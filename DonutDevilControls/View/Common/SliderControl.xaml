@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="DonutDevilControls.View.Common.SliderControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:common="clr-namespace:DonutDevilControls.ViewModel.Design.Common"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance {x:Type common:DesignSliderVm}, IsDesignTimeCreatable=True}"
+             Background="#2FFF" 
+             d:DesignHeight="70"
+             d:DesignWidth="300">
+    <Border>
+        <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Padding="5,0"
+                TextAlignment="Center" 
+                Text="{Binding Title}" 
+                HorizontalAlignment="Center"
+                Foreground="Yellow"
+                Margin="0,0,0,10"/>
+
+            <Slider
+                Grid.Row="1"
+                Value="{Binding Value}" 
+                Minimum="{Binding Interval.Min}" 
+                Maximum="{Binding Interval.Max}" 
+                IsSnapToTickEnabled="True" 
+                TickFrequency="{Binding TickFrequency}"/>
+        
+            <Grid Grid.Row="2">
+
+                <TextBlock 
+                    Padding="5,0" Text="{Binding LegendMinimum}" 
+                    HorizontalAlignment="Left" 
+                    Margin="5,0,0,0" 
+                    VerticalAlignment="Top" 
+                    Foreground="Yellow"/>
+
+                <TextBlock
+                    Padding="5,0"  
+                    Margin="0"
+                    Text="{Binding LegendValue}" 
+                    VerticalAlignment="Bottom" 
+                    HorizontalAlignment="Center"
+                    Foreground="Yellow"
+                    />
+
+                <TextBlock
+                    Padding="5,0"  Text="{Binding LegendMaximum}" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Top"
+                    Foreground="Yellow"
+                    />
+            
+            </Grid>
+
+
+
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="DonutDevilControls.View.Common.ImageLegendControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:common="clr-namespace:DonutDevilControls.ViewModel.Design.Common"
+             xmlns:common1="clr-namespace:DonutDevilControls.View.Common"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance {x:Type common:DesignImageLegendVm}, IsDesignTimeCreatable=True}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Bottom">
+            <Button Command="{Binding LoadImageFileCommand}">Load File</Button>
+        </StackPanel>
+        <common1:ColorLegendControl2d DataContext="{Binding ColorLegendVm2D}"/>
+    </DockPanel>
+</UserControl>
