@@ -42,6 +42,8 @@
     <Compile Include="Node.cs" />
     <Compile Include="NodeGroup.cs" />
     <Compile Include="NodeGroupUpdater.cs" />
+    <Compile Include="NodeGroupUpdaterRing.cs" />
+    <Compile Include="NodeGroupUpdaterTorus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

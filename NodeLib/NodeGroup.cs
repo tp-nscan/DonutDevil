@@ -6,7 +6,7 @@ namespace NodeLib
 {
     public interface INodeGroup
     {
-        IReadOnlyList<float> Nodes { get; }
+        IReadOnlyList<float> Values { get; }
     }
 
     public static class NodeGroup
@@ -20,7 +20,7 @@ namespace NodeLib
             return new NodeGroupImpl
                 (
                     nodes: Enumerable.Range(0, nodeCount)
-                              .Select(i=> Node.Make((float) (randy.NextDouble()*2 -1), groupIndex: i)),
+                              .Select(i=> Node.Make((float)randy.NextDouble(), groupIndex: i)),
                     nodeCount: nodeCount          
                 );
         }
@@ -33,23 +33,28 @@ namespace NodeLib
         {
             return new NodeGroupImpl(nodes, nodeCount);
         }
+
+        public static IEnumerable<INode> Nodes(this INodeGroup nodeGroup)
+        {
+            return nodeGroup.Values.Select(Node.Make);
+        }
     }
 
     public class NodeGroupImpl : INodeGroup
     {
         public NodeGroupImpl(IEnumerable<INode> nodes, int nodeCount)
         {
-            _nodes = new float[nodeCount];
+            _values = new float[nodeCount];
             foreach (var node in nodes)
             {
-                _nodes[node.GroupIndex] = node.Value;
+                _values[node.GroupIndex] = node.Value;
             }
         }
 
-        private readonly float[] _nodes;
-        public IReadOnlyList<float> Nodes
+        private readonly float[] _values;
+        public IReadOnlyList<float> Values
         {
-            get { return _nodes; }
+            get { return _values; }
         }
     }
 }

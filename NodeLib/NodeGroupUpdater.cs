@@ -9,6 +9,9 @@ namespace NodeLib
         INodeGroup Update(INodeGroup nodeGroup);
     }
 
+
+
+
     public class NodeGroupUpdaterImpl : INodeGroupUpdater
     {
         public NodeGroupUpdaterImpl(
@@ -23,7 +26,7 @@ namespace NodeLib
             return _updateFunctions
                         .AsParallel()
                         .SelectMany(n => n(nodeGroup))
-                        .ToNodeGroup(nodeGroup.Nodes.Count);
+                        .ToNodeGroup(nodeGroup.Values.Count);
         }
 
         private readonly Func<INodeGroup, INode[]>[] _updateFunctions;

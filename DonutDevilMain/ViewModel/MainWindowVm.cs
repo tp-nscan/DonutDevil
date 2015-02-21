@@ -1,6 +1,4 @@
-﻿using System;
-using DonutDevilControls.ViewModel.Common;
-using WpfUtils;
+﻿using WpfUtils;
 
 namespace DonutDevilMain.ViewModel
 {
@@ -8,20 +6,9 @@ namespace DonutDevilMain.ViewModel
     {
         public MainWindowVm()
         {
-            _imageLegendVm = new ImageLegendVm();
-            _imageLegendVm.OnPixelsChanged.Subscribe(OnPixelsChanged);
+            NodeGroupVm = new TorusValuedNodeGroupVm();
         }
 
-        private readonly ImageLegendVm _imageLegendVm;
-        public ImageLegendVm ImageLegendVm
-        {
-            get { return _imageLegendVm; }
-        }
-
-        void OnPixelsChanged(int[,] pixels)
-        {
-            
-        }
-
+        public NotifyPropertyChanged NodeGroupVm { get; set; }
     }
 }
