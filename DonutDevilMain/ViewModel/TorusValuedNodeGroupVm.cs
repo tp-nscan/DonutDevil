@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
 using MathLib.Intervals;
@@ -15,23 +18,29 @@ namespace DonutDevilMain.ViewModel
 {
     public class TorusValuedNodeGroupVm : NotifyPropertyChanged
     {
-        private const int SquareSize = 256;
+        private const int SquareSize = 128;
+        private const int Colorsteps = 512;
+        private const int HistogramBins = 100;
+
 
         public TorusValuedNodeGroupVm()
         {
             _imageLegendVm = new ImageLegendVm();
-            _imageLegendVm.OnPixelsChanged.Subscribe(OnPixelsChanged);
-            _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 1.6), 0.05, "0.00") { Title = "Step" };
-            //_nodeGroup = NodeGroup.RandomMnNodeGroup(SquareSize * SquareSize, 127734, DataModulus);
+            _imageLegendVm.OnColorsChanged.Subscribe(OnPixelsChanged);
+            _rangeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.02, "0.00") { Title = "Range" };
+            _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
             InitializeRun();
         }
         #region local vars
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private INodeGroup _nodeGroup;
-        private INodeGroupUpdater _nodeGroupUpdaterNbd;
+        private INodeGroupUpdater _nodeGroupUpdater;
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private bool _isRunning;
 
         #endregion
+
 
         #region UpdateGridCommand
 
@@ -40,94 +49,175 @@ namespace DonutDevilMain.ViewModel
         {
             get
             {
-                if (_updateGridCommand == null)
-                    _updateGridCommand = new RelayCommand(
-                        param => DoUpdateGrid(),
-                        param => CanUpdateGrid()
-                        );
-
-                return _updateGridCommand;
+                return _updateGridCommand ?? (_updateGridCommand = new RelayCommand(
+                    param => DoUpdateGrid(),
+                    param => CanUpdateGrid()
+                    ));
             }
         }
 
         private async void DoUpdateGrid()
         {
+            _cancellationTokenSource = new CancellationTokenSource();
+            _isRunning = true;
+
             await Task.Run(() =>
             {
                 try
                 {
                     _stopwatch.Start();
-
-                    InitializeRun();
-
-                    for (var i = 0; i < 1000000; i++)
+                    for (var i = 0; _isRunning; i++)
                     {
+                        _nodeGroup = _nodeGroupUpdater.Update(_nodeGroup);
+                        _generation++;
+
+                        if (_cancellationTokenSource.IsCancellationRequested)
+                        {
+                            _isRunning = false;
+                            _stopwatch.Stop();
+                        }
+
                         if (i % 10 == 0)
                         {
-                            var i1 = i;
                             Application.Current.Dispatcher.Invoke
                                 (
                                     () =>
                                     {
-
                                         ResetNodeGroupUpdaters();
-                                        UpdateBindingProperties(i1);
-                                        DrawMainGrid(_nodeGroup);
-
+                                        UpdateBindingProperties();
+                                        DrawMainGrid();
+                                        CommandManager.InvalidateRequerySuggested();
                                     },
                                     DispatcherPriority.Background
                                 );
-
                         }
 
-                        //_nodeGroup = _nodeGroupUpdaterNbd
-                        //                .Update(_nodeGroup, StepSizeSliderVm.Value)
-                        //                .ToNodeGroup(SquareSize * SquareSize);
-
                     }
-
                 }
+
                 catch (Exception)
                 {
                 }
-            });
+            },
+                cancellationToken: _cancellationTokenSource.Token
+            );
         }
 
         bool CanUpdateGrid()
         {
-            return true;
+            return !_isRunning;
         }
 
         #endregion // UpdateGridCommand
 
+
+
+        #region StopUpdateGridCommand
+
+        RelayCommand _stopUpdateGridCommand;
+        public ICommand StopUpdateGridCommand
+        {
+            get
+            {
+                if (_stopUpdateGridCommand == null)
+                    _stopUpdateGridCommand = new RelayCommand(
+                        param => DoCancelUpdateGrid(),
+                        param => CanCancelUpdateGrid()
+                        );
+
+                return _stopUpdateGridCommand;
+            }
+        }
+
+        private void DoCancelUpdateGrid()
+        {
+            _cancellationTokenSource.Cancel();
+        }
+
+        bool CanCancelUpdateGrid()
+        {
+            return _isRunning;
+        }
+
+        #endregion // StopUpdateGridCommand
+
+
+        #region ResetCommand
+
+        RelayCommand _resetCommand;
+        public ICommand ResetCommand
+        {
+            get
+            {
+                if (_resetCommand == null)
+                    _resetCommand = new RelayCommand(
+                        param => DoReset(),
+                        param => CanDoReset()
+                        );
+
+                return _resetCommand;
+            }
+        }
+
+        private void DoReset()
+        {
+            InitializeRun();
+        }
+
+        bool CanDoReset()
+        {
+            return !_isRunning;
+        }
+
+        #endregion // ResetCommand
+
+
+
+
         #region local helpers
 
-        void UpdateBindingProperties(int generation)
+        void UpdateBindingProperties()
         {
-
-            Generation = generation;
-            ElapsedTime = _stopwatch.Elapsed;
+            OnPropertyChanged("Generation");
+            OnPropertyChanged("ElapsedTime");
         }
 
-        void DrawMainGrid(INodeGroup nodeGroup)
+        void DrawMainGrid()
         {
-            //GridGraphicsInfo =
-            //    nodeGroup.Nodes.Select(n =>
-            //        new GraphicsInfo(
-            //            x: n.GroupIndex / SquareSize,
-            //            y: n.GroupIndex % SquareSize,
-            //            color: _nodeGroupColorSequence.ToUnitColor(n.Value.M10ToDouble())))
-            //        .ToList();
+            if (_nodeGroup == null)
+            {
+                return;
+            }
+
+            var ggi = new List<GraphicsInfo>();
+            for (float i = 0; i < SquareSize; i++)
+            {
+                for (float j = 0; j < SquareSize; j++)
+                {
+                    ggi.Add(new GraphicsInfo(
+                            x:(int) i,
+                            y:(int) j,
+                            color: ImageLegendVm.ColorForUnitTorus(
+                                xVal: _nodeGroup.Values[(int) (j*SquareSize + i)],
+                                yVal: _nodeGroup.Values[(int)((j  +1.0f) * SquareSize + i )]
+                              )
+                        ));
+                }
+            }
+
+            GridGraphicsInfo = ggi;
+
         }
 
-        void InitializeRun()
+        async void InitializeRun()
         {
-            _imageLegendVm.ImageFileName = @"C:\Users\tpnsc_000\Documents\GitHub\DonutDevil\DonutDevilControls\Images\earth.bmp";
-            //_nodeGroup = NodeGroup.RandomMnNodeGroup(SquareSize * SquareSize, DateTime.Now.Millisecond, DataModulus);
+           await ImageLegendVm.LoadImageFile(@"C:\Users\tpnsc_000\Documents\GitHub\DonutDevil\DonutDevilControls\Images\earth.bmp");
+
+            _nodeGroup = NodeGroup.RandomNodeGroup(SquareSize * SquareSize* 2, DateTime.Now.Millisecond);
+
+            DrawMainGrid();
 
             ResetNodeGroupUpdaters();
-
-            DrawMainGrid(_nodeGroup);
         }
 
         void ResetNodeGroupUpdaters()
@@ -169,16 +259,9 @@ namespace DonutDevilMain.ViewModel
             }
         }
 
-
-        private TimeSpan _elapsedTime;
         public TimeSpan ElapsedTime
         {
-            get { return _elapsedTime; }
-            set
-            {
-                _elapsedTime = value;
-                OnPropertyChanged("ElapsedTime");
-            }
+            get { return _stopwatch.Elapsed; }
         }
 
         private IReadOnlyList<GraphicsInfo> _gridGraphicsInfo = new List<GraphicsInfo>();
@@ -198,9 +281,15 @@ namespace DonutDevilMain.ViewModel
             get { return _imageLegendVm; }
         }
 
-        void OnPixelsChanged(int[,] pixels)
+        void OnPixelsChanged(Color[,] pixels)
         {
-            DrawMainGrid(_nodeGroup);
+            DrawMainGrid();
+        }
+
+        private readonly SliderVm _rangeSliderVm;
+        public SliderVm RangeSliderVm
+        {
+            get { return _rangeSliderVm; }
         }
 
         private readonly SliderVm _stepSizeSliderVm;

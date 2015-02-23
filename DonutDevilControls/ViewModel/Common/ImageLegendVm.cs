@@ -7,6 +7,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using WpfUtils;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -22,10 +23,10 @@ namespace DonutDevilControls.ViewModel.Common
             _colorLegendVm2D = new ColorLegendVm2D
             {
                 Title = "Node values",
-                MinValueX = -0.5,
-                MaxValueX =  0.5,
-                MinValueY = -0.5,
-                MaxValueY =  0.5
+                MinValueX = 0.0,
+                MaxValueX =  1.0,
+                MinValueY = 0.0,
+                MaxValueY =  1.0
             };
         }
 
@@ -44,7 +45,7 @@ namespace DonutDevilControls.ViewModel.Common
             {
                 if (_loadImageFileCommand == null)
                     _loadImageFileCommand = new RelayCommand(
-                            param => DoLoadImageFile(),
+                            param => SetImageFileWithDialog(),
                             param => CanLoadImage()
                         );
 
@@ -52,7 +53,7 @@ namespace DonutDevilControls.ViewModel.Common
             }
         }
 
-        private async void DoLoadImageFile()
+        private void SetImageFileWithDialog()
         {
 
             //var d = new CommonSaveFileDialog()
@@ -78,25 +79,59 @@ namespace DonutDevilControls.ViewModel.Common
                 EnsureValidNames = true,
                 ShowPlacesList = true
             };
-
-            if (od.ShowDialog() == CommonFileDialogResult.Ok)
+            if (od.ShowDialog() != CommonFileDialogResult.Ok)
             {
-                System.Diagnostics.Debug.WriteLine(od.FileName);
-                ImageFileName = od.FileName;
-                //C:\Users\tpnsc_000\Documents\GitHub\DonutDevil\DonutDevilControls\Images\earth.bmp
+                LoadImageFile(od.FileName);
             }
+        }
 
+
+        public async Task LoadImageFile(string imageFileName)
+        {
             await Task.Run(() =>
             {
                 try
                 {
+                    var image1 = (Bitmap)Image.FromFile(imageFileName, true);
+
+                    _imageColors = new System.Windows.Media.Color[image1.Height, image1.Width];
+
+                    unsafe
+                    {
+                        var bmd = image1.LockBits(new Rectangle(0, 0, image1.Width, image1.Height), ImageLockMode.ReadOnly, image1.PixelFormat);
+                        for (var row = 0; row < bmd.Height; row++)
+                        {
+                            var offset = (row * bmd.Stride);
+
+                            for (var col = 0; col < bmd.Width; col++)
+                            {
+                                var currentPixel = (255 << 24);
+                                currentPixel += (((byte*)bmd.Scan0)[offset + col * 3 + 0] << 16);
+                                currentPixel += (((byte*)bmd.Scan0)[offset + col * 3 + 1] << 8);
+                                currentPixel += (((byte*)bmd.Scan0)[offset + col * 3 + 2] << 0);
+
+                                _imageColors[row, col] = currentPixel.IntToColor();
+                            }
+                        }
+                    }
 
                     Application.Current.Dispatcher.Invoke
                         (
                             () =>
                             {
 
+                                ImageFileName = imageFileName;
+                                ColorLegendVm2D.GraphicsInfos =
+                                    Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
+                                        .Select(
+                                            c => new GraphicsInfo
+                                                (
+                                                x: c % ImageWidth,
+                                                y: c / ImageWidth,
+                                                color: _imageColors[(c) / ImageHeight, (c) % ImageWidth]
+                                                )).ToList();
 
+                                _colorsChanged.OnNext(ImageColors);
                             },
                             DispatcherPriority.Background
                         );
@@ -108,23 +143,37 @@ namespace DonutDevilControls.ViewModel.Common
             });
         }
 
-        private readonly Subject<int[,]> _pixelsChanged = new Subject<int[,]>();
-        public IObservable<int[,]> OnPixelsChanged
+        private readonly Subject<System.Windows.Media.Color[,]> _colorsChanged 
+            = new Subject<System.Windows.Media.Color[,]>();
+        public IObservable<System.Windows.Media.Color[,]> OnColorsChanged
         {
-            get { return _pixelsChanged; }
+            get { return _colorsChanged; }
         }
 
-        private int[,] _pixels;
-        public int[,] Pixels
+        public int ImageHeight
         {
-            get { return _pixels; }
+            get { return _imageColors.GetLength(1); }
+        }
+
+        public int ImageWidth
+        {
+            get { return _imageColors.GetLength(1); }
+        }
+
+        private System.Windows.Media.Color[,] _imageColors = new System.Windows.Media.Color[0, 0];
+        public System.Windows.Media.Color[,] ImageColors
+        {
+            get { return _imageColors; }
             private set
             {
-                _pixels = value;
-                _pixelsChanged.OnNext(value);
+                _imageColors = value;
             }
         }
 
+        public System.Windows.Media.Color ColorForUnitTorus(float xVal, float yVal)
+        {
+            return _imageColors[(int)(xVal*ImageHeight), (int)(yVal*ImageWidth)];
+        }
 
         bool CanLoadImage()
         {
@@ -137,41 +186,10 @@ namespace DonutDevilControls.ViewModel.Common
         public string ImageFileName
         {
             get { return _imageFileName; }
-            set
+            private set
             {
                 _imageFileName = value;
-
-                var image1 = (Bitmap)Image.FromFile(value, true);
-
-                var pixels = new int[image1.Height, image1.Width]; 
-
-                unsafe
-                {
-                    var bmd = image1.LockBits(new Rectangle(0, 0, image1.Width, image1.Height), ImageLockMode.ReadOnly, image1.PixelFormat);
-                    for (var row = 0; row < bmd.Height; row++)
-                    {
-                        var offset = (row * bmd.Stride);
-
-                        for (var col = 0; col < bmd.Width; col++)
-                        {
-                            var currentPixel = (  255                                    << 24);
-                            currentPixel    += (((byte*)bmd.Scan0)[offset + col * 3 + 0] << 16);
-                            currentPixel    += (((byte*)bmd.Scan0)[offset + col * 3 + 1] <<  8);
-                            currentPixel    += (((byte*)bmd.Scan0)[offset + col * 3 + 2] <<  0);
-                            pixels[row, col] = currentPixel;
-                        }
-                    }
-                }
-
-                ColorLegendVm2D.GraphicsInfos =
-                    Enumerable.Range(0, image1.Height * image1.Width)
-                        .Select(
-                            c => new GraphicsInfo
-                                (
-                                x: c % image1.Width,
-                                y: c / image1.Width,
-                                color: pixels[(c) / image1.Width, (c) % image1.Width].IntToColor()
-                                )).ToList();
+                OnPropertyChanged("ImageFileName");
             }
         }
     }

@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Reactive.Core">
       <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
     </Reference>
@@ -82,6 +83,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModel\Design\DesignMainWindowVm.cs" />
     <Compile Include="ViewModel\RingValuedNodeGroupVm.cs" />
     <Compile Include="ViewModel\TorusValuedNodeGroupVm.cs" />
     <Compile Include="View\RingValuedNodeGroupControl.xaml.cs">

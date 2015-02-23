@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -18,16 +19,15 @@ namespace DonutDevilMain.ViewModel
 {
     public class RingValuedNodeGroupVm : NotifyPropertyChanged
     {
-        private const int SquareSize = 256;
-        private const int Colorsteps = 128;
-        public const int HistogramBins = 100;
+        private const int SquareSize = 100;
+        private const int Colorsteps = 512;
+        private const int HistogramBins = 100;
 
 
         public RingValuedNodeGroupVm()
         {
             _rangeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.02, "0.00") {Title = "Range"};
-            _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 1.6), 0.05, "0.00") { Title = "Step" };
-            _nodeGroup = NodeGroup.RandomNodeGroup(SquareSize * SquareSize, 127734);
+            _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
             InitializeRun();
         }
 
@@ -42,9 +42,12 @@ namespace DonutDevilMain.ViewModel
 
         private INodeGroup _nodeGroup;
 
-        private INodeGroupUpdater _nodeGroupUpdaterNbd;
+        private INodeGroupUpdater _nodeGroupUpdater;
 
-            #endregion
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private bool _isRunning;
+
+        #endregion
 
         #region UpdateGridCommand
 
@@ -62,51 +65,119 @@ namespace DonutDevilMain.ViewModel
 
         private async void DoUpdateGrid()
         {
+            _cancellationTokenSource = new CancellationTokenSource();
+            _isRunning = true;
+
             await Task.Run(() =>
             {
                 try
                 {
                     _stopwatch.Start();
-
-                    InitializeRun();
-
-                    for (var i = 0; i < 1000000; i++)
+                    for (var i = 0; _isRunning; i++)
                     {
+                        _nodeGroup = _nodeGroupUpdater.Update(_nodeGroup);
+                        _generation++;
+
+                        if (_cancellationTokenSource.IsCancellationRequested)
+                        {
+                            _isRunning = false;
+                            _stopwatch.Stop();
+                        }
+
                         if (i % 10 == 0)
                         {
-                            var i1 = i;
                             Application.Current.Dispatcher.Invoke
                                 (
                                     () =>
                                     {
-
                                         ResetNodeGroupUpdaters();
-                                        UpdateBindingProperties(i1);
+                                        UpdateBindingProperties();
                                         MakeHistogram();
                                         DrawMainGrid(_nodeGroup);
-
+                                        CommandManager.InvalidateRequerySuggested();
                                     },
                                     DispatcherPriority.Background
                                 );
-
                         }
 
-                        _nodeGroup = _nodeGroupUpdaterNbd.Update(_nodeGroup);
                     }
-
                 }
+
                 catch (Exception)
                 {
                 }
-            });
+            },
+                cancellationToken: _cancellationTokenSource.Token
+            );
         }
 
         bool CanUpdateGrid()
         {
-            return true;
+            return !_isRunning;
         }
 
         #endregion // UpdateGridCommand
+
+
+        #region StopUpdateGridCommand
+
+        RelayCommand _stopUpdateGridCommand;
+        public ICommand StopUpdateGridCommand
+        {
+            get
+            {
+                if (_stopUpdateGridCommand == null)
+                    _stopUpdateGridCommand = new RelayCommand(
+                        param => DoCancelUpdateGrid(),
+                        param => CanCancelUpdateGrid()
+                        );
+
+                return _stopUpdateGridCommand;
+            }
+        }
+
+        private void DoCancelUpdateGrid()
+        {
+            _cancellationTokenSource.Cancel();
+        }
+
+        bool CanCancelUpdateGrid()
+        {
+            return _isRunning;
+        }
+
+        #endregion // StopUpdateGridCommand
+
+
+        #region ResetCommand
+
+        RelayCommand _resetCommand;
+        public ICommand ResetCommand
+        {
+            get
+            {
+                if (_resetCommand == null)
+                    _resetCommand = new RelayCommand(
+                        param => DoReset(),
+                        param => CanDoReset()
+                        );
+
+                return _resetCommand;
+            }
+        }
+
+        private void DoReset()
+        {
+            InitializeRun();
+        }
+
+        bool CanDoReset()
+        {
+            return !_isRunning;
+        }
+
+        #endregion // ResetCommand
+
 
         #region local helpers
 
@@ -115,7 +186,7 @@ namespace DonutDevilMain.ViewModel
             var histogram =
                 _nodeGroup.Values.ToHistogram
                 (
-                    bins: RealInterval.ClosedZRange.SplitToEvenIntervals(HistogramBins).ToList(),
+                    bins: RealInterval.UnitRange.SplitToEvenIntervals(HistogramBins).ToList(),
                     valuatorFunc: n => n
                 );
 
@@ -124,8 +195,8 @@ namespace DonutDevilMain.ViewModel
             HistogramVm = new ColorLegendVm
             {
                 Title = "Node frequencies",
-                MinValue = -0.5,
-                MaxValue = 0.5,
+                MinValue = -0.0,
+                MaxValue = 1.0,
                 GraphicsInfos = histogram.Select(
                     (bin, index) => new GraphicsInfo
                         (
@@ -137,11 +208,10 @@ namespace DonutDevilMain.ViewModel
 
         }
 
-        void UpdateBindingProperties(int generation)
+        void UpdateBindingProperties()
         {
-
-            Generation = generation;
-            ElapsedTime = _stopwatch.Elapsed;
+            OnPropertyChanged("Generation");
+            OnPropertyChanged("ElapsedTime");
         }
 
         void DrawMainGrid(INodeGroup nodeGroup)
@@ -160,21 +230,28 @@ namespace DonutDevilMain.ViewModel
             _nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue,
                 Colorsteps);
 
-            //_nodeGroupColorSequence = ColorSequence.Dipolar(Colors.Red, Colors.Blue,
-            //    Colorsteps);
-
             _histogramColorSequence = Colors.White.ToUniformColorSequence(Colorsteps);
 
             _nodeGroup = NodeGroup.RandomNodeGroup(SquareSize * SquareSize, DateTime.Now.Millisecond);
 
             MakeHistogram();
 
+            SetupColorLegend();
+
+            ResetNodeGroupUpdaters();
+
+            DrawMainGrid(_nodeGroup);
+        }
+
+
+        void SetupColorLegend()
+        {
             var x = 0;
 
             ColorLegendVm = new ColorLegendVm
             {
                 Title = "Node values",
-                MinValue = -1.0,
+                MinValue = -0.0,
                 MaxValue = 1.0,
                 GraphicsInfos = _nodeGroupColorSequence
                                     .Colors
@@ -186,21 +263,17 @@ namespace DonutDevilMain.ViewModel
                                             color: c
                                     )).ToList()
             };
-
-
-            ResetNodeGroupUpdaters();
-
-            DrawMainGrid(_nodeGroup);
-
         }
+
 
         void ResetNodeGroupUpdaters()
         {
-            _nodeGroupUpdaterNbd = NodeGroupUpdaterRing.ForSquareTorus
+            _nodeGroupUpdater = NodeGroupUpdaterRing.ForSquareTorus
             (
-                gain: 0.095,
+                gain: 0.095f,
+                step: (float)StepSizeSliderVm.Value,
                 squareSize: SquareSize,
-                range: RangeSliderVm.Value,
+                range: (float)RangeSliderVm.Value,
                 use8Way: Use8Way
             );
         }
@@ -233,16 +306,9 @@ namespace DonutDevilMain.ViewModel
             }
         }
 
-
-        private TimeSpan _elapsedTime;
         public TimeSpan ElapsedTime
         {
-            get { return _elapsedTime; }
-            set
-            {
-                _elapsedTime = value;
-                OnPropertyChanged("ElapsedTime");
-            }
+            get { return _stopwatch.Elapsed; }
         }
 
         private IReadOnlyList<GraphicsInfo> _gridGraphicsInfo = new List<GraphicsInfo>();
