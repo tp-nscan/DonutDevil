@@ -11,7 +11,7 @@
     d:DataContext="{d:DesignInstance {x:Type win:DesignMainWindowVm}, IsDesignTimeCreatable=True}"
     >
 
-    <!--<view:RingValuedNodeGroupControl DataContext="{Binding NodeGroupVm}"/>-->
-    <view:TorusValuedNodeGroupControl DataContext="{Binding NodeGroupVm}"/>
+    <view:RingValuedNodeGroupControl DataContext="{Binding NodeGroupVm}"/>
+    <!--<view:TorusValuedNodeGroupControl DataContext="{Binding NodeGroupVm}"/>-->
     
 </Window>

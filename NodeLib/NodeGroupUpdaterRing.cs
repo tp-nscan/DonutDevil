@@ -6,7 +6,14 @@ namespace NodeLib
 {
     public static class NodeGroupUpdaterRing
     {
-        public static INodeGroupUpdater ForSquareTorus(float gain, float step, float range, int squareSize, bool use8Way)
+        public static INodeGroupUpdater ForSquareTorus
+            (
+                float gain, 
+                float step, 
+                float range, 
+                int squareSize, 
+                bool use8Way
+            )
         {
             return new NodeGroupUpdaterImpl(
                 Enumerable.Range(0, squareSize * squareSize)

@@ -6,8 +6,8 @@ namespace DonutDevilMain.ViewModel
     {
         public MainWindowVm()
         {
-            NodeGroupVm = new TorusValuedNodeGroupVm();
-            //NodeGroupVm = new RingValuedNodeGroupVm();
+            //NodeGroupVm = new TorusValuedNodeGroupVm();
+            NodeGroupVm = new RingValuedNodeGroupVm();
         }
 
         public NotifyPropertyChanged NodeGroupVm { get; set; }

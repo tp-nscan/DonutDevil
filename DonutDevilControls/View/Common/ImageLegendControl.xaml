@@ -11,8 +11,10 @@
     
     
     <DockPanel LastChildFill="True">
-        <StackPanel DockPanel.Dock="Bottom">
-            <Button Command="{Binding LoadImageFileCommand}">Load File</Button>
+        <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <Button Margin="5,0" Command="{Binding LoadImageFileCommand}">Load File</Button>
+            <Button Margin="5,0" Command="{Binding XonlyCommand}">X only</Button>
+            <Button Margin="5,0" Command="{Binding YonlyCommand}">Y only</Button>
         </StackPanel>
         <common1:ColorLegendControl2d DataContext="{Binding ColorLegendVm2D}"/>
     </DockPanel>

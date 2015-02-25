@@ -77,7 +77,7 @@ namespace DonutDevilMain.ViewModel
                             _stopwatch.Stop();
                         }
 
-                        if (i % 10 == 0)
+                        if (i % 100 == 0)
                         {
                             Application.Current.Dispatcher.Invoke
                                 (
@@ -190,6 +190,9 @@ namespace DonutDevilMain.ViewModel
             }
 
             var ggi = new List<GraphicsInfo>();
+
+            const int offset = SquareSize*SquareSize;
+
             for (float i = 0; i < SquareSize; i++)
             {
                 for (float j = 0; j < SquareSize; j++)
@@ -199,7 +202,7 @@ namespace DonutDevilMain.ViewModel
                             y:(int) j,
                             color: ImageLegendVm.ColorForUnitTorus(
                                 xVal: _nodeGroup.Values[(int) (j*SquareSize + i)],
-                                yVal: _nodeGroup.Values[(int)((j  +1.0f) * SquareSize + i )]
+                                yVal: _nodeGroup.Values[offset + (int)(j * SquareSize + i)]
                               )
                         ));
                 }
@@ -213,7 +216,7 @@ namespace DonutDevilMain.ViewModel
         {
            await ImageLegendVm.LoadImageFile(@"C:\Users\tpnsc_000\Documents\GitHub\DonutDevil\DonutDevilControls\Images\earth.bmp");
 
-            _nodeGroup = NodeGroup.RandomNodeGroup(SquareSize * SquareSize* 2, DateTime.Now.Millisecond);
+           _nodeGroup = NodeGroup.RandomNodeGroup(SquareSize * SquareSize * 2, (int)DateTime.Now.Ticks);
 
             DrawMainGrid();
 
@@ -222,13 +225,14 @@ namespace DonutDevilMain.ViewModel
 
         void ResetNodeGroupUpdaters()
         {
-            //_nodeGroupUpdaterNbd = NodeGroupUpdaterRing.ForSquareTorus
-            //(
-            //    gain: 0.095,
-            //    squareSize: SquareSize,
-            //    range: RangeSliderVm.Value,
-            //    use8Way: Use8Way
-            //);
+            _nodeGroupUpdater = NodeGroupUpdaterTorus.ForSquareTorus
+            (
+                gain: 0.095f,
+                step: (float)StepSizeSliderVm.Value,
+                squareSize: SquareSize,
+                range: (float)RangeSliderVm.Value,
+                use8Way: Use8Way
+            );
         }
 
 

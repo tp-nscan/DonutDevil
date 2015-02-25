@@ -49,6 +49,7 @@
     <Compile Include="Intervals\RealInterval.cs" />
     <Compile Include="Intervals\RealIntervalExt.cs" />
     <Compile Include="NumericTypes\PointFlt.cs" />
+    <Compile Include="NumericTypes\TorusNbrhd.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

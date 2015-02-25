@@ -9,7 +9,20 @@ namespace MathLib.NumericTypes
 
         public static float AsMf(this float lhs)
         {
-            return (lhs + Padder) - (float)Math.Floor(lhs + Padder); ;
+            var res = (lhs + Padder) - (float)Math.Floor(lhs + Padder);
+            if (Math.Abs(res - 1.0) < Epsilon)
+                return 1.0f - Epsilon;
+
+            return res;
+        }
+
+        public static float AsMf(this double lhs)
+        {
+            var res = (lhs + Padder) - (float)Math.Floor(lhs + Padder);
+            if (Math.Abs(res - 1.0) < Epsilon)
+                return 1.0f - Epsilon;
+
+            return (float) res;
         }
 
         public static bool IsNearlyEqualTo(this float lhs, float rhs)
@@ -45,6 +58,11 @@ namespace MathLib.NumericTypes
             }
 
             return (delta < - 0.5) ? -1.0f - delta : - delta;
+        }
+
+        public static float MfSin(this double value)
+        {
+            return (Math.Sin(value) / 2.0 + 0.5).AsMf();
         }
     }
 

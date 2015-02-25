@@ -36,6 +36,7 @@ namespace DonutDevilControls.ViewModel.Common
             get { return _colorLegendVm2D; }
         }
 
+
         #region LoadImageFileCommand
 
         RelayCommand _loadImageFileCommand;
@@ -79,7 +80,7 @@ namespace DonutDevilControls.ViewModel.Common
                 EnsureValidNames = true,
                 ShowPlacesList = true
             };
-            if (od.ShowDialog() != CommonFileDialogResult.Ok)
+            if (od.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 LoadImageFile(od.FileName);
             }
@@ -181,6 +182,140 @@ namespace DonutDevilControls.ViewModel.Common
         }
 
         #endregion // LoadImageFileCommand
+
+
+
+        #region XonlyCommand
+
+        RelayCommand _xonlyCommand;
+        public ICommand XonlyCommand
+        {
+            get
+            {
+                if (_xonlyCommand == null)
+                    _xonlyCommand = new RelayCommand(
+                            param => DoXOnly(),
+                            param => CanXOnly()
+                        );
+
+                return _xonlyCommand;
+            }
+        }
+
+        private void DoXOnly()
+        {
+            try
+            {
+                _imageColors = new System.Windows.Media.Color[1024,1024];
+                var _colorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, 256);
+                for (var row = 0; row < 1024; row++)
+                {
+                    for (var col = 0; col < 1024; col++)
+                    {
+                        _imageColors[row, col] = _colorSequence.Colors[col];
+                    }
+                }
+
+                Application.Current.Dispatcher.Invoke
+                    (
+                        () =>
+                        {
+                            ColorLegendVm2D.GraphicsInfos =
+                                Enumerable.Range(0, 1024 * 1024)
+                                    .Select(
+                                        c => new GraphicsInfo
+                                            (
+                                            x: c % 1024,
+                                            y: c / 1024,
+                                            color: _imageColors[(c) / 1024, (c) % 1024]
+                                            )).ToList();
+
+                            _colorsChanged.OnNext(ImageColors);
+                        },
+                        DispatcherPriority.Background
+                    );
+
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+
+        bool CanXOnly()
+        {
+            return true;
+        }
+
+        #endregion // XonlyCommand
+
+
+
+        #region YonlyCommand
+
+        RelayCommand _yonlyCommand;
+        public ICommand YonlyCommand
+        {
+            get
+            {
+                if (_yonlyCommand == null)
+                    _yonlyCommand = new RelayCommand(
+                            param => DoYOnly(),
+                            param => CanYOnly()
+                        );
+
+                return _yonlyCommand;
+            }
+        }
+
+        private void DoYOnly()
+        {
+            try
+            {
+                _imageColors = new System.Windows.Media.Color[1024, 1024];
+                var _colorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, 256);
+                for (var row = 0; row < 1024; row++)
+                {
+                    for (var col = 0; col < 1024; col++)
+                    {
+                        _imageColors[row, col] = _colorSequence.Colors[row];
+                    }
+                }
+
+                Application.Current.Dispatcher.Invoke
+                    (
+                        () =>
+                        {
+                            ColorLegendVm2D.GraphicsInfos =
+                                Enumerable.Range(0, 1024 * 1024)
+                                    .Select(
+                                        c => new GraphicsInfo
+                                            (
+                                            x: c % 1024,
+                                            y: c / 1024,
+                                            color: _imageColors[(c) / 1024, (c) % 1024]
+                                            )).ToList();
+
+                            _colorsChanged.OnNext(ImageColors);
+                        },
+                        DispatcherPriority.Background
+                    );
+
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+
+        bool CanYOnly()
+        {
+            return true;
+        }
+
+        #endregion // YonlyCommand
+
+
 
         private string _imageFileName;
         public string ImageFileName

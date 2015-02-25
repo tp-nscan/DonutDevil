@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -68,6 +67,22 @@ namespace MathLib.Test.NumericTypes
         }
 
 
+        [TestMethod]
+        public void TestCapture()
+        {
+
+            var p = new[] {5};
+            var f = MakeFunc(p);
+            p[0] = 6;
+
+            var res = f.Invoke();
+        }
+
+        Func<int> MakeFunc(int[] param)
+        {
+            var temp = param[0];
+            return () => temp;
+        }
 
     }
 

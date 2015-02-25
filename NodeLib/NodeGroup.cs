@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MathLib.NumericTypes;
 
 namespace NodeLib
 {
@@ -22,6 +23,36 @@ namespace NodeLib
                     nodes: Enumerable.Range(0, nodeCount)
                               .Select(i=> Node.Make((float)randy.NextDouble(), groupIndex: i)),
                     nodeCount: nodeCount          
+                );
+        }
+
+        public static INodeGroup TorusPeriodicNodeGroup(int squareSize, float waviness)
+        {
+            var adjWaviness = waviness / squareSize;
+            var nodes = new INode[squareSize * squareSize * 2];
+
+            for (var i = 0; i < squareSize; i++)
+            {
+                for (var j = 0; j < squareSize; j++)
+                {
+                    nodes[i * squareSize + j] = Node.Make
+                        (
+                            value: Mf.MfSin( (i*waviness)/squareSize),
+                            groupIndex: i * squareSize + j
+                        );
+
+                    nodes[squareSize * squareSize + i * squareSize + j] = Node.Make
+                        (
+                            value: Mf.MfSin((j * waviness) / squareSize),
+                            groupIndex: squareSize * squareSize + i * squareSize + j
+                        );
+                }
+            }
+
+            return new NodeGroupImpl
+                (
+                    nodes: nodes,
+                    nodeCount: squareSize * squareSize * 2
                 );
         }
 

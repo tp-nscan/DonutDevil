@@ -145,9 +145,6 @@ namespace MathLib.NumericTypes
             };
         }
 
-
-
-
         public static int[] CornersOnDt(this int index, int width, int height)
         {
             var row = index / width;

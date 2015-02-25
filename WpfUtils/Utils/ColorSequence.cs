@@ -134,7 +134,7 @@ namespace WpfUtils.Utils
 
         public static Color ToUnitColor(this IColorSequence colorSequence, double value)
         {
-            return colorSequence.Colors[(int)((value + 0.5) * 0.999 * colorSequence.Colors.Count)];
+            return colorSequence.Colors[(int)(value * 0.999 * colorSequence.Colors.Count)];
         }
 
         public static Color ToUnitColor2D(this IColorSequence colorSequence, double valueX, double valueY, int colorWidth)
