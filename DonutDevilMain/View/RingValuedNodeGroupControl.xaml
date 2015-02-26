@@ -58,7 +58,9 @@
 
             <common:SliderControl Margin="0,5" DataContext="{Binding StepSizeSliderVm}"/>
 
-            <common:SliderControl Margin="0,5" DataContext="{Binding RangeSliderVm}"/>
+            <common:SliderControl Margin="0,5" DataContext="{Binding AlphaSliderVm}"/>
+            
+            <common:SliderControl Margin="0,5" DataContext="{Binding BetaSliderVm}"/>
 
             <common:ColorLegendControl DataContext="{Binding HistogramVm}" Width="350" Height="50" Margin="0,5" VerticalAlignment="Top"/>
 

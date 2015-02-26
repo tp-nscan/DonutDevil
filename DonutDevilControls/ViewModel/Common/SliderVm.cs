@@ -60,6 +60,7 @@ namespace DonutDevilControls.ViewModel.Common
             set
             {
                 _value = value;
+                IsDirty = true;
                 OnPropertyChanged("Value");
                 OnPropertyChanged("LegendValue");
             }
@@ -70,5 +71,7 @@ namespace DonutDevilControls.ViewModel.Common
         {
             get { return _tickFrequency; }
         }
+
+        public bool IsDirty { get; set; }
     }
 }

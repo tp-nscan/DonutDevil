@@ -9,8 +9,9 @@ namespace NodeLib
         public static INodeGroupUpdater ForSquareTorus
             (
                 float gain, 
-                float step, 
-                float range, 
+                float step,
+                float alpha,
+                float beta,
                 int squareSize, 
                 bool use8Way
             )
@@ -18,422 +19,280 @@ namespace NodeLib
             return new NodeGroupUpdaterImpl(
                 Enumerable.Range(0, squareSize * squareSize)
                           .Select(n2 =>
-                              AsymmetricRingFunc3
-                                  (
-                                      position: n2,
-                                      step: step,
-                                      range: range,
-                                      squareSize: squareSize,
-                                      use8Way: use8Way
-                                  )
+                                  RingFSquareBiasFunc
+                                      (
+                                          torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
+                                          step: step,
+                                          hBias: alpha,
+                                          vBias: beta
+                                      )
                               )
                           .ToList()
                 );
         }
 
-        static Func<INodeGroup, INode[]> StandardRingFunc(
-                int position, float step, float range, int squareSize, bool use8Way)
+        static Func<INodeGroup, INode[]> PerimeterFunc(
+              TorusNbrhd torusNbrhd,
+              float step
+            )
         {
-            if (use8Way)
-            {
-                return (ng) =>
-                {
-                    var orig = ng.Values[position];
+             return (ng) =>
+             {
+                 var cOne = ng.Values[torusNbrhd.CC];
 
-                    var res =
-                        position.PerimeterOnDt(squareSize, squareSize)
-                            .Select(i => ng.Values[i])
-                            .Sum(n => orig.MfDeltaAsFloat(n) * step);
+                 var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UF]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UR]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LF]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LR]) * step;
 
-                    return new[]
+            return new[]
                     {
                         Node.Make
                             (
-                                value: (orig + res).AsMf(),
-                                groupIndex: position
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhd.CC
                             )
                     };
-                };
-            }
+             };
+
+        }
+
+
+
+
+
+
+        static Func<INodeGroup, INode[]> SidesFunc(
+              TorusNbrhd torusNbrhd,
+              float step
+            )
+        {
             return (ng) =>
             {
-                var orig = ng.Values[position];
+                var cOne = ng.Values[torusNbrhd.CC];
 
-                var res =
-                    position.SidesOnDt(squareSize, squareSize)
-                        .Select(i => ng.Values[i])
-                        .Sum(n => orig.MfDeltaAsFloat(n) * step);
+                var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * step;
 
                 return new[]
                     {
                         Node.Make
                             (
-                                value: (orig + res).AsMf(),
-                                groupIndex: position
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhd.CC
                             )
                     };
             };
+
         }
 
 
-        static Func<INodeGroup, INode[]> AsymmetricRingFunc2(
-        int position, float step, float range, int squareSize, bool use8Way)
+        static Func<INodeGroup, INode[]> StarFunc(
+          TorusNbrhd torusNbrhd,
+          float step,
+          float vBias
+        )
         {
-            var s2 =
-                position.Sides2OnDt(squareSize, squareSize);
-
-            var baseInc = step * 0.5f;
-            var hiInc = step * (0.75f + range);
-            var lowInc = step * (0.25f - range);
-
-            if (use8Way)
-            {
-                return (ng) =>
-                {
-                    var orig = ng.Values[position];
-                    var nbrs =
-                        s2.Select(i => ng.Values[i]).ToArray();
+            var hStep = step*(1.0f - vBias*2);
+            var vStep = step * (vBias * 2 - 1.0f);
 
 
-                    var res2 =
-                            orig.MfDeltaAsFloat(nbrs[0]) * hiInc +
-                            orig.MfDeltaAsFloat(nbrs[1]) * lowInc +
-                            orig.MfDeltaAsFloat(nbrs[2]) * baseInc +
-                            orig.MfDeltaAsFloat(nbrs[3]) * baseInc +
-                            orig.MfDeltaAsFloat(nbrs[4]) * hiInc +
-                            orig.MfDeltaAsFloat(nbrs[5]) * lowInc +
-                            orig.MfDeltaAsFloat(nbrs[6]) * baseInc +
-                            orig.MfDeltaAsFloat(nbrs[7]) * baseInc;
-
-                    return new[]
-                    {
-                        Node.Make
-                            (
-                                value: (orig + res2).AsMf(),
-                                groupIndex: position
-                            )
-                    };
-                };
-            }
             return (ng) =>
             {
-                var orig = ng.Values[position];
+                var cOne = ng.Values[torusNbrhd.CC];
 
-                var nbrs =
-                    s2.Select(i => ng.Values[i]).ToArray();
+                var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UF]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UR]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LF]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LR]) * step;
 
-
-                var res2 =
-                        orig.MfDeltaAsFloat(nbrs[0]) * baseInc +
-                        orig.MfDeltaAsFloat(nbrs[1]) * baseInc +
-                        orig.MfDeltaAsFloat(nbrs[2]) * hiInc +
-                        orig.MfDeltaAsFloat(nbrs[3]) * lowInc +
-                        orig.MfDeltaAsFloat(nbrs[4]) * baseInc +
-                        orig.MfDeltaAsFloat(nbrs[5]) * baseInc +
-                        orig.MfDeltaAsFloat(nbrs[6]) * hiInc +
-                        orig.MfDeltaAsFloat(nbrs[7]) * lowInc 
-
-
-                           ;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CFf]) * hStep;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CRr]) * hStep;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UuC]) * vStep;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LlC]) * vStep;
 
                 return new[]
                     {
                         Node.Make
                             (
-                                value: (orig + res2).AsMf(),
-                                groupIndex: position
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhd.CC
                             )
                     };
             };
+
         }
 
+        static Func<INodeGroup, INode[]> LongStarFunc(
+              TorusNbrhd torusNbrhd,
+              float step,
+              float hBias,
+              float vBias
 
-        static Func<INodeGroup, INode[]> AsymmetricRingFunc3(
-                int position, float step, float range, int squareSize, bool use8Way)
+            )
         {
-            var baseInc = step * 0.5f;
-            var halfInc = baseInc * 0.5f;
-            var hiInc = step * (halfInc + range);
-            var lowInc = step * (halfInc - range);
 
-            var s2 =
-                position.Sides3OnDt(squareSize, squareSize);
+            var hInnerStep = step * (hBias - 0.5f);
+            var hOuterStep = step * (hBias - 0.5f);
 
-            if (use8Way)
-            {
-                return (ng) =>
-                {
-                    var orig = ng.Values[position];
-                    var nbrs =
-                        s2.Select(i => ng.Values[i]).ToArray();
+            var vInnerStep = step * (vBias - 0.5f);
+            var vOuterStep = step * (vBias - 0.5f);
 
 
-                    var res2 =
-                        orig.MfDeltaAsFloat(nbrs[0]) * baseInc +
-                        orig.MfDeltaAsFloat(nbrs[1]) * halfInc +
-                        orig.MfDeltaAsFloat(nbrs[2]) * halfInc +
 
-
-                        orig.MfDeltaAsFloat(nbrs[3]) * hiInc +
-                        orig.MfDeltaAsFloat(nbrs[4]) * baseInc +
-                        orig.MfDeltaAsFloat(nbrs[5]) * lowInc +
-
-
-                        orig.MfDeltaAsFloat(nbrs[6]) * baseInc +
-                        orig.MfDeltaAsFloat(nbrs[7]) * halfInc +
-                        orig.MfDeltaAsFloat(nbrs[8]) * halfInc +
-
-
-                        orig.MfDeltaAsFloat(nbrs[9]) * hiInc +
-                        orig.MfDeltaAsFloat(nbrs[10]) * baseInc +
-                        orig.MfDeltaAsFloat(nbrs[11]) * lowInc 
-
-                               ;
-
-                    return new[]
-                    {
-                        Node.Make
-                            (
-                                value: (orig + res2).AsMf(),
-                                groupIndex: position
-                            )
-                    };
-                };
-            }
             return (ng) =>
             {
-                var orig = ng.Values[position];
+                var cOne = ng.Values[torusNbrhd.CC];
 
-                var nbrs =
-                    s2.Select(i => ng.Values[i]).ToArray();
+                var 
+                resOne  = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UF]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UR]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LF]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LR]) * step;
 
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CFf])  * hInnerStep;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CFff]) * hOuterStep;
 
-                var res2 =
-                    orig.MfDeltaAsFloat(nbrs[0]) * hiInc +
-                    orig.MfDeltaAsFloat(nbrs[1]) * baseInc +
-                    orig.MfDeltaAsFloat(nbrs[2]) * lowInc +
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CRr])  * hInnerStep;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CRrr]) * hOuterStep;
 
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UuC]) * vInnerStep;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UuuC]) * vOuterStep;
 
-                    orig.MfDeltaAsFloat(nbrs[3]) * baseInc +
-                    orig.MfDeltaAsFloat(nbrs[4]) * halfInc +
-                    orig.MfDeltaAsFloat(nbrs[5]) * halfInc +
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LlC]) * vInnerStep;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LllC]) * vOuterStep;
 
-
-                    orig.MfDeltaAsFloat(nbrs[6]) * hiInc +
-                    orig.MfDeltaAsFloat(nbrs[7]) * baseInc +
-                    orig.MfDeltaAsFloat(nbrs[8]) * lowInc +
-
-                    orig.MfDeltaAsFloat(nbrs[9]) * baseInc +
-                    orig.MfDeltaAsFloat(nbrs[10]) * halfInc +
-                    orig.MfDeltaAsFloat(nbrs[11]) * halfInc
-
-
-                           ;
 
                 return new[]
                     {
                         Node.Make
                             (
-                                value: (orig + res2).AsMf(),
-                                groupIndex: position
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhd.CC
                             )
                     };
             };
+
         }
 
 
-        static Func<INodeGroup, INode[]> AsymmetricRingFunc3p(
-        int position, float step, float range, int squareSize, bool use8Way)
+        static Func<INodeGroup, INode[]> RingFSquareBiasFunc(
+          TorusNbrhd torusNbrhd,
+          float step,
+          float hBias,
+          float vBias
+
+        )
         {
-            var s2 =
-                position.Sides3OnDt(squareSize, squareSize);
+            var adjH = (hBias - 0.5f);
+            var adjV = (vBias - 0.5f);
 
-            if (use8Way)
-            {
+            var hv = step * (1.0f - adjH - adjV);
+            var h = step *  (1.0f - adjH       );
+            var hV = step * (1.0f - adjH + adjV);
+            var v = step *  (1.0f        - adjV);
+            var V = step *  (1.0f        + adjV);
+            var Hv = step * (1.0f + adjH - adjV);
+            var H = step *  (1.0f + adjH       );
+            var HV = step * (1.0f + adjH + adjV);
 
-
-
-                return (ng) =>
-                {
-                    var orig = ng.Values[position];
-                    var nbrs =
-                        s2.Select(i => ng.Values[i]).ToArray();
-
-
-                    var res2 =
-                        orig.MfDeltaAsFloat(nbrs[0]) * step * 0.5f +
-                        orig.MfDeltaAsFloat(nbrs[1]) * step * 0.25f +
-                        orig.MfDeltaAsFloat(nbrs[2]) * step * 0.25f +
-
-
-                        orig.MfDeltaAsFloat(nbrs[3]) * step * 1.0f +
-                        orig.MfDeltaAsFloat(nbrs[4]) * step * -0.5f +
-                        orig.MfDeltaAsFloat(nbrs[5]) * step * 0.5f +
-
-
-                        orig.MfDeltaAsFloat(nbrs[6]) * step * 0.5f +
-                        orig.MfDeltaAsFloat(nbrs[7]) * step * 0.25f +
-                        orig.MfDeltaAsFloat(nbrs[8]) * step * 0.25f +
-
-
-                        orig.MfDeltaAsFloat(nbrs[9]) * step * 1.0f +
-                        orig.MfDeltaAsFloat(nbrs[10]) * step * 0.5f +
-                        orig.MfDeltaAsFloat(nbrs[11]) * step * -0.5f
-
-                               ;
-
-                    return new[]
-                    {
-                        Node.Make
-                            (
-                                value: (orig + res2).AsMf(),
-                                groupIndex: position
-                            )
-                    };
-                };
-            }
             return (ng) =>
             {
-                var orig = ng.Values[position];
+                var cOne = ng.Values[torusNbrhd.CC];
 
-                var nbrs =
-                    s2.Select(i => ng.Values[i]).ToArray();
+                var
+                resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UF]) * hv;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * v;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UR]) * Hv;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * h;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * H;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LF]) * hV;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * V;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LR]) * HV;
 
-
-                var res2 =
-                    orig.MfDeltaAsFloat(nbrs[0]) * step * 1.0f +
-                    orig.MfDeltaAsFloat(nbrs[1]) * step * 0.5f +
-                    orig.MfDeltaAsFloat(nbrs[2]) * step * -0.5f +
-
-
-                    orig.MfDeltaAsFloat(nbrs[3]) * step * 0.5f +
-                    orig.MfDeltaAsFloat(nbrs[4]) * step * 0.25f +
-                    orig.MfDeltaAsFloat(nbrs[5]) * step * 0.25f +
-
-
-                    orig.MfDeltaAsFloat(nbrs[6]) * step * 1.0f +
-                    orig.MfDeltaAsFloat(nbrs[7]) * step * -0.5f +
-                    orig.MfDeltaAsFloat(nbrs[8]) * step * 0.5f +
-
-                    orig.MfDeltaAsFloat(nbrs[9]) * step * 0.5f +
-                    orig.MfDeltaAsFloat(nbrs[10]) * step * 0.25f +
-                    orig.MfDeltaAsFloat(nbrs[11]) * step * 0.25f
-
-
-                           ;
 
                 return new[]
                     {
                         Node.Make
                             (
-                                value: (orig + res2).AsMf(),
-                                groupIndex: position
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhd.CC
                             )
                     };
             };
+
         }
 
 
-        static Func<INodeGroup, INode[]> AsymmetricRingFunc4p(
-                int position, float step, float range, int squareSize, bool use8Way)
+        static Func<INodeGroup, INode[]> BigRingFunc(
+              TorusNbrhd torusNbrhd,
+              float step,
+              float hBias,
+              float vBias
+
+        )
         {
-            var s2 =
-                position.Star3OnDt(squareSize, squareSize);
 
-            if (use8Way)
-            {
-                return (ng) =>
-                {
-                    var orig = ng.Values[position];
-                    var nbrs =
-                        s2.Select(i => ng.Values[i]).ToArray();
+            var hInnerStep = step * (hBias - 0.5f);
+            var hOuterStep = step * (hBias - 0.5f);
 
-
-                    var res2 =
-                        orig.MfDeltaAsFloat(nbrs[0]) * step * 0.5f +
-                        orig.MfDeltaAsFloat(nbrs[1]) * step * 0.25f +
-                        orig.MfDeltaAsFloat(nbrs[2]) * step * 0.25f +
-
-
-                        orig.MfDeltaAsFloat(nbrs[3]) * step * 1.0f +
-                        orig.MfDeltaAsFloat(nbrs[4]) * step * -1.0f +
-                        orig.MfDeltaAsFloat(nbrs[5]) * step * 1.0f +
-
-
-                        orig.MfDeltaAsFloat(nbrs[6]) * step * 0.5f +
-                        orig.MfDeltaAsFloat(nbrs[7]) * step * 0.25f +
-                        orig.MfDeltaAsFloat(nbrs[8]) * step * 0.25f +
-
-
-                        orig.MfDeltaAsFloat(nbrs[9]) * step * 1.0f +
-                        orig.MfDeltaAsFloat(nbrs[10]) * step * 1.0f +
-                        orig.MfDeltaAsFloat(nbrs[11]) * step * -1.0f +
+            var vInnerStep = step * (vBias - 0.5f);
+            var vOuterStep = step * (vBias - 0.5f);
 
 
 
-                        orig.MfDeltaAsFloat(nbrs[12]) * step * 1.0f +
-                        orig.MfDeltaAsFloat(nbrs[13]) * step * 1.0f +
-                        orig.MfDeltaAsFloat(nbrs[14]) * step * 1.0f +
-                        orig.MfDeltaAsFloat(nbrs[15]) * step * 1.0f
-
-                               ;
-
-                    return new[]
-                    {
-                        Node.Make
-                            (
-                                value: (orig + res2).AsMf(),
-                                groupIndex: position
-                            )
-                    };
-                };
-            }
             return (ng) =>
             {
-                var orig = ng.Values[position];
+                var cOne = ng.Values[torusNbrhd.CC];
 
-                var nbrs =
-                    s2.Select(i => ng.Values[i]).ToArray();
+                var
+                resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UF]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UR]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LF]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * step;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LR]) * step;
 
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CFf]) * hInnerStep;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CFff]) * hOuterStep;
 
-                var res2 =
-                    orig.MfDeltaAsFloat(nbrs[0]) * step * 1.0f +
-                    orig.MfDeltaAsFloat(nbrs[1]) * step * 0.5f +
-                    orig.MfDeltaAsFloat(nbrs[2]) * step * -0.5f +
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CRr]) * hInnerStep;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CRrr]) * hOuterStep;
 
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UuC]) * vInnerStep;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UuuC]) * vOuterStep;
 
-                    orig.MfDeltaAsFloat(nbrs[3]) * step * 0.5f +
-                    orig.MfDeltaAsFloat(nbrs[4]) * step * 0.25f +
-                    orig.MfDeltaAsFloat(nbrs[5]) * step * 0.25f +
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LlC]) * vInnerStep;
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LllC]) * vOuterStep;
 
-
-                    orig.MfDeltaAsFloat(nbrs[6]) * step * 1.0f +
-                    orig.MfDeltaAsFloat(nbrs[7]) * step * 0.5f +
-                    orig.MfDeltaAsFloat(nbrs[8]) * step * -0.5f +
-
-                    orig.MfDeltaAsFloat(nbrs[9]) * step * 0.5f +
-                    orig.MfDeltaAsFloat(nbrs[10]) * step * 0.25f +
-                    orig.MfDeltaAsFloat(nbrs[11]) * step * 0.25f +
-
-                    orig.MfDeltaAsFloat(nbrs[12]) * step * 1.0f +
-                    orig.MfDeltaAsFloat(nbrs[13]) * step * 1.0f +
-                    orig.MfDeltaAsFloat(nbrs[14]) * step * 1.0f +
-                    orig.MfDeltaAsFloat(nbrs[15]) * step * 1.0f
-
-                           ;
 
                 return new[]
                     {
                         Node.Make
                             (
-                                value: (orig + res2).AsMf(),
-                                groupIndex: position
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhd.CC
                             )
                     };
             };
+
         }
-
-
 
     }
 }

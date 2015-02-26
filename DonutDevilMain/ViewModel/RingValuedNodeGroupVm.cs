@@ -19,14 +19,15 @@ namespace DonutDevilMain.ViewModel
 {
     public class RingValuedNodeGroupVm : NotifyPropertyChanged
     {
-        private const int SquareSize = 100;
+        private const int SquareSize = 256;
         private const int Colorsteps = 512;
         private const int HistogramBins = 100;
 
 
         public RingValuedNodeGroupVm()
         {
-            _rangeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.02, "0.00") {Title = "Range"};
+            _alphaSliderVm = new SliderVm(RealInterval.Make(0, 1.0), 0.02, "0.00") {Title = "Alpha"};
+            _betaSliderVm = new SliderVm(RealInterval.Make(0, 1.0), 0.02, "0.00") { Title = "Beta" };
             _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
             InitializeRun();
         }
@@ -45,9 +46,24 @@ namespace DonutDevilMain.ViewModel
         private INodeGroupUpdater _nodeGroupUpdater;
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
         private bool _isRunning;
 
+        public bool IsDirty
+        {
+            get { return _stepSizeSliderVm.IsDirty || _alphaSliderVm.IsDirty || _betaSliderVm.IsDirty; }
+
+        }
+
+        public void Clean()
+        {
+            _stepSizeSliderVm.IsDirty = false;
+            _alphaSliderVm.IsDirty = false;
+            _betaSliderVm.IsDirty = false;
+        }
+
         #endregion
+
 
         #region UpdateGridCommand
 
@@ -268,18 +284,25 @@ namespace DonutDevilMain.ViewModel
 
         void ResetNodeGroupUpdaters()
         {
+            if (!IsDirty)
+                return;
+
             _nodeGroupUpdater = NodeGroupUpdaterRing.ForSquareTorus
             (
                 gain: 0.095f,
                 step: (float)StepSizeSliderVm.Value,
                 squareSize: SquareSize,
-                range: (float)RangeSliderVm.Value,
+                alpha: (float)AlphaSliderVm.Value,
+                beta: (float)BetaSliderVm.Value,
                 use8Way: Use8Way
             );
+
+            Clean();
         }
 
 
         #endregion
+
 
         #region Binding variables
 
@@ -344,10 +367,10 @@ namespace DonutDevilMain.ViewModel
             }
         }
 
-        private readonly SliderVm _rangeSliderVm;
-        public SliderVm RangeSliderVm
+        private readonly SliderVm _alphaSliderVm;
+        public SliderVm AlphaSliderVm
         {
-            get { return _rangeSliderVm; }
+            get { return _alphaSliderVm; }
         }
 
         private readonly SliderVm _stepSizeSliderVm;
@@ -356,18 +379,11 @@ namespace DonutDevilMain.ViewModel
             get { return _stepSizeSliderVm; }
         }
 
-        private readonly SliderVm _horizontalBiasSliderVm;
-        public SliderVm HorizontalBiasSliderVm
+        private readonly SliderVm _betaSliderVm;
+        public SliderVm BetaSliderVm
         {
-            get { return _horizontalBiasSliderVm; }
+            get { return _betaSliderVm; }
         }
-
-        private readonly SliderVm _verticalBiasSliderVm;
-        public SliderVm VerticalBiasSliderVm
-        {
-            get { return _verticalBiasSliderVm; }
-        }
-
 
         #endregion
     }

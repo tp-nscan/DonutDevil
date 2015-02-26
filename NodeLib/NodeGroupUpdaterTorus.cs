@@ -136,7 +136,8 @@ namespace NodeLib
          static Func<INodeGroup, INode[]> DualAsymRingFunc(
               TorusNbrhd torusNbrhdOne,
               TorusNbrhd torusNbrhdTwo,
-              float step)
+              float step
+             )
          {
              return (ng) =>
              {
@@ -147,24 +148,27 @@ namespace NodeLib
 
 
 
-                 var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UC]) * step;
-                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CR]) * step;
-                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LC]) * step;
+                 var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UF]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UC]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UR]) * step;
                  resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CF]) * step;
                  resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CR]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LF]) * step;
                  resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LC]) * step;
-                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CF]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LR]) * step;
 
 
 
 
 
-                 var resTwo = cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UC]) * step;
-                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.CR]) * step;
-                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LC]) * step;
-                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.CF]) * step;
-
-
+                 var resTwo = cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UF]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UC]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UR]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CF]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CR]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LF]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LC]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LR]) * step;
 
 
                  return new[]
