@@ -69,6 +69,14 @@ namespace NodeLib
         {
             return nodeGroup.Values.Select(Node.Make);
         }
+
+        public static double Activity(this INodeGroup lhs, INodeGroup rhs)
+        {
+            return 
+                Enumerable.Range(0, lhs.Values.Count).Average(
+                        i => lhs.Values[i].MfAbsDeltaAsFloat(rhs.Values[i])
+                    );
+        }
     }
 
     public class NodeGroupImpl : INodeGroup

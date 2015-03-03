@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using MathLib;
 using MathLib.NumericTypes;
 
 namespace NodeLib
@@ -7,89 +8,111 @@ namespace NodeLib
      public static class NodeGroupUpdaterTorus
     {
          public static INodeGroupUpdater ForSquareTorus
-             (
-                 float gain,
-                 float step,
-                 float range,
-                 int squareSize,
-                 bool use8Way
-             )
+        (
+            float gain,
+            float step,
+            float alpha,
+            float beta,
+            int squareSize,
+            bool use8Way
+        )
          {
              if (use8Way)
              {
-                 return new NodeGroupUpdaterImpl
-                 (
-                    Enumerable.Range(0, squareSize * squareSize)
-                              .Select(n2 =>
-                                  DualAsymRingFunc
-                                      (
-                                          torusNbrhdOne: n2.ToTorusNbrs(squareSize, squareSize),
-                                          torusNbrhdTwo: n2.ToTorusNbrs(squareSize, squareSize, squareSize * squareSize),
-                                          step: step * 15.0f
-                                      )
-                                  )
-                              .ToList()
-                 );
+                 return null;
              }
+             
+
              return new NodeGroupUpdaterImpl
              (
                  Enumerable.Range(0, squareSize * squareSize)
                            .Select(n2 =>
-                               DualRingFunc
+                               Ring1UsingPerimeterWithRotationalBias
                                    (
-                                       torusNbrhdOne: n2.ToTorusNbrs(squareSize,squareSize),
-                                       torusNbrhdTwo: n2.ToTorusNbrs(squareSize, squareSize, squareSize * squareSize),
-                                       step: step
+                                       squareSize:squareSize,
+                                       torusNbrhdOne: n2.ToTorusNbrs(squareSize, squareSize),
+                                       alpha: alpha,
+                                       step: step * 1.0f,
+                                       beta: beta
                                    )
                                )
                            .ToList()
               );
+             //return new NodeGroupUpdaterImpl
+             //(
+             //    Enumerable.Range(0, squareSize * squareSize)
+             //              .Select(n2 =>
+             //                  Ring2UsingPerimeterTv
+             //                      (
+             //                          squareSize:squareSize,
+             //                          alpha: alpha * 3.0f,
+             //                          torusNbrhdOne: n2.ToTorusNbrs(squareSize, squareSize),
+             //                          torusNbrhdTwo: n2.ToTorusNbrs(squareSize, squareSize, squareSize * squareSize),
+             //                          step: step * 1.0f
+             //                      )
+             //                  )
+             //              .ToList()
+             // );
          }
 
 
-         public static INodeGroupUpdater ForSquareTorusOld
-             (
-                 float gain, 
-                 float step, 
-                 float range, 
-                 int squareSize, 
-                 bool use8Way
-             )
-         {
-             return new NodeGroupUpdaterImpl
-             (
-                 Enumerable.Range(0, squareSize * squareSize)
-                           .Select(n2 =>
-                               DualRingFuncOld
-                                   (
-                                       position: n2,
-                                       offset: 0,
-                                       step: step,
-                                       range: range,
-                                       squareSize: squareSize,
-                                       use8Way: use8Way
-                                   )
-                               )
-                  .Concat( 
-                        Enumerable.Range(0, squareSize * squareSize)
-                           .Select(n2 =>
-                               DualRingFuncOld
-                                   (
-                                       position: n2,
-                                       offset: squareSize * squareSize,
-                                       step: step,
-                                       range: range,
-                                       squareSize: squareSize,
-                                       use8Way: use8Way
-                                   )
-                               )
-                  )
-                  .ToList()
-              );
-         }
+         
+        //public static INodeGroupUpdater ForSquareTorus
+        //(
+        //    float gain,
+        //    float step,
+        //    float alpha,
+        //    float beta,
+        //    int squareSize,
+        //    bool use8Way
+        //)
+        //     {
+        //         if (use8Way)
+        //         {
+        //             return new NodeGroupUpdaterImpl
+        //             (
+        //                Enumerable.Range(0, squareSize * squareSize)
+        //                          .Select(n2 =>
+        //                              Ring3UsingPerimeterWithRotationalBiasFunc
+        //                                  (
+        //                                   torusNbrhdOne: n2.ToTorusNbrs(squareSize, squareSize),
+        //                                   torusNbrhdTwo: n2.ToTorusNbrs(squareSize, squareSize, squareSize * squareSize),
+        //                                   torusNbrhdThree: n2.ToTorusNbrs(squareSize, squareSize, 2 * squareSize * squareSize),
+        //                                   step: step,
+        //                                   alpha: alpha,
+        //                                   beta: beta
+        //                                  )
+        //                              )
+        //                          .ToList()
+        //             );
+        //         }
+
+        //         return new NodeGroupUpdaterImpl
+        //         (
+        //             Enumerable.Range(0, squareSize * squareSize)
+        //                       .Select(n2 =>
+        //                           Ring4UsingPerimeterWithRotationalBiasFunc
+        //                               (
+        //                                   torusNbrhdOne: n2.ToTorusNbrs(squareSize, squareSize),
+        //                                   torusNbrhdTwo: n2.ToTorusNbrs(squareSize, squareSize, squareSize * squareSize),
+        //                                   torusNbrhdThree: n2.ToTorusNbrs(squareSize, squareSize, 2 * squareSize * squareSize),
+        //                                   torusNbrhdFour: n2.ToTorusNbrs(squareSize, squareSize, 3 * squareSize * squareSize),
+        //                                   step: step,
+        //                                   alpha: alpha,
+        //                                   beta: beta
+        //                               )
+        //                           )
+        //                       .ToList()
+        //          );
+        //     }
 
 
-         static Func<INodeGroup, INode[]> DualRingFunc(
+
+
+         /// <summary>
+         ///  2-ring metric with sides nbhd
+         /// </summary>
+         static Func<INodeGroup, INode[]> Ring2UsingSides(
                TorusNbrhd torusNbrhdOne,
                TorusNbrhd torusNbrhdTwo,
                float step)
@@ -133,7 +156,11 @@ namespace NodeLib
 
          }
 
-         static Func<INodeGroup, INode[]> DualAsymRingFunc(
+
+         /// <summary>
+         ///  2-ring metric with perimeter nbhd
+         /// </summary>
+         static Func<INodeGroup, INode[]> Ring2UsingPerimeter(
               TorusNbrhd torusNbrhdOne,
               TorusNbrhd torusNbrhdTwo,
               float step
@@ -161,14 +188,14 @@ namespace NodeLib
 
 
 
-                 var resTwo = cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UF]) * step;
-                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UC]) * step;
-                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UR]) * step;
-                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CF]) * step;
-                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CR]) * step;
-                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LF]) * step;
-                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LC]) * step;
-                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LR]) * step;
+                 var resTwo = cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UF]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UC]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UR]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.CF]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.CR]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LF]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LC]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LR]) * step;
 
 
                  return new[]
@@ -190,24 +217,333 @@ namespace NodeLib
          }
 
 
+         /// <summary>
+         ///  2-ring metric with perimeter nbhd and rotational bias
+         /// </summary>
+         static Func<INodeGroup, INode[]> Ring1UsingPerimeterWithRotationalBias(
+              TorusNbrhd torusNbrhdOne,
+              int squareSize,
+              float step,
+              float alpha,
+              float beta
+             )
+         {
+             return (ng) =>
+             {
+
+                 var bias = torusNbrhdOne.CC/(float) (squareSize*squareSize);
+
+                 var cOne = ng.Values[torusNbrhdOne.CC];
+
+                 var biasesOne = NodeGroupUpdaterRing.RingRadialCosBiases(step: step, rBias: alpha, aBias: cOne);
+
+
+                 var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UF]) * biasesOne[7];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UC]) * biasesOne[0];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UR]) * biasesOne[1];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CF]) * biasesOne[6];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CR]) * biasesOne[2];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LF]) * biasesOne[5];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LC]) * biasesOne[4];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LR]) * biasesOne[3];
+
+                 resOne += (float)((SafeRandom.NextDouble() - 0.5f) * beta);
+
+                 return new[]
+                    {
+                        Node.Make
+                            (
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhdOne.CC
+                            )
+                    };
+             };
+
+         }
+
+
+
+         /// <summary>
+         ///  2-ring metric with perimeter nbhd and rotational bias
+         /// </summary>
+         static Func<INodeGroup, INode[]> Ring2UsingPerimeterWithRotationalBias(
+              TorusNbrhd torusNbrhdOne,
+              TorusNbrhd torusNbrhdTwo,
+              float step,
+              float alpha,
+              float beta
+             )
+         {
+             return (ng) =>
+             {
+
+
+                 var cOne = ng.Values[torusNbrhdOne.CC];
+                 var cTwo = ng.Values[torusNbrhdTwo.CC];
+
+
+                 var biasesOne = NodeGroupUpdaterRing.RingRadialCosBiases(step: step, rBias: alpha, aBias: cTwo);
+
+
+                 var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UF]) * biasesOne[7];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UC]) * biasesOne[0];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UR]) * biasesOne[1];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CF]) * biasesOne[6];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CR]) * biasesOne[2];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LF]) * biasesOne[5];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LC]) * biasesOne[4];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LR]) * biasesOne[3];
+
+                 resOne += (float)(( SafeRandom.NextDouble()- 0.5f) * beta);
+
+
+                 var biasesTwo = NodeGroupUpdaterRing.RingRadialSinBiases(step: step, rBias: alpha, aBias: cOne);
+
+                 var resTwo = cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UF]) * biasesTwo[7];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UC]) * biasesTwo[0];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UR]) * biasesTwo[1];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.CF]) * biasesTwo[6];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.CR]) * biasesTwo[2];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LF]) * biasesTwo[5];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LC]) * biasesTwo[4];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LR]) * biasesTwo[3];
+
+
+                 resTwo += (float)((SafeRandom.NextDouble() - 0.5f) * beta);
+
+                 return new[]
+                    {
+                        Node.Make
+                            (
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhdOne.CC
+                            ),
+
+                        Node.Make
+                            (
+                                value: (cTwo + resTwo).AsMf(),
+                                groupIndex: torusNbrhdTwo.CC
+                            )
+                    };
+             };
+
+         }
+
+
+         /// <summary>
+         ///  3-ring metric with perimeter nbhd and rotational bias
+         /// </summary>
+         static Func<INodeGroup, INode[]> Ring3UsingPerimeterWithRotationalBias(
+              TorusNbrhd torusNbrhdOne,
+              TorusNbrhd torusNbrhdTwo,
+              TorusNbrhd torusNbrhdThree,
+              float step,
+              float alpha,
+              float beta
+             )
+         {
+             return (ng) =>
+             {
+
+
+                 var cOne = ng.Values[torusNbrhdOne.CC];
+                 var cTwo = ng.Values[torusNbrhdTwo.CC];
+                 var cThree = ng.Values[torusNbrhdThree.CC];
+
+
+                 var biasesOne = NodeGroupUpdaterRing.RingRadialCosBiases(step: step, rBias: alpha, aBias: cTwo);
+
+
+                 var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UF]) * biasesOne[7];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UC]) * biasesOne[0];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UR]) * biasesOne[1];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CF]) * biasesOne[6];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CR]) * biasesOne[2];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LF]) * biasesOne[5];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LC]) * biasesOne[4];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LR]) * biasesOne[3];
+
+                 resOne += (float)((SafeRandom.NextDouble() - 0.5f) * beta);
+
+
+                 var biasesTwo = NodeGroupUpdaterRing.RingRadialSinBiases(step: step, rBias: alpha, aBias: cThree);
+
+                 var resTwo = cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UF]) * biasesTwo[7];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UC]) * biasesTwo[0];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UR]) * biasesTwo[1];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.CF]) * biasesTwo[6];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.CR]) * biasesTwo[2];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LF]) * biasesTwo[5];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LC]) * biasesTwo[4];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LR]) * biasesTwo[3];
+
+
+                 resTwo += (float)((SafeRandom.NextDouble() - 0.5f) * beta);
+
+
+
+                 var biasesThree = NodeGroupUpdaterRing.RingRadialSinBiases(step: step, rBias: alpha, aBias: cOne);
+
+                 var resThree = cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.UF]) * biasesThree[7];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.UC]) * biasesThree[0];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.UR]) * biasesThree[1];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.CF]) * biasesThree[6];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.CR]) * biasesThree[2];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.LF]) * biasesThree[5];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.LC]) * biasesThree[4];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.LR]) * biasesThree[3];
+
+
+                 resThree += (float)((SafeRandom.NextDouble() - 0.5f) * beta);
+
+
+                 return new[]
+                    {
+                        Node.Make
+                            (
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhdOne.CC
+                            ),
+
+                        Node.Make
+                            (
+                                value: (cTwo + resTwo).AsMf(),
+                                groupIndex: torusNbrhdTwo.CC
+                            ),
+
+                       Node.Make
+                            (
+                                value: (cThree + resThree).AsMf(),
+                                groupIndex: torusNbrhdThree.CC
+                            )
+                    };
+             };
+
+         }
+
+
+         /// <summary>
+         ///  4-ring metric with perimeter nbhd and rotational bias
+         /// </summary>
+         static Func<INodeGroup, INode[]> Ring4UsingPerimeterWithRotationalBias(
+              TorusNbrhd torusNbrhdOne,
+              TorusNbrhd torusNbrhdTwo,
+              TorusNbrhd torusNbrhdThree,
+              TorusNbrhd torusNbrhdFour,
+              float step,
+              float alpha,
+              float beta
+             )
+         {
+             return (ng) =>
+             {
+
+
+                 var cOne = ng.Values[torusNbrhdOne.CC];
+                 var cTwo = ng.Values[torusNbrhdTwo.CC];
+                 var cThree = ng.Values[torusNbrhdThree.CC];
+                 var cFour = ng.Values[torusNbrhdFour.CC];
+
+
+                 var biasesOne = NodeGroupUpdaterRing.RingRadialCosBiases(step: step, rBias: alpha, aBias: cTwo);
+
+
+                 var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UF]) * biasesOne[7];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UC]) * biasesOne[0];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UR]) * biasesOne[1];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CF]) * biasesOne[6];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CR]) * biasesOne[2];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LF]) * biasesOne[5];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LC]) * biasesOne[4];
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LR]) * biasesOne[3];
+
+                 resOne += (float)((SafeRandom.NextDouble() - 0.5f) * beta);
+
+
+                 var biasesTwo = NodeGroupUpdaterRing.RingRadialSinBiases(step: step, rBias: alpha, aBias: cThree);
+
+                 var resTwo = cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UF]) * biasesTwo[7];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UC]) * biasesTwo[0];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UR]) * biasesTwo[1];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.CF]) * biasesTwo[6];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.CR]) * biasesTwo[2];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LF]) * biasesTwo[5];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LC]) * biasesTwo[4];
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LR]) * biasesTwo[3];
+
+
+                 resTwo += (float)((SafeRandom.NextDouble() - 0.5f) * beta);
+
+
+
+                 var biasesThree = NodeGroupUpdaterRing.RingRadialSinBiases(step: step, rBias: alpha, aBias: cFour);
+
+                 var resThree = cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.UF]) * biasesThree[7];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.UC]) * biasesThree[0];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.UR]) * biasesThree[1];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.CF]) * biasesThree[6];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.CR]) * biasesThree[2];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.LF]) * biasesThree[5];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.LC]) * biasesThree[4];
+                 resThree += cThree.MfDeltaAsFloat(ng.Values[torusNbrhdThree.LR]) * biasesThree[3];
+
+
+                 resThree += (float)((SafeRandom.NextDouble() - 0.5f) * beta);
+
+
+                 var biasesFour = NodeGroupUpdaterRing.RingRadialSinBiases(step: step, rBias: alpha, aBias: cOne);
+
+                 var resFour = cFour.MfDeltaAsFloat(ng.Values[torusNbrhdFour.UF]) * biasesFour[7];
+                 resFour += cFour.MfDeltaAsFloat(ng.Values[torusNbrhdFour.UC]) * biasesFour[0];
+                 resFour += cFour.MfDeltaAsFloat(ng.Values[torusNbrhdFour.UR]) * biasesFour[1];
+                 resFour += cFour.MfDeltaAsFloat(ng.Values[torusNbrhdFour.CF]) * biasesFour[6];
+                 resFour += cFour.MfDeltaAsFloat(ng.Values[torusNbrhdFour.CR]) * biasesFour[2];
+                 resFour += cFour.MfDeltaAsFloat(ng.Values[torusNbrhdFour.LF]) * biasesFour[5];
+                 resFour += cFour.MfDeltaAsFloat(ng.Values[torusNbrhdFour.LC]) * biasesFour[4];
+                 resFour += cFour.MfDeltaAsFloat(ng.Values[torusNbrhdFour.LR]) * biasesFour[3];
+
+                 resFour += (float)((SafeRandom.NextDouble() - 0.5f) * beta);
+
+
+
+                 return new[]
+                    {
+                        Node.Make
+                            (
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhdOne.CC
+                            ),
+
+                        Node.Make
+                            (
+                                value: (cTwo + resTwo).AsMf(),
+                                groupIndex: torusNbrhdTwo.CC
+                            ),
+
+                       Node.Make
+                            (
+                                value: (cThree + resThree).AsMf(),
+                                groupIndex: torusNbrhdThree.CC
+                            ),
+
+                       Node.Make
+                            (
+                                value: (cFour + resFour).AsMf(),
+                                groupIndex: torusNbrhdFour.CC
+                            )
+                    };
+             };
+
+         }
 
 
 
 
+         /// <summary>
+         ///  Torus euclidean metric with sides nbhd
+         /// </summary>
 
-
-
-
-
-
-
-
-
-
-
-
-
-         static Func<INodeGroup, INode[]> TorusFunc(
+         static Func<INodeGroup, INode[]> EuclidSides(
                TorusNbrhd torusNbrhdOne,
                TorusNbrhd torusNbrhdTwo,
                float step)
@@ -256,7 +592,10 @@ namespace NodeLib
          }
 
 
-         static Func<INodeGroup, INode[]> TorusFuncP(
+         /// <summary>
+         ///  Torus euclidean metric with perimeter nbhd
+         /// </summary>
+         static Func<INodeGroup, INode[]> EuclidPerimeter(
               TorusNbrhd torusNbrhdOne,
               TorusNbrhd torusNbrhdTwo,
               float step)
@@ -315,21 +654,18 @@ namespace NodeLib
          }
 
 
-
-         static Func<INodeGroup, INode[]> TorusFuncP2(
+         /// <summary>
+         ///  Torus euclidean metric with star nbhd
+         /// </summary>
+         static Func<INodeGroup, INode[]> EuclidStar(
               TorusNbrhd torusNbrhdOne,
               TorusNbrhd torusNbrhdTwo,
               float step)
          {
              return (ng) =>
              {
-
-
                  var cOne = ng.Values[torusNbrhdOne.CC];
                  var cTwo = ng.Values[torusNbrhdTwo.CC];
-
-
-
 
 
                  var dUuC = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.UuC], ng.Values[torusNbrhdTwo.UuC]);
@@ -362,7 +698,6 @@ namespace NodeLib
                  resOne += dCFf[0] * step * dCFf[2];
 
 
-
                  var resTwo = dUF[1] * step * dUF[2];
                  resTwo += dUC[1] * step * dUC[2];
                  resTwo += dUR[1] * step * dUR[2];
@@ -375,9 +710,6 @@ namespace NodeLib
                  resTwo += dCRr[1] * step * dCRr[2];
                  resTwo += dLlC[1] * step * dLlC[2];
                  resTwo += dCFf[1] * step * dCFf[2];
-
-
-
 
 
                  return new[]
@@ -397,65 +729,293 @@ namespace NodeLib
              };
 
          }
-         static Func<INodeGroup, INode[]> DualRingFuncOld(
-                int position, 
-                int offset,
-                float step, 
-                float range, 
-                int squareSize, 
-                bool use8Way)
+
+
+
+         /// <summary>
+         ///  Torus euclidean metric with star nbhd
+         /// </summary>
+         static Func<INodeGroup, INode[]> EuclidFuncRadius2Perimeter(
+              TorusNbrhd torusNbrhdOne,
+              TorusNbrhd torusNbrhdTwo,
+              float step)
          {
-             var s2 =
-                 position.Sides2OnDt(squareSize, squareSize)
-                     .Select(i => i + offset);
-
-             var p2 =
-                position.PerimeterOnDt(squareSize, squareSize)
-                     .Select(i => i + offset);
-
-
-             if (use8Way)
-             {
-                 return (ng) =>
-                 {
-                     var orig = ng.Values[position];
-
-                     var res =
-                           p2.Select(i => ng.Values[i])
-                             .Sum(n => orig.MfDeltaAsFloat(n) * step);
-
-                     return new[]
-                    {
-                        Node.Make
-                            (
-                                value: (orig + res).AsMf(),
-                                groupIndex: position + offset
-                            )
-                    };
-                 };
-             }
              return (ng) =>
              {
-                 var orig = ng.Values[position];
+                 var cOne = ng.Values[torusNbrhdOne.CC];
+                 var cTwo = ng.Values[torusNbrhdTwo.CC];
 
-                 var res =
-                       s2.Select(i => ng.Values[i])
-                         .Sum(n => orig.MfDeltaAsFloat(n) * step);
+
+                 var dUuFf = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.UuFf], ng.Values[torusNbrhdTwo.UuFf]);
+                 var dUuF = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.UuF], ng.Values[torusNbrhdTwo.UuF]);
+                 var dUuC = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.UuC], ng.Values[torusNbrhdTwo.UuC]);
+                 var dUuR = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.UuR], ng.Values[torusNbrhdTwo.UuR]);
+                 var dUuRr = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.UuRr], ng.Values[torusNbrhdTwo.UuRr]);
+
+                 var dLlFf = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.LlFf], ng.Values[torusNbrhdTwo.LlFf]);
+                 var dLlF = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.LlF], ng.Values[torusNbrhdTwo.LlF]);
+                 var dLlC = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.LlC], ng.Values[torusNbrhdTwo.LlC]);
+                 var dLlR = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.LlR], ng.Values[torusNbrhdTwo.LlR]);
+                 var dLlRr = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.LlRr], ng.Values[torusNbrhdTwo.LlRr]);
+
+
+                 var dUFf = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.UFf], ng.Values[torusNbrhdTwo.UFf]);
+                 var dCFf = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.CFf], ng.Values[torusNbrhdTwo.CFf]);
+                 var dLFf = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.LFf], ng.Values[torusNbrhdTwo.LFf]);
+
+                 var dURr = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.URr], ng.Values[torusNbrhdTwo.URr]);
+                 var dCRr = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.CRr], ng.Values[torusNbrhdTwo.CRr]);
+                 var dLRr = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.LRr], ng.Values[torusNbrhdTwo.LRr]);
+
+
+
+
+                 var dUF = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.UF], ng.Values[torusNbrhdTwo.UF]);
+                 var dUC = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.UC], ng.Values[torusNbrhdTwo.UC]);
+                 var dUR = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.UR], ng.Values[torusNbrhdTwo.UR]);
+                 var dCF = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.CF], ng.Values[torusNbrhdTwo.CF]);
+                 var dCR = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.CR], ng.Values[torusNbrhdTwo.CR]);
+                 var dLF = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.LF], ng.Values[torusNbrhdTwo.LF]);
+                 var dLC = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.LC], ng.Values[torusNbrhdTwo.LC]);
+                 var dLR = Mf2.VDiff(cOne, cTwo, ng.Values[torusNbrhdOne.LR], ng.Values[torusNbrhdTwo.LR]);
+
+
+                 var 
+                     resOne =  dUF[0] * step * dUF[2];
+                     resOne += dUC[0] * step * dUC[2];
+                     resOne += dUR[0] * step * dUR[2];
+                     resOne += dCF[0] * step * dCF[2];
+                     resOne += dCR[0] * step * dCR[2];
+                     resOne += dLF[0] * step * dLF[2];
+                     resOne += dLC[0] * step * dLC[2];
+                     resOne += dLR[0] * step * dLR[2];
+
+                     resOne += dUuFf[0] * step * dUuFf[2];
+                     resOne += dUuF[0] * step * dUuF[2];
+                     resOne += dUuC[0] * step * dUuC[2];
+                     resOne += dUuR[0] * step * dUuR[2];
+                     resOne += dUuRr[0] * step * dUuRr[2];
+
+                     resOne += dLlFf[0] * step * dLlFf[2];
+                     resOne += dLlF[0] * step * dLlF[2];
+                     resOne += dLlC[0] * step * dLlC[2];
+                     resOne += dLlR[0] * step * dLlR[2];
+                     resOne += dLlRr[0] * step * dLlRr[2];
+
+                     resOne += dUFf[0] * step * dUFf[2];
+                     resOne += dCFf[0] * step * dCFf[2];
+                     resOne += dLFf[0] * step * dLFf[2];
+
+                     resOne += dURr[0] * step * dURr[2];
+                     resOne += dCRr[0] * step * dCRr[2];
+                     resOne += dLRr[0] * step * dLRr[2];
+
+
+
+                 var 
+                     resTwo =  dUF[1] * step * dUF[2];
+                     resTwo += dUC[1] * step * dUC[2];
+                     resTwo += dUR[1] * step * dUR[2];
+                     resTwo += dCF[1] * step * dCF[2];
+                     resTwo += dCR[1] * step * dCR[2];
+                     resTwo += dLF[1] * step * dLF[2];
+                     resTwo += dLC[1] * step * dLC[2];
+                     resTwo += dLR[1] * step * dLR[2];
+
+                     resTwo += dUuFf[1] * step * dUuFf[2];
+                     resTwo += dUuF[1] * step * dUuF[2];
+                     resTwo += dUuC[1] * step * dUuC[2];
+                     resTwo += dUuR[1] * step * dUuR[2];
+                     resTwo += dUuRr[1] * step * dUuRr[2];
+
+                     resTwo += dLlFf[1] * step * dLlFf[2];
+                     resTwo += dLlF[1] * step * dLlF[2];
+                     resTwo += dLlC[1] * step * dLlC[2];
+                     resTwo += dLlR[1] * step * dLlR[2];
+                     resTwo += dLlRr[1] * step * dLlRr[2];
+
+                     resTwo += dUFf[1] * step * dUFf[2];
+                     resTwo += dCFf[1] * step * dCFf[2];
+                     resTwo += dLFf[1] * step * dLFf[2];
+
+                     resTwo += dURr[1] * step * dURr[2];
+                     resTwo += dCRr[1] * step * dCRr[2];
+                     resTwo += dLRr[1] * step * dLRr[2];
+
 
                  return new[]
                     {
                         Node.Make
                             (
-                                value: (orig + res).AsMf(),
-                                groupIndex: position + offset
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhdOne.CC
+                            ),
+
+                        Node.Make
+                            (
+                                value: (cTwo + resTwo).AsMf(),
+                                groupIndex: torusNbrhdTwo.CC
                             )
                     };
              };
-
 
          }
 
 
 
+         /// <summary>
+         ///  Torus euclidean metric with perimeter nbhd
+         /// </summary>
+         static Func<INodeGroup, INode[]> EuclidFuncPerimeterTv(
+              int squareSize,
+              TorusNbrhd torusNbrhdOne,
+              TorusNbrhd torusNbrhdTwo,
+              float alpha,
+              float step
+             )
+         {
+             const float nbrTentMax = 0.15f;
+             const float tvTentMax = 0.020f;
+             return (ng) =>
+             {
+
+
+                 var cOne = ng.Values[torusNbrhdOne.CC];
+                 var cTwo = ng.Values[torusNbrhdTwo.CC];
+
+                 var tvXcoord = (int)(cOne * squareSize);
+                 var tvYcord = (int)(cTwo * squareSize);
+                 var tvCord = tvXcoord*squareSize + tvYcord;
+
+                 var tvXVal = ng.Values[tvCord];
+                 var tvYVal = ng.Values[tvCord + squareSize*squareSize];
+
+
+                 var dTv = Mf2.VDiffTent(cOne, cTwo, tvXVal, tvYVal, tvTentMax);
+
+                 var dUF = Mf2.VDiffTent(cOne, cTwo, ng.Values[torusNbrhdOne.UF], ng.Values[torusNbrhdTwo.UF], nbrTentMax);
+                 var dUC = Mf2.VDiffTent(cOne, cTwo, ng.Values[torusNbrhdOne.UC], ng.Values[torusNbrhdTwo.UC], nbrTentMax);
+                 var dUR = Mf2.VDiffTent(cOne, cTwo, ng.Values[torusNbrhdOne.UR], ng.Values[torusNbrhdTwo.UR], nbrTentMax);
+                 var dCF = Mf2.VDiffTent(cOne, cTwo, ng.Values[torusNbrhdOne.CF], ng.Values[torusNbrhdTwo.CF], nbrTentMax);
+                 var dCR = Mf2.VDiffTent(cOne, cTwo, ng.Values[torusNbrhdOne.CR], ng.Values[torusNbrhdTwo.CR], nbrTentMax);
+                 var dLF = Mf2.VDiffTent(cOne, cTwo, ng.Values[torusNbrhdOne.LF], ng.Values[torusNbrhdTwo.LF], nbrTentMax);
+                 var dLC = Mf2.VDiffTent(cOne, cTwo, ng.Values[torusNbrhdOne.LC], ng.Values[torusNbrhdTwo.LC], nbrTentMax);
+                 var dLR = Mf2.VDiffTent(cOne, cTwo, ng.Values[torusNbrhdOne.LR], ng.Values[torusNbrhdTwo.LR], nbrTentMax);
+
+
+                 var resOne = dUF[0] * step * dUF[2];
+                 resOne += dUC[0] * step * dUC[2];
+                 resOne += dUR[0] * step * dUR[2];
+                 resOne += dCF[0] * step * dCF[2];
+                 resOne += dCR[0] * step * dCR[2];
+                 resOne += dLF[0] * step * dLF[2];
+                 resOne += dLC[0] * step * dLC[2];
+                 resOne += dLR[0] * step * dLR[2];
+
+                 resOne += dTv[0] * step * dTv[2] * alpha;
+
+
+
+
+                 var resTwo = dUF[1] * step * dUF[2];
+                 resTwo += dUC[1] * step * dUC[2];
+                 resTwo += dUR[1] * step * dUR[2];
+                 resTwo += dCF[1] * step * dCF[2];
+                 resTwo += dCR[1] * step * dCR[2];
+                 resTwo += dLF[1] * step * dLF[2];
+                 resTwo += dLC[1] * step * dLC[2];
+                 resTwo += dLR[1] * step * dLR[2];
+
+                 resTwo += dTv[1] * step * dTv[2] * alpha;
+
+
+                 return new[]
+                    {
+                        Node.Make
+                            (
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhdOne.CC
+                            ),
+
+                        Node.Make
+                            (
+                                value: (cTwo + resTwo).AsMf(),
+                                groupIndex: torusNbrhdTwo.CC
+                            )
+                    };
+             };
+
+         }
+
+
+
+         /// <summary>
+         ///  2-ring metric with perimeter nbhd
+         /// </summary>
+         static Func<INodeGroup, INode[]> Ring2UsingPerimeterTv(
+              int squareSize,
+              TorusNbrhd torusNbrhdOne,
+              TorusNbrhd torusNbrhdTwo,
+              float alpha,
+              float step
+             )
+         {
+             return (ng) =>
+             {
+
+
+                 var cOne = ng.Values[torusNbrhdOne.CC];
+                 var cTwo = ng.Values[torusNbrhdTwo.CC];
+
+                 var tvXcoord = (int)(cOne * squareSize);
+                 var tvYcord = (int)(cTwo * squareSize);
+                 var tvCord = tvXcoord * squareSize + tvYcord;
+
+                 var tvXVal = ng.Values[tvCord];
+                 var tvYVal = ng.Values[tvCord + squareSize * squareSize];
+
+
+                 var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UF]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UC]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.UR]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CF]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.CR]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LF]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LC]) * step;
+                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhdOne.LR]) * step;
+
+                 resOne += cOne.MfDeltaAsFloat(tvXVal) * step * alpha;
+
+
+
+                 var resTwo = cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UF]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UC]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.UR]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.CF]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.CR]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LF]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LC]) * step;
+                 resTwo += cTwo.MfDeltaAsFloat(ng.Values[torusNbrhdTwo.LR]) * step;
+
+                 resTwo += cTwo.MfDeltaAsFloat(tvYVal) * step * alpha;
+
+
+                 return new[]
+                    {
+                        Node.Make
+                            (
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhdOne.CC
+                            ),
+
+                        Node.Make
+                            (
+                                value: (cTwo + resTwo).AsMf(),
+                                groupIndex: torusNbrhdTwo.CC
+                            )
+                    };
+             };
+
+         }
     }
 }

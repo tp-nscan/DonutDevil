@@ -4,8 +4,9 @@ namespace MathLib.NumericTypes
 {
     public static class Mf
     {
-        public const float Padder = 1000000.0f;
+        public const float Padder = 10.0f;
         public const float Epsilon =  0.00001f;
+        public const float LookupTablePrecision = 0.001f;
 
         public static float AsMf(this float lhs)
         {
@@ -29,7 +30,7 @@ namespace MathLib.NumericTypes
         {
             var diff = Math.Abs(lhs - rhs);
 
-            if ((diff < Mf.Epsilon) || ((diff <= 1.0f ) && (diff > (1.0f - Epsilon))))
+            if ((diff < Epsilon) || ((diff <= 1.0f ) && (diff > (1.0f - Epsilon))))
             {
                 return true;
             }
@@ -47,7 +48,7 @@ namespace MathLib.NumericTypes
             return x => 0.5 + Math.Tanh(gain * (x - 0.5)) / 2;
         }
 
-        //returns the circular distance betweeh lhs and rhs, positive is clockwise
+        //returns the directed circular distance betweeh lhs and rhs, positive is clockwise
         public static float MfDeltaAsFloat(this float lhs, float rhs)
         {
             var delta = lhs - rhs;
@@ -58,6 +59,29 @@ namespace MathLib.NumericTypes
             }
 
             return (delta < - 0.5) ? -1.0f - delta : - delta;
+        }
+
+        //returns the circular distance betweeh lhs and rhs.
+        public static float MfAbsDeltaAsFloat(this float lhs, float rhs)
+        {
+            var delta = lhs - rhs;
+
+            if (delta > 0.5)
+            {
+                return 1.0f - delta;
+            }
+
+            if (delta > 0.0)
+            {
+                return delta;
+            }
+
+            if (delta > - 0.5)
+            {
+                return - delta;
+            }
+
+            return 1 - delta;
         }
 
         public static float MfSin(this double value)
@@ -77,6 +101,17 @@ namespace MathLib.NumericTypes
             var dY = lhsY.MfDeltaAsFloat(rhsY);
 
             return new[] { dX * Math.Abs(dX), dY * Math.Abs(dY), dX * dX + dY * dY };
+        }
+
+        /// <summary>
+        /// returns [(+/-) x^2/d^2 , (+/-) y^2/d^2, d^2]. The returned values are pure float
+        /// </summary>
+        public static float[] VDiffTent(float lhsX, float lhsY, float rhsX, float rhsY, float tentMax)
+        {
+            var dX = lhsX.MfDeltaAsFloat(rhsX);
+            var dY = lhsY.MfDeltaAsFloat(rhsY);
+
+            return new[] { dX * Math.Abs(dX), dY * Math.Abs(dY), (dX * dX + dY * dY).Tent(tentMax)};
         }
     }
 

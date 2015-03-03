@@ -26,8 +26,8 @@ namespace DonutDevilMain.ViewModel
 
         public RingValuedNodeGroupVm()
         {
-            _alphaSliderVm = new SliderVm(RealInterval.Make(0, 1.0), 0.02, "0.00") {Title = "Alpha"};
-            _betaSliderVm = new SliderVm(RealInterval.Make(0, 1.0), 0.02, "0.00") { Title = "Beta" };
+            _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") {Title = "Alpha"};
+            _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta" };
             _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
             InitializeRun();
         }

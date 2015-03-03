@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls" xmlns:BitmapGraphics="clr-namespace:WpfUtils.BitmapGraphics;assembly=WpfUtils"
+    xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls" xmlns:BitmapGraphics="clr-namespace:WpfUtils.BitmapGraphics;assembly=WpfUtils"
     mc:Ignorable="d"
     x:Class="DonutDevilMain.View.TorusValuedNodeGroupControl"
     x:Name="UserControl"
@@ -56,12 +56,24 @@
 
                 </StackPanel>
 
-                <Common:SliderControl Margin="0,5" DataContext="{Binding StepSizeSliderVm}"/>
+                <common:SliderControl Margin="0,5" DataContext="{Binding StepSizeSliderVm}"/>
                 
-                
-                <Common:ImageLegendControl DataContext="{Binding ImageLegendVm}"/>
+                <common:SliderControl Margin="0,5" DataContext="{Binding AlphaSliderVm}"/>
+
+                <common:SliderControl Margin="0,5" DataContext="{Binding BetaSliderVm}"/>
+
+                <common:ImageLegendControl DataContext="{Binding ImageLegendVm}"/>
             
                 <CheckBox IsChecked="{Binding Use8Way}" Content="Use 8 way" Foreground="Yellow" HorizontalAlignment="Center" Margin="8"/>
+
+
+                <StackPanel Margin="0,0,20,0" Orientation="Horizontal">
+
+                    <TextBlock Foreground="Beige" Text="Activity:" Margin="0,0,5,0" />
+
+                    <TextBlock Text="{Binding Activity, StringFormat=N5}" Foreground="Beige"/>
+
+                </StackPanel>
 
             </StackPanel>
 

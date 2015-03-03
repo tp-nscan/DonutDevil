@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,19 +17,21 @@ namespace DonutDevilMain.ViewModel
 {
     public class TorusValuedNodeGroupVm : NotifyPropertyChanged
     {
-        private const int SquareSize = 128;
-        private const int Colorsteps = 512;
-        private const int HistogramBins = 100;
+        private const int SquareSize = 256;
 
 
         public TorusValuedNodeGroupVm()
         {
             _imageLegendVm = new ImageLegendVm();
             _imageLegendVm.OnColorsChanged.Subscribe(OnPixelsChanged);
-            _rangeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.02, "0.00") { Title = "Range" };
-            _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
+
+            _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Alpha", Value = 0.1};
+            _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta", Value = 0.0 };
+            _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step", Value = 0.1 };
+
             InitializeRun();
         }
+
         #region local vars
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
@@ -38,6 +39,30 @@ namespace DonutDevilMain.ViewModel
         private INodeGroupUpdater _nodeGroupUpdater;
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private bool _isRunning;
+        private bool _isDirty;
+
+        public bool IsDirty
+        {
+            get
+            {
+                return  _stepSizeSliderVm.IsDirty || 
+                        _alphaSliderVm.IsDirty || 
+                        _betaSliderVm.IsDirty ||
+                        _imageLegendVm.IsDirty ||
+                        _isDirty;
+            }
+
+        }
+
+        public void Clean()
+        {
+            _stepSizeSliderVm.IsDirty = false;
+            _alphaSliderVm.IsDirty = false;
+            _betaSliderVm.IsDirty = false;
+            _imageLegendVm.IsDirty = false;
+            _isDirty = false;
+        }
+
 
         #endregion
 
@@ -63,40 +88,35 @@ namespace DonutDevilMain.ViewModel
 
             await Task.Run(() =>
             {
-                try
+                _stopwatch.Start();
+                for (var i = 0; _isRunning; i++)
                 {
-                    _stopwatch.Start();
-                    for (var i = 0; _isRunning; i++)
+                    var newNodeGroup = _nodeGroupUpdater.Update(_nodeGroup);
+                    Activity = _nodeGroup.Activity(newNodeGroup);
+                    _nodeGroup = newNodeGroup;
+                    Generation++;
+
+                    if (_cancellationTokenSource.IsCancellationRequested)
                     {
-                        _nodeGroup = _nodeGroupUpdater.Update(_nodeGroup);
-                        _generation++;
-
-                        if (_cancellationTokenSource.IsCancellationRequested)
-                        {
-                            _isRunning = false;
-                            _stopwatch.Stop();
-                        }
-
-                        if (i % 100 == 0)
-                        {
-                            Application.Current.Dispatcher.Invoke
-                                (
-                                    () =>
-                                    {
-                                        ResetNodeGroupUpdaters();
-                                        UpdateBindingProperties();
-                                        DrawMainGrid();
-                                        CommandManager.InvalidateRequerySuggested();
-                                    },
-                                    DispatcherPriority.Background
-                                );
-                        }
-
+                        _isRunning = false;
+                        _stopwatch.Stop();
                     }
-                }
 
-                catch (Exception)
-                {
+                    if (i % 5 == 0)
+                    {
+                        Application.Current.Dispatcher.Invoke
+                            (
+                                () =>
+                                {
+                                    ResetNodeGroupUpdaters();
+                                    UpdateBindingProperties();
+                                    DrawMainGrid();
+                                    CommandManager.InvalidateRequerySuggested();
+                                },
+                                DispatcherPriority.Background
+                            );
+                    }
+
                 }
             },
                 cancellationToken: _cancellationTokenSource.Token
@@ -225,16 +245,21 @@ namespace DonutDevilMain.ViewModel
 
         void ResetNodeGroupUpdaters()
         {
+            if (!IsDirty)
+                return;
+
             _nodeGroupUpdater = NodeGroupUpdaterTorus.ForSquareTorus
             (
                 gain: 0.095f,
                 step: (float)StepSizeSliderVm.Value,
                 squareSize: SquareSize,
-                range: (float)RangeSliderVm.Value,
+                alpha: (float)AlphaSliderVm.Value,
+                beta: (float)BetaSliderVm.Value,
                 use8Way: Use8Way
             );
-        }
 
+            Clean();
+        }
 
         #endregion
 
@@ -247,6 +272,7 @@ namespace DonutDevilMain.ViewModel
             set
             {
                 _use8Way = value;
+                _isDirty = true;
                 OnPropertyChanged("Use8Way");
             }
         }
@@ -260,6 +286,17 @@ namespace DonutDevilMain.ViewModel
             {
                 _generation = value;
                 OnPropertyChanged("Generation");
+            }
+        }
+
+        private double _activity;
+        public double Activity
+        {
+            get { return _activity; }
+            set
+            {
+                _activity = value;
+                OnPropertyChanged("Activity");
             }
         }
 
@@ -290,16 +327,22 @@ namespace DonutDevilMain.ViewModel
             DrawMainGrid();
         }
 
-        private readonly SliderVm _rangeSliderVm;
-        public SliderVm RangeSliderVm
+        private readonly SliderVm _alphaSliderVm;
+        public SliderVm AlphaSliderVm
         {
-            get { return _rangeSliderVm; }
+            get { return _alphaSliderVm; }
         }
 
         private readonly SliderVm _stepSizeSliderVm;
         public SliderVm StepSizeSliderVm
         {
             get { return _stepSizeSliderVm; }
+        }
+
+        private readonly SliderVm _betaSliderVm;
+        public SliderVm BetaSliderVm
+        {
+            get { return _betaSliderVm; }
         }
 
         #endregion

@@ -132,6 +132,7 @@ namespace DonutDevilControls.ViewModel.Common
                                                 color: _imageColors[(c) / ImageHeight, (c) % ImageWidth]
                                                 )).ToList();
 
+                                IsDirty = true;
                                 _colorsChanged.OnNext(ImageColors);
                             },
                             DispatcherPriority.Background
@@ -153,7 +154,7 @@ namespace DonutDevilControls.ViewModel.Common
 
         public int ImageHeight
         {
-            get { return _imageColors.GetLength(1); }
+            get { return _imageColors.GetLength(0); }
         }
 
         public int ImageWidth
@@ -183,6 +184,73 @@ namespace DonutDevilControls.ViewModel.Common
 
         #endregion // LoadImageFileCommand
 
+
+        #region StandardCommand
+
+        RelayCommand _standardCommand;
+        public ICommand StandardCommand
+        {
+            get
+            {
+                if (_standardCommand == null)
+                    _standardCommand = new RelayCommand(
+                            param => DoStandard(),
+                            param => CanStandard()
+                        );
+
+                return _standardCommand;
+            }
+        }
+
+        private void DoStandard()
+        {
+            try
+            {
+                _imageColors = new System.Windows.Media.Color[1024, 1024];
+
+
+                var n1ColorSequence = ColorSequence.TriPolar(1024);
+
+                for (var row = 0; row < 1024; row++)
+                {
+                    for (var col = 0; col < 1024; col++)
+                    {
+                        _imageColors[row, col] = n1ColorSequence.Colors[row*1024 + col];
+                    }
+                }
+
+                Application.Current.Dispatcher.Invoke
+                    (
+                        () =>
+                        {
+                            ColorLegendVm2D.GraphicsInfos =
+                                Enumerable.Range(0, 1024 * 1024)
+                                    .Select(
+                                        c => new GraphicsInfo
+                                            (
+                                            x: c % 1024,
+                                            y: c / 1024,
+                                            color: _imageColors[(c) / 1024, (c) % 1024]
+                                            )).ToList();
+                            IsDirty = true;
+                            _colorsChanged.OnNext(ImageColors);
+                        },
+                        DispatcherPriority.Background
+                    );
+
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+
+        bool CanStandard()
+        {
+            return true;
+        }
+
+        #endregion // StandardCommand
 
 
         #region XonlyCommand
@@ -229,7 +297,7 @@ namespace DonutDevilControls.ViewModel.Common
                                             y: c / 1024,
                                             color: _imageColors[(c) / 1024, (c) % 1024]
                                             )).ToList();
-
+                            IsDirty = true;
                             _colorsChanged.OnNext(ImageColors);
                         },
                         DispatcherPriority.Background
@@ -248,7 +316,6 @@ namespace DonutDevilControls.ViewModel.Common
         }
 
         #endregion // XonlyCommand
-
 
 
         #region YonlyCommand
@@ -295,8 +362,9 @@ namespace DonutDevilControls.ViewModel.Common
                                             y: c / 1024,
                                             color: _imageColors[(c) / 1024, (c) % 1024]
                                             )).ToList();
-
+                            IsDirty = true;
                             _colorsChanged.OnNext(ImageColors);
+
                         },
                         DispatcherPriority.Background
                     );
@@ -327,5 +395,8 @@ namespace DonutDevilControls.ViewModel.Common
                 OnPropertyChanged("ImageFileName");
             }
         }
+
+
+        public bool IsDirty { get; set; }
     }
 }

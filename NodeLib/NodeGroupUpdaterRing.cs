@@ -1,12 +1,37 @@
 ﻿using System;
 using System.Linq;
+using MathLib;
 using MathLib.NumericTypes;
 
 namespace NodeLib
 {
     public static class NodeGroupUpdaterRing
     {
+
         public static INodeGroupUpdater ForSquareTorus
+    (
+        float gain,
+        float step,
+        float alpha,
+        float beta,
+        int squareSize,
+        bool use8Way
+    )
+        {
+            return new NodeGroupUpdaterImpl(
+                Enumerable.Range(0, squareSize * squareSize)
+                          .Select(n2 =>
+                                  PerimeterFunc
+                                      (
+                                          torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
+                                          step: step
+                                      )
+                              )
+                          .ToList()
+                );
+        }
+
+        public static INodeGroupUpdater ForSquareTorus0
             (
                 float gain, 
                 float step,
@@ -16,15 +41,14 @@ namespace NodeLib
                 bool use8Way
             )
         {
+            var biases = RingRadialCosBiases(step: step, rBias: alpha, aBias: beta);
             return new NodeGroupUpdaterImpl(
                 Enumerable.Range(0, squareSize * squareSize)
                           .Select(n2 =>
-                                  RingFSquareBiasFunc
+                                  RingBiasFunc
                                       (
                                           torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
-                                          step: step,
-                                          hBias: alpha,
-                                          vBias: beta
+                                          biasedSteps: biases
                                       )
                               )
                           .ToList()
@@ -190,7 +214,82 @@ namespace NodeLib
         }
 
 
-        static Func<INodeGroup, INode[]> RingFSquareBiasFunc(
+        public static float[] RingRadialCosBiases
+            (
+                float step,
+                float rBias,
+                float aBias
+            )
+        {
+            return new[]
+            {
+                step*  (1.0f + rBias * aBias.UnitToCos(Perimeter.UC)),  //0
+                step * (1.0f + rBias * aBias.UnitToCos(Perimeter.UR)),  //1
+                step * (1.0f + rBias * aBias.UnitToCos(Perimeter.CR)),  //2
+                step * (1.0f + rBias * aBias.UnitToCos(Perimeter.LR)),  //3
+                step * (1.0f + rBias * aBias.UnitToCos(Perimeter.LC)),  //4
+                step * (1.0f + rBias * aBias.UnitToCos(Perimeter.LF)),  //5
+                step * (1.0f + rBias * aBias.UnitToCos(Perimeter.CF)),  //6
+                step * (1.0f + rBias * aBias.UnitToCos(Perimeter.UF))   //7
+            };
+
+        }
+
+        public static float[] RingRadialSinBiases
+    (
+        float step,
+        float rBias,
+        float aBias
+    )
+        {
+            return new[]
+            {
+                step*  (1.0f + rBias * aBias.UnitToSin(Perimeter.UC)), 
+                step * (1.0f + rBias * aBias.UnitToSin(Perimeter.UR)),
+                step * (1.0f + rBias * aBias.UnitToSin(Perimeter.CR)),
+                step * (1.0f + rBias * aBias.UnitToSin(Perimeter.LR)),
+                step * (1.0f + rBias * aBias.UnitToSin(Perimeter.LC)),
+                step * (1.0f + rBias * aBias.UnitToSin(Perimeter.LF)),
+                step * (1.0f + rBias * aBias.UnitToSin(Perimeter.CF)),
+                step * (1.0f + rBias * aBias.UnitToSin(Perimeter.UF))
+            };
+
+        }
+
+        static Func<INodeGroup, INode[]> RingBiasFunc(
+          TorusNbrhd torusNbrhd,
+          float[] biasedSteps
+
+        )
+        {
+            return (ng) =>
+            {
+                var cOne = ng.Values[torusNbrhd.CC];
+
+                var
+                resOne  = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * biasedSteps[0];
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UR]) * biasedSteps[1];
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * biasedSteps[2];
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LR]) * biasedSteps[3];
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * biasedSteps[4];
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LF]) * biasedSteps[5];
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * biasedSteps[6];
+                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UF]) * biasedSteps[7];
+
+
+                return new[]
+                    {
+                        Node.Make
+                            (
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhd.CC
+                            )
+                    };
+            };
+
+        }
+
+        static Func<INodeGroup, INode[]> RingSquareBiasFunc(
           TorusNbrhd torusNbrhd,
           float step,
           float hBias,
@@ -202,12 +301,12 @@ namespace NodeLib
             var adjV = (vBias - 0.5f);
 
             var hv = step * (1.0f - adjH - adjV);
-            var h = step *  (1.0f - adjH       );
+            var h = step * (1.0f - adjH);
             var hV = step * (1.0f - adjH + adjV);
-            var v = step *  (1.0f        - adjV);
-            var V = step *  (1.0f        + adjV);
+            var v = step * (1.0f - adjV);
+            var V = step * (1.0f + adjV);
             var Hv = step * (1.0f + adjH - adjV);
-            var H = step *  (1.0f + adjH       );
+            var H = step * (1.0f + adjH);
             var HV = step * (1.0f + adjH + adjV);
 
             return (ng) =>
@@ -236,6 +335,7 @@ namespace NodeLib
             };
 
         }
+
 
 
         static Func<INodeGroup, INode[]> BigRingFunc(

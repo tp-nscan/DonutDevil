@@ -29,8 +29,11 @@ namespace WpfUtils.BitmapGraphics
             {
                 return;
             }
+
             var gridImage = d as GridImage;
-            if (gridImage == null) return;
+            if ((gridImage == null)) return;
+
+           // System.Diagnostics.Debug.WriteLine("{0} {1} {2}", gridImage.IsVisible, gridImage.IsLoaded, gridImage.IsMeasureValid );   
 
             gridImage.DrawGrid();
 

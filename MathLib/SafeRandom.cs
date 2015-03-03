@@ -1,7 +1,7 @@
 ﻿using System;
 using MathLib.Intervals;
 
-namespace WpfUtils.Utils
+namespace MathLib
 {
     public static class SafeRandom
     {
