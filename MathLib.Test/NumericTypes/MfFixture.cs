@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using MathLib.NumericTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -48,23 +49,73 @@ namespace MathLib.Test.NumericTypes
         }
 
         [TestMethod]
-        public void TestMfDeltaAsFloat()
+        public void TestMfDelta()
         {
             const float fOne = 0.05f;
             const float fTwo = 0.3f;
             const float fThree = 0.65f;
             const float fFour = 0.85f;
 
-            Assert.IsTrue(Math.Abs(fOne.MfDeltaAsFloat(fOne) - 0.0) < Mf.Epsilon);
-            Assert.IsTrue(Math.Abs(fOne.MfDeltaAsFloat(fTwo) - 0.25f) < Mf.Epsilon);
-            Assert.IsTrue(Math.Abs(fOne.MfDeltaAsFloat(fThree) + 0.40f) < Mf.Epsilon);
-            Assert.IsTrue(Math.Abs(fOne.MfDeltaAsFloat(fFour) + 0.20f) < Mf.Epsilon);
+            Assert.IsTrue(Math.Abs(fOne.MfDelta(fOne) - 0.0) < Mf.Epsilon);
+            Assert.IsTrue(Math.Abs(fOne.MfDelta(fTwo) - 0.25f) < Mf.Epsilon);
+            Assert.IsTrue(Math.Abs(fOne.MfDelta(fThree) + 0.40f) < Mf.Epsilon);
+            Assert.IsTrue(Math.Abs(fOne.MfDelta(fFour) + 0.20f) < Mf.Epsilon);
 
-            Assert.IsTrue(Math.Abs(fFour.MfDeltaAsFloat(fOne) - 0.20f) < Mf.Epsilon);
-            Assert.IsTrue(Math.Abs(fFour.MfDeltaAsFloat(fTwo) - 0.45f) < Mf.Epsilon);
-            Assert.IsTrue(Math.Abs(fFour.MfDeltaAsFloat(fThree) + 0.20f) < Mf.Epsilon);
+            Assert.IsTrue(Math.Abs(fFour.MfDelta(fOne) - 0.20f) < Mf.Epsilon);
+            Assert.IsTrue(Math.Abs(fFour.MfDelta(fTwo) - 0.45f) < Mf.Epsilon);
+            Assert.IsTrue(Math.Abs(fFour.MfDelta(fThree) + 0.20f) < Mf.Epsilon);
 
         }
+
+        [TestMethod]
+        public void TestMfDeltaSaw()
+        {
+            const float fOne = 0.05f;
+            const float fTwo = 0.3f;
+            const float fThree = 0.65f;
+            const float fFour = 0.85f;
+
+            const float fFive = 0.10f;
+            const float fSix = 0.15f;
+            const float fSaw = 0.15f;
+
+            System.Diagnostics.Debug.WriteLine(fOne.MfDeltaSaw(fOne, fSaw));
+            System.Diagnostics.Debug.WriteLine(fOne.MfDeltaSaw(fTwo, fSaw));
+            System.Diagnostics.Debug.WriteLine(fTwo.MfDeltaSaw(fOne, fSaw));
+            System.Diagnostics.Debug.WriteLine(fOne.MfDeltaSaw(fThree, fSaw));
+            System.Diagnostics.Debug.WriteLine(fThree.MfDeltaSaw(fOne, fSaw));
+            System.Diagnostics.Debug.WriteLine(fOne.MfDeltaSaw(fFive, fSaw));
+            System.Diagnostics.Debug.WriteLine(fFive.MfDeltaSaw(fSix, fSaw));
+            System.Diagnostics.Debug.WriteLine(fSix.MfDeltaSaw(fFive, fSaw));
+
+
+
+            //Assert.IsTrue(Math.Abs(fOne.MfDeltaSaw(fOne, fSaw) - 0.0) < Mf.Epsilon);
+            //Assert.IsTrue(Math.Abs(fOne.MfDeltaSaw(fTwo, fSaw) - 0.25f) < Mf.Epsilon);
+            //Assert.IsTrue(Math.Abs(fTwo.MfDeltaSaw(fOne, fSaw) + 0.40f) < Mf.Epsilon);
+            //Assert.IsTrue(Math.Abs(fOne.MfDeltaSaw(fThree, fSaw) + 0.20f) < Mf.Epsilon);
+            //Assert.IsTrue(Math.Abs(fThree.MfDeltaSaw(fOne, fSaw) - 0.20f) < Mf.Epsilon);
+            //Assert.IsTrue(Math.Abs(fOne.MfDeltaSaw(fFive, fSaw) - 0.45f) < Mf.Epsilon);
+            //Assert.IsTrue(Math.Abs(fFive.MfDeltaSaw(fSix, fSaw) + 0.20f) < Mf.Epsilon);
+            //Assert.IsTrue(Math.Abs(fSix.MfDeltaSaw(fFive, fSaw) + 0.1) < Mf.Epsilon);
+
+        }
+
+
+        [TestMethod]
+        public void TestMfDeltaSawG()
+        {
+            var res =
+                Enumerable.Range(0, 100).Select(i => new[] { (float)i, (0.99f).MfDeltaSaw(i/100.0f, 0.1f)} ).ToList();
+
+            for (int i = 0; i < res.Count; i++)
+            {
+                System.Diagnostics.Debug.WriteLine("{0}\t{1}", res[i][0], res[i][1]);
+            }
+        }
+
+
+
 
         [TestMethod]
         public void TestVDiff()

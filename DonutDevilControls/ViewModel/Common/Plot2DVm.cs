@@ -4,7 +4,7 @@ using WpfUtils.BitmapGraphics;
 
 namespace DonutDevilControls.ViewModel.Common
 {
-    public class ColorLegendVm2D : NotifyPropertyChanged
+    public class Plot2DVm : NotifyPropertyChanged
     {
         private IReadOnlyList<GraphicsInfo> _graphicsInfos = new List<GraphicsInfo>();
         public IReadOnlyList<GraphicsInfo> GraphicsInfos

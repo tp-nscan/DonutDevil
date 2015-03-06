@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="DonutDevilControls.View.Common.ColorLegendControl2d"
+﻿<UserControl x:Class="DonutDevilControls.View.Common.Plot2DControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,7 +7,7 @@
              xmlns:common="clr-namespace:DonutDevilControls.ViewModel.Design.Common"
              mc:Ignorable="d"
              x:Name="UserControl"
-            d:DataContext="{d:DesignInstance {x:Type common:DesignColorLegendVm2D}, IsDesignTimeCreatable=True}"
+            d:DataContext="{d:DesignInstance {x:Type common:DesignPlot2DVm}, IsDesignTimeCreatable=True}"
             Width="225" 
             Height="225"
             d:DesignHeight="300" d:DesignWidth="300">

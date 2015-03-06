@@ -6,7 +6,7 @@
     xmlns:bitmapGraphics="clr-namespace:WpfUtils.BitmapGraphics;assembly=WpfUtils"
     xmlns:common="clr-namespace:DonutDevilControls.ViewModel.Design.Common"
     mc:Ignorable="d"
-    x:Class="DonutDevilControls.View.Common.ColorLegendControl"
+    x:Class="DonutDevilControls.View.Common.Plot1DControl"
     x:Name="UserControl"
     d:DataContext="{d:DesignInstance {x:Type common:DesignColorLegendVm}, IsDesignTimeCreatable=True}"
     Width="300" 

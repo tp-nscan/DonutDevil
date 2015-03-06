@@ -208,7 +208,7 @@ namespace DonutDevilMain.ViewModel
 
             var colorDexer = (Colorsteps - 1) / histogram.Max(t => Math.Sqrt(t.Item2.Item));
 
-            HistogramVm = new ColorLegendVm
+            HistogramVm = new Plot1DVm
             {
                 Title = "Node frequencies",
                 MinValue = -0.0,
@@ -264,7 +264,7 @@ namespace DonutDevilMain.ViewModel
         {
             var x = 0;
 
-            ColorLegendVm = new ColorLegendVm
+            ColorLegendVm = new Plot1DVm
             {
                 Title = "Node values",
                 MinValue = -0.0,
@@ -345,8 +345,8 @@ namespace DonutDevilMain.ViewModel
             }
         }
 
-        private ColorLegendVm _colorLegendVm;
-        public ColorLegendVm ColorLegendVm
+        private Plot1DVm _colorLegendVm;
+        public Plot1DVm ColorLegendVm
         {
             get { return _colorLegendVm; }
             set
@@ -356,8 +356,8 @@ namespace DonutDevilMain.ViewModel
             }
         }
 
-        private ColorLegendVm _histogramVm;
-        public ColorLegendVm HistogramVm
+        private Plot1DVm _histogramVm;
+        public Plot1DVm HistogramVm
         {
             get { return _histogramVm; }
             set

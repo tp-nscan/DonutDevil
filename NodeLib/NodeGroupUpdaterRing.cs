@@ -64,14 +64,14 @@ namespace NodeLib
              {
                  var cOne = ng.Values[torusNbrhd.CC];
 
-                 var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UF]) * step;
-                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * step;
-                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UR]) * step;
-                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * step;
-                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * step;
-                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LF]) * step;
-                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * step;
-                 resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LR]) * step;
+                 var resOne = cOne.MfDelta(ng.Values[torusNbrhd.UF]) * step;
+                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.UC]) * step;
+                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.UR]) * step;
+                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.CF]) * step;
+                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.CR]) * step;
+                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.LF]) * step;
+                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.LC]) * step;
+                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.LR]) * step;
 
             return new[]
                     {
@@ -99,10 +99,10 @@ namespace NodeLib
             {
                 var cOne = ng.Values[torusNbrhd.CC];
 
-                var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * step;
+                var resOne = cOne.MfDelta(ng.Values[torusNbrhd.UC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LC]) * step;
 
                 return new[]
                     {
@@ -131,19 +131,19 @@ namespace NodeLib
             {
                 var cOne = ng.Values[torusNbrhd.CC];
 
-                var resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UF]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UR]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LF]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LR]) * step;
+                var resOne = cOne.MfDelta(ng.Values[torusNbrhd.UF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LR]) * step;
 
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CFf]) * hStep;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CRr]) * hStep;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UuC]) * vStep;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LlC]) * vStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CFf]) * hStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CRr]) * hStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UuC]) * vStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LlC]) * vStep;
 
                 return new[]
                     {
@@ -179,26 +179,26 @@ namespace NodeLib
                 var cOne = ng.Values[torusNbrhd.CC];
 
                 var 
-                resOne  = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UF]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UR]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LF]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LR]) * step;
+                resOne  = cOne.MfDelta(ng.Values[torusNbrhd.UF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LR]) * step;
 
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CFf])  * hInnerStep;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CFff]) * hOuterStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CFf])  * hInnerStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CFff]) * hOuterStep;
 
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CRr])  * hInnerStep;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CRrr]) * hOuterStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CRr])  * hInnerStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CRrr]) * hOuterStep;
 
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UuC]) * vInnerStep;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UuuC]) * vOuterStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UuC]) * vInnerStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UuuC]) * vOuterStep;
 
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LlC]) * vInnerStep;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LllC]) * vOuterStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LlC]) * vInnerStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LllC]) * vOuterStep;
 
 
                 return new[]
@@ -267,14 +267,14 @@ namespace NodeLib
                 var cOne = ng.Values[torusNbrhd.CC];
 
                 var
-                resOne  = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * biasedSteps[0];
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UR]) * biasedSteps[1];
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * biasedSteps[2];
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LR]) * biasedSteps[3];
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * biasedSteps[4];
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LF]) * biasedSteps[5];
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * biasedSteps[6];
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UF]) * biasedSteps[7];
+                resOne  = cOne.MfDelta(ng.Values[torusNbrhd.UC]) * biasedSteps[0];
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UR]) * biasedSteps[1];
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CR]) * biasedSteps[2];
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LR]) * biasedSteps[3];
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LC]) * biasedSteps[4];
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LF]) * biasedSteps[5];
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CF]) * biasedSteps[6];
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UF]) * biasedSteps[7];
 
 
                 return new[]
@@ -314,14 +314,14 @@ namespace NodeLib
                 var cOne = ng.Values[torusNbrhd.CC];
 
                 var
-                resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UF]) * hv;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * v;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UR]) * Hv;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * h;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * H;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LF]) * hV;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * V;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LR]) * HV;
+                resOne = cOne.MfDelta(ng.Values[torusNbrhd.UF]) * hv;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UC]) * v;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UR]) * Hv;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CF]) * h;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CR]) * H;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LF]) * hV;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LC]) * V;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LR]) * HV;
 
 
                 return new[]
@@ -360,26 +360,26 @@ namespace NodeLib
                 var cOne = ng.Values[torusNbrhd.CC];
 
                 var
-                resOne = cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UF]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UC]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UR]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CF]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CR]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LF]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LC]) * step;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LR]) * step;
+                resOne = cOne.MfDelta(ng.Values[torusNbrhd.UF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LR]) * step;
 
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CFf]) * hInnerStep;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CFff]) * hOuterStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CFf]) * hInnerStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CFff]) * hOuterStep;
 
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CRr]) * hInnerStep;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.CRrr]) * hOuterStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CRr]) * hInnerStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CRrr]) * hOuterStep;
 
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UuC]) * vInnerStep;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.UuuC]) * vOuterStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UuC]) * vInnerStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UuuC]) * vOuterStep;
 
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LlC]) * vInnerStep;
-                resOne += cOne.MfDeltaAsFloat(ng.Values[torusNbrhd.LllC]) * vOuterStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LlC]) * vInnerStep;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LllC]) * vOuterStep;
 
 
                 return new[]

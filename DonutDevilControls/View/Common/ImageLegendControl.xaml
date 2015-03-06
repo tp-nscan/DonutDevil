@@ -17,6 +17,6 @@
             <Button Margin="5,0" Command="{Binding YonlyCommand}">Y only</Button>
             <Button Margin="5,0" Command="{Binding StandardCommand}">Standard</Button>
         </StackPanel>
-        <common1:ColorLegendControl2d DataContext="{Binding ColorLegendVm2D}"/>
+        <common1:Plot2DControl DataContext="{Binding Plot2DVm}"/>
     </DockPanel>
 </UserControl>

@@ -20,7 +20,7 @@ namespace DonutDevilControls.ViewModel.Common
     {
         public ImageLegendVm()
         {
-            _colorLegendVm2D = new ColorLegendVm2D
+            _plot2DVm = new Plot2DVm
             {
                 Title = "Node values",
                 MinValueX = 0.0,
@@ -30,10 +30,10 @@ namespace DonutDevilControls.ViewModel.Common
             };
         }
 
-        private readonly ColorLegendVm2D _colorLegendVm2D;
-        public ColorLegendVm2D ColorLegendVm2D
+        private readonly Plot2DVm _plot2DVm;
+        public Plot2DVm Plot2DVm
         {
-            get { return _colorLegendVm2D; }
+            get { return _plot2DVm; }
         }
 
 
@@ -122,7 +122,7 @@ namespace DonutDevilControls.ViewModel.Common
                             {
 
                                 ImageFileName = imageFileName;
-                                ColorLegendVm2D.GraphicsInfos =
+                                Plot2DVm.GraphicsInfos =
                                     Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
                                         .Select(
                                             c => new GraphicsInfo
@@ -223,7 +223,7 @@ namespace DonutDevilControls.ViewModel.Common
                     (
                         () =>
                         {
-                            ColorLegendVm2D.GraphicsInfos =
+                            Plot2DVm.GraphicsInfos =
                                 Enumerable.Range(0, 1024 * 1024)
                                     .Select(
                                         c => new GraphicsInfo
@@ -288,7 +288,7 @@ namespace DonutDevilControls.ViewModel.Common
                     (
                         () =>
                         {
-                            ColorLegendVm2D.GraphicsInfos =
+                            Plot2DVm.GraphicsInfos =
                                 Enumerable.Range(0, 1024 * 1024)
                                     .Select(
                                         c => new GraphicsInfo
@@ -353,7 +353,7 @@ namespace DonutDevilControls.ViewModel.Common
                     (
                         () =>
                         {
-                            ColorLegendVm2D.GraphicsInfos =
+                            Plot2DVm.GraphicsInfos =
                                 Enumerable.Range(0, 1024 * 1024)
                                     .Select(
                                         c => new GraphicsInfo

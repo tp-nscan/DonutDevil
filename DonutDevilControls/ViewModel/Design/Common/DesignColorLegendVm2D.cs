@@ -5,9 +5,9 @@ using WpfUtils.Utils;
 
 namespace DonutDevilControls.ViewModel.Design.Common
 {
-    public class DesignColorLegendVm2D : ColorLegendVm2D
+    public class DesignPlot2DVm : Plot2DVm
     {
-        public DesignColorLegendVm2D()
+        public DesignPlot2DVm()
         {
             Title = "Designer title";
             MinValueX = -1.0;

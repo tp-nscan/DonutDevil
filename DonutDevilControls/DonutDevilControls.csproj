@@ -88,8 +88,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ViewModel\Common\ColorLegendVm.cs" />
-    <Compile Include="ViewModel\Common\ColorLegendVm2d.cs" />
+    <Compile Include="ViewModel\Common\Plot1DVm.cs" />
+    <Compile Include="ViewModel\Common\Plot2DVm.cs" />
     <Compile Include="ViewModel\Common\ImageLegendVm.cs" />
     <Compile Include="ViewModel\Common\NodeGroupVm.cs" />
     <Compile Include="ViewModel\Common\NodeVm.cs" />
@@ -104,11 +104,11 @@
     <Compile Include="ViewModel\Design\Win\DesignNgFloatWindowVm.cs" />
     <Compile Include="ViewModel\Design\Win\DesignNgRingWindowVm.cs" />
     <Compile Include="ViewModel\Design\Win\DesignNgTorusWindowVm.cs" />
-    <Compile Include="View\Common\ColorLegendControl.xaml.cs">
-      <DependentUpon>ColorLegendControl.xaml</DependentUpon>
+    <Compile Include="View\Common\Plot1DControl.xaml.cs">
+      <DependentUpon>Plot1DControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Common\ColorLegendControl2d.xaml.cs">
-      <DependentUpon>ColorLegendControl2d.xaml</DependentUpon>
+    <Compile Include="View\Common\Plot2DControl.xaml.cs">
+      <DependentUpon>Plot2DControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Common\SliderControl.xaml.cs">
       <DependentUpon>SliderControl.xaml</DependentUpon>
@@ -125,11 +125,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Common\ColorLegendControl.xaml">
+    <Page Include="View\Common\Plot1DControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Common\ColorLegendControl2d.xaml">
+    <Page Include="View\Common\Plot2DControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

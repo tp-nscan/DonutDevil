@@ -17,7 +17,7 @@ namespace DonutDevilMain.ViewModel
 {
     public class TorusValuedNodeGroupVm : NotifyPropertyChanged
     {
-        private const int SquareSize = 256;
+        private const int SquareSize = 100;
 
 
         public TorusValuedNodeGroupVm()
@@ -28,6 +28,7 @@ namespace DonutDevilMain.ViewModel
             _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Alpha", Value = 0.1};
             _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta", Value = 0.0 };
             _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step", Value = 0.1 };
+            _displayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
 
             InitializeRun();
         }
@@ -102,7 +103,7 @@ namespace DonutDevilMain.ViewModel
                         _stopwatch.Stop();
                     }
 
-                    if (i % 5 == 0)
+                    if (i % (int)DisplayFrequencySliderVm.Value == 0)
                     {
                         Application.Current.Dispatcher.Invoke
                             (
@@ -325,6 +326,12 @@ namespace DonutDevilMain.ViewModel
         void OnPixelsChanged(Color[,] pixels)
         {
             DrawMainGrid();
+        }
+
+        private readonly SliderVm _displayFrequencySliderVm;
+        public SliderVm DisplayFrequencySliderVm
+        {
+            get { return _displayFrequencySliderVm; }
         }
 
         private readonly SliderVm _alphaSliderVm;

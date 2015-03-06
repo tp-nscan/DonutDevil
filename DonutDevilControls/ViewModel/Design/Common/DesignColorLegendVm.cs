@@ -6,7 +6,7 @@ using WpfUtils.Utils;
 
 namespace DonutDevilControls.ViewModel.Design.Common
 {
-    public class DesignColorLegendVm : ColorLegendVm
+    public class DesignColorLegendVm : Plot1DVm
     {
         public DesignColorLegendVm()
         {

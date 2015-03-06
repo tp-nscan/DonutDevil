@@ -62,6 +62,8 @@
 
                 <common:SliderControl Margin="0,5" DataContext="{Binding BetaSliderVm}"/>
 
+                <common:SliderControl Margin="0,5" DataContext="{Binding DisplayFrequencySliderVm}"/>
+                
                 <common:ImageLegendControl DataContext="{Binding ImageLegendVm}"/>
             
                 <CheckBox IsChecked="{Binding Use8Way}" Content="Use 8 way" Foreground="Yellow" HorizontalAlignment="Center" Margin="8"/>

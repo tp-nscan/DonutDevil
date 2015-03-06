@@ -34,8 +34,8 @@ namespace MathLib.NumericTypes
     {
         public static float[] ModEuclideanForce(this PointFlt target, PointFlt draw, float tentParam)
         {
-            var dX = target.X.MfDeltaAsFloat(draw.X);
-            var dY = target.Y.MfDeltaAsFloat(draw.Y);
+            var dX = target.X.MfDelta(draw.X);
+            var dY = target.Y.MfDelta(draw.Y);
 
             var dSquared = (dX*dX + dY*dY);
             var pull = dSquared.Tent(tentParam);
