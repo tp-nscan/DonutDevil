@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     x:Class="DonutDevilControls.View.Common.Plot1DControl"
     x:Name="UserControl"
-    d:DataContext="{d:DesignInstance {x:Type common:DesignColorLegendVm}, IsDesignTimeCreatable=True}"
+    d:DataContext="{d:DesignInstance {x:Type common:DesignPlot1DVm}, IsDesignTimeCreatable=True}"
     Width="300" 
     Height="50">
 
@@ -18,8 +18,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <graphics:WbImage Grid.RowSpan="2" ImageWidth="1024" ImageHeight="1024"
-                                  PlotPoints="{Binding GraphicsInfos}"/>
+        <Border Grid.RowSpan="2" DataContext="{Binding WbVerticalStripesVm}">
+            <graphics:WbImage ImageWidth="{Binding ImageWidth}" ImageHeight="{Binding ImageHeight}"
+                                  PlotRectangles="{Binding PlotRectangles}"/>
+        </Border>
 
         <Border
             Grid.Row="0" 

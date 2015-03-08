@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using DonutDevilControls.ViewModel.Design.Common;
 using WpfUtils.Utils;
-using WpfUtils.Views.Graphics;
 
 namespace DonutDevilMain.ViewModel.Design
 {
@@ -13,29 +11,16 @@ namespace DonutDevilMain.ViewModel.Design
             var n1ColorSequence = ColorSequence.TriPolar(2);
 
             var x = 0;
-
-            PlotRectangles = n1ColorSequence
-                .Colors
-                .Select(
-                    c => new PlotRectangle
-                        (
-                            x: x % 2,
-                            y: (x++) / 2,
-                            width: 10,
-                            height: 10,
-                            color: c
-                        )
-                  ).ToList();
         }
 
-        private IReadOnlyList<PlotRectangle> _plotRectangles = new List<PlotRectangle>();
-        public IReadOnlyList<PlotRectangle> PlotRectangles
+        private DesignPlot1DVm _plotRectangles = new DesignPlot1DVm();
+        public DesignPlot1DVm DesignPlot1DVm
         {
             get { return _plotRectangles; }
             set
             {
                 _plotRectangles = value;
-                OnPropertyChanged("GraphicsInfos");
+                OnPropertyChanged("DesignPlot1DVm");
             }
         }
 

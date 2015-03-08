@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -9,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
+using DonutDevilControls.ViewModel.Design.Common;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
 using NodeLib;
@@ -28,13 +28,35 @@ namespace DonutDevilMain.ViewModel
 
         public RingValuedNodeGroupVm()
         {
-            _nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colorsteps);
+            _nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colorsteps/4);
 
             _histogramColorSequence = Colors.White.ToUniformColorSequence(Colorsteps);
 
             _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") {Title = "Alpha"};
             _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta" };
             _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
+
+            _colorLegendVm = new Plot1DVm(Colorsteps, 0.15, f => _nodeGroupColorSequence.ToUnitColor(f))
+                {
+                    Title = "Cell legend",
+                    MinValue = 0.0,
+                    MaxValue = 1.0
+                };
+
+            _colorLegendVm.WbVerticalStripesVm.AddValues
+                (
+                    Enumerable.Range(0, Colorsteps)
+                                .Select(i => new D2Val<float>(i, 0, i / (float)Colorsteps))
+                );
+
+
+            _histogramVm = new Plot1DVm(HistogramBins, 0.15, f => _histogramColorSequence.Colors[(int)f])
+            {
+                Title = "Cell frequency",
+                MinValue = 0.0,
+                MaxValue = 1.0
+            };
+
             _wbUniformGridVm = new WbUniformGridVm(SquareSize, SquareSize, f => _nodeGroupColorSequence.ToUnitColor(f));
 
             InitializeRun();
@@ -216,20 +238,28 @@ namespace DonutDevilMain.ViewModel
 
             var colorDexer = (Colorsteps - 1) / histogram.Max(t => Math.Sqrt(t.Item2.Item));
 
-            HistogramVm = new Plot1DVm
-            {
-                Title = "Node frequencies",
-                MinValue = -0.0,
-                MaxValue = 1.0,
-                GraphicsInfos = histogram.Select(
-                    (bin, index) => new PlotPoint
-                        (
-                                x: index,
-                                y: 0,
-                                color: _histogramColorSequence.Colors[(int)(colorDexer * Math.Sqrt(bin.Item2.Item))]
-                        )).ToList()
-            };
+            //HistogramVm = new Plot1DVm
+            //{
+            //    Title = "Node frequencies",
+            //    MinValue = -0.0,
+            //    MaxValue = 1.0,
+            //    GraphicsInfos = histogram.Select(
+            //        (bin, index) => new PlotPoint
+            //            (
+            //                    x: index,
+            //                    y: 0,
+            //                    color: _histogramColorSequence.Colors[(int)(colorDexer * Math.Sqrt(bin.Item2.Item))]
+            //            )).ToList()
+            //};
+            _histogramVm.WbVerticalStripesVm.AddValues
+            (
 
+                histogram.Select((bin, index) => new D2Val<float>(index, 0, (float)(colorDexer * Math.Sqrt(bin.Item2.Item)))).ToList()
+
+
+                //Enumerable.Range(0, Colorsteps)
+                //            .Select(i => new D2Val<float>(i, 0, i / (float)Colorsteps))
+            );
         }
 
         void UpdateBindingProperties()
@@ -267,21 +297,21 @@ namespace DonutDevilMain.ViewModel
         {
             var x = 0;
 
-            ColorLegendVm = new Plot1DVm
-            {
-                Title = "Node values",
-                MinValue = -0.0,
-                MaxValue = 1.0,
-                GraphicsInfos = _nodeGroupColorSequence
-                                    .Colors
-                                    .Select(
-                                    c => new PlotPoint
-                                        (
-                                            x: x++,
-                                            y: 0,
-                                            color: c
-                                    )).ToList()
-            };
+            //ColorLegendVm = new Plot1DVm
+            //{
+            //    Title = "Node values",
+            //    MinValue = -0.0,
+            //    MaxValue = 1.0,
+            //    GraphicsInfos = _nodeGroupColorSequence
+            //                        .Colors
+            //                        .Select(
+            //                        c => new PlotPoint
+            //                            (
+            //                                x: x++,
+            //                                y: 0,
+            //                                color: c
+            //                        )).ToList()
+            //};
         }
 
 

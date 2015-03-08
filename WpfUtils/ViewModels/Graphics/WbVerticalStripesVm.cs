@@ -7,21 +7,19 @@ using WpfUtils.Views.Graphics;
 
 namespace WpfUtils.ViewModels.Graphics
 {
-    public class WbUniformGridVm : WbImageVm
+    public class WbVerticalStripesVm : WbImageVm
     {
-
-        public WbUniformGridVm(int cellDimX, int cellDimY, Func<float, Color> colorMap)
-            : base(CalcPixelResolution(cellDimX, cellDimY) * cellDimX, CalcPixelResolution(cellDimX, cellDimY) * cellDimY)
+        public WbVerticalStripesVm(int cellDimX, double heightOverWidth, Func<float, Color> colorMap)
+            : base(CalcPixelResolution(cellDimX) * cellDimX, (int) ((CalcPixelResolution(cellDimX) * cellDimX) * heightOverWidth))
         {
-            if ((cellDimX > MaxCellDim) || (cellDimY > MaxCellDim))
+            if (cellDimX > MaxCellDim)
             {
                 throw new Exception("Cell dimension too large");
             }
 
             _cellDimX = cellDimX;
-            _cellDimY = cellDimY;
             _colorMap = colorMap;
-            PixelResolution = CalcPixelResolution(cellDimX, cellDimY);
+            PixelResolution = CalcPixelResolution(cellDimX);
         }
 
         private List<D2Val<float>> _gridVals = new List<D2Val<float>>();
@@ -36,12 +34,6 @@ namespace WpfUtils.ViewModels.Graphics
         public int CellDimX
         {
             get { return _cellDimX; }
-        }
-
-        private readonly int _cellDimY;
-        public int CellDimY
-        {
-            get { return _cellDimY; }
         }
 
         public int PixelResolution { get; set; }
@@ -75,7 +67,7 @@ namespace WpfUtils.ViewModels.Graphics
                             x: PixelResolution * gv.X,
                             y: PixelResolution * gv.Y,
                             width: PixelResolution,
-                            height: PixelResolution,
+                            height: ImageHeight,
                             color: ColorMap.Invoke(gv.Value)                    
                        )
                     ).ToList();
@@ -84,13 +76,11 @@ namespace WpfUtils.ViewModels.Graphics
 
         }
 
-        public static int CalcPixelResolution(int cellDimX, int cellDimY)
+        public static int CalcPixelResolution(int cellDimX)
         {
-            return Math.Min(MaxCellDim / Math.Max(cellDimX, cellDimY), 20);
+            return Math.Min(MaxCellDim / cellDimX, 20);
         }
 
         public const int MaxCellDim = 1024;
     }
-
-
 }

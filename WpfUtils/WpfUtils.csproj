@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="ViewModels\Graphics\WbImageVm.cs" />
     <Compile Include="ViewModels\Graphics\WbUniformGridVm.cs" />
+    <Compile Include="ViewModels\Graphics\WbVerticalStripesVm.cs" />
     <Compile Include="Views\Graphics\PlotRectangle.cs" />
     <Compile Include="Views\Graphics\WbImage.cs" />
     <Compile Include="Views\Graphics\PlotPoint.cs" />

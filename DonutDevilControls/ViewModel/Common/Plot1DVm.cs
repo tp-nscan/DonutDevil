@@ -1,19 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Windows.Media;
 using WpfUtils;
-using WpfUtils.Views.Graphics;
+using WpfUtils.ViewModels.Graphics;
 
 namespace DonutDevilControls.ViewModel.Common
 {
     public class Plot1DVm : NotifyPropertyChanged
     {
-        private IReadOnlyList<PlotPoint> _graphicsInfos = new List<PlotPoint>();
-        public IReadOnlyList<PlotPoint> GraphicsInfos
+        public Plot1DVm(int cellDimX, double heightOverWidth, Func<float, Color> colorMap)
         {
-            get { return _graphicsInfos; }
+            _wbVerticalStripesVm = new WbVerticalStripesVm(cellDimX, heightOverWidth, colorMap);
+        }
+
+        private WbVerticalStripesVm _wbVerticalStripesVm;
+        public WbVerticalStripesVm WbVerticalStripesVm
+        {
+            get { return _wbVerticalStripesVm; }
             set
             {
-                _graphicsInfos = value;
-                OnPropertyChanged("GraphicsInfos");
+                _wbVerticalStripesVm = value;
+                OnPropertyChanged("WbVerticalStripesVm");
             }
         }
 

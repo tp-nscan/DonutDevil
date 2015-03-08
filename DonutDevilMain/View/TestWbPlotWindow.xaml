@@ -6,6 +6,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:design="clr-namespace:DonutDevilMain.ViewModel.Design"
         xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
+        xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
         Height="500" Width="800"
         mc:Ignorable="d"
         d:DesignHeight="300" d:DesignWidth="600">
@@ -14,7 +15,7 @@
 
     <Grid x:Name="grid" Background="Black">
 
-        <graphics:WbImage PlotRectangles="{Binding PlotRectangles}" />
+        <common:Plot1DControl DataContext="{Binding DesignPlot1DVm}" />
         
     </Grid>
 
