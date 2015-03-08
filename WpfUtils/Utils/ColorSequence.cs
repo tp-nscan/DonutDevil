@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
-using MathLib.Intervals;
 
 namespace WpfUtils.Utils
 {
@@ -24,74 +22,6 @@ namespace WpfUtils.Utils
 
     public static class ColorSequence
     {
-        public static Color IntToColor(this int colorVal)
-        {
-            return Color.FromArgb((byte)(255), (byte)(colorVal >> 0), (byte)(colorVal >> 8), (byte)(colorVal >> 16));
-        }
-
-        public static IEnumerable<Color> UniformSpread(Color lowColor, Color hiColor, int stepCount)
-        {
-            return Enumerable.Range(0, stepCount).Select
-                (
-                    i => new Color
-                    {
-                        ScA = RealIntervalExt.TicAtIndex(lowColor.ScA, hiColor.ScA, i, stepCount + 1),
-                        ScR = RealIntervalExt.TicAtIndex(lowColor.ScR, hiColor.ScR, i, stepCount + 1),
-                        ScG = RealIntervalExt.TicAtIndex(lowColor.ScG, hiColor.ScG, i, stepCount + 1),
-                        ScB = RealIntervalExt.TicAtIndex(lowColor.ScB, hiColor.ScB, i, stepCount + 1)
-                    }
-                );
-        }
-
-        public static IEnumerable<Color> D2(int width)
-        {
-            float w2 = width * width;
-            return Enumerable.Range(0, width * width).Select
-                (
-
-                    i => new Color
-                    {
-                        ScA = (float)1.0,
-                        ScR = (float)((1.0 + Math.Sin(i * Math.PI * 2.0 / width)) / 2.0),
-                        ScG = (float)((1.0 + Math.Sin(i * Math.PI * 2.0 / w2)) / 2.0),
-                        ScB = (float)((2.0 + Math.Cos(i * Math.PI * 2.0 / w2) + Math.Cos(i * Math.PI * 2.0 / width)) / 4.0)
-                    }
-
-                );
-        }
-
-        public static IEnumerable<Color> D3(int width)
-        {
-            float w2 = width * width;
-
-            return Enumerable.Range(0, width * width).Select
-                (
-
-                    i => new Color
-                    {
-                        ScA = (float)1.0,
-                        ScR = (float)( i % 2),
-                        ScG = (float)((i / width) % 2),
-                        ScB = (float)((2.0 + Math.Cos(i * Math.PI * 2.0 / w2) + Math.Cos(i * Math.PI * 2.0 / width)) / 4.0)
-                    }
-
-                );
-        }
-
-        public static IEnumerable<Color> FadingSpread(this Color color, int stepCount)
-        {
-            return Enumerable.Range(0, stepCount).Select
-                (
-                    i => new Color
-                    {
-                        ScA = RealIntervalExt.TicAtIndex((float) 0.0, color.ScA, i, stepCount + 1),
-                        ScR = color.ScR,
-                        ScG = color.ScG,
-                        ScB = color.ScB
-                    }
-                );
-        }
-
         public static IN1ColorSequence Dipolar(Color negativeColor, Color positiveColor, int halfStepCount)
         {
             return new Ir1ColorSequence(
@@ -109,10 +39,10 @@ namespace WpfUtils.Utils
         {
             return new ColorSequenceImpl
                 (
-                    UniformSpread(color1, color2, quarterStepCount)
-                        .Concat(UniformSpread(color2, color3, quarterStepCount))
-                        .Concat(UniformSpread(color3, color4, quarterStepCount))
-                        .Concat(UniformSpread(color4, color1, quarterStepCount))
+                    ColorEx.UniformSpread(color1, color2, quarterStepCount)
+                        .Concat(ColorEx.UniformSpread(color2, color3, quarterStepCount))
+                        .Concat(ColorEx.UniformSpread(color3, color4, quarterStepCount))
+                        .Concat(ColorEx.UniformSpread(color4, color1, quarterStepCount))
                 );
         }
 
@@ -120,7 +50,7 @@ namespace WpfUtils.Utils
         {
             return new ColorSequenceImpl2D
                 (
-                   colors: D2(width),
+                   colors: ColorEx.D2(width),
                    width: width
                 );
         }
@@ -139,9 +69,6 @@ namespace WpfUtils.Utils
 
         public static Color ToUnitColor2D(this IColorSequence colorSequence, double valueX, double valueY, int colorWidth)
         {
-            var xoff = (int)((valueX + 0.5) * 0.999 * colorWidth) * colorWidth;
-            var yoff = (int)((valueY + 0.5) * 0.999 * colorWidth);
-
             return colorSequence.Colors[((int)((valueX + 0.5) * 0.999 * colorWidth) * colorWidth) + (int)((valueY + 0.5) * 0.999 * colorWidth)];
         }
 
@@ -162,6 +89,7 @@ namespace WpfUtils.Utils
         {
             return new ColorSequenceImpl(maxColor.FadingSpread(steps));
         }
+
     }
 
 

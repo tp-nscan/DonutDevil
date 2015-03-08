@@ -2,7 +2,7 @@
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace WpfUtils.BitmapGraphics
+namespace WpfUtils.ViewModels.Graphics
 {
     public class ReadableImageVm : NotifyPropertyChanged
     {

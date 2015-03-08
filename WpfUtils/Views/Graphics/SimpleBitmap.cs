@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace WpfUtils.BitmapGraphics
+namespace WpfUtils.Views.Graphics
 {
     public class SimpleBitmap
     {

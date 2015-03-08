@@ -129,6 +129,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\TestWbPlotWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\TorusValuedNodeGroupControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -142,10 +146,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewModel\Design\DesignMainWindowVm.cs" />
+    <Compile Include="ViewModel\Design\DesignTestWbPlotWindowVm.cs" />
     <Compile Include="ViewModel\RingValuedNodeGroupVm.cs" />
+    <Compile Include="ViewModel\TestWbPlotWindowVm.cs" />
     <Compile Include="ViewModel\TorusValuedNodeGroupVm.cs" />
     <Compile Include="View\RingValuedNodeGroupControl.xaml.cs">
       <DependentUpon>RingValuedNodeGroupControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TestWbPlotWindow.xaml.cs">
+      <DependentUpon>TestWbPlotWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TorusValuedNodeGroupControl.xaml.cs">
       <DependentUpon>TorusValuedNodeGroupControl.xaml</DependentUpon>

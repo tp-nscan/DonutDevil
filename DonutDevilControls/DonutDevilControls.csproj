@@ -95,7 +95,7 @@
     <Compile Include="ViewModel\Common\NodeVm.cs" />
     <Compile Include="ViewModel\Common\SliderVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignColorLegendVm.cs" />
-    <Compile Include="ViewModel\Design\Common\DesignColorLegendVm2D.cs" />
+    <Compile Include="ViewModel\Design\Common\DesignPlot2DVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignImageLegendVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignSliderVm.cs" />
     <Compile Include="View\Common\ImageLegendControl.xaml.cs">

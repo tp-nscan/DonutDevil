@@ -11,7 +11,7 @@ using DonutDevilControls.ViewModel.Common;
 using MathLib.Intervals;
 using NodeLib;
 using WpfUtils;
-using WpfUtils.BitmapGraphics;
+using WpfUtils.Views.Graphics;
 
 namespace DonutDevilMain.ViewModel
 {
@@ -210,7 +210,7 @@ namespace DonutDevilMain.ViewModel
                 return;
             }
 
-            var ggi = new List<GraphicsInfo>();
+            var ggi = new List<PlotPoint>();
 
             const int offset = SquareSize*SquareSize;
 
@@ -218,7 +218,7 @@ namespace DonutDevilMain.ViewModel
             {
                 for (float j = 0; j < SquareSize; j++)
                 {
-                    ggi.Add(new GraphicsInfo(
+                    ggi.Add(new PlotPoint(
                             x:(int) i,
                             y:(int) j,
                             color: ImageLegendVm.ColorForUnitTorus(
@@ -306,8 +306,8 @@ namespace DonutDevilMain.ViewModel
             get { return _stopwatch.Elapsed; }
         }
 
-        private IReadOnlyList<GraphicsInfo> _gridGraphicsInfo = new List<GraphicsInfo>();
-        public IReadOnlyList<GraphicsInfo> GridGraphicsInfo
+        private IReadOnlyList<PlotPoint> _gridGraphicsInfo = new List<PlotPoint>();
+        public IReadOnlyList<PlotPoint> GridGraphicsInfo
         {
             get { return _gridGraphicsInfo; }
             set

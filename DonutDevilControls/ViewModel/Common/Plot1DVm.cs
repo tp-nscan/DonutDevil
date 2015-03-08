@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using WpfUtils;
-using WpfUtils.BitmapGraphics;
+using WpfUtils.Views.Graphics;
 
 namespace DonutDevilControls.ViewModel.Common
 {
     public class Plot1DVm : NotifyPropertyChanged
     {
-        private IReadOnlyList<GraphicsInfo> _graphicsInfos = new List<GraphicsInfo>();
-        public IReadOnlyList<GraphicsInfo> GraphicsInfos
+        private IReadOnlyList<PlotPoint> _graphicsInfos = new List<PlotPoint>();
+        public IReadOnlyList<PlotPoint> GraphicsInfos
         {
             get { return _graphicsInfos; }
             set
@@ -16,7 +16,6 @@ namespace DonutDevilControls.ViewModel.Common
                 OnPropertyChanged("GraphicsInfos");
             }
         }
-
 
         private double _minValue;
         public double MinValue

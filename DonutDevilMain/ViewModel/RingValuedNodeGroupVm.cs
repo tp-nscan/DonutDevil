@@ -10,10 +10,12 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
 using MathLib.Intervals;
+using MathLib.NumericTypes;
 using NodeLib;
 using WpfUtils;
-using WpfUtils.BitmapGraphics;
 using WpfUtils.Utils;
+using WpfUtils.ViewModels.Graphics;
+using WpfUtils.Views.Graphics;
 
 namespace DonutDevilMain.ViewModel
 {
@@ -26,9 +28,15 @@ namespace DonutDevilMain.ViewModel
 
         public RingValuedNodeGroupVm()
         {
+            _nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colorsteps);
+
+            _histogramColorSequence = Colors.White.ToUniformColorSequence(Colorsteps);
+
             _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") {Title = "Alpha"};
             _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta" };
             _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
+            _wbUniformGridVm = new WbUniformGridVm(SquareSize, SquareSize, f => _nodeGroupColorSequence.ToUnitColor(f));
+
             InitializeRun();
         }
 
@@ -214,7 +222,7 @@ namespace DonutDevilMain.ViewModel
                 MinValue = -0.0,
                 MaxValue = 1.0,
                 GraphicsInfos = histogram.Select(
-                    (bin, index) => new GraphicsInfo
+                    (bin, index) => new PlotPoint
                         (
                                 x: index,
                                 y: 0,
@@ -232,22 +240,17 @@ namespace DonutDevilMain.ViewModel
 
         void DrawMainGrid(INodeGroup nodeGroup)
         {
-            GridGraphicsInfo =
-                nodeGroup.Nodes().Select(n =>
-                    new GraphicsInfo(
-                        x: n.GroupIndex / SquareSize,
-                        y: n.GroupIndex % SquareSize,
-                        color: _nodeGroupColorSequence.ToUnitColor(n.Value)))
-                    .ToList();
+            WbUniformGridVm.AddValues(nodeGroup.Values.Select((v,i)=> new D2Val<float>(i/SquareSize, i%SquareSize, v)));
+        }
+
+        private WbUniformGridVm _wbUniformGridVm;
+        public WbUniformGridVm WbUniformGridVm
+        {
+            get { return _wbUniformGridVm; }
         }
 
         void InitializeRun()
         {
-            _nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue,
-                Colorsteps);
-
-            _histogramColorSequence = Colors.White.ToUniformColorSequence(Colorsteps);
-
             _nodeGroup = NodeGroup.RandomNodeGroup(SquareSize * SquareSize, DateTime.Now.Millisecond);
 
             MakeHistogram();
@@ -272,7 +275,7 @@ namespace DonutDevilMain.ViewModel
                 GraphicsInfos = _nodeGroupColorSequence
                                     .Colors
                                     .Select(
-                                    c => new GraphicsInfo
+                                    c => new PlotPoint
                                         (
                                             x: x++,
                                             y: 0,
@@ -334,16 +337,6 @@ namespace DonutDevilMain.ViewModel
             get { return _stopwatch.Elapsed; }
         }
 
-        private IReadOnlyList<GraphicsInfo> _gridGraphicsInfo = new List<GraphicsInfo>();
-        public IReadOnlyList<GraphicsInfo> GridGraphicsInfo
-        {
-            get { return _gridGraphicsInfo; }
-            set
-            {
-                _gridGraphicsInfo = value;
-                OnPropertyChanged("GridGraphicsInfo");
-            }
-        }
 
         private Plot1DVm _colorLegendVm;
         public Plot1DVm ColorLegendVm

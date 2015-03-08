@@ -11,8 +11,8 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using WpfUtils;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using WpfUtils.BitmapGraphics;
 using WpfUtils.Utils;
+using WpfUtils.Views.Graphics;
 
 namespace DonutDevilControls.ViewModel.Common
 {
@@ -125,7 +125,7 @@ namespace DonutDevilControls.ViewModel.Common
                                 Plot2DVm.GraphicsInfos =
                                     Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
                                         .Select(
-                                            c => new GraphicsInfo
+                                            c => new PlotPoint
                                                 (
                                                 x: c % ImageWidth,
                                                 y: c / ImageWidth,
@@ -226,7 +226,7 @@ namespace DonutDevilControls.ViewModel.Common
                             Plot2DVm.GraphicsInfos =
                                 Enumerable.Range(0, 1024 * 1024)
                                     .Select(
-                                        c => new GraphicsInfo
+                                        c => new PlotPoint
                                             (
                                             x: c % 1024,
                                             y: c / 1024,
@@ -291,7 +291,7 @@ namespace DonutDevilControls.ViewModel.Common
                             Plot2DVm.GraphicsInfos =
                                 Enumerable.Range(0, 1024 * 1024)
                                     .Select(
-                                        c => new GraphicsInfo
+                                        c => new PlotPoint
                                             (
                                             x: c % 1024,
                                             y: c / 1024,
@@ -356,7 +356,7 @@ namespace DonutDevilControls.ViewModel.Common
                             Plot2DVm.GraphicsInfos =
                                 Enumerable.Range(0, 1024 * 1024)
                                     .Select(
-                                        c => new GraphicsInfo
+                                        c => new PlotPoint
                                             (
                                             x: c % 1024,
                                             y: c / 1024,

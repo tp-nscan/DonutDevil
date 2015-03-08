@@ -84,17 +84,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitmapGraphics\GridImage.cs" />
-    <Compile Include="BitmapGraphics\GraphicsInfo.cs" />
-    <Compile Include="BitmapGraphics\ReadableImage.cs" />
-    <Compile Include="BitmapGraphics\ReadableImageVm.cs" />
-    <Compile Include="BitmapGraphics\SimpleBitmap.cs" />
+    <Compile Include="ViewModels\Graphics\WbImageVm.cs" />
+    <Compile Include="ViewModels\Graphics\WbUniformGridVm.cs" />
+    <Compile Include="Views\Graphics\PlotRectangle.cs" />
+    <Compile Include="Views\Graphics\WbImage.cs" />
+    <Compile Include="Views\Graphics\PlotPoint.cs" />
+    <Compile Include="Views\Graphics\ReadableImage.cs" />
+    <Compile Include="ViewModels\Graphics\ReadableImageVm.cs" />
+    <Compile Include="Views\Graphics\SimpleBitmap.cs" />
     <Compile Include="CommandBase.cs" />
     <Compile Include="CoreLibConverters.cs" />
     <Compile Include="NotifyPropertyChanged.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="StateHelper.cs" />
     <Compile Include="Utils\BrushSequence.cs" />
+    <Compile Include="Utils\ColorEx.cs" />
     <Compile Include="Utils\ColorSequence.cs" />
     <Compile Include="WindowPlacement.cs" />
   </ItemGroup>

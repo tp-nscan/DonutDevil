@@ -3,11 +3,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls" xmlns:BitmapGraphics="clr-namespace:WpfUtils.BitmapGraphics;assembly=WpfUtils"
+    xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
+    xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
     mc:Ignorable="d"
     x:Class="DonutDevilMain.View.TorusValuedNodeGroupControl"
     x:Name="UserControl"
-    d:DesignWidth="1192" d:DesignHeight="669">
+    d:DesignWidth="1200" d:DesignHeight="800">
 
     <Grid x:Name="LayoutRoot">
         <Grid Background="Black">
@@ -79,7 +80,7 @@
 
             </StackPanel>
 
-            <BitmapGraphics:GridImage Grid.Column="1" Margin="10" GraphicsInfos="{Binding GridGraphicsInfo}" Width="1024" Height="1024"/>
+            <graphics:WbImage Grid.Column="1" Margin="10" PlotPoints="{Binding GridGraphicsInfo}" ImageWidth="1024" ImageHeight="1024"/>
 
         </Grid>
     </Grid>

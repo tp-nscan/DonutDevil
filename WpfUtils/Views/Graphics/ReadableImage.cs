@@ -1,6 +1,7 @@
 ﻿using System.Windows.Media.Imaging;
+using WpfUtils.ViewModels.Graphics;
 
-namespace WpfUtils.BitmapGraphics
+namespace WpfUtils.Views.Graphics
 {
     public class ReadableImage : System.Windows.Controls.Image
     {

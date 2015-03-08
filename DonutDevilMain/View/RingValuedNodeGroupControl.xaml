@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:bitmapGraphics="clr-namespace:WpfUtils.BitmapGraphics;assembly=WpfUtils"
              xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
+             xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
              mc:Ignorable="d" 
              >
     <Grid Background="Black">
@@ -70,7 +70,11 @@
 
         </StackPanel>
 
-        <bitmapGraphics:GridImage Grid.Column="1" Margin="10" GraphicsInfos="{Binding GridGraphicsInfo}" Width="1024" Height="1024"/>
+        <graphics:WbImage Grid.Column="1" Margin="10" 
+                          ImageWidth="{Binding WbUniformGridVm.ImageWidth}" 
+                          ImageHeight="{Binding WbUniformGridVm.ImageHeight}"
+                          PlotRectangles="{Binding WbUniformGridVm.PlotRectangles}" 
+                          />
 
     </Grid>
 </UserControl>

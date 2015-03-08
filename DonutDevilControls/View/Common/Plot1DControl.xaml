@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:bitmapGraphics="clr-namespace:WpfUtils.BitmapGraphics;assembly=WpfUtils"
     xmlns:common="clr-namespace:DonutDevilControls.ViewModel.Design.Common"
+    xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
     mc:Ignorable="d"
     x:Class="DonutDevilControls.View.Common.Plot1DControl"
     x:Name="UserControl"
@@ -17,10 +17,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-        <bitmapGraphics:GridImage Grid.RowSpan="2" Width="{Binding Width, ElementName=UserControl}" 
-                                  GraphicsInfos="{Binding GraphicsInfos}"
-                                  Height="{Binding Height, ElementName=UserControl}"/>
+
+        <graphics:WbImage Grid.RowSpan="2" ImageWidth="1024" ImageHeight="1024"
+                                  PlotPoints="{Binding GraphicsInfos}"/>
 
         <Border
             Grid.Row="0" 

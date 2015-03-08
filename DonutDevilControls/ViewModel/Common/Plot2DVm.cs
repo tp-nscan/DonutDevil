@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using WpfUtils;
-using WpfUtils.BitmapGraphics;
+using WpfUtils.Views.Graphics;
 
 namespace DonutDevilControls.ViewModel.Common
 {
     public class Plot2DVm : NotifyPropertyChanged
     {
-        private IReadOnlyList<GraphicsInfo> _graphicsInfos = new List<GraphicsInfo>();
-        public IReadOnlyList<GraphicsInfo> GraphicsInfos
+        private IReadOnlyList<PlotPoint> _graphicsInfos = new List<PlotPoint>();
+        public IReadOnlyList<PlotPoint> GraphicsInfos
         {
             get { return _graphicsInfos; }
             set
