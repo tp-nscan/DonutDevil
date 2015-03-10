@@ -6,15 +6,14 @@
              xmlns:common="clr-namespace:DonutDevilControls.ViewModel.Design.Common"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance {x:Type common:DesignSliderVm}, IsDesignTimeCreatable=True}"
-             Background="#2FFF" 
-             d:DesignHeight="70"
+             Background="#2FFF"
              d:DesignWidth="300">
     <Border>
-        <Grid Margin="5">
+        <Grid Margin="0,2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
 
             <TextBlock
@@ -23,7 +22,7 @@
                 Text="{Binding Title}" 
                 HorizontalAlignment="Center"
                 Foreground="Yellow"
-                Margin="0,0,0,10"/>
+                Margin="0,0,0,5"/>
 
             <Slider
                 Grid.Row="1"

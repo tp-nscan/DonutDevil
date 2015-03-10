@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
+using MathLib;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
 using NodeLib;
@@ -32,6 +33,7 @@ namespace DonutDevilMain.ViewModel
             _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") {Title = "Alpha"};
             _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta" };
             _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
+            _displayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
 
 
             _ringHistogramVm = new RingHistogramVm
@@ -42,8 +44,8 @@ namespace DonutDevilMain.ViewModel
                 );
 
             _ringHistogramVm.LegendVm.AddValues(
-                    Enumerable.Range(0, WbRingPlotVm.NumCoords)
-                              .Select(i => new D1Val<float>(i, (float)i / WbRingPlotVm.NumCoords))
+                    Enumerable.Range(0, Functions.TrigFuncSteps)
+                              .Select(i => new D1Val<float>(i, (float)i / Functions.TrigFuncSteps))
                 );
 
             _wbUniformGridVm = new WbUniformGridVm(SquareSize, SquareSize, f => _nodeGroupColorSequence.ToUnitColor(f));
@@ -54,11 +56,11 @@ namespace DonutDevilMain.ViewModel
 
         #region local vars
 
-        private IColorSequence _nodeGroupColorSequence;
+        private readonly IColorSequence _nodeGroupColorSequence;
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
 
-        private IColorSequence _histogramColorSequence;
+        private readonly IColorSequence _histogramColorSequence;
 
         private INodeGroup _nodeGroup;
 
@@ -105,41 +107,32 @@ namespace DonutDevilMain.ViewModel
 
             await Task.Run(() =>
             {
-                try
+                _stopwatch.Start();
+                for (var i = 0; _isRunning; i++)
                 {
-                    _stopwatch.Start();
-                    for (var i = 0; _isRunning; i++)
+                    _nodeGroup = _nodeGroupUpdater.Update(_nodeGroup);
+
+                    if (_cancellationTokenSource.IsCancellationRequested)
                     {
-                        _nodeGroup = _nodeGroupUpdater.Update(_nodeGroup);
-                        _generation++;
-
-                        if (_cancellationTokenSource.IsCancellationRequested)
-                        {
-                            _isRunning = false;
-                            _stopwatch.Stop();
-                        }
-
-                        if (i % 10 == 0)
-                        {
-                            Application.Current.Dispatcher.Invoke
-                                (
-                                    () =>
-                                    {
-                                        ResetNodeGroupUpdaters();
-                                        UpdateBindingProperties();
-                                        MakeHistogram();
-                                        DrawMainGrid(_nodeGroup);
-                                        CommandManager.InvalidateRequerySuggested();
-                                    },
-                                    DispatcherPriority.Background
-                                );
-                        }
-
+                        _isRunning = false;
+                        _stopwatch.Stop();
                     }
-                }
 
-                catch (Exception)
-                {
+                    if (i % (int)DisplayFrequencySliderVm.Value == 0)
+                    {
+                        Application.Current.Dispatcher.Invoke
+                            (
+                                () =>
+                                {
+                                    ResetNodeGroupUpdaters();
+                                    UpdateBindingProperties();
+                                    MakeHistogram();
+                                    DrawMainGrid(_nodeGroup);
+                                    CommandManager.InvalidateRequerySuggested();
+                                },
+                                DispatcherPriority.Background
+                            );
+                    }
                 }
             },
                 cancellationToken: _cancellationTokenSource.Token
@@ -161,13 +154,10 @@ namespace DonutDevilMain.ViewModel
         {
             get
             {
-                if (_stopUpdateGridCommand == null)
-                    _stopUpdateGridCommand = new RelayCommand(
-                        param => DoCancelUpdateGrid(),
-                        param => CanCancelUpdateGrid()
-                        );
-
-                return _stopUpdateGridCommand;
+                return _stopUpdateGridCommand ?? (_stopUpdateGridCommand = new RelayCommand(
+                    param => DoCancelUpdateGrid(),
+                    param => CanCancelUpdateGrid()
+                    ));
             }
         }
 
@@ -191,13 +181,10 @@ namespace DonutDevilMain.ViewModel
         {
             get
             {
-                if (_resetCommand == null)
-                    _resetCommand = new RelayCommand(
-                        param => DoReset(),
-                        param => CanDoReset()
-                        );
-
-                return _resetCommand;
+                return _resetCommand ?? (_resetCommand = new RelayCommand(
+                    param => DoReset(),
+                    param => CanDoReset()
+                    ));
             }
         }
 
@@ -221,7 +208,7 @@ namespace DonutDevilMain.ViewModel
             var histogram =
                 _nodeGroup.Values.ToHistogram
                 (
-                    bins: RealInterval.UnitRange.SplitToEvenIntervals(WbRingPlotVm.NumCoords -1).ToList(),
+                    bins: RealInterval.UnitRange.SplitToEvenIntervals(Functions.TrigFuncSteps - 1).ToList(),
                     valuatorFunc: n => n
                 );
 
@@ -243,7 +230,7 @@ namespace DonutDevilMain.ViewModel
             WbUniformGridVm.AddValues(nodeGroup.Values.Select((v,i)=> new D2Val<float>(i/SquareSize, i%SquareSize, v)));
         }
 
-        private WbUniformGridVm _wbUniformGridVm;
+        private readonly WbUniformGridVm _wbUniformGridVm;
         public WbUniformGridVm WbUniformGridVm
         {
             get { return _wbUniformGridVm; }
@@ -255,33 +242,9 @@ namespace DonutDevilMain.ViewModel
 
             MakeHistogram();
 
-            SetupColorLegend();
-
             ResetNodeGroupUpdaters();
 
             DrawMainGrid(_nodeGroup);
-        }
-
-
-        void SetupColorLegend()
-        {
-            var x = 0;
-
-            //ColorLegendVm = new Plot1DVm
-            //{
-            //    Title = "Node values",
-            //    MinValue = -0.0,
-            //    MaxValue = 1.0,
-            //    GraphicsInfos = _nodeGroupColorSequence
-            //                        .Colors
-            //                        .Select(
-            //                        c => new PlotPoint
-            //                            (
-            //                                x: x++,
-            //                                y: 0,
-            //                                color: c
-            //                        )).ToList()
-            //};
         }
 
 
@@ -296,8 +259,7 @@ namespace DonutDevilMain.ViewModel
                 step: (float)StepSizeSliderVm.Value,
                 squareSize: SquareSize,
                 alpha: (float)AlphaSliderVm.Value,
-                beta: (float)BetaSliderVm.Value,
-                use8Way: Use8Way
+                beta: (float)BetaSliderVm.Value
             );
 
             Clean();
@@ -309,27 +271,9 @@ namespace DonutDevilMain.ViewModel
 
         #region Binding variables
 
-        private bool _use8Way;
-        public bool Use8Way
-        {
-            get { return _use8Way; }
-            set
-            {
-                _use8Way = value;
-                OnPropertyChanged("Use8Way");
-            }
-        }
-
-
-        private int _generation;
         public int Generation
         {
-            get { return _generation; }
-            set
-            {
-                _generation = value;
-                OnPropertyChanged("Generation");
-            }
+            get { return _nodeGroup.Generation; }
         }
 
         public TimeSpan ElapsedTime
@@ -337,12 +281,17 @@ namespace DonutDevilMain.ViewModel
             get { return _stopwatch.Elapsed; }
         }
 
-        private RingHistogramVm _ringHistogramVm;
+        private readonly RingHistogramVm _ringHistogramVm;
         public RingHistogramVm RingHistogramVm
         {
             get { return _ringHistogramVm; }
         }
 
+        private readonly SliderVm _displayFrequencySliderVm;
+        public SliderVm DisplayFrequencySliderVm
+        {
+            get { return _displayFrequencySliderVm; }
+        }
 
         private readonly SliderVm _alphaSliderVm;
         public SliderVm AlphaSliderVm

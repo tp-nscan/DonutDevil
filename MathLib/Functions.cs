@@ -1,11 +1,20 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace MathLib
 {
     public static class Functions
     {
+        static Functions()
+        {
+            scaffold = new float[TrigFuncSteps, 2];
+
+            for (var i = 0; i < TrigFuncSteps; i++)
+            {
+                var angle = (i / (double)TrigFuncSteps) * Math.PI * 2.0;
+                scaffold[i, 0] = (float)Math.Cos(angle);
+                scaffold[i, 1] = (float)Math.Sin(angle);
+            }
+        }
 
         public static double SawTooth(double period)
         {
@@ -24,5 +33,19 @@ namespace MathLib
             }
             return 0.0f;
         }
+
+        public static float SinLu(float arg)
+        {
+            return scaffold[(int) (arg*TrigFuncSteps), 1];
+        }
+
+        public static float CosLu(float arg)
+        {
+            return scaffold[(int) (arg*TrigFuncSteps), 0];
+        }
+
+        private static readonly float[,] scaffold;
+
+        public const int TrigFuncSteps = 2000;
     }
 }

@@ -26,7 +26,7 @@ namespace NodeLib
             return _updateFunctions
                         .AsParallel()
                         .SelectMany(n => n(nodeGroup))
-                        .ToNodeGroup(nodeGroup.Values.Count);
+                        .ToNodeGroup(nodeGroup.Values.Count, nodeGroup.Generation +1);
         }
 
         private readonly Func<INodeGroup, INode[]>[] _updateFunctions;

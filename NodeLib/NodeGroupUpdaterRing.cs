@@ -8,23 +8,24 @@ namespace NodeLib
     public static class NodeGroupUpdaterRing
     {
 
-        public static INodeGroupUpdater ForSquareTorus
+    public static INodeGroupUpdater ForSquareTorus
     (
         float gain,
         float step,
         float alpha,
         float beta,
-        int squareSize,
-        bool use8Way
+        int squareSize
     )
-        {
+    {
+            var spatial = alpha*alpha*0.1f;
             return new NodeGroupUpdaterImpl(
                 Enumerable.Range(0, squareSize * squareSize)
                           .Select(n2 =>
-                                  PerimeterFunc
+                                  PeriodicFunc
                                       (
                                           torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
-                                          step: step
+                                          temporal: step * 0.20f,
+                                          spatial: spatial
                                       )
                               )
                           .ToList()
@@ -54,6 +55,29 @@ namespace NodeLib
                           .ToList()
                 );
         }
+
+
+        private static Func<INodeGroup, INode[]> PeriodicFunc(
+                TorusNbrhd torusNbrhd,
+                float temporal,
+                float spatial
+            )
+        {
+            var spv = (torusNbrhd.CC % 256)*spatial;
+            return (ng) =>
+            {
+                return new[]
+                    {
+                        Node.Make
+                            (
+                                value: (spv + ng.Generation * temporal).AsMf(),
+                                groupIndex: torusNbrhd.CC
+                            )
+                    };
+            };
+
+        }
+
 
         static Func<INodeGroup, INode[]> PerimeterFunc(
               TorusNbrhd torusNbrhd,

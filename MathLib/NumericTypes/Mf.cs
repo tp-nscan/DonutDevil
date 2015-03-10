@@ -4,26 +4,33 @@ namespace MathLib.NumericTypes
 {
     public static class Mf
     {
-        public const float Padder = 10.0f;
         public const float Epsilon =  0.00001f;
         public const float LookupTablePrecision = 0.001f;
 
         public static float AsMf(this float lhs)
         {
-            var res = (lhs + Padder) - (float)Math.Floor(lhs + Padder);
-            if (Math.Abs(res - 1.0) < Epsilon)
-                return 1.0f - Epsilon;
-
-            return res;
+            if (lhs >= 0)
+            {
+                if (lhs < 1.0)
+                {
+                    return lhs;
+                }
+                return (float)(lhs - Math.Floor(lhs));
+            }
+            return 1.0f - (-lhs).AsMf();
         }
 
         public static float AsMf(this double lhs)
         {
-            var res = (lhs + Padder) - (float)Math.Floor(lhs + Padder);
-            if (Math.Abs(res - 1.0) < Epsilon)
-                return 1.0f - Epsilon;
-
-            return (float) res;
+            if (lhs >= 0)
+            {
+                if (lhs < 1.0)
+                {
+                    return (float) lhs;
+                }
+                return (float)(lhs - Math.Floor(lhs));
+            }
+            return 1.0f - (-lhs).AsMf();
         }
 
         public static bool IsNearlyEqualTo(this float lhs, float rhs)
@@ -52,12 +59,10 @@ namespace MathLib.NumericTypes
         public static float MfDelta(this float lhs, float rhs)
         {
             var delta = lhs - rhs;
-
             if (lhs > rhs)
             {
                 return (delta <= 0.5) ? - delta : 1.0f - delta;
             }
-
             return (delta < - 0.5) ? -1.0f - delta : - delta;
         }
 

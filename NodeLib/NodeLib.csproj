@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Network.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NodeGroup.cs" />
     <Compile Include="NodeGroupUpdater.cs" />

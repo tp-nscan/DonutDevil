@@ -132,7 +132,6 @@ namespace DonutDevilMain.ViewModel
         #endregion // UpdateGridCommand
 
 
-
         #region StopUpdateGridCommand
 
         RelayCommand _stopUpdateGridCommand;
@@ -191,8 +190,6 @@ namespace DonutDevilMain.ViewModel
         }
 
         #endregion // ResetCommand
-
-
 
 
         #region local helpers

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using MathLib.NumericTypes;
 
@@ -8,6 +9,7 @@ namespace NodeLib
     public interface INodeGroup
     {
         IReadOnlyList<float> Values { get; }
+        int Generation { get; }
     }
 
     public static class NodeGroup
@@ -22,13 +24,13 @@ namespace NodeLib
                 (
                     nodes: Enumerable.Range(0, nodeCount)
                               .Select(i=> Node.Make((float)randy.NextDouble(), groupIndex: i)),
-                    nodeCount: nodeCount          
+                    nodeCount: nodeCount,
+                    generation: 0
                 );
         }
 
         public static INodeGroup TorusPeriodicNodeGroup(int squareSize, float waviness)
         {
-            var adjWaviness = waviness / squareSize;
             var nodes = new INode[squareSize * squareSize * 2];
 
             for (var i = 0; i < squareSize; i++)
@@ -52,17 +54,19 @@ namespace NodeLib
             return new NodeGroupImpl
                 (
                     nodes: nodes,
-                    nodeCount: squareSize * squareSize * 2
+                    nodeCount: squareSize * squareSize * 2,
+                    generation:0
                 );
         }
 
         public static INodeGroup ToNodeGroup
             (
                 this IEnumerable<INode> nodes, 
-                int nodeCount
+                int nodeCount,
+                int generation
             )
         {
-            return new NodeGroupImpl(nodes, nodeCount);
+            return new NodeGroupImpl(nodes, nodeCount, generation);
         }
 
         public static IEnumerable<INode> Nodes(this INodeGroup nodeGroup)
@@ -81,8 +85,9 @@ namespace NodeLib
 
     public class NodeGroupImpl : INodeGroup
     {
-        public NodeGroupImpl(IEnumerable<INode> nodes, int nodeCount)
+        public NodeGroupImpl(IEnumerable<INode> nodes, int nodeCount, int generation)
         {
+            _generation = generation;
             _values = new float[nodeCount];
             foreach (var node in nodes)
             {
@@ -94,6 +99,12 @@ namespace NodeLib
         public IReadOnlyList<float> Values
         {
             get { return _values; }
+        }
+
+        private readonly int _generation;
+        public int Generation
+        {
+            get { return _generation; }
         }
     }
 }
