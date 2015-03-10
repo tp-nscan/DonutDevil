@@ -4,8 +4,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:design="clr-namespace:DonutDevilMain.ViewModel.Design"
-        xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
         xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
         Height="500" Width="800"
         mc:Ignorable="d"
@@ -15,7 +13,7 @@
 
     <Grid x:Name="grid" Background="Black">
 
-        <common:Plot1DControl DataContext="{Binding DesignPlot1DVm}" />
+        <common:RingHistogramControl DataContext="{Binding DesignRingHistogramVm}" />
         
     </Grid>
 

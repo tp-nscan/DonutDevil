@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using DonutDevilControls.ViewModel.Design.Common;
 using WpfUtils;
-using WpfUtils.Utils;
-using WpfUtils.Views.Graphics;
 
 namespace DonutDevilMain.ViewModel
 {
@@ -10,21 +7,9 @@ namespace DonutDevilMain.ViewModel
     {
         public TestWbPlotWindowVm()
         {
-            PanelPlotRectangles =
-            Enumerable.Range(0, 40000)
-                .Select(i => new PlotRectangle(i%100, i/100, 10, 10, i.IntToColor()))
-                .ToList();
+            DesignRingHistogramVm = new DesignRingHistogramVm();
         }
 
-        private IReadOnlyList<PlotRectangle> _panelPlotRectangles;
-        public IReadOnlyList<PlotRectangle> PanelPlotRectangles
-        {
-            get { return _panelPlotRectangles; }
-            set
-            {
-                _panelPlotRectangles = value;
-                OnPropertyChanged("PanelPlotRectangles");
-            }
-        }
+        public DesignRingHistogramVm DesignRingHistogramVm { get; set; }
     }
 }

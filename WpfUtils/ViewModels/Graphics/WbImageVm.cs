@@ -34,5 +34,11 @@ namespace WpfUtils.ViewModels.Graphics
         {
             get { return PlotRectangleList; }
         }
+
+        protected List<PlotLine> PlotLineList = new List<PlotLine>();
+        public IReadOnlyList<PlotLine> PlotLines
+        {
+            get { return PlotLineList; }
+        }
     }
 }

@@ -146,7 +146,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewModel\Design\DesignMainWindowVm.cs" />
-    <Compile Include="ViewModel\Design\DesignTestWbPlotWindowVm.cs" />
     <Compile Include="ViewModel\RingValuedNodeGroupVm.cs" />
     <Compile Include="ViewModel\TestWbPlotWindowVm.cs" />
     <Compile Include="ViewModel\TorusValuedNodeGroupVm.cs" />

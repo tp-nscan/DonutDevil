@@ -62,9 +62,7 @@
             
             <common:SliderControl Margin="0,5" DataContext="{Binding BetaSliderVm}"/>
 
-            <common:Plot1DControl DataContext="{Binding HistogramVm}" Width="350" Height="50" Margin="0,5" VerticalAlignment="Top"/>
-
-            <common:Plot1DControl DataContext="{Binding ColorLegendVm}" Width="350" Height="50" Margin="0,5" VerticalAlignment="Top"/>
+            <common:RingHistogramControl Height="200" Margin="0,10" DataContext="{Binding RingHistogramVm}" />
 
             <CheckBox IsChecked="{Binding Use8Way}" Content="Use 8 way" Foreground="Yellow" HorizontalAlignment="Center" Margin="8"/>
 

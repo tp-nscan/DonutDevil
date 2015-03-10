@@ -37,6 +37,10 @@ namespace WpfUtils.Views.Graphics
 
         void DoPlotPoints()
         {
+            if ((ImageWidth == 0) || (ImageHeight == 0))
+            {
+                return;
+            }
             if (_writeableBmp == null)
             {
                 _writeableBmp = BitmapFactory.New(ImageWidth, ImageHeight);
@@ -90,6 +94,11 @@ namespace WpfUtils.Views.Graphics
 
         void DoPlotRectangles()
         {
+            if ((ImageWidth == 0) || (ImageHeight == 0))
+            {
+                return;
+            }
+
             if (_writeableBmp == null)
             {
                 _writeableBmp = BitmapFactory.New(ImageWidth, ImageHeight);
@@ -102,17 +111,75 @@ namespace WpfUtils.Views.Graphics
                 foreach (var plotRectangle in PlotRectangles)
                 {
                     _writeableBmp.FillRectangle(
-                        plotRectangle.X,
-                        plotRectangle.Y,
-                        plotRectangle.X +  plotRectangle.Width,
-                        plotRectangle.Y +  plotRectangle.Height,
-                        plotRectangle.Color
+                            plotRectangle.X,
+                            plotRectangle.Y,
+                            plotRectangle.X +  plotRectangle.Width,
+                            plotRectangle.Y +  plotRectangle.Height,
+                            plotRectangle.Color
                         );
                 }
 
             } // Invalidates on exit of using block
 
         }
+
+
+        [Category("Custom Properties")]
+        public IReadOnlyList<PlotLine> PlotLines
+        {
+            get { return (IReadOnlyList<PlotLine>)GetValue(PlotLinesProperty); }
+            set { SetValue(PlotLinesProperty, value); }
+        }
+
+        public static readonly DependencyProperty PlotLinesProperty =
+            DependencyProperty.Register("PlotLines", typeof(IReadOnlyList<PlotLine>), typeof(WbImage),
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender,
+                OnPlotLinesChanged));
+
+        private static void OnPlotLinesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var graphicsInfo = (IReadOnlyList<PlotLine>)e.NewValue;
+            if (graphicsInfo == null)
+            {
+                return;
+            }
+
+            var gridImage = d as WbImage;
+            if ((gridImage == null)) return;
+            gridImage.DoPlotLines();
+        }
+
+        void DoPlotLines()
+        {
+            if ((ImageWidth == 0) || (ImageHeight == 0))
+            {
+                return;
+            }
+
+            if (_writeableBmp == null)
+            {
+                _writeableBmp = BitmapFactory.New(ImageWidth, ImageHeight);
+                Source = _writeableBmp;
+            }
+            using (_writeableBmp.GetBitmapContext())
+            {
+                _writeableBmp.Clear();
+
+                foreach (var plotLine in PlotLines)
+                {
+                    _writeableBmp.DrawLineAa(
+                            plotLine.X1,
+                            plotLine.Y1,
+                            plotLine.X2,
+                            plotLine.Y2,
+                            plotLine.Color
+                        );
+                }
+
+            } // Invalidates on exit of using block
+
+        }
+
 
         [Category("Custom Properties")]
         public int ImageWidth

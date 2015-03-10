@@ -93,10 +93,12 @@
     <Compile Include="ViewModel\Common\ImageLegendVm.cs" />
     <Compile Include="ViewModel\Common\NodeGroupVm.cs" />
     <Compile Include="ViewModel\Common\NodeVm.cs" />
+    <Compile Include="ViewModel\Common\RingHistogramVm.cs" />
     <Compile Include="ViewModel\Common\SliderVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignPlot1DVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignPlot2DVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignImageLegendVm.cs" />
+    <Compile Include="ViewModel\Design\Common\DesignRingHistogramVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignSliderVm.cs" />
     <Compile Include="View\Common\ImageLegendControl.xaml.cs">
       <DependentUpon>ImageLegendControl.xaml</DependentUpon>
@@ -109,6 +111,9 @@
     </Compile>
     <Compile Include="View\Common\Plot2DControl.xaml.cs">
       <DependentUpon>Plot2DControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Common\RingHistogramControl.xaml.cs">
+      <DependentUpon>RingHistogramControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Common\SliderControl.xaml.cs">
       <DependentUpon>SliderControl.xaml</DependentUpon>
@@ -132,6 +137,10 @@
     <Page Include="View\Common\Plot2DControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Common\RingHistogramControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Common\SliderControl.xaml">
       <Generator>MSBuild:Compile</Generator>

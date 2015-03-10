@@ -81,6 +81,6 @@ namespace WpfUtils.ViewModels.Graphics
             return Math.Min(MaxCellDim / cellDimX, 20);
         }
 
-        public const int MaxCellDim = 1024;
+        public const int MaxCellDim = 2000;
     }
 }

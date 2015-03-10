@@ -2,9 +2,6 @@
 {
     public class D2Val<T>
     {
-        private readonly int _y;
-        private readonly int _x;
-        private readonly T _value;
 
         public D2Val(int x, int y, T value)
         {
@@ -13,16 +10,19 @@
             _value = value;
         }
 
+        private readonly T _value;
         public T Value
         {
             get { return _value; }
         }
 
+        private readonly int _x;
         public int X
         {
             get { return _x; }
         }
 
+        private readonly int _y;
         public int Y
         {
             get { return _y; }

@@ -8,14 +8,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
-using DonutDevilControls.ViewModel.Design.Common;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
 using NodeLib;
 using WpfUtils;
 using WpfUtils.Utils;
 using WpfUtils.ViewModels.Graphics;
-using WpfUtils.Views.Graphics;
 
 namespace DonutDevilMain.ViewModel
 {
@@ -23,7 +21,6 @@ namespace DonutDevilMain.ViewModel
     {
         private const int SquareSize = 256;
         private const int Colorsteps = 512;
-        private const int HistogramBins = 100;
 
 
         public RingValuedNodeGroupVm()
@@ -36,26 +33,18 @@ namespace DonutDevilMain.ViewModel
             _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta" };
             _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
 
-            _colorLegendVm = new Plot1DVm(Colorsteps, 0.15, f => _nodeGroupColorSequence.ToUnitColor(f))
-                {
-                    Title = "Cell legend",
-                    MinValue = 0.0,
-                    MaxValue = 1.0
-                };
 
-            _colorLegendVm.WbVerticalStripesVm.AddValues
+            _ringHistogramVm = new RingHistogramVm
                 (
-                    Enumerable.Range(0, Colorsteps)
-                                .Select(i => new D2Val<float>(i, 0, i / (float)Colorsteps))
+                  title: "Cell values",
+                  legendColorMap: f => _nodeGroupColorSequence.ToUnitColor(f),
+                  histogramColorMap: f => _histogramColorSequence.Colors[(int)f]
                 );
 
-
-            _histogramVm = new Plot1DVm(HistogramBins, 0.15, f => _histogramColorSequence.Colors[(int)f])
-            {
-                Title = "Cell frequency",
-                MinValue = 0.0,
-                MaxValue = 1.0
-            };
+            _ringHistogramVm.LegendVm.AddValues(
+                    Enumerable.Range(0, WbRingPlotVm.NumCoords)
+                              .Select(i => new D1Val<float>(i, (float)i / WbRingPlotVm.NumCoords))
+                );
 
             _wbUniformGridVm = new WbUniformGridVm(SquareSize, SquareSize, f => _nodeGroupColorSequence.ToUnitColor(f));
 
@@ -232,34 +221,15 @@ namespace DonutDevilMain.ViewModel
             var histogram =
                 _nodeGroup.Values.ToHistogram
                 (
-                    bins: RealInterval.UnitRange.SplitToEvenIntervals(HistogramBins).ToList(),
+                    bins: RealInterval.UnitRange.SplitToEvenIntervals(WbRingPlotVm.NumCoords -1).ToList(),
                     valuatorFunc: n => n
                 );
 
             var colorDexer = (Colorsteps - 1) / histogram.Max(t => Math.Sqrt(t.Item2.Item));
 
-            //HistogramVm = new Plot1DVm
-            //{
-            //    Title = "Node frequencies",
-            //    MinValue = -0.0,
-            //    MaxValue = 1.0,
-            //    GraphicsInfos = histogram.Select(
-            //        (bin, index) => new PlotPoint
-            //            (
-            //                    x: index,
-            //                    y: 0,
-            //                    color: _histogramColorSequence.Colors[(int)(colorDexer * Math.Sqrt(bin.Item2.Item))]
-            //            )).ToList()
-            //};
-            _histogramVm.WbVerticalStripesVm.AddValues
-            (
-
-                histogram.Select((bin, index) => new D2Val<float>(index, 0, (float)(colorDexer * Math.Sqrt(bin.Item2.Item)))).ToList()
-
-
-                //Enumerable.Range(0, Colorsteps)
-                //            .Select(i => new D2Val<float>(i, 0, i / (float)Colorsteps))
-            );
+            RingHistogramVm.HistogramVm.AddValues(
+                    histogram.Select((bin, index) => new D1Val<float>(index, (float)(colorDexer * Math.Sqrt(bin.Item2.Item))))
+                );
         }
 
         void UpdateBindingProperties()
@@ -367,28 +337,12 @@ namespace DonutDevilMain.ViewModel
             get { return _stopwatch.Elapsed; }
         }
 
-
-        private Plot1DVm _colorLegendVm;
-        public Plot1DVm ColorLegendVm
+        private RingHistogramVm _ringHistogramVm;
+        public RingHistogramVm RingHistogramVm
         {
-            get { return _colorLegendVm; }
-            set
-            {
-                _colorLegendVm = value;
-                OnPropertyChanged("ColorLegendVm");
-            }
+            get { return _ringHistogramVm; }
         }
 
-        private Plot1DVm _histogramVm;
-        public Plot1DVm HistogramVm
-        {
-            get { return _histogramVm; }
-            set
-            {
-                _histogramVm = value;
-                OnPropertyChanged("HistogramVm");
-            }
-        }
 
         private readonly SliderVm _alphaSliderVm;
         public SliderVm AlphaSliderVm

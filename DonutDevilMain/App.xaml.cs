@@ -16,7 +16,7 @@ namespace DonutDevilMain
             var windowVm = new MainWindowVm();
             var mainWindow = new MainWindow(windowVm);
 
-            //var windowVm = new DesignTestWbPlotWindowVm();
+            //var windowVm = new TestWbPlotWindowVm();
             //var mainWindow = new TestWbPlotWindow();
 
 
