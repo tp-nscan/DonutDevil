@@ -12,6 +12,7 @@ using MathLib;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
 using NodeLib;
+using NodeLib.Updaters;
 using WpfUtils;
 using WpfUtils.Utils;
 using WpfUtils.ViewModels.Graphics;
@@ -23,7 +24,6 @@ namespace DonutDevilMain.ViewModel
         private const int SquareSize = 256;
         private const int Colorsteps = 512;
 
-
         public RingValuedNodeGroupVm()
         {
             _nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colorsteps/4);
@@ -34,7 +34,6 @@ namespace DonutDevilMain.ViewModel
             _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta" };
             _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
             _displayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
-
 
             _ringHistogramVm = new RingHistogramVm
                 (
@@ -64,7 +63,7 @@ namespace DonutDevilMain.ViewModel
 
         private INodeGroup _nodeGroup;
 
-        private INodeGroupUpdater _nodeGroupUpdater;
+        private INgUpdater _ngUpdater;
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -110,7 +109,7 @@ namespace DonutDevilMain.ViewModel
                 _stopwatch.Start();
                 for (var i = 0; _isRunning; i++)
                 {
-                    _nodeGroup = _nodeGroupUpdater.Update(_nodeGroup);
+                    _nodeGroup = _ngUpdater.Update(_nodeGroup);
 
                     if (_cancellationTokenSource.IsCancellationRequested)
                     {
@@ -124,7 +123,7 @@ namespace DonutDevilMain.ViewModel
                             (
                                 () =>
                                 {
-                                    ResetNodeGroupUpdaters();
+                                    ResetNgUpdaters();
                                     UpdateBindingProperties();
                                     MakeHistogram();
                                     DrawMainGrid(_nodeGroup);
@@ -242,18 +241,18 @@ namespace DonutDevilMain.ViewModel
 
             MakeHistogram();
 
-            ResetNodeGroupUpdaters();
+            ResetNgUpdaters();
 
             DrawMainGrid(_nodeGroup);
         }
 
 
-        void ResetNodeGroupUpdaters()
+        void ResetNgUpdaters()
         {
             if (!IsDirty)
                 return;
 
-            _nodeGroupUpdater = NodeGroupUpdaterRing.ForSquareTorus
+            _ngUpdater = NgUpdaterRing.ForSquareTorus
             (
                 gain: 0.095f,
                 step: (float)StepSizeSliderVm.Value,

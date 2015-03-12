@@ -1,38 +1,117 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MathLib;
 using MathLib.NumericTypes;
+using NodeLib.Params;
 
-namespace NodeLib
+namespace NodeLib.Updaters
 {
-    public static class NodeGroupUpdaterRing
+    public static class NgUpdaterRing
     {
+        public static INgUpdater Standard(
+                string name,
+                int squareSize,
+                int offset,
+                float stepSize,
+                NeighboorhoodType neighborhoodType,
+                float noise
+            )
+        {
+            switch (neighborhoodType)
+            {
+                case NeighboorhoodType.Sides:
+                    return new NgUpdaterImpl
+                    (
+                        name: name,
+                        updateFunctions: Enumerable.Range(offset, squareSize * squareSize + offset)
+                                .Select(n2 =>
+                                        SidesFunc
+                                            (
+                                                torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
+                                                step: stepSize
+                                            )
+                                    )
+                                .ToList()
+                    );
 
-    public static INodeGroupUpdater ForSquareTorus
-    (
-        float gain,
-        float step,
-        float alpha,
-        float beta,
-        int squareSize
-    )
-    {
-            var spatial = alpha*alpha*0.1f;
-            return new NodeGroupUpdaterImpl(
-                Enumerable.Range(0, squareSize * squareSize)
-                          .Select(n2 =>
-                                  PeriodicFunc
-                                      (
-                                          torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
-                                          temporal: step * 0.20f,
-                                          spatial: spatial
+                case NeighboorhoodType.Perimeter:
+                    return new NgUpdaterImpl
+                    (
+                        name: name,
+                        updateFunctions: Enumerable.Range(offset, squareSize * squareSize + offset)
+                                .Select(n2 =>
+                                        PerimeterFunc
+                                            (
+                                                torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
+                                                step: stepSize
+                                            )
+                                    )
+                                .ToList()
+                    );
+
+                case NeighboorhoodType.Star:
+                    return new NgUpdaterImpl
+                    (
+                        name: name,
+                            updateFunctions: Enumerable.Range(offset, squareSize * squareSize + offset)
+                                  .Select(n2 =>
+                                          StarFunc
+                                              (
+                                                  torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
+                                                  step: stepSize
+                                              )
                                       )
-                              )
-                          .ToList()
-                );
+                                  .ToList()
+                    );
+
+                case NeighboorhoodType.DoublePerimeter:
+                    return new NgUpdaterImpl
+                    (
+                        name: name,
+                            updateFunctions: Enumerable.Range(offset, squareSize * squareSize + offset)
+                                  .Select(n2 =>
+                                          DoubleRingFunc
+                                              (
+                                                  torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
+                                                  step: stepSize
+                                              )
+                                      )
+                                  .ToList()
+                    );
+
+                default:
+                    throw new Exception("NeighboorhoodType not handled");
+            }
         }
 
-        public static INodeGroupUpdater ForSquareTorus0
+
+        public static INgUpdater ForSquareTorus
+        (
+            float gain,
+            float step,
+            float alpha,
+            float beta,
+            int squareSize
+        )
+        {
+                var spatial = alpha*alpha*0.1f;
+                return new NgUpdaterImpl(
+                    name: "ForSquareTorus",
+                    updateFunctions: Enumerable.Range(0, squareSize * squareSize)
+                              .Select(n2 =>
+                                      PeriodicFunc
+                                          (
+                                              torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
+                                              temporal: step * 0.20f,
+                                              spatial: spatial
+                                          )
+                                  )
+                              .ToList()
+                    );
+            }
+
+        public static INgUpdater ForSquareTorus0
             (
                 float gain, 
                 float step,
@@ -43,8 +122,9 @@ namespace NodeLib
             )
         {
             var biases = RingRadialCosBiases(step: step, rBias: alpha, aBias: beta);
-            return new NodeGroupUpdaterImpl(
-                Enumerable.Range(0, squareSize * squareSize)
+            return new NgUpdaterImpl(
+                name: "ForSquareTorus",
+                updateFunctions:  Enumerable.Range(0, squareSize * squareSize)
                           .Select(n2 =>
                                   RingBiasFunc
                                       (
@@ -143,11 +223,47 @@ namespace NodeLib
 
         static Func<INodeGroup, INode[]> StarFunc(
           TorusNbrhd torusNbrhd,
+          float step
+        )
+        {
+            return (ng) =>
+            {
+                var cOne = ng.Values[torusNbrhd.CC];
+
+                var resOne = cOne.MfDelta(ng.Values[torusNbrhd.UF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LR]) * step;
+
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CFf]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CRr]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UuC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LlC]) * step;
+
+                return new[]
+                    {
+                        Node.Make
+                            (
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhd.CC
+                            )
+                    };
+            };
+
+        }
+
+
+        static Func<INodeGroup, INode[]> StarFuncVbias(
+          TorusNbrhd torusNbrhd,
           float step,
           float vBias
         )
         {
-            var hStep = step*(1.0f - vBias*2);
+            var hStep = step * (1.0f - vBias * 2);
             var vStep = step * (vBias * 2 - 1.0f);
 
 
@@ -360,9 +476,54 @@ namespace NodeLib
 
         }
 
+        static Func<INodeGroup, INode[]> DoubleRingFunc(
+              TorusNbrhd torusNbrhd,
+              float step
+
+        )
+        {
+            return (ng) =>
+            {
+                var cOne = ng.Values[torusNbrhd.CC];
+
+                var
+                resOne = cOne.MfDelta(ng.Values[torusNbrhd.UF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LR]) * step;
+
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CFf]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CFff]) * step;
+
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CRr]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CRrr]) * step;
+
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UuC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UuuC]) * step;
+
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LlC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LllC]) * step;
 
 
-        static Func<INodeGroup, INode[]> BigRingFunc(
+                return new[]
+                    {
+                        Node.Make
+                            (
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhd.CC
+                            )
+                    };
+            };
+
+        }
+
+
+
+        static Func<INodeGroup, INode[]> BigRingFuncWithBias(
               TorusNbrhd torusNbrhd,
               float step,
               float hBias,

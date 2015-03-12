@@ -100,12 +100,16 @@
     <Compile Include="ViewModel\Design\Common\DesignImageLegendVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignRingHistogramVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignSliderVm.cs" />
+    <Compile Include="ViewModel\Design\Params\DesignParamsVm.cs" />
+    <Compile Include="ViewModel\Params\IParamVm.cs" />
+    <Compile Include="ViewModel\Params\ParamEditorEnumVm.cs" />
+    <Compile Include="ViewModel\Params\ParamEditorFloatVm.cs" />
+    <Compile Include="ViewModel\Params\ParamEditorIntVm.cs" />
+    <Compile Include="ViewModel\Params\ParamsVm.cs" />
+    <Compile Include="ViewModel\Params\ParamEditorBoolVm.cs" />
     <Compile Include="View\Common\ImageLegendControl.xaml.cs">
       <DependentUpon>ImageLegendControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\Design\Win\DesignNgFloatWindowVm.cs" />
-    <Compile Include="ViewModel\Design\Win\DesignNgRingWindowVm.cs" />
-    <Compile Include="ViewModel\Design\Win\DesignNgTorusWindowVm.cs" />
     <Compile Include="View\Common\Plot1DControl.xaml.cs">
       <DependentUpon>Plot1DControl.xaml</DependentUpon>
     </Compile>
@@ -117,6 +121,10 @@
     </Compile>
     <Compile Include="View\Common\SliderControl.xaml.cs">
       <DependentUpon>SliderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Params\ParamEditorSelector.cs" />
+    <Compile Include="View\Params\ParamsEditorControl.xaml.cs">
+      <DependentUpon>ParamsEditorControl.xaml</DependentUpon>
     </Compile>
     <Page Include="UserControl1.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -145,6 +153,14 @@
     <Page Include="View\Common\SliderControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Params\ParamEditorSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Params\ParamsEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

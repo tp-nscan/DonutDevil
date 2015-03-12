@@ -59,12 +59,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DualInteractionType.cs" />
+    <Compile Include="NeighboorhoodType.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NodeGroup.cs" />
-    <Compile Include="NodeGroupUpdater.cs" />
-    <Compile Include="NodeGroupUpdaterRing.cs" />
-    <Compile Include="NodeGroupUpdaterTorus.cs" />
+    <Compile Include="NgLayerIndexer.cs" />
+    <Compile Include="Updaters\NgCycler.cs" />
+    <Compile Include="Updaters\NgUpdater.cs" />
+    <Compile Include="Updaters\NgUpdaterBuilder.cs" />
+    <Compile Include="Updaters\NgUpdaterRing.cs" />
+    <Compile Include="Updaters\NgUpdaterTorus.cs" />
+    <Compile Include="Params\IParameter.cs" />
+    <Compile Include="Params\ParamBool.cs" />
+    <Compile Include="Params\ParamEnum.cs" />
+    <Compile Include="Params\ParamFloat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

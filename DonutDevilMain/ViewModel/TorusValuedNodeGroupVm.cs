@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
 using MathLib.Intervals;
 using NodeLib;
+using NodeLib.Updaters;
 using WpfUtils;
 using WpfUtils.Views.Graphics;
 
@@ -37,7 +38,7 @@ namespace DonutDevilMain.ViewModel
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private INodeGroup _nodeGroup;
-        private INodeGroupUpdater _nodeGroupUpdater;
+        private INgUpdater _ngUpdater;
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private bool _isRunning;
         private bool _isDirty;
@@ -92,7 +93,7 @@ namespace DonutDevilMain.ViewModel
                 _stopwatch.Start();
                 for (var i = 0; _isRunning; i++)
                 {
-                    var newNodeGroup = _nodeGroupUpdater.Update(_nodeGroup);
+                    var newNodeGroup = _ngUpdater.Update(_nodeGroup);
                     Activity = _nodeGroup.Activity(newNodeGroup);
                     _nodeGroup = newNodeGroup;
                     Generation++;
@@ -109,7 +110,7 @@ namespace DonutDevilMain.ViewModel
                             (
                                 () =>
                                 {
-                                    ResetNodeGroupUpdaters();
+                                    ResetNgUpdaters();
                                     UpdateBindingProperties();
                                     DrawMainGrid();
                                     CommandManager.InvalidateRequerySuggested();
@@ -238,15 +239,15 @@ namespace DonutDevilMain.ViewModel
 
             DrawMainGrid();
 
-            ResetNodeGroupUpdaters();
+            ResetNgUpdaters();
         }
 
-        void ResetNodeGroupUpdaters()
+        void ResetNgUpdaters()
         {
             if (!IsDirty)
                 return;
 
-            _nodeGroupUpdater = NodeGroupUpdaterTorus.ForSquareTorus
+            _ngUpdater = NgUpdaterTorus.ForSquareTorus
             (
                 gain: 0.095f,
                 step: (float)StepSizeSliderVm.Value,
