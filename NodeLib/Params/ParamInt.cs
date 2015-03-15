@@ -2,9 +2,9 @@
 
 namespace NodeLib.Params
 {
-    public class ParamFloat : IParameter
+    public class ParamInt : IParameter
     {
-        public ParamFloat(float min, float max, float value, string name)
+        public ParamInt(int min, int max, int value, string name)
         {
             _min = min;
             _max = max;
@@ -14,22 +14,22 @@ namespace NodeLib.Params
 
         public ParamType ParamType
         {
-            get { return ParamType.Float; }
+            get { return ParamType.Int; }
         }
 
         public Type Type
         {
-            get { return typeof(float); }
+            get { return typeof(int); }
         }
 
-        private readonly float _min;
-        public float Min
+        private readonly int _min;
+        public int Min
         {
             get { return _min; }
         }
 
-        private readonly float _max;
-        public float Max
+        private readonly int _max;
+        public int Max
         {
             get { return _max; }
         }

@@ -21,17 +21,17 @@ namespace NodeLib
                 {
                     case DualInteractionType.None:
                         yield return new ParamFloat(0f, 1f, 0.5f, "StepSize" + suffix);
-                        yield return new ParamEnum(typeof(NeighboorhoodType), NeighboorhoodType.Perimeter.ToString(), "NeighboorhoodType" + suffix);
+                        yield return new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighboorhoodType" + suffix);
                         yield return new ParamFloat(0f, 1f, 0.0f, "Noise" + suffix);
                         break;
                     case DualInteractionType.Euclidean:
                         yield return new ParamFloat(0f, 1f, 0.5f, "StepSize" + suffix);
-                        yield return new ParamEnum(typeof(NeighboorhoodType), NeighboorhoodType.Perimeter.ToString(), "NeighboorhoodType" + suffix);
+                        yield return new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighboorhoodType" + suffix);
                         yield return new ParamFloat(0f, 1f, 0.0f, "Noise" + suffix);
                         break;
                     case DualInteractionType.RotationalBias:
                         yield return new ParamFloat(0f, 1f, 0.5f, "StepSize" + suffix);
-                        yield return new ParamEnum(typeof(NeighboorhoodType), NeighboorhoodType.Perimeter.ToString(), "NeighboorhoodType" + suffix);
+                        yield return new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighboorhoodType" + suffix);
                         yield return new ParamFloat(0f, 1f, 0.5f, "RadialBias" + suffix);
                         yield return new ParamFloat(0f, 1f, 0.0f, "Noise" + suffix);
                         break;
@@ -45,27 +45,27 @@ namespace NodeLib
             {
                 case DualInteractionType.None:
                     yield return new ParamFloat(0f, 1f, 0.5f, "StepSize_A" + suffix);
-                    yield return new ParamEnum(typeof(NeighboorhoodType), NeighboorhoodType.Perimeter.ToString(), "NeighboorhoodType_A" + suffix);
+                    yield return new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighboorhoodType_A" + suffix);
                     yield return new ParamFloat(0f, 1f, 0.0f, "Noise_A" + suffix);
                     yield return new ParamFloat(0f, 1f, 0.5f, "StepSize_B" + suffix);
-                    yield return new ParamEnum(typeof(NeighboorhoodType), NeighboorhoodType.Perimeter.ToString(), "NeighboorhoodType_B" + suffix);
+                    yield return new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighboorhoodType_B" + suffix);
                     yield return new ParamFloat(0f, 1f, 0.0f, "Noise_B" + suffix);
                     break;
                 case DualInteractionType.Euclidean:
                     yield return new ParamFloat(0f, 1f, 0.5f, "StepSize_A" + suffix);
-                    yield return new ParamEnum(typeof(NeighboorhoodType), NeighboorhoodType.Perimeter.ToString(), "NeighboorhoodType_A" + suffix);
+                    yield return new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighboorhoodType_A" + suffix);
                     yield return new ParamFloat(0f, 1f, 0.0f, "Noise_A" + suffix);
                     yield return new ParamFloat(0f, 1f, 0.5f, "StepSize_B" + suffix);
-                    yield return new ParamEnum(typeof(NeighboorhoodType), NeighboorhoodType.Perimeter.ToString(), "NeighboorhoodType_B" + suffix);
+                    yield return new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighboorhoodType_B" + suffix);
                     yield return new ParamFloat(0f, 1f, 0.0f, "Noise_B" + suffix);
                     break;
                 case DualInteractionType.RotationalBias:
                     yield return new ParamFloat(0f, 1f, 0.5f, "StepSize_A" + suffix);
-                    yield return new ParamEnum(typeof(NeighboorhoodType), NeighboorhoodType.Perimeter.ToString(), "NeighboorhoodType_A" + suffix);
+                    yield return new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighboorhoodType_A" + suffix);
                     yield return new ParamFloat(0f, 1f, 0.5f, "RadialBias_A" + suffix);
                     yield return new ParamFloat(0f, 1f, 0.0f, "Noise_A" + suffix);
                     yield return new ParamFloat(0f, 1f, 0.5f, "StepSize_B" + suffix);
-                    yield return new ParamEnum(typeof(NeighboorhoodType), NeighboorhoodType.Perimeter.ToString(), "NeighboorhoodType_B" + suffix);
+                    yield return new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighboorhoodType_B" + suffix);
                     yield return new ParamFloat(0f, 1f, 0.5f, "RadialBias_B" + suffix);
                     yield return new ParamFloat(0f, 1f, 0.0f, "Noise_B" + suffix);
                     break;

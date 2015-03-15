@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using DonutDevilMain.View;
 using DonutDevilMain.ViewModel;
-using DonutDevilMain.ViewModel.Design;
 
 namespace DonutDevilMain
 {
@@ -14,11 +13,7 @@ namespace DonutDevilMain
         {
 
             var windowVm = new MainWindowVm();
-            var mainWindow = new MainWindow(windowVm);
-
-            //var windowVm = new TestWbPlotWindowVm();
-            //var mainWindow = new TestWbPlotWindow();
-
+            var mainWindow = new MainWindow();
 
             mainWindow.DataContext = windowVm;
 

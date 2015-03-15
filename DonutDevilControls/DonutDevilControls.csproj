@@ -100,13 +100,16 @@
     <Compile Include="ViewModel\Design\Common\DesignImageLegendVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignRingHistogramVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignSliderVm.cs" />
-    <Compile Include="ViewModel\Design\Params\DesignParamsVm.cs" />
-    <Compile Include="ViewModel\Params\IParamVm.cs" />
+    <Compile Include="ViewModel\Design\Params\DesignParamSetEditorVm.cs" />
+    <Compile Include="ViewModel\Params\IParamEditorVm.cs" />
     <Compile Include="ViewModel\Params\ParamEditorEnumVm.cs" />
     <Compile Include="ViewModel\Params\ParamEditorFloatVm.cs" />
     <Compile Include="ViewModel\Params\ParamEditorIntVm.cs" />
-    <Compile Include="ViewModel\Params\ParamsVm.cs" />
+    <Compile Include="ViewModel\Params\ParamSetEditorVm.cs" />
     <Compile Include="ViewModel\Params\ParamEditorBoolVm.cs" />
+    <Compile Include="View\Common\EnumEditorControl.xaml.cs">
+      <DependentUpon>EnumEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Common\ImageLegendControl.xaml.cs">
       <DependentUpon>ImageLegendControl.xaml</DependentUpon>
     </Compile>
@@ -126,14 +129,10 @@
     <Compile Include="View\Params\ParamsEditorControl.xaml.cs">
       <DependentUpon>ParamsEditorControl.xaml</DependentUpon>
     </Compile>
-    <Page Include="UserControl1.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="View\Common\EnumEditorControl.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Page Include="View\Common\ImageLegendControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

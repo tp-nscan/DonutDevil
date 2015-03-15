@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using DonutDevilControls.ViewModel.Params;
+using NodeLib.Params;
 
 namespace DonutDevilControls.View.Params
 {
@@ -19,7 +20,7 @@ namespace DonutDevilControls.View.Params
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            var paramVm = item as IParamVm;
+            var paramVm = item as IParamEditorVm;
 
             if (paramVm != null)
             {

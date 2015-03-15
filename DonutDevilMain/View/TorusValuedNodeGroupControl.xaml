@@ -20,9 +20,9 @@
 
                 <StackPanel Orientation="Horizontal" Margin="0,5" HorizontalAlignment="Center">
 
-                    <Button Height="40" Command="{Binding UpdateGridCommand}" Content="Run" Width="40" HorizontalAlignment="Center"/>
+                    <Button Height="40" Command="{Binding UpdateNetworkCommand}" Content="Run" Width="40" HorizontalAlignment="Center"/>
 
-                    <Button Height="40" Command="{Binding StopUpdateGridCommand}" Content="Stop" Width="40" HorizontalAlignment="Center"/>
+                    <Button Height="40" Command="{Binding StopUpdateNetworkCommand}" Content="Stop" Width="40" HorizontalAlignment="Center"/>
 
                     <Button Height="40" Command="{Binding ResetCommand}" Content="Reset" Width="40" HorizontalAlignment="Center"/>
 
@@ -80,7 +80,7 @@
 
             </StackPanel>
 
-            <graphics:WbImage Grid.Column="1" Margin="10" PlotPoints="{Binding GridGraphicsInfo}" ImageWidth="1024" ImageHeight="1024"/>
+            <graphics:WbImage Grid.Column="1" Margin="10" PlotPoints="{Binding NetworkGraphicsInfo}" ImageWidth="1024" ImageHeight="1024"/>
 
         </Grid>
     </Grid>

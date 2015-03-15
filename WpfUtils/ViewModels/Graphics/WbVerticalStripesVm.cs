@@ -24,7 +24,7 @@ namespace WpfUtils.ViewModels.Graphics
 
         private List<D2Val<float>> _gridVals = new List<D2Val<float>>();
 
-        private List<D2Val<float>> GridVals
+        private List<D2Val<float>> NetworkVals
         {
             get { return _gridVals; }
             set { _gridVals = value; }
@@ -40,7 +40,7 @@ namespace WpfUtils.ViewModels.Graphics
 
         public void AddValues(IEnumerable<D2Val<float>> gridVals)
         {
-            GridVals = gridVals.ToList();
+            NetworkVals = gridVals.ToList();
             RefreshPlotRectangles();
         }
 
@@ -59,7 +59,7 @@ namespace WpfUtils.ViewModels.Graphics
         {
             PlotRectangleList.Clear();
 
-            PlotRectangleList = GridVals.Select(
+            PlotRectangleList = NetworkVals.Select(
                 
                 gv =>
                     new PlotRectangle

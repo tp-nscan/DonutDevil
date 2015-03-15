@@ -1,4 +1,5 @@
-﻿using WpfUtils;
+﻿using DonutDevilMain.ViewModel.Design;
+using WpfUtils;
 
 namespace DonutDevilMain.ViewModel
 {
@@ -6,10 +7,9 @@ namespace DonutDevilMain.ViewModel
     {
         public MainWindowVm()
         {
-           // NodeGroupVm = new TorusValuedNodeGroupVm();
-            NodeGroupVm = new RingValuedNodeGroupVm();
+            NetworkVm = new DesignNetworkVm();
         }
 
-        public NotifyPropertyChanged NodeGroupVm { get; set; }
+        public NotifyPropertyChanged NetworkVm { get; set; }
     }
 }

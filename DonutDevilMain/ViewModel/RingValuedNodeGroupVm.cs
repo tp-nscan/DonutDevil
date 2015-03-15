@@ -27,7 +27,6 @@ namespace DonutDevilMain.ViewModel
         public RingValuedNodeGroupVm()
         {
             _nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colorsteps/4);
-
             _histogramColorSequence = Colors.White.ToUniformColorSequence(Colorsteps);
 
             _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") {Title = "Alpha"};
@@ -47,7 +46,7 @@ namespace DonutDevilMain.ViewModel
                               .Select(i => new D1Val<float>(i, (float)i / Functions.TrigFuncSteps))
                 );
 
-            _wbUniformGridVm = new WbUniformGridVm(SquareSize, SquareSize, f => _nodeGroupColorSequence.ToUnitColor(f));
+            _wbUniformNetworkVm = new WbUniformNetworkVm(SquareSize, SquareSize, f => _nodeGroupColorSequence.ToUnitColor(f));
 
             InitializeRun();
         }
@@ -85,21 +84,21 @@ namespace DonutDevilMain.ViewModel
         #endregion
 
 
-        #region UpdateGridCommand
+        #region UpdateNetworkCommand
 
-        RelayCommand _updateGridCommand;
-        public ICommand UpdateGridCommand
+        RelayCommand _updateNetworkCommand;
+        public ICommand UpdateNetworkCommand
         {
             get
             {
-                return _updateGridCommand ?? (_updateGridCommand = new RelayCommand(
-                    param => DoUpdateGrid(),
-                    param => CanUpdateGrid()
+                return _updateNetworkCommand ?? (_updateNetworkCommand = new RelayCommand(
+                    param => DoUpdateNetwork(),
+                    param => CanUpdateNetwork()
                     ));
             }
         }
 
-        private async void DoUpdateGrid()
+        private async void DoUpdateNetwork()
         {
             _cancellationTokenSource = new CancellationTokenSource();
             _isRunning = true;
@@ -126,7 +125,7 @@ namespace DonutDevilMain.ViewModel
                                     ResetNgUpdaters();
                                     UpdateBindingProperties();
                                     MakeHistogram();
-                                    DrawMainGrid(_nodeGroup);
+                                    DrawMainNetwork(_nodeGroup);
                                     CommandManager.InvalidateRequerySuggested();
                                 },
                                 DispatcherPriority.Background
@@ -138,39 +137,39 @@ namespace DonutDevilMain.ViewModel
             );
         }
 
-        bool CanUpdateGrid()
+        bool CanUpdateNetwork()
         {
             return !_isRunning;
         }
 
-        #endregion // UpdateGridCommand
+        #endregion // UpdateNetworkCommand
 
 
-        #region StopUpdateGridCommand
+        #region StopUpdateNetworkCommand
 
-        RelayCommand _stopUpdateGridCommand;
-        public ICommand StopUpdateGridCommand
+        RelayCommand _stopUpdateNetworkCommand;
+        public ICommand StopUpdateNetworkCommand
         {
             get
             {
-                return _stopUpdateGridCommand ?? (_stopUpdateGridCommand = new RelayCommand(
-                    param => DoCancelUpdateGrid(),
-                    param => CanCancelUpdateGrid()
+                return _stopUpdateNetworkCommand ?? (_stopUpdateNetworkCommand = new RelayCommand(
+                    param => DoCancelUpdateNetwork(),
+                    param => CanCancelUpdateNetwork()
                     ));
             }
         }
 
-        private void DoCancelUpdateGrid()
+        private void DoCancelUpdateNetwork()
         {
             _cancellationTokenSource.Cancel();
         }
 
-        bool CanCancelUpdateGrid()
+        bool CanCancelUpdateNetwork()
         {
             return _isRunning;
         }
 
-        #endregion // StopUpdateGridCommand
+        #endregion // StopUpdateNetworkCommand
 
 
         #region ResetCommand
@@ -224,15 +223,15 @@ namespace DonutDevilMain.ViewModel
             OnPropertyChanged("ElapsedTime");
         }
 
-        void DrawMainGrid(INodeGroup nodeGroup)
+        void DrawMainNetwork(INodeGroup nodeGroup)
         {
-            WbUniformGridVm.AddValues(nodeGroup.Values.Select((v,i)=> new D2Val<float>(i/SquareSize, i%SquareSize, v)));
+            WbUniformNetworkVm.AddValues(nodeGroup.Values.Select((v,i)=> new D2Val<float>(i/SquareSize, i%SquareSize, v)));
         }
 
-        private readonly WbUniformGridVm _wbUniformGridVm;
-        public WbUniformGridVm WbUniformGridVm
+        private readonly WbUniformNetworkVm _wbUniformNetworkVm;
+        public WbUniformNetworkVm WbUniformNetworkVm
         {
-            get { return _wbUniformGridVm; }
+            get { return _wbUniformNetworkVm; }
         }
 
         void InitializeRun()
@@ -243,7 +242,7 @@ namespace DonutDevilMain.ViewModel
 
             ResetNgUpdaters();
 
-            DrawMainGrid(_nodeGroup);
+            DrawMainNetwork(_nodeGroup);
         }
 
 
@@ -311,5 +310,6 @@ namespace DonutDevilMain.ViewModel
         }
 
         #endregion
+
     }
 }

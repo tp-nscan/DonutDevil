@@ -10,6 +10,11 @@ namespace NodeLib.Params
             _name = name;
         }
 
+        public ParamType ParamType
+        {
+            get { return ParamType.Bool; }
+        }
+
         public Type Type
         {
             get { return typeof(bool); }

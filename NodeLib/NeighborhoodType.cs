@@ -1,6 +1,6 @@
 ﻿namespace NodeLib
 {
-    public enum NeighboorhoodType
+    public enum NeighborhoodType
     {
         Sides,
         Perimeter,

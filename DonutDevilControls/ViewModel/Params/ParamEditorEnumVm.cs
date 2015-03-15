@@ -1,12 +1,24 @@
-﻿using WpfUtils;
+﻿using System;
+using System.Collections.ObjectModel;
+using NodeLib.Params;
+using WpfUtils;
 
 namespace DonutDevilControls.ViewModel.Params
 {
-    public class ParamEditorEnumVm : NotifyPropertyChanged, IParamVm
+    public class ParamEditorEnumVm : NotifyPropertyChanged, IParamEditorVm
     {
-        public ParamEditorEnumVm(string name)
+        public ParamEditorEnumVm(ParamEnum paramEnum)
         {
-            _name = name;
+            _paramEnum = paramEnum;
+            Value = _paramEnum.Value.ToString();
+            _enumValues = new ObservableCollection<string>(Enum.GetNames(paramEnum.Type));
+        }
+
+        private bool _isDirty;
+        public bool IsDirty
+        {
+            get { return _isDirty; }
+            set { _isDirty = value; }
         }
 
         public ParamType ParamType
@@ -14,21 +26,40 @@ namespace DonutDevilControls.ViewModel.Params
             get { return ParamType.Enum; }
         }
 
-        private readonly string _name;
-        public string Name
+        public string Title
         {
-            get { return _name; }
+            get { return _paramEnum.Name; }
         }
 
-        private bool _value;
-        public bool Value
+        private readonly ParamEnum _paramEnum;
+
+        private string _value;
+        public string Value
         {
             get { return _value; }
             set
             {
                 _value = value;
+                _isDirty = (value != (string) _paramEnum.Value);
                 OnPropertyChanged("Value");
             }
+        }
+
+        private ObservableCollection<string> _enumValues;
+        public ObservableCollection<string> EnumValues
+        {
+            get { return _enumValues; }
+            set
+            {
+                _enumValues = value;
+                OnPropertyChanged("EnumValues");
+            }
+        }
+
+
+        public IParameter EditedValue
+        {
+            get { return new ParamEnum(_paramEnum.Type, Value, _paramEnum.Name); }
         }
     }
 }

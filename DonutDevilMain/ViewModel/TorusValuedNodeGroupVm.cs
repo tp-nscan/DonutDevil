@@ -69,21 +69,21 @@ namespace DonutDevilMain.ViewModel
         #endregion
 
 
-        #region UpdateGridCommand
+        #region UpdateNetworkCommand
 
-        RelayCommand _updateGridCommand;
-        public ICommand UpdateGridCommand
+        RelayCommand _updateNetworkCommand;
+        public ICommand UpdateNetworkCommand
         {
             get
             {
-                return _updateGridCommand ?? (_updateGridCommand = new RelayCommand(
-                    param => DoUpdateGrid(),
-                    param => CanUpdateGrid()
+                return _updateNetworkCommand ?? (_updateNetworkCommand = new RelayCommand(
+                    param => DoUpdateNetwork(),
+                    param => CanUpdateNetwork()
                     ));
             }
         }
 
-        private async void DoUpdateGrid()
+        private async void DoUpdateNetwork()
         {
             _cancellationTokenSource = new CancellationTokenSource();
             _isRunning = true;
@@ -112,7 +112,7 @@ namespace DonutDevilMain.ViewModel
                                 {
                                     ResetNgUpdaters();
                                     UpdateBindingProperties();
-                                    DrawMainGrid();
+                                    DrawMainNetwork();
                                     CommandManager.InvalidateRequerySuggested();
                                 },
                                 DispatcherPriority.Background
@@ -125,42 +125,42 @@ namespace DonutDevilMain.ViewModel
             );
         }
 
-        bool CanUpdateGrid()
+        bool CanUpdateNetwork()
         {
             return !_isRunning;
         }
 
-        #endregion // UpdateGridCommand
+        #endregion // UpdateNetworkCommand
 
 
-        #region StopUpdateGridCommand
+        #region StopUpdateNetworkCommand
 
-        RelayCommand _stopUpdateGridCommand;
-        public ICommand StopUpdateGridCommand
+        RelayCommand _stopUpdateNetworkCommand;
+        public ICommand StopUpdateNetworkCommand
         {
             get
             {
-                if (_stopUpdateGridCommand == null)
-                    _stopUpdateGridCommand = new RelayCommand(
-                        param => DoCancelUpdateGrid(),
-                        param => CanCancelUpdateGrid()
+                if (_stopUpdateNetworkCommand == null)
+                    _stopUpdateNetworkCommand = new RelayCommand(
+                        param => DoCancelUpdateNetwork(),
+                        param => CanCancelUpdateNetwork()
                         );
 
-                return _stopUpdateGridCommand;
+                return _stopUpdateNetworkCommand;
             }
         }
 
-        private void DoCancelUpdateGrid()
+        private void DoCancelUpdateNetwork()
         {
             _cancellationTokenSource.Cancel();
         }
 
-        bool CanCancelUpdateGrid()
+        bool CanCancelUpdateNetwork()
         {
             return _isRunning;
         }
 
-        #endregion // StopUpdateGridCommand
+        #endregion // StopUpdateNetworkCommand
 
 
         #region ResetCommand
@@ -201,7 +201,7 @@ namespace DonutDevilMain.ViewModel
             OnPropertyChanged("ElapsedTime");
         }
 
-        void DrawMainGrid()
+        void DrawMainNetwork()
         {
             if (_nodeGroup == null)
             {
@@ -227,7 +227,7 @@ namespace DonutDevilMain.ViewModel
                 }
             }
 
-            GridGraphicsInfo = ggi;
+            NetworkGraphicsInfo = ggi;
 
         }
 
@@ -237,7 +237,7 @@ namespace DonutDevilMain.ViewModel
 
            _nodeGroup = NodeGroup.RandomNodeGroup(SquareSize * SquareSize * 2, (int)DateTime.Now.Ticks);
 
-            DrawMainGrid();
+            DrawMainNetwork();
 
             ResetNgUpdaters();
         }
@@ -305,13 +305,13 @@ namespace DonutDevilMain.ViewModel
         }
 
         private IReadOnlyList<PlotPoint> _gridGraphicsInfo = new List<PlotPoint>();
-        public IReadOnlyList<PlotPoint> GridGraphicsInfo
+        public IReadOnlyList<PlotPoint> NetworkGraphicsInfo
         {
             get { return _gridGraphicsInfo; }
             set
             {
                 _gridGraphicsInfo = value;
-                OnPropertyChanged("GridGraphicsInfo");
+                OnPropertyChanged("NetworkGraphicsInfo");
             }
         }
 
@@ -323,7 +323,7 @@ namespace DonutDevilMain.ViewModel
 
         void OnPixelsChanged(Color[,] pixels)
         {
-            DrawMainGrid();
+            DrawMainNetwork();
         }
 
         private readonly SliderVm _displayFrequencySliderVm;

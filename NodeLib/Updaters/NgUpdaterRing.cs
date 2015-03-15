@@ -14,13 +14,13 @@ namespace NodeLib.Updaters
                 int squareSize,
                 int offset,
                 float stepSize,
-                NeighboorhoodType neighborhoodType,
+                NeighborhoodType neighborhoodType,
                 float noise
             )
         {
             switch (neighborhoodType)
             {
-                case NeighboorhoodType.Sides:
+                case NeighborhoodType.Sides:
                     return new NgUpdaterImpl
                     (
                         name: name,
@@ -35,7 +35,7 @@ namespace NodeLib.Updaters
                                 .ToList()
                     );
 
-                case NeighboorhoodType.Perimeter:
+                case NeighborhoodType.Perimeter:
                     return new NgUpdaterImpl
                     (
                         name: name,
@@ -50,7 +50,7 @@ namespace NodeLib.Updaters
                                 .ToList()
                     );
 
-                case NeighboorhoodType.Star:
+                case NeighborhoodType.Star:
                     return new NgUpdaterImpl
                     (
                         name: name,
@@ -65,7 +65,7 @@ namespace NodeLib.Updaters
                                   .ToList()
                     );
 
-                case NeighboorhoodType.DoublePerimeter:
+                case NeighborhoodType.DoublePerimeter:
                     return new NgUpdaterImpl
                     (
                         name: name,

@@ -1,11 +1,11 @@
 ﻿namespace DonutDevilMain.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for NetworkControl.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class NetworkControl
     {
-        public MainWindow()
+        public NetworkControl()
         {
             InitializeComponent();
         }

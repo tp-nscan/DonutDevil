@@ -1,12 +1,21 @@
-﻿using WpfUtils;
+﻿using NodeLib.Params;
+using WpfUtils;
 
 namespace DonutDevilControls.ViewModel.Params
 {
-    public class ParamEditorBoolVm : NotifyPropertyChanged, IParamVm
+    public class ParamEditorBoolVm : NotifyPropertyChanged, IParamEditorVm
     {
-        public ParamEditorBoolVm(string name)
+        public ParamEditorBoolVm(ParamBool paramBool)
         {
-            _name = name;
+            _paramBool = paramBool;
+            Value = (bool)_paramBool.Value;
+        }
+
+        private bool _isDirty;
+        public bool IsDirty
+        {
+            get { return _isDirty; }
+            set { _isDirty = value; }
         }
 
         public ParamType ParamType
@@ -14,11 +23,12 @@ namespace DonutDevilControls.ViewModel.Params
             get { return ParamType.Bool; }
         }
 
-        private readonly string _name;
-        public string Name
+        public string Title
         {
-            get { return _name; }
+            get { return _paramBool.Name; }
         }
+
+        private readonly ParamBool _paramBool;
 
         private bool _value;
         public bool Value
@@ -27,8 +37,14 @@ namespace DonutDevilControls.ViewModel.Params
             set
             {
                 _value = value;
+                _isDirty =  (bool)_paramBool.Value != _value; 
                 OnPropertyChanged("Value");
             }
+        }
+
+        public IParameter EditedValue
+        {
+            get { return new ParamBool(Value, _paramBool.Name); }
         }
     }
 }

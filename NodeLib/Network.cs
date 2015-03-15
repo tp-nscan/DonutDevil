@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+using NodeLib.Indexers;
 using NodeLib.Params;
 using NodeLib.Updaters;
 
@@ -12,7 +11,7 @@ namespace NodeLib
         Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> NgUpdaterBuilder { get; }
         INgUpdater NgUpdater { get; }
         IReadOnlyDictionary<string, IParameter> Parameters { get; }
-        IReadOnlyList<INgLayerIndexer> NodegroupLayers { get; }
+        IReadOnlyList<INgIndexer> NodeGroupIndexers { get; }
         INodeGroup NodeGroup { get; }
     }
 
@@ -24,32 +23,45 @@ namespace NodeLib
                 nodeGroup: NodeGroup.RandomNodeGroup(squareSize*squareSize, seed),
                 parameters: NgUpdaterBuilder.StandardRingParams(),
                 ngUpdater: NgUpdaterBuilder.StandardRing(squareSize)(NgUpdaterBuilder.StandardRingParams()),
-                nodegroupLayers: new[] { NgLayerIndexer.SquareLayer("Node values", squareSize) },
+                nodeGroupIndexers: new[] { NgIndexer.MakeD2Float("Node values", squareSize) },
                 ngUpdaterBuilder: NgUpdaterBuilder.StandardRing(squareSize)
             );
         }
 
-        public static INetwork Update(
-                this INetwork network,
-                INodeGroup nodeGroup,
-                IReadOnlyDictionary<string, IParameter> paramDictionary = null
-            )
+        public static INetwork UpdateNodeGroup(
+            this INetwork network
+        )
         {
             return new NetworkImpl(
-                nodeGroup: nodeGroup,
-                parameters: (paramDictionary) ?? network.Parameters,
-                ngUpdater: (paramDictionary == null) ? network.NgUpdater : network.NgUpdaterBuilder(network.Parameters),
-                nodegroupLayers: network.NodegroupLayers,
+                nodeGroup: network.NgUpdater.Update(network.NodeGroup),
+                parameters: network.Parameters,
+                ngUpdater: network.NgUpdater,
+                nodeGroupIndexers: network.NodeGroupIndexers,
                 ngUpdaterBuilder: network.NgUpdaterBuilder
             );
         }
+
+        public static INetwork UpdateParams(
+            this INetwork network,
+            IReadOnlyDictionary<string, IParameter> paramDictionary
+        )
+        {
+            return new NetworkImpl(
+                nodeGroup: network.NodeGroup,
+                parameters: paramDictionary,
+                ngUpdater: network.NgUpdaterBuilder(network.Parameters),
+                nodeGroupIndexers: network.NodeGroupIndexers,
+                ngUpdaterBuilder: network.NgUpdaterBuilder
+            );
+        }
+
     }
 
     public class NetworkImpl : INetwork
     {
         private readonly INgUpdater _ngUpdater;
         private readonly IReadOnlyDictionary<string, IParameter> _parameters;
-        private readonly IReadOnlyList<INgLayerIndexer> _nodegroupLayers;
+        private readonly IReadOnlyList<INgIndexer> _nodeGroupIndexers;
         private readonly INodeGroup _nodeGroup;
         private readonly Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> _ngUpdaterBuilder;
 
@@ -57,13 +69,13 @@ namespace NodeLib
             INodeGroup nodeGroup,
             IReadOnlyDictionary<string, IParameter> parameters, 
             INgUpdater ngUpdater, 
-            IReadOnlyList<INgLayerIndexer> nodegroupLayers, 
+            IReadOnlyList<INgIndexer> nodeGroupIndexers, 
             Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ngUpdaterBuilder)
         {
             _nodeGroup = nodeGroup;
             _parameters = parameters;
             _ngUpdater = ngUpdater;
-            _nodegroupLayers = nodegroupLayers;
+            _nodeGroupIndexers = nodeGroupIndexers;
             _ngUpdaterBuilder = ngUpdaterBuilder;
         }
 
@@ -82,9 +94,9 @@ namespace NodeLib
             get { return _parameters; }
         }
 
-        public IReadOnlyList<INgLayerIndexer> NodegroupLayers
+        public IReadOnlyList<INgIndexer> NodeGroupIndexers
         {
-            get { return _nodegroupLayers; }
+            get { return _nodeGroupIndexers; }
         }
 
         public INodeGroup NodeGroup

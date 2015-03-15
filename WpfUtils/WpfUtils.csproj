@@ -84,6 +84,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ObservableCollectionEx.cs" />
+    <Compile Include="TextFormat.cs" />
     <Compile Include="ViewModels\Graphics\WbImageVm.cs" />
     <Compile Include="ViewModels\Graphics\WbRingPlotVm.cs" />
     <Compile Include="ViewModels\Graphics\WbUniformGridVm.cs" />

@@ -14,8 +14,8 @@ namespace NodeLib.Updaters
            return
                 new IParameter[]
                 {
-                    new ParamEnum(typeof (NeighboorhoodType), NeighboorhoodType.Perimeter.ToString(), "NeighboorhoodType"),
-                    new ParamFloat(0.0f, 1.0f, 0.5f, "Step size"),
+                    new ParamEnum(typeof (NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType"),
+                    new ParamFloat(0.0f, 1.0f, 0.5f, "StepSize"),
                     new ParamFloat(0.0f, 1.0f, 0.0f, "Noise")
                 }.ToDictionary(v => v.Name);
         }
@@ -27,7 +27,9 @@ namespace NodeLib.Updaters
             return d =>
             {
                 var stepSize = (float)d["StepSize"].Value;
-                var neighborhoodType = (NeighboorhoodType)d["NeighboorhoodType"].Value;
+
+                NeighborhoodType neighborhoodType;
+                Enum.TryParse((string)d["NeighborhoodType"].Value, out neighborhoodType);
                 var noise = (float)d["Noise"].Value;
 
                 return NgUpdaterRing.Standard(

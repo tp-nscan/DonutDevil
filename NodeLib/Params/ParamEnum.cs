@@ -11,6 +11,11 @@ namespace NodeLib.Params
             _name = name;
         }
 
+        public ParamType ParamType
+        {
+            get { return ParamType.Enum; }
+        }
+
         private readonly Type _type;
         public Type Type
         {
