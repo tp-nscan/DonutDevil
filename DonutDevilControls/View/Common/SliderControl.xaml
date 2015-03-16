@@ -13,7 +13,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
-                <RowDefinition Height="25"/>
+                <RowDefinition Height="20"/>
             </Grid.RowDefinitions>
 
             <TextBlock
@@ -22,7 +22,7 @@
                 Text="{Binding Title}" 
                 HorizontalAlignment="Center"
                 Foreground="Yellow"
-                Margin="0,0,0,5"/>
+                Margin="0,0,0,3"/>
 
             <Slider
                 Grid.Row="1"

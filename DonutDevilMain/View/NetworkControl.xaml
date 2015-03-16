@@ -4,10 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:params="clr-namespace:DonutDevilControls.View.Params;assembly=DonutDevilControls"
-             xmlns:design="clr-namespace:DonutDevilMain.ViewModel.Design"
              xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
-             mc:Ignorable="d" 
-
+             xmlns:ngIndexer="clr-namespace:DonutDevilControls.View.NgIndexer;assembly=DonutDevilControls"
+             mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="600">
 
     <!--d:DataContext="{d:DesignInstance {x:Type design:DesignNetworkVm}, IsDesignTimeCreatable=True}"-->
@@ -51,15 +50,15 @@
                 <common:SliderControl DataContext="{Binding DisplayFrequencySliderVm}"/>
             </Border>
 
-            <!--<common:SliderControl Margin="0,5" Width="300" HorizontalAlignment="Left" DataContext="{Binding DisplayFrequencySliderVm}"/>-->
-
             <params:ParamsEditorControl Width="300" DataContext="{Binding ParamSetEditorVm}" HorizontalAlignment="Left" />
+
+            <ngIndexer:NgIndexerSetControl Margin="0,10,0,0" Height="250" DataContext="{Binding NgIndexerSetVm}"/>
             
         </StackPanel>
         
         
         
-        <TextBox Background="Transparent"></TextBox>
+        <TextBox BorderBrush="Transparent" Background="Transparent"></TextBox>
         
     </DockPanel>
 </UserControl>

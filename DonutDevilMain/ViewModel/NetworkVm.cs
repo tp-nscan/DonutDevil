@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
+using DonutDevilControls.ViewModel.NgIndexer;
 using DonutDevilControls.ViewModel.Params;
 using MathLib.Intervals;
 using NodeLib;
@@ -24,6 +25,7 @@ namespace DonutDevilMain.ViewModel
             _paramSetEditorVm = new ParamSetEditorVm();
             _paramSetEditorVm.ParamVms.AddMany(network.Parameters.Values.Select(v => v.ToParamEditorVm()));
             _displayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
+            _ngIndexerSetVm = new NgIndexerSetVm(network.NodeGroupIndexers.ToNgIndexerVms());
         }
 
         private readonly ParamSetEditorVm _paramSetEditorVm;
@@ -224,6 +226,12 @@ namespace DonutDevilMain.ViewModel
         public SliderVm DisplayFrequencySliderVm
         {
             get { return _displayFrequencySliderVm; }
+        }
+
+        private readonly NgIndexerSetVm _ngIndexerSetVm;
+        public NgIndexerSetVm NgIndexerSetVm
+        {
+            get { return _ngIndexerSetVm; }
         }
     }
 }

@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="DonutDevilControls.View.NgIndexer.NgIndexerSetControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:win="clr-namespace:DonutDevilControls.ViewModel.Design.NgIndexer"
+             xmlns:ngIndexer="clr-namespace:DonutDevilControls.View.NgIndexer"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance {x:Type win:DesignNgIndexerSetVm}, IsDesignTimeCreatable=True}"
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="layerSelector">
+            <ngIndexer:NgIndexerControl/>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Border BorderBrush="#F444" BorderThickness="2" CornerRadius="4">
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal">
+
+                <TextBlock Margin="10,0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Background="Transparent" 
+                       FontSize="16"
+                       Foreground="DarkGreen" Text="Display type:"/>
+
+                <StackPanel Margin="0,8" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <ToggleButton 
+                    x:Name="ToggleButtonRing"
+                    Height="22" Margin="2" 
+                    FontSize="14"
+                    Width="80" 
+                    Content="Ring" 
+                    IsChecked="{Binding IsRing}" 
+                    HorizontalAlignment="Center"/>
+
+                    <ToggleButton 
+                    x:Name="ToggleButtonTorusx"
+                    Height="22" Margin="2" 
+                    FontSize="14" Width="80" 
+                    Content="Torus" 
+                    IsChecked="{Binding IsTorus}" HorizontalAlignment="Center"/>
+
+                </StackPanel>
+            </StackPanel>
+
+            <ItemsControl
+            Grid.Row="1"
+            ItemsSource="{Binding NgIndexerVms}" 
+            ItemTemplate="{DynamicResource layerSelector}"/>
+        </Grid>
+
+    </Border>
+    
+</UserControl>
