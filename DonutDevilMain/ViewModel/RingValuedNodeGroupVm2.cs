@@ -1,58 +1,76 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
-using DonutDevilControls.ViewModel.Legend;
+using MathLib;
 using MathLib.Intervals;
+using MathLib.NumericTypes;
 using NodeLib;
 using NodeLib.Updaters;
 using WpfUtils;
-using WpfUtils.Views.Graphics;
+using WpfUtils.Utils;
+using WpfUtils.ViewModels.Graphics;
 
 namespace DonutDevilMain.ViewModel
 {
-    public class TorusValuedNodeGroupVm : NotifyPropertyChanged
+    public class RingValuedNodeGroupVm2 : NotifyPropertyChanged
     {
-        private const int SquareSize = 100;
+        private const int SquareSize = 256;
+        private const int Colorsteps = 512;
 
-
-        public TorusValuedNodeGroupVm()
+        public RingValuedNodeGroupVm2()
         {
-            _imageLegendVm = new ImageLegendVm();
-            _imageLegendVm.OnColorsChanged.Subscribe(OnPixelsChanged);
+            _nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colorsteps/4);
+            _histogramColorSequence = Colors.White.ToUniformColorSequence(Colorsteps);
 
-            _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Alpha", Value = 0.1};
-            _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta", Value = 0.0 };
-            _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step", Value = 0.1 };
+            _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") {Title = "Alpha"};
+            _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta" };
+            _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
             _displayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
+
+            _ringHistogramVm = new RingHistogramVm
+                (
+                  title: "Cell values"
+                );
+
+            _ringHistogramVm.LegendVm.AddValues
+                (
+                 Enumerable.Range(0, Functions.TrigFuncSteps)
+                    .Select(i =>
+                        new D1Val<Color>(i, _nodeGroupColorSequence.ToUnitColor(i.FractionOf(Functions.TrigFuncSteps))))
+                );
+
+            _wbUniformGridVm = new WbUniformGridVm(SquareSize, SquareSize);
 
             InitializeRun();
         }
 
+
         #region local vars
 
+        private readonly IColorSequence _nodeGroupColorSequence;
+
         private readonly Stopwatch _stopwatch = new Stopwatch();
+
+        private readonly IColorSequence _histogramColorSequence;
+
         private INodeGroup _nodeGroup;
+
         private INgUpdater _ngUpdater;
+
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
         private bool _isRunning;
-        private bool _isDirty;
 
         public bool IsDirty
         {
-            get
-            {
-                return  _stepSizeSliderVm.IsDirty || 
-                        _alphaSliderVm.IsDirty || 
-                        _betaSliderVm.IsDirty ||
-                        _imageLegendVm.IsDirty ||
-                        _isDirty;
-            }
+            get { return _stepSizeSliderVm.IsDirty || _alphaSliderVm.IsDirty || _betaSliderVm.IsDirty; }
 
         }
 
@@ -61,10 +79,7 @@ namespace DonutDevilMain.ViewModel
             _stepSizeSliderVm.IsDirty = false;
             _alphaSliderVm.IsDirty = false;
             _betaSliderVm.IsDirty = false;
-            _imageLegendVm.IsDirty = false;
-            _isDirty = false;
         }
-
 
         #endregion
 
@@ -93,10 +108,7 @@ namespace DonutDevilMain.ViewModel
                 _stopwatch.Start();
                 for (var i = 0; _isRunning; i++)
                 {
-                    var newNodeGroup = _ngUpdater.Update(_nodeGroup);
-                    Activity = _nodeGroup.Activity(newNodeGroup);
-                    _nodeGroup = newNodeGroup;
-                    Generation++;
+                    _nodeGroup = _ngUpdater.Update(_nodeGroup);
 
                     if (_cancellationTokenSource.IsCancellationRequested)
                     {
@@ -112,13 +124,13 @@ namespace DonutDevilMain.ViewModel
                                 {
                                     ResetNgUpdaters();
                                     UpdateBindingProperties();
-                                    DrawMainNetwork();
+                                    MakeHistogram();
+                                    DrawMainNetwork(_nodeGroup);
                                     CommandManager.InvalidateRequerySuggested();
                                 },
                                 DispatcherPriority.Background
                             );
                     }
-
                 }
             },
                 cancellationToken: _cancellationTokenSource.Token
@@ -140,13 +152,10 @@ namespace DonutDevilMain.ViewModel
         {
             get
             {
-                if (_stopUpdateNetworkCommand == null)
-                    _stopUpdateNetworkCommand = new RelayCommand(
-                        param => DoCancelUpdateNetwork(),
-                        param => CanCancelUpdateNetwork()
-                        );
-
-                return _stopUpdateNetworkCommand;
+                return _stopUpdateNetworkCommand ?? (_stopUpdateNetworkCommand = new RelayCommand(
+                    param => DoCancelUpdateNetwork(),
+                    param => CanCancelUpdateNetwork()
+                    ));
             }
         }
 
@@ -170,13 +179,10 @@ namespace DonutDevilMain.ViewModel
         {
             get
             {
-                if (_resetCommand == null)
-                    _resetCommand = new RelayCommand(
-                        param => DoReset(),
-                        param => CanDoReset()
-                        );
-
-                return _resetCommand;
+                return _resetCommand ?? (_resetCommand = new RelayCommand(
+                    param => DoReset(),
+                    param => CanDoReset()
+                    ));
             }
         }
 
@@ -195,108 +201,82 @@ namespace DonutDevilMain.ViewModel
 
         #region local helpers
 
+        void MakeHistogram()
+        {
+            var histogram =
+                _nodeGroup.Values.ToHistogram
+                (
+                    bins: RealInterval.UnitRange.SplitToEvenIntervals(Functions.TrigFuncSteps - 1).ToList(),
+                    valuatorFunc: n => n
+                );
+
+            var colorDexer = (1.0) / histogram.Max(t => Math.Sqrt(t.Item2.Item));
+
+            RingHistogramVm.HistogramVm.AddValues
+            (
+                histogram.Select((bin, index) 
+                    => new D1Val<Color>(index, _histogramColorSequence.ToUnitColor((float)(colorDexer * Math.Sqrt(bin.Item2.Item))  
+                )))
+            );
+
+        }
+
         void UpdateBindingProperties()
         {
             OnPropertyChanged("Generation");
             OnPropertyChanged("ElapsedTime");
         }
 
-        void DrawMainNetwork()
+        void DrawMainNetwork(INodeGroup nodeGroup)
         {
-            if (_nodeGroup == null)
-            {
-                return;
-            }
-
-            var ggi = new List<PlotPoint>();
-
-            const int offset = SquareSize*SquareSize;
-
-            for (float i = 0; i < SquareSize; i++)
-            {
-                for (float j = 0; j < SquareSize; j++)
-                {
-                    ggi.Add(new PlotPoint(
-                            x:(int) i,
-                            y:(int) j,
-                            color: ImageLegendVm.ColorForUnitTorus(
-                                xVal: _nodeGroup.Values[(int) (j*SquareSize + i)],
-                                yVal: _nodeGroup.Values[offset + (int)(j * SquareSize + i)]
-                              )
-                        ));
-                }
-            }
-
-            GridGraphicsInfo = ggi;
-
+            WbUniformGridVm.AddValues(nodeGroup.Values.Select((v,i)=> 
+                new D2Val<Color>(i/SquareSize, i%SquareSize, _nodeGroupColorSequence.ToUnitColor(v))));
         }
 
-        async void InitializeRun()
+        private readonly WbUniformGridVm _wbUniformGridVm;
+        public WbUniformGridVm WbUniformGridVm
         {
-           await ImageLegendVm.LoadImageFile(@"C:\Users\tpnsc_000\Documents\GitHub\DonutDevil\DonutDevilControls\Images\earth.bmp");
+            get { return _wbUniformGridVm; }
+        }
 
-           _nodeGroup = NodeGroup.RandomNodeGroup(SquareSize * SquareSize * 2, (int)DateTime.Now.Ticks);
+        void InitializeRun()
+        {
+            _nodeGroup = NodeGroup.RandomNodeGroup(SquareSize * SquareSize, DateTime.Now.Millisecond);
 
-            DrawMainNetwork();
+            MakeHistogram();
 
             ResetNgUpdaters();
+
+            DrawMainNetwork(_nodeGroup);
         }
+
 
         void ResetNgUpdaters()
         {
             if (!IsDirty)
                 return;
 
-            _ngUpdater = NgUpdaterTorus.ForSquareTorus
+            _ngUpdater = NgUpdaterRing.ForSquareTorus
             (
                 gain: 0.095f,
                 step: (float)StepSizeSliderVm.Value,
                 squareSize: SquareSize,
                 alpha: (float)AlphaSliderVm.Value,
-                beta: (float)BetaSliderVm.Value,
-                use8Way: Use8Way
+                beta: (float)BetaSliderVm.Value
             );
 
             Clean();
         }
 
+
         #endregion
+
 
         #region Binding variables
 
-        private bool _use8Way;
-        public bool Use8Way
-        {
-            get { return _use8Way; }
-            set
-            {
-                _use8Way = value;
-                _isDirty = true;
-                OnPropertyChanged("Use8Way");
-            }
-        }
-
-
-        private int _generation;
         public int Generation
         {
-            get { return _generation; }
-            set
-            {
-                _generation = value;
-                OnPropertyChanged("Generation");
-            }
-        }
-
-        private double _activity;
-        public double Activity
-        {
-            get { return _activity; }
-            set
-            {
-                _activity = value;
-                OnPropertyChanged("Activity");
-            }
+            get { return _nodeGroup.Generation; }
         }
 
         public TimeSpan ElapsedTime
@@ -304,26 +284,10 @@ namespace DonutDevilMain.ViewModel
             get { return _stopwatch.Elapsed; }
         }
 
-        private IReadOnlyList<PlotPoint> _gridGraphicsInfo = new List<PlotPoint>();
-        public IReadOnlyList<PlotPoint> GridGraphicsInfo
+        private readonly RingHistogramVm _ringHistogramVm;
+        public RingHistogramVm RingHistogramVm
         {
-            get { return _gridGraphicsInfo; }
-            set
-            {
-                _gridGraphicsInfo = value;
-                OnPropertyChanged("GridGraphicsInfo");
-            }
-        }
-
-        private readonly ImageLegendVm _imageLegendVm;
-        public ImageLegendVm ImageLegendVm
-        {
-            get { return _imageLegendVm; }
-        }
-
-        void OnPixelsChanged(bool value)
-        {
-            DrawMainNetwork();
+            get { return _ringHistogramVm; }
         }
 
         private readonly SliderVm _displayFrequencySliderVm;

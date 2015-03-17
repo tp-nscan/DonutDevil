@@ -1,4 +1,4 @@
-﻿namespace DonutDevilControls.View.Common
+﻿namespace DonutDevilControls.View.Legend
 {
     /// <summary>
     /// Interaction logic for ImageLegendControl.xaml

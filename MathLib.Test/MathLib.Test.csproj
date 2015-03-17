@@ -76,6 +76,7 @@
     <Compile Include="NumericTypes\MfFixture.cs" />
     <Compile Include="NumericTypes\DtFixture.cs" />
     <Compile Include="NumericTypes\PointFltFixture.cs" />
+    <Compile Include="NumericTypes\NumericExtFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Intervals\HistogramFixture.cs" />
     <Compile Include="FunctionsFixture.cs" />

@@ -91,7 +91,8 @@
     <Compile Include="ViewModel\Common\NgLayerSelectorVm.cs" />
     <Compile Include="ViewModel\Common\Plot1DVm.cs" />
     <Compile Include="ViewModel\Common\Plot2DVm.cs" />
-    <Compile Include="ViewModel\Common\ImageLegendVm.cs" />
+    <Compile Include="ViewModel\Legend\ILegendVm.cs" />
+    <Compile Include="ViewModel\Legend\ImageLegendVm.cs" />
     <Compile Include="ViewModel\Common\NodeGroupVm.cs" />
     <Compile Include="ViewModel\Common\NodeVm.cs" />
     <Compile Include="ViewModel\Common\RingHistogramVm.cs" />
@@ -99,12 +100,13 @@
     <Compile Include="ViewModel\Design\Common\DesignNgLayerSelectorVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignPlot1DVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignPlot2DVm.cs" />
-    <Compile Include="ViewModel\Design\Common\DesignImageLegendVm.cs" />
+    <Compile Include="ViewModel\Design\Legend\DesignImageLegendVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignRingHistogramVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignSliderVm.cs" />
     <Compile Include="ViewModel\Design\NgIndexer\DesignNgIndexerSetVm.cs" />
     <Compile Include="ViewModel\Design\NgIndexer\DesignNgIndexerVm.cs" />
-    <Compile Include="ViewModel\NgIndexer\NgisDisplayMode.cs" />
+    <Compile Include="ViewModel\Legend\SeqLegendVm.cs" />
+    <Compile Include="ViewModel\NgIndexer\NgDisplayMode.cs" />
     <Compile Include="ViewModel\NgIndexer\NgIndexerState.cs" />
     <Compile Include="ViewModel\Design\Params\DesignParamSetEditorVm.cs" />
     <Compile Include="ViewModel\NgIndexer\NgIndexerVm.cs" />
@@ -118,8 +120,12 @@
     <Compile Include="View\Common\EnumEditorControl.xaml.cs">
       <DependentUpon>EnumEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Common\ImageLegendControl.xaml.cs">
+    <Compile Include="View\Legend\ImageLegendControl.xaml.cs">
       <DependentUpon>ImageLegendControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Legend\LegendSelector.cs" />
+    <Compile Include="View\Legend\SeqLegendControl.xaml.cs">
+      <DependentUpon>SeqLegendControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\NgIndexer\NgIndexerControl.xaml.cs">
       <DependentUpon>NgIndexerControl.xaml</DependentUpon>
@@ -147,7 +153,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Common\ImageLegendControl.xaml">
+    <Page Include="View\Legend\ImageLegendControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Legend\LegendSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Legend\SeqLegendControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -226,7 +240,9 @@
   <ItemGroup>
     <Resource Include="Images\earth.bmp" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ViewModel\NewFolder1\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

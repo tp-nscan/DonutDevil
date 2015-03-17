@@ -12,30 +12,21 @@ namespace DonutDevilControls.ViewModel.Design.Common
     public class DesignRingHistogramVm : RingHistogramVm
     {
         public DesignRingHistogramVm() 
-            : base("Designer title", LegendColorMap(), HistogramColorMap())
+            : base("Designer title")
         {
+            var legendColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Functions.TrigFuncSteps / 4);
+            var histogramColorSequence = Colors.White.ToUniformColorSequence(Functions.TrigFuncSteps);
             var randy = new Random();
+
             LegendVm.AddValues(
                     Enumerable.Range(0, Functions.TrigFuncSteps)
-                              .Select(i => new D1Val<float>(i, (float)i / Functions.TrigFuncSteps))
+                              .Select(i => new D1Val<Color>(i, legendColorSequence.ToUnitColor((float)i / Functions.TrigFuncSteps)))
                 );
 
             HistogramVm.AddValues(
                     Enumerable.Range(0, Functions.TrigFuncSteps)
-                              .Select(i => new D1Val<float>(i, (float)randy.NextDouble()))
+                              .Select(i => new D1Val<Color>(i, histogramColorSequence.ToUnitColor((float)randy.NextDouble())))
                 );
-        }
-
-        static Func<float, Color> LegendColorMap()
-        {
-            var nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Functions.TrigFuncSteps / 4);
-            return f => nodeGroupColorSequence.ToUnitColor(f);
-        }
-
-        static Func<float, Color> HistogramColorMap()
-        {
-            var nodeGroupColorSequence = Colors.White.ToUniformColorSequence(Functions.TrigFuncSteps);
-            return f => nodeGroupColorSequence.ToUnitColor(f);
         }
     }
 }

@@ -67,6 +67,7 @@
     <Compile Include="NumericTypes\ModBits\M8By8.cs" />
     <Compile Include="NumericTypes\Mf.cs" />
     <Compile Include="NumericTypes\ModBits\Mmap.cs" />
+    <Compile Include="NumericTypes\NumericExt.cs" />
     <Compile Include="NumericTypes\PointDbl.cs" />
     <Compile Include="Intervals\Histogram.cs" />
     <Compile Include="Intervals\RealInterval.cs" />

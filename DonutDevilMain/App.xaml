@@ -5,8 +5,18 @@
     
     <Application.Resources>
 
-        <ResourceDictionary Source="/DonutDevilControls;component/View/Params/ParamEditorSelector.xaml"/>
-        
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DonutDevilControls;component/View/Params/ParamEditorSelector.xaml"/>
+                <ResourceDictionary Source="/DonutDevilControls;component/View/Legend/LegendSelector.xaml"/>
+
+            </ResourceDictionary.MergedDictionaries>
+
+            <!--wpf bug workaround see http://projekt202.com/blog/2010/xaml-organization/-->
+            <Style TargetType="{x:Type Button}"></Style>
+
+        </ResourceDictionary>
     </Application.Resources>
     
 </Application>

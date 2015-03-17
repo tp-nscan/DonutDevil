@@ -1,17 +1,15 @@
-﻿using System;
-using System.Windows.Media;
-using WpfUtils;
+﻿using WpfUtils;
 using WpfUtils.ViewModels.Graphics;
 
 namespace DonutDevilControls.ViewModel.Common
 {
     public class RingHistogramVm : NotifyPropertyChanged
     {
-        public RingHistogramVm(string title, Func<float, Color> legendColorMap, Func<float, Color> histogramColorMap )
+        public RingHistogramVm(string title)
         {
             _title = title;
-            _legendVm = new WbRingPlotVm(80, legendColorMap);
-            _histogramVm = new WbRingPlotVm(165, histogramColorMap);
+            _legendVm = new WbRingPlotVm(80);
+            _histogramVm = new WbRingPlotVm(165);
         }
 
         private readonly WbRingPlotVm _legendVm;

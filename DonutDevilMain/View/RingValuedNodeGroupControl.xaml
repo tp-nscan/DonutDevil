@@ -64,9 +64,9 @@
         </StackPanel>
 
         <graphics:WbImage Grid.Column="1" Margin="10" 
-                          ImageWidth="{Binding WbUniformNetworkVm.ImageWidth}" 
-                          ImageHeight="{Binding WbUniformNetworkVm.ImageHeight}"
-                          PlotRectangles="{Binding WbUniformNetworkVm.PlotRectangles}" 
+                          ImageWidth="{Binding WbUniformGridVm.ImageWidth}" 
+                          ImageHeight="{Binding WbUniformGridVm.ImageHeight}"
+                          PlotRectangles="{Binding WbUniformGridVm.PlotRectangles}" 
                           />
 
     </Grid>

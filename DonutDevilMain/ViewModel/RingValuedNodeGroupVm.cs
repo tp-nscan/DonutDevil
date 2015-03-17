@@ -26,27 +26,27 @@ namespace DonutDevilMain.ViewModel
 
         public RingValuedNodeGroupVm()
         {
-            _nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colorsteps/4);
+            _nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colorsteps / 4);
             _histogramColorSequence = Colors.White.ToUniformColorSequence(Colorsteps);
 
-            _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") {Title = "Alpha"};
+            _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Alpha" };
             _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta" };
             _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
             _displayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
 
             _ringHistogramVm = new RingHistogramVm
                 (
-                  title: "Cell values",
-                  legendColorMap: f => _nodeGroupColorSequence.ToUnitColor(f),
-                  histogramColorMap: f => _histogramColorSequence.Colors[(int)f]
+                  title: "Cell values"
                 );
 
-            _ringHistogramVm.LegendVm.AddValues(
-                    Enumerable.Range(0, Functions.TrigFuncSteps)
-                              .Select(i => new D1Val<float>(i, (float)i / Functions.TrigFuncSteps))
+            _ringHistogramVm.LegendVm.AddValues
+                (
+                 Enumerable.Range(0, Functions.TrigFuncSteps)
+                    .Select(i =>
+                        new D1Val<Color>(i, _nodeGroupColorSequence.ToUnitColor(i.FractionOf(Functions.TrigFuncSteps))))
                 );
 
-            _wbUniformNetworkVm = new WbUniformNetworkVm(SquareSize, SquareSize, f => _nodeGroupColorSequence.ToUnitColor(f));
+            _wbUniformGridVm = new WbUniformGridVm(SquareSize, SquareSize);
 
             InitializeRun();
         }
@@ -210,11 +210,15 @@ namespace DonutDevilMain.ViewModel
                     valuatorFunc: n => n
                 );
 
-            var colorDexer = (Colorsteps - 1) / histogram.Max(t => Math.Sqrt(t.Item2.Item));
+            var colorDexer = (1.0) / histogram.Max(t => Math.Sqrt(t.Item2.Item));
 
-            RingHistogramVm.HistogramVm.AddValues(
-                    histogram.Select((bin, index) => new D1Val<float>(index, (float)(colorDexer * Math.Sqrt(bin.Item2.Item))))
-                );
+            RingHistogramVm.HistogramVm.AddValues
+            (
+                histogram.Select((bin, index)
+                    => new D1Val<Color>(index, _histogramColorSequence.ToUnitColor((float)(colorDexer * Math.Sqrt(bin.Item2.Item))
+                )))
+            );
+
         }
 
         void UpdateBindingProperties()
@@ -225,13 +229,14 @@ namespace DonutDevilMain.ViewModel
 
         void DrawMainNetwork(INodeGroup nodeGroup)
         {
-            WbUniformNetworkVm.AddValues(nodeGroup.Values.Select((v,i)=> new D2Val<float>(i/SquareSize, i%SquareSize, v)));
+            WbUniformGridVm.AddValues(nodeGroup.Values.Select((v, i) =>
+                new D2Val<Color>(i / SquareSize, i % SquareSize, _nodeGroupColorSequence.ToUnitColor(v))));
         }
 
-        private readonly WbUniformNetworkVm _wbUniformNetworkVm;
-        public WbUniformNetworkVm WbUniformNetworkVm
+        private readonly WbUniformGridVm _wbUniformGridVm;
+        public WbUniformGridVm WbUniformGridVm
         {
-            get { return _wbUniformNetworkVm; }
+            get { return _wbUniformGridVm; }
         }
 
         void InitializeRun()

@@ -29,23 +29,24 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Background="Transparent" 
-                       FontSize="16"
-                       Foreground="DarkGreen" Text="Display type:"/>
+                       FontSize="14"
+                       Foreground="DarkGreen" Text="Display data type:"/>
 
-                <StackPanel Margin="0,8" Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel Margin="0,8" Orientation="Horizontal" 
+                            HorizontalAlignment="Center">
                     <ToggleButton 
                     x:Name="ToggleButtonRing"
-                    Height="22" Margin="2" 
+                    Height="22" Margin="4,2" 
                     FontSize="14"
-                    Width="80" 
+                    Width="60" 
                     Content="Ring" 
                     IsChecked="{Binding IsRing}" 
                     HorizontalAlignment="Center"/>
 
                     <ToggleButton 
                     x:Name="ToggleButtonTorusx"
-                    Height="22" Margin="2" 
-                    FontSize="14" Width="80" 
+                    Height="22" Margin="4,2" 
+                    FontSize="14" Width="60" 
                     Content="Torus" 
                     IsChecked="{Binding IsTorus}" HorizontalAlignment="Center"/>
 

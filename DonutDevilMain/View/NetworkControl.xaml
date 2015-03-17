@@ -53,6 +53,8 @@
             <params:ParamsEditorControl Width="300" DataContext="{Binding ParamSetEditorVm}" HorizontalAlignment="Left" />
 
             <ngIndexer:NgIndexerSetControl Margin="0,10,0,0" Height="250" DataContext="{Binding NgIndexerSetVm}"/>
+
+            <ContentControl Content="{Binding LegendVm}" ContentTemplateSelector="{DynamicResource LegendSelector}" />
             
         </StackPanel>
         

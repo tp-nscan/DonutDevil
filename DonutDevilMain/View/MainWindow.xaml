@@ -11,8 +11,9 @@
 
     <Grid x:Name="grid" Background="Black">
         
-        <view:NetworkControl DataContext="{Binding NetworkVm}"/>
-        
+        <!--<view:NetworkControl DataContext="{Binding NetworkVm}"/>-->
+
+        <view:RingValuedNodeGroupControl DataContext="{Binding RingValuedNodeGroupVm}"/>
     </Grid>
 
 </Window>

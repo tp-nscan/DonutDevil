@@ -14,11 +14,11 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 
     public static class NdfasExt
     {
-        public static NgIndexerState Convert(this NgIndexerState ngIndexerState, NgisDisplayMode ngisDisplayMode)
+        public static NgIndexerState Convert(this NgIndexerState ngIndexerState, NgDisplayMode ngisDisplayMode)
         {
             switch (ngisDisplayMode)
             {
-                case NgisDisplayMode.Ring:
+                case NgDisplayMode.Ring:
                     switch (ngIndexerState)
                         {
                             case NgIndexerState.RingSelected:
@@ -36,7 +36,7 @@ namespace DonutDevilControls.ViewModel.NgIndexer
                             default:
                                 throw new Exception("NgIndexerState not handled");
                         }
-                case NgisDisplayMode.Torus:
+                case NgDisplayMode.Torus:
                     switch (ngIndexerState)
                     {
                         case NgIndexerState.RingSelected:

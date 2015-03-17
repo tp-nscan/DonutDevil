@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
+using DonutDevilControls.ViewModel.Legend;
 using DonutDevilControls.ViewModel.NgIndexer;
 using DonutDevilControls.ViewModel.Params;
 using MathLib.Intervals;
@@ -38,13 +39,10 @@ namespace DonutDevilMain.ViewModel
 
         #region local vars
 
-        private readonly IColorSequence _nodeGroupColorSequence;
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
 
-        private readonly IColorSequence _histogramColorSequence;
 
-        private INgUpdater _ngUpdater;
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -99,7 +97,7 @@ namespace DonutDevilMain.ViewModel
                 {
                     if (IsDirty)
                     {
-                        Network.UpdateParams(ParamSetEditorVm.EditedParameters.ToDictionary(p => p.Name));
+                        Network = Network.UpdateParams(ParamSetEditorVm.EditedParameters.ToDictionary(p => p.Name));
                     }
                     Network = Network.UpdateNodeGroup();
 
@@ -232,6 +230,17 @@ namespace DonutDevilMain.ViewModel
         public NgIndexerSetVm NgIndexerSetVm
         {
             get { return _ngIndexerSetVm; }
+        }
+
+        private ILegendVm _legendVm;
+        public ILegendVm LegendVm
+        {
+            get { return _legendVm; }
+            set
+            {
+                _legendVm = value;
+                OnPropertyChanged("LegendVm");
+            }
         }
     }
 }

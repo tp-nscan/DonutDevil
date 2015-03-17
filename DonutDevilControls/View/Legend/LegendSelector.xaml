@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:legend="clr-namespace:DonutDevilControls.View.Legend">
+
+
+    <DataTemplate x:Key="DefaultTemplate">
+        <TextBox Text="DefaultTemplate"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ImageTemplate">
+        <legend:ImageLegendControl/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SeqTemplate">
+        <legend:SeqLegendControl/>
+    </DataTemplate>
+
+    <legend:LegendSelector x:Key ="LegendSelector"
+        ImageTemplate="{StaticResource ImageTemplate}"
+        SeqTemplate="{StaticResource IntTemplate}"
+        DefaultTemplate="{StaticResource DefaultTemplate}"            
+    />
+
+</ResourceDictionary>

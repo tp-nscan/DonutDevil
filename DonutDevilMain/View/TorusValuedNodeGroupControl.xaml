@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
     xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
+    xmlns:legend="clr-namespace:DonutDevilControls.View.Legend;assembly=DonutDevilControls"
     mc:Ignorable="d"
     x:Class="DonutDevilMain.View.TorusValuedNodeGroupControl"
     x:Name="UserControl"
@@ -65,7 +66,7 @@
 
                 <common:SliderControl Margin="0,5" DataContext="{Binding DisplayFrequencySliderVm}"/>
                 
-                <common:ImageLegendControl DataContext="{Binding ImageLegendVm}"/>
+                <legend:ImageLegendControl DataContext="{Binding ImageLegendVm}"/>
             
                 <CheckBox IsChecked="{Binding Use8Way}" Content="Use 8 way" Foreground="Yellow" HorizontalAlignment="Center" Margin="8"/>
 
@@ -80,7 +81,7 @@
 
             </StackPanel>
 
-            <graphics:WbImage Grid.Column="1" Margin="10" PlotPoints="{Binding NetworkGraphicsInfo}" ImageWidth="1024" ImageHeight="1024"/>
+            <graphics:WbImage Grid.Column="1" Margin="10" PlotPoints="{Binding GridGraphicsInfo}" ImageWidth="1024" ImageHeight="1024"/>
 
         </Grid>
     </Grid>

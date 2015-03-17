@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Drawing;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
@@ -9,14 +9,15 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using WpfUtils;
+using DonutDevilControls.ViewModel.Common;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using WpfUtils;
 using WpfUtils.Utils;
 using WpfUtils.Views.Graphics;
 
-namespace DonutDevilControls.ViewModel.Common
+namespace DonutDevilControls.ViewModel.Legend
 {
-    public class ImageLegendVm : NotifyPropertyChanged
+    public class ImageLegendVm : NotifyPropertyChanged, ILegendVm
     {
         public ImageLegendVm()
         {
@@ -133,7 +134,7 @@ namespace DonutDevilControls.ViewModel.Common
                                                 )).ToList();
 
                                 IsDirty = true;
-                                _colorsChanged.OnNext(ImageColors);
+                                _colorsChanged.OnNext(true);
                             },
                             DispatcherPriority.Background
                         );
@@ -145,12 +146,19 @@ namespace DonutDevilControls.ViewModel.Common
             });
         }
 
-        private readonly Subject<System.Windows.Media.Color[,]> _colorsChanged 
-            = new Subject<System.Windows.Media.Color[,]>();
-        public IObservable<System.Windows.Media.Color[,]> OnColorsChanged
+        private readonly Subject<bool> _colorsChanged
+            = new Subject<bool>();
+        public IObservable<bool> OnColorsChanged
         {
             get { return _colorsChanged; }
         }
+
+        //private readonly Subject<System.Windows.Media.Color[,]> _colorsChanged 
+        //    = new Subject<System.Windows.Media.Color[,]>();
+        //public IObservable<System.Windows.Media.Color[,]> OnColorsChanged
+        //{
+        //    get { return _colorsChanged; }
+        //}
 
         public int ImageHeight
         {
@@ -233,11 +241,10 @@ namespace DonutDevilControls.ViewModel.Common
                                             color: _imageColors[(c) / 1024, (c) % 1024]
                                             )).ToList();
                             IsDirty = true;
-                            _colorsChanged.OnNext(ImageColors);
+                            _colorsChanged.OnNext(true);
                         },
                         DispatcherPriority.Background
                     );
-
             }
             catch (Exception)
             {
@@ -251,7 +258,6 @@ namespace DonutDevilControls.ViewModel.Common
         }
 
         #endregion // StandardCommand
-
 
         #region XonlyCommand
 
@@ -298,7 +304,7 @@ namespace DonutDevilControls.ViewModel.Common
                                             color: _imageColors[(c) / 1024, (c) % 1024]
                                             )).ToList();
                             IsDirty = true;
-                            _colorsChanged.OnNext(ImageColors);
+                            _colorsChanged.OnNext(true);
                         },
                         DispatcherPriority.Background
                     );
@@ -316,7 +322,6 @@ namespace DonutDevilControls.ViewModel.Common
         }
 
         #endregion // XonlyCommand
-
 
         #region YonlyCommand
 
@@ -363,7 +368,7 @@ namespace DonutDevilControls.ViewModel.Common
                                             color: _imageColors[(c) / 1024, (c) % 1024]
                                             )).ToList();
                             IsDirty = true;
-                            _colorsChanged.OnNext(ImageColors);
+                            _colorsChanged.OnNext(true);
 
                         },
                         DispatcherPriority.Background
@@ -398,5 +403,10 @@ namespace DonutDevilControls.ViewModel.Common
 
 
         public bool IsDirty { get; set; }
+
+        public LegendVmType LegendVmType
+        {
+            get { return LegendVmType.Image; }
+        }
     }
 }

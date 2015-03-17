@@ -2,43 +2,43 @@
 
 namespace DonutDevilControls.ViewModel.NgIndexer
 {
-    public enum NgisDisplayMode
+    public enum NgDisplayMode
     {
         Ring,
         Torus
     }
 
-    public interface INgisDisplayState
+    public interface INgDisplayState
     {
-        NgisDisplayMode NgisDisplayMode { get; }
+        NgDisplayMode NgisDisplayMode { get; }
         INgIndexer IndexerRing { get; }
         INgIndexer IndexerTorusX { get; }
         INgIndexer IndexerTorusY { get; }
     }
 
 
-    public static class NgisDisplayState
+    public static class NgDisplayState
     {
-        public static INgisDisplayState RingState(INgIndexer ngIndexer)
+        public static INgDisplayState RingState(INgIndexer ngIndexer)
         {
-            return new NgisDisplayStateImpl(NgisDisplayMode.Ring, indexerRing: ngIndexer, indexerTorusX:null, indexerTorusY:null);
+            return new NgDisplayStateImpl(NgDisplayMode.Ring, indexerRing: ngIndexer, indexerTorusX:null, indexerTorusY:null);
         }
 
-        public static INgisDisplayState TorusState(INgIndexer ngIndexerX, INgIndexer ngIndexerY)
+        public static INgDisplayState TorusState(INgIndexer ngIndexerX, INgIndexer ngIndexerY)
         {
-            return new NgisDisplayStateImpl(NgisDisplayMode.Ring, indexerRing: null, indexerTorusX:ngIndexerX, indexerTorusY:ngIndexerY);
+            return new NgDisplayStateImpl(NgDisplayMode.Ring, indexerRing: null, indexerTorusX:ngIndexerX, indexerTorusY:ngIndexerY);
         }
 
     }
 
-    public class NgisDisplayStateImpl : INgisDisplayState
+    public class NgDisplayStateImpl : INgDisplayState
     {
-        private readonly NgisDisplayMode _ngisDisplayMode;
+        private readonly NgDisplayMode _ngisDisplayMode;
         private readonly INgIndexer _indexerRing;
         private readonly INgIndexer _indexerTorusX;
         private readonly INgIndexer _indexerTorusY;
 
-        public NgisDisplayStateImpl(NgisDisplayMode ngisDisplayMode, 
+        public NgDisplayStateImpl(NgDisplayMode ngisDisplayMode, 
                                 INgIndexer indexerRing, 
                                 INgIndexer indexerTorusX, 
                                 INgIndexer indexerTorusY)
@@ -49,7 +49,7 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             _indexerTorusY = indexerTorusY;
         }
 
-        public NgisDisplayMode NgisDisplayMode
+        public NgDisplayMode NgisDisplayMode
         {
             get { return _ngisDisplayMode; }
         }
