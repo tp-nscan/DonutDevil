@@ -23,34 +23,13 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal">
-
-                <TextBlock Margin="10,0"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Background="Transparent" 
-                       FontSize="14"
-                       Foreground="DarkGreen" Text="Display data type:"/>
-
-                <StackPanel Margin="0,8" Orientation="Horizontal" 
-                            HorizontalAlignment="Center">
-                    <ToggleButton 
-                    x:Name="ToggleButtonRing"
-                    Height="22" Margin="4,2" 
-                    FontSize="14"
-                    Width="60" 
-                    Content="Ring" 
-                    IsChecked="{Binding IsRing}" 
-                    HorizontalAlignment="Center"/>
-
-                    <ToggleButton 
-                    x:Name="ToggleButtonTorusx"
-                    Height="22" Margin="4,2" 
-                    FontSize="14" Width="60" 
-                    Content="Torus" 
-                    IsChecked="{Binding IsTorus}" HorizontalAlignment="Center"/>
-
-                </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <GroupBox Foreground="Wheat" Header="Display data type">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <RadioButton IsChecked="{Binding IsRing}" Foreground="Wheat"  Margin="35,5" Content="Ring" />
+                        <RadioButton IsChecked="{Binding IsTorus}" Foreground="Wheat"  Margin="35,5" Content="Torus" />
+                    </StackPanel>
+                </GroupBox>
             </StackPanel>
 
             <ItemsControl

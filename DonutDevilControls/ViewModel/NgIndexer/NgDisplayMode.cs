@@ -8,7 +8,7 @@ namespace DonutDevilControls.ViewModel.NgIndexer
         Torus
     }
 
-    public interface INgDisplayState
+    public interface INgDisplayIndexing
     {
         NgDisplayMode NgisDisplayMode { get; }
         INgIndexer IndexerRing { get; }
@@ -19,26 +19,26 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 
     public static class NgDisplayState
     {
-        public static INgDisplayState RingState(INgIndexer ngIndexer)
+        public static INgDisplayIndexing RingIndexing(INgIndexer ngIndexer)
         {
-            return new NgDisplayStateImpl(NgDisplayMode.Ring, indexerRing: ngIndexer, indexerTorusX:null, indexerTorusY:null);
+            return new NgDisplayIndexingImpl(NgDisplayMode.Ring, indexerRing: ngIndexer, indexerTorusX:null, indexerTorusY:null);
         }
 
-        public static INgDisplayState TorusState(INgIndexer ngIndexerX, INgIndexer ngIndexerY)
+        public static INgDisplayIndexing TorusIndexing(INgIndexer ngIndexerX, INgIndexer ngIndexerY)
         {
-            return new NgDisplayStateImpl(NgDisplayMode.Ring, indexerRing: null, indexerTorusX:ngIndexerX, indexerTorusY:ngIndexerY);
+            return new NgDisplayIndexingImpl(NgDisplayMode.Ring, indexerRing: null, indexerTorusX:ngIndexerX, indexerTorusY:ngIndexerY);
         }
 
     }
 
-    public class NgDisplayStateImpl : INgDisplayState
+    public class NgDisplayIndexingImpl : INgDisplayIndexing
     {
         private readonly NgDisplayMode _ngisDisplayMode;
         private readonly INgIndexer _indexerRing;
         private readonly INgIndexer _indexerTorusX;
         private readonly INgIndexer _indexerTorusY;
 
-        public NgDisplayStateImpl(NgDisplayMode ngisDisplayMode, 
+        public NgDisplayIndexingImpl(NgDisplayMode ngisDisplayMode, 
                                 INgIndexer indexerRing, 
                                 INgIndexer indexerTorusX, 
                                 INgIndexer indexerTorusY)

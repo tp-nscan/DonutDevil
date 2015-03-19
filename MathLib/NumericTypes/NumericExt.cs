@@ -6,9 +6,9 @@ namespace MathLib.NumericTypes
 {
     public static class NumericExt
     {
-        public static double FractionOf(this int numerator, int denominator)
+        public static float FractionOf(this int numerator, int denominator)
         {
-            return ((double)numerator)/denominator;
+            return ((float)numerator) / denominator;
         }
 
         public static IEnumerable<double> ToUnitInterp(this int stepCount)

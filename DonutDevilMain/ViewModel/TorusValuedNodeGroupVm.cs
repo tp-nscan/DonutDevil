@@ -23,8 +23,8 @@ namespace DonutDevilMain.ViewModel
 
         public TorusValuedNodeGroupVm()
         {
-            _imageLegendVm = new ImageLegendVm();
-            _imageLegendVm.OnColorsChanged.Subscribe(OnPixelsChanged);
+            _torusLegendVm = new TorusLegendVm();
+            _torusLegendVm.OnLegendVmChanged.Subscribe(OnPixelsChanged);
 
             _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Alpha", Value = 0.1};
             _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta", Value = 0.0 };
@@ -50,7 +50,7 @@ namespace DonutDevilMain.ViewModel
                 return  _stepSizeSliderVm.IsDirty || 
                         _alphaSliderVm.IsDirty || 
                         _betaSliderVm.IsDirty ||
-                        _imageLegendVm.IsDirty ||
+                        _torusLegendVm.IsDirty ||
                         _isDirty;
             }
 
@@ -61,7 +61,7 @@ namespace DonutDevilMain.ViewModel
             _stepSizeSliderVm.IsDirty = false;
             _alphaSliderVm.IsDirty = false;
             _betaSliderVm.IsDirty = false;
-            _imageLegendVm.IsDirty = false;
+            _torusLegendVm.IsDirty = false;
             _isDirty = false;
         }
 
@@ -219,7 +219,7 @@ namespace DonutDevilMain.ViewModel
                     ggi.Add(new PlotPoint(
                             x:(int) i,
                             y:(int) j,
-                            color: ImageLegendVm.ColorForUnitTorus(
+                            color: TorusLegendVm.ColorForUnitTorus(
                                 xVal: _nodeGroup.Values[(int) (j*SquareSize + i)],
                                 yVal: _nodeGroup.Values[offset + (int)(j * SquareSize + i)]
                               )
@@ -233,7 +233,7 @@ namespace DonutDevilMain.ViewModel
 
         async void InitializeRun()
         {
-           await ImageLegendVm.LoadImageFile(@"C:\Users\tpnsc_000\Documents\GitHub\DonutDevil\DonutDevilControls\Images\earth.bmp");
+           await TorusLegendVm.LoadImageFile(@"C:\Users\tpnsc_000\Documents\GitHub\DonutDevil\DonutDevilControls\Images\earth.bmp");
 
            _nodeGroup = NodeGroup.RandomNodeGroup(SquareSize * SquareSize * 2, (int)DateTime.Now.Ticks);
 
@@ -315,13 +315,13 @@ namespace DonutDevilMain.ViewModel
             }
         }
 
-        private readonly ImageLegendVm _imageLegendVm;
-        public ImageLegendVm ImageLegendVm
+        private readonly TorusLegendVm _torusLegendVm;
+        public TorusLegendVm TorusLegendVm
         {
-            get { return _imageLegendVm; }
+            get { return _torusLegendVm; }
         }
 
-        void OnPixelsChanged(bool value)
+        void OnPixelsChanged(ILegendVm value)
         {
             DrawMainNetwork();
         }

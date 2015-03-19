@@ -7,9 +7,9 @@ namespace DonutDevilControls.View.Legend
 {
     public class LegendSelector : DataTemplateSelector
     {
-        public DataTemplate SeqTemplate { get; set; }
+        public DataTemplate RingTemplate { get; set; }
 
-        public DataTemplate ImageTemplate { get; set; }
+        public DataTemplate TorusTemplate { get; set; }
 
         public DataTemplate DefaultTemplate { get; set; }
 
@@ -19,14 +19,14 @@ namespace DonutDevilControls.View.Legend
 
             if (legendVm != null)
             {
-                switch (legendVm.LegendVmType)
+                switch (legendVm.DisplaySpaceType)
                 {
-                    case LegendVmType.Image:
-                        return ImageTemplate;
-                    case LegendVmType.Seq:
-                        return SeqTemplate;
+                    case DisplaySpaceType.Torus:
+                        return TorusTemplate;
+                    case DisplaySpaceType.Ring:
+                        return RingTemplate;
                     default:
-                        throw new Exception(String.Format("LegendVmType {0} not handled in SelectTemplate", legendVm.LegendVmType));
+                        throw new Exception(String.Format("LegendVmType {0} not handled in SelectTemplate", legendVm.DisplaySpaceType));
                 }
             }
 

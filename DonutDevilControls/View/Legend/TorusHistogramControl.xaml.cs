@@ -1,11 +1,11 @@
 ﻿namespace DonutDevilControls.View.Legend
 {
     /// <summary>
-    /// Interaction logic for ImageLegendControl.xaml
+    /// Interaction logic for TorusHistogramControl.xaml
     /// </summary>
-    public partial class ImageLegendControl
+    public partial class TorusHistogramControl
     {
-        public ImageLegendControl()
+        public TorusHistogramControl()
         {
             InitializeComponent();
         }

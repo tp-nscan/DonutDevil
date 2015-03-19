@@ -7,18 +7,31 @@
         <TextBox Text="DefaultTemplate"/>
     </DataTemplate>
 
-    <DataTemplate x:Key="ImageTemplate">
-        <legend:ImageLegendControl/>
+    <DataTemplate x:Key="TorusTemplateLoad">
+        <legend:TorusLegendLoadControl/>
     </DataTemplate>
 
-    <DataTemplate x:Key="SeqTemplate">
-        <legend:SeqLegendControl/>
+    <DataTemplate x:Key="RingTemplateLoad">
+        <legend:RingLegendLoadControl/>
     </DataTemplate>
 
-    <legend:LegendSelector x:Key ="LegendSelector"
-        ImageTemplate="{StaticResource ImageTemplate}"
-        SeqTemplate="{StaticResource IntTemplate}"
+    <legend:LegendSelector x:Key ="LegendLoadSelector"
+        TorusTemplate="{StaticResource TorusTemplateLoad}"
+        RingTemplate="{StaticResource RingTemplateLoad}"
         DefaultTemplate="{StaticResource DefaultTemplate}"            
     />
 
+    <DataTemplate x:Key="TorusTemplateDisplay">
+        <legend:TorusHistogramControl/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="RingTemplateDisplay">
+        <legend:RingHistogramControl/>
+    </DataTemplate>
+
+    <legend:LegendSelector x:Key ="HistogramSelector"
+        TorusTemplate="{StaticResource TorusTemplateDisplay}"
+        RingTemplate="{StaticResource RingTemplateDisplay}"
+        DefaultTemplate="{StaticResource DefaultTemplate}"            
+    />
 </ResourceDictionary>

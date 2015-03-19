@@ -1,4 +1,6 @@
-﻿using MathLib.Intervals;
+﻿using System;
+using System.Reactive.Subjects;
+using MathLib.Intervals;
 using WpfUtils;
 
 namespace DonutDevilControls.ViewModel.Common
@@ -60,6 +62,7 @@ namespace DonutDevilControls.ViewModel.Common
             set
             {
                 _value = value;
+                _sliderVmChanged.OnNext(this);
                 IsDirty = true;
                 OnPropertyChanged("Value");
                 OnPropertyChanged("LegendValue");
@@ -73,5 +76,12 @@ namespace DonutDevilControls.ViewModel.Common
         }
 
         public bool IsDirty { get; set; }
+
+        private readonly Subject<SliderVm> _sliderVmChanged
+            = new Subject<SliderVm>();
+        public IObservable<SliderVm> OnSliderVmChanged
+        {
+            get { return _sliderVmChanged; }
+        }
     }
 }

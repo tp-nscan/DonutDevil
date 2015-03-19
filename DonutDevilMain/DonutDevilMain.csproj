@@ -148,7 +148,6 @@
     <Compile Include="ViewModel\Design\DesignNetworkVm.cs" />
     <Compile Include="ViewModel\NetworkVm.cs" />
     <Compile Include="ViewModel\RingValuedNodeGroupVm.cs" />
-    <Compile Include="ViewModel\RingValuedNodeGroupVm2.cs" />
     <Compile Include="ViewModel\TorusValuedNodeGroupVm.cs" />
     <Compile Include="View\NetworkControl.xaml.cs">
       <DependentUpon>NetworkControl.xaml</DependentUpon>

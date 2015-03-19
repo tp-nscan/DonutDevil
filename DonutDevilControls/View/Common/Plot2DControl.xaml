@@ -26,7 +26,7 @@
         <graphics:WbImage
             Grid.Column="1"
             ImageWidth="1024" ImageHeight="1024" 
-            PlotPoints="{Binding GraphicsInfos}"/>
+            PlotRectangles="{Binding GraphicsInfos}"/>
 
 
         <Border

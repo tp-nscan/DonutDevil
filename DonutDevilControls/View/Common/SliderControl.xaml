@@ -25,6 +25,7 @@
                 Margin="0,0,0,3"/>
 
             <Slider
+                Delay="50"
                 Grid.Row="1"
                 Value="{Binding Value}" 
                 Minimum="{Binding Interval.Min}" 

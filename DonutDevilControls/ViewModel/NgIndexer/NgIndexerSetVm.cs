@@ -13,6 +13,7 @@ namespace DonutDevilControls.ViewModel.NgIndexer
         public NgIndexerSetVm(IEnumerable<NgIndexerVm> ngIndexerVms)
         {
             _ngIndexerVms = new ObservableCollection<NgIndexerVm>(ngIndexerVms);
+            _ngDisplayMode = NgDisplayMode.Torus;
         }
 
         private ObservableCollection<NgIndexerVm> _ngIndexerVms;
@@ -22,13 +23,13 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             set { _ngIndexerVms = value; }
         }
 
-        private NgDisplayMode _ngisDisplayMode;
-        public NgDisplayMode NgisDisplayMode
+        private NgDisplayMode _ngDisplayMode;
+        public NgDisplayMode NgDisplayMode
         {
-            get { return _ngisDisplayMode; }
+            get { return _ngDisplayMode; }
             set
             {
-                _ngisDisplayMode = value;
+                _ngDisplayMode = value;
                 OnPropertyChanged("State");
                 OnPropertyChanged("IsRing");
                 OnPropertyChanged("IsTorus");
@@ -37,10 +38,10 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 
         public bool IsRing
         {
-            get { return NgisDisplayMode == NgDisplayMode.Ring; }
+            get { return NgDisplayMode == NgDisplayMode.Ring; }
             set
             {
-                NgisDisplayMode = (value) ? NgDisplayMode.Ring : NgDisplayMode.Torus;
+                NgDisplayMode = (value) ? NgDisplayMode.Ring : NgDisplayMode.Torus;
                 UpdateLayerSelectorVms();
                 UpdateNgisDisplayState();
             }
@@ -48,10 +49,10 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 
         public bool IsTorus
         {
-            get { return NgisDisplayMode == NgDisplayMode.Torus; }
+            get { return NgDisplayMode == NgDisplayMode.Torus; }
             set
             {
-                NgisDisplayMode = (value) ? NgDisplayMode.Torus : NgDisplayMode.Ring;
+                NgDisplayMode = (value) ? NgDisplayMode.Torus : NgDisplayMode.Ring;
                 UpdateLayerSelectorVms();
                 UpdateNgisDisplayState();
             }
@@ -61,23 +62,23 @@ namespace DonutDevilControls.ViewModel.NgIndexer
         {
             foreach (var ngLayerSelectorVm in NgIndexerVms)
             {
-                ngLayerSelectorVm.NgIndexerState = ngLayerSelectorVm.NgIndexerState.Convert(NgisDisplayMode);
+                ngLayerSelectorVm.NgIndexerState = ngLayerSelectorVm.NgIndexerState.Convert(NgDisplayMode);
             }
         }
 
         private void UpdateNgisDisplayState()
         {
-            if (NgisDisplayMode == NgDisplayMode.Ring)
+            if (NgDisplayMode == NgDisplayMode.Ring)
             {
-                NgDisplayState =
-                    NgIndexer.NgDisplayState.RingState(
+                NgDisplayIndexing =
+                    NgIndexer.NgDisplayState.RingIndexing(
                       ngIndexer:  NgIndexerFor(NgIndexerState.RingSelected));
 
                 return;
             }
 
-            NgDisplayState =
-                NgIndexer.NgDisplayState.TorusState
+            NgDisplayIndexing =
+                NgIndexer.NgDisplayState.TorusIndexing
                 (
                       ngIndexerX:  NgIndexerFor(NgIndexerState.TorusX),
                       ngIndexerY:  NgIndexerFor(NgIndexerState.TorusY)
@@ -95,21 +96,21 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             return null;
         }
 
-        private readonly Subject<INgDisplayState> _ngisDisplayStateChanged
-            = new Subject<INgDisplayState>();
-        public IObservable<INgDisplayState> OnNgisDisplayStateChanged
+        private readonly Subject<INgDisplayIndexing> _ngisDisplayStateChanged
+            = new Subject<INgDisplayIndexing>();
+        public IObservable<INgDisplayIndexing> OnNgisDisplayStateChanged
         {
             get { return _ngisDisplayStateChanged; }
         }
 
 
-        private INgDisplayState _ngDisplayState;
-        public INgDisplayState NgDisplayState
+        private INgDisplayIndexing _ngDisplayIndexing;
+        public INgDisplayIndexing NgDisplayIndexing
         {
-            get { return _ngDisplayState; }
+            get { return _ngDisplayIndexing; }
             set
             {
-                _ngDisplayState = value;
+                _ngDisplayIndexing = value;
                 _ngisDisplayStateChanged.OnNext(value);
             }
         }

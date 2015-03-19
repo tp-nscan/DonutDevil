@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using DonutDevilControls.ViewModel.Common;
-using WpfUtils.Utils;
+﻿using DonutDevilControls.ViewModel.Common;
 using WpfUtils.Views.Graphics;
 
 namespace DonutDevilControls.ViewModel.Design.Common

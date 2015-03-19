@@ -54,7 +54,9 @@
 
             <ngIndexer:NgIndexerSetControl Margin="0,10,0,0" Height="250" DataContext="{Binding NgIndexerSetVm}"/>
 
-            <ContentControl Content="{Binding LegendVm}" ContentTemplateSelector="{DynamicResource LegendSelector}" />
+            <ContentControl Content="{Binding HistogramVm}" ContentTemplateSelector="{DynamicResource HistogramSelector}" />
+
+            <ContentControl Content="{Binding LegendVm}" ContentTemplateSelector="{DynamicResource LegendLoadSelector}" />
             
         </StackPanel>
         

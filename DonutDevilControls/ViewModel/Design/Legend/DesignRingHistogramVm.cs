@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Media;
-using DonutDevilControls.ViewModel.Common;
+using DonutDevilControls.ViewModel.Legend;
 using MathLib;
 using MathLib.NumericTypes;
 using WpfUtils.Utils;
-using WpfUtils.ViewModels.Graphics;
 
-namespace DonutDevilControls.ViewModel.Design.Common
+namespace DonutDevilControls.ViewModel.Design.Legend
 {
     public class DesignRingHistogramVm : RingHistogramVm
     {

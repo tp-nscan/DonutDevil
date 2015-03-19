@@ -8,13 +8,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
-using MathLib;
+using DonutDevilControls.ViewModel.Legend;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
 using NodeLib;
 using NodeLib.Updaters;
 using WpfUtils;
-using WpfUtils.Utils;
 using WpfUtils.ViewModels.Graphics;
 
 namespace DonutDevilMain.ViewModel
@@ -22,14 +21,12 @@ namespace DonutDevilMain.ViewModel
     public class RingValuedNodeGroupVm : NotifyPropertyChanged
     {
         private const int SquareSize = 256;
-        private const int Colorsteps = 512;
-
         public RingValuedNodeGroupVm()
         {
-            _nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colorsteps / 4);
-            _histogramColorSequence = Colors.White.ToUniformColorSequence(Colorsteps);
+            _legendVm = new RingLegendVm();
+            _legendVm.OnLegendVmChanged.Subscribe(RespondToLegendChange);
 
-            _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Alpha" };
+            _alphaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") {Title = "Alpha"};
             _betaSliderVm = new SliderVm(RealInterval.Make(0, 0.999), 0.02, "0.00") { Title = "Beta" };
             _stepSizeSliderVm = new SliderVm(RealInterval.Make(0, 0.5), 0.002, "0.0000") { Title = "Step" };
             _displayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
@@ -39,26 +36,22 @@ namespace DonutDevilMain.ViewModel
                   title: "Cell values"
                 );
 
-            _ringHistogramVm.LegendVm.AddValues
-                (
-                 Enumerable.Range(0, Functions.TrigFuncSteps)
-                    .Select(i =>
-                        new D1Val<Color>(i, _nodeGroupColorSequence.ToUnitColor(i.FractionOf(Functions.TrigFuncSteps))))
-                );
-
             _wbUniformGridVm = new WbUniformGridVm(SquareSize, SquareSize);
 
             InitializeRun();
         }
 
+        void RespondToLegendChange(ILegendVm legendVm)
+        {
+            RingHistogramVm.DrawLegend(f=>LegendVm.ColorForUnitRing(f));
+
+            DrawMainNetwork(_nodeGroup);
+        }
+
 
         #region local vars
 
-        private readonly IColorSequence _nodeGroupColorSequence;
-
         private readonly Stopwatch _stopwatch = new Stopwatch();
-
-        private readonly IColorSequence _histogramColorSequence;
 
         private INodeGroup _nodeGroup;
 
@@ -203,22 +196,7 @@ namespace DonutDevilMain.ViewModel
 
         void MakeHistogram()
         {
-            var histogram =
-                _nodeGroup.Values.ToHistogram
-                (
-                    bins: RealInterval.UnitRange.SplitToEvenIntervals(Functions.TrigFuncSteps - 1).ToList(),
-                    valuatorFunc: n => n
-                );
-
-            var colorDexer = (1.0) / histogram.Max(t => Math.Sqrt(t.Item2.Item));
-
-            RingHistogramVm.HistogramVm.AddValues
-            (
-                histogram.Select((bin, index)
-                    => new D1Val<Color>(index, _histogramColorSequence.ToUnitColor((float)(colorDexer * Math.Sqrt(bin.Item2.Item))
-                )))
-            );
-
+            RingHistogramVm.MakeHistogram(_nodeGroup.Values);
         }
 
         void UpdateBindingProperties()
@@ -229,8 +207,8 @@ namespace DonutDevilMain.ViewModel
 
         void DrawMainNetwork(INodeGroup nodeGroup)
         {
-            WbUniformGridVm.AddValues(nodeGroup.Values.Select((v, i) =>
-                new D2Val<Color>(i / SquareSize, i % SquareSize, _nodeGroupColorSequence.ToUnitColor(v))));
+            WbUniformGridVm.AddValues(nodeGroup.Values.Select((v,i)=> 
+                new D2Val<Color>(i/SquareSize, i%SquareSize,  LegendVm.ColorForUnitRing(v) )));
         }
 
         private readonly WbUniformGridVm _wbUniformGridVm;
@@ -247,7 +225,7 @@ namespace DonutDevilMain.ViewModel
 
             ResetNgUpdaters();
 
-            DrawMainNetwork(_nodeGroup);
+            RespondToLegendChange(LegendVm);
         }
 
 
@@ -312,6 +290,17 @@ namespace DonutDevilMain.ViewModel
         public SliderVm BetaSliderVm
         {
             get { return _betaSliderVm; }
+        }
+
+        private ILegendVm _legendVm;
+        public ILegendVm LegendVm
+        {
+            get { return _legendVm; }
+            set
+            {
+                _legendVm = value;
+                OnPropertyChanged("LegendVm");
+            }
         }
 
         #endregion

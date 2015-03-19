@@ -1,13 +1,17 @@
-﻿namespace DonutDevilControls.ViewModel.Legend
-{
-    public enum LegendVmType
-    {
-        Image,
-        Seq
-    }
+﻿using System;
+using WpfUtils.Utils;
 
+namespace DonutDevilControls.ViewModel.Legend
+{
     public interface ILegendVm
     {
-        LegendVmType LegendVmType { get; }
+        DisplaySpaceType DisplaySpaceType { get; }
+
+        System.Windows.Media.Color ColorForUnitRing(float val);
+
+        System.Windows.Media.Color ColorForUnitTorus(float xVal, float yVal);
+
+        IObservable<ILegendVm> OnLegendVmChanged { get; }
+
     }
 }

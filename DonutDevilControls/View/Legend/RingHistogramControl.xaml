@@ -1,12 +1,12 @@
-﻿<UserControl x:Class="DonutDevilControls.View.Common.RingHistogramControl"
+﻿<UserControl x:Class="DonutDevilControls.View.Legend.RingHistogramControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
-             xmlns:common="clr-namespace:DonutDevilControls.ViewModel.Design.Common"
+             xmlns:legend="clr-namespace:DonutDevilControls.ViewModel.Design.Legend"
              x:Name="UserControl"
-             d:DataContext="{d:DesignInstance {x:Type common:DesignRingHistogramVm}, IsDesignTimeCreatable=True}"
+             d:DataContext="{d:DesignInstance {x:Type legend:DesignRingHistogramVm}, IsDesignTimeCreatable=True}"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 

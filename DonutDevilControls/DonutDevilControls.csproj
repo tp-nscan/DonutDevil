@@ -75,6 +75,7 @@
     <Reference Include="System.Reactive.PlatformServices">
       <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -91,21 +92,26 @@
     <Compile Include="ViewModel\Common\NgLayerSelectorVm.cs" />
     <Compile Include="ViewModel\Common\Plot1DVm.cs" />
     <Compile Include="ViewModel\Common\Plot2DVm.cs" />
+    <Compile Include="ViewModel\Design\Legend\DesignRingLegendVm.cs" />
+    <Compile Include="ViewModel\Design\Legend\DesignTorusHistogramVm.cs" />
+    <Compile Include="ViewModel\Legend\DisplaySpaceType.cs" />
+    <Compile Include="ViewModel\Legend\IHistogramVm.cs" />
     <Compile Include="ViewModel\Legend\ILegendVm.cs" />
-    <Compile Include="ViewModel\Legend\ImageLegendVm.cs" />
+    <Compile Include="ViewModel\Legend\TorusHistogramVm.cs" />
+    <Compile Include="ViewModel\Legend\TorusLegendVm.cs" />
     <Compile Include="ViewModel\Common\NodeGroupVm.cs" />
     <Compile Include="ViewModel\Common\NodeVm.cs" />
-    <Compile Include="ViewModel\Common\RingHistogramVm.cs" />
+    <Compile Include="ViewModel\Legend\RingHistogramVm.cs" />
     <Compile Include="ViewModel\Common\SliderVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignNgLayerSelectorVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignPlot1DVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignPlot2DVm.cs" />
-    <Compile Include="ViewModel\Design\Legend\DesignImageLegendVm.cs" />
-    <Compile Include="ViewModel\Design\Common\DesignRingHistogramVm.cs" />
+    <Compile Include="ViewModel\Design\Legend\DesignTorusLegendVm.cs" />
+    <Compile Include="ViewModel\Design\Legend\DesignRingHistogramVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignSliderVm.cs" />
     <Compile Include="ViewModel\Design\NgIndexer\DesignNgIndexerSetVm.cs" />
     <Compile Include="ViewModel\Design\NgIndexer\DesignNgIndexerVm.cs" />
-    <Compile Include="ViewModel\Legend\SeqLegendVm.cs" />
+    <Compile Include="ViewModel\Legend\RingLegendVm.cs" />
     <Compile Include="ViewModel\NgIndexer\NgDisplayMode.cs" />
     <Compile Include="ViewModel\NgIndexer\NgIndexerState.cs" />
     <Compile Include="ViewModel\Design\Params\DesignParamSetEditorVm.cs" />
@@ -120,12 +126,15 @@
     <Compile Include="View\Common\EnumEditorControl.xaml.cs">
       <DependentUpon>EnumEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Legend\ImageLegendControl.xaml.cs">
-      <DependentUpon>ImageLegendControl.xaml</DependentUpon>
+    <Compile Include="View\Legend\TorusHistogramControl.xaml.cs">
+      <DependentUpon>TorusHistogramControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Legend\TorusLegendLoadControl.xaml.cs">
+      <DependentUpon>TorusLegendLoadControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Legend\LegendSelector.cs" />
-    <Compile Include="View\Legend\SeqLegendControl.xaml.cs">
-      <DependentUpon>SeqLegendControl.xaml</DependentUpon>
+    <Compile Include="View\Legend\RingLegendLoadControl.xaml.cs">
+      <DependentUpon>RingLegendLoadControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\NgIndexer\NgIndexerControl.xaml.cs">
       <DependentUpon>NgIndexerControl.xaml</DependentUpon>
@@ -139,7 +148,7 @@
     <Compile Include="View\Common\Plot2DControl.xaml.cs">
       <DependentUpon>Plot2DControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Common\RingHistogramControl.xaml.cs">
+    <Compile Include="View\Legend\RingHistogramControl.xaml.cs">
       <DependentUpon>RingHistogramControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Common\SliderControl.xaml.cs">
@@ -153,7 +162,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Legend\ImageLegendControl.xaml">
+    <Page Include="View\Legend\TorusHistogramControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Legend\TorusLegendLoadControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -161,7 +174,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Legend\SeqLegendControl.xaml">
+    <Page Include="View\Legend\RingLegendLoadControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -181,7 +194,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Common\RingHistogramControl.xaml">
+    <Page Include="View\Legend\RingHistogramControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -240,9 +253,7 @@
   <ItemGroup>
     <Resource Include="Images\earth.bmp" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModel\NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

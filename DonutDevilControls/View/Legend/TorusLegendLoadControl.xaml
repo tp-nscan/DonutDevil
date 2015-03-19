@@ -1,23 +1,27 @@
-﻿<UserControl x:Class="DonutDevilControls.View.Legend.ImageLegendControl"
+﻿<UserControl x:Class="DonutDevilControls.View.Legend.TorusLegendLoadControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:common="clr-namespace:DonutDevilControls.ViewModel.Design.Common"
              xmlns:common1="clr-namespace:DonutDevilControls.View.Common"
              xmlns:legend="clr-namespace:DonutDevilControls.ViewModel.Design.Legend"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance {x:Type legend:DesignImageLegendVm}, IsDesignTimeCreatable=True}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DataContext="{d:DesignInstance {x:Type legend:DesignTorusLegendVm}, IsDesignTimeCreatable=True}"
+             d:DesignHeight="100" d:DesignWidth="300">
     
-    
-    <DockPanel LastChildFill="True">
-        <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="0,5" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal">
             <Button Margin="5,0" Command="{Binding LoadImageFileCommand}">Load File</Button>
             <Button Margin="5,0" Command="{Binding XonlyCommand}">X only</Button>
             <Button Margin="5,0" Command="{Binding YonlyCommand}">Y only</Button>
             <Button Margin="5,0" Command="{Binding StandardCommand}">Standard</Button>
         </StackPanel>
-        <common1:Plot2DControl DataContext="{Binding Plot2DVm}"/>
-    </DockPanel>
+
+        <common1:SliderControl DataContext="{Binding OffsetSliderVm}" Grid.Row="1"/>
+
+    </Grid>
 </UserControl>

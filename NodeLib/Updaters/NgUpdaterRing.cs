@@ -86,7 +86,7 @@ namespace NodeLib.Updaters
         }
 
 
-        public static INgUpdater ForSquareTorus
+        public static INgUpdater ForSquareTorus0
         (
             float gain,
             float step,
@@ -111,14 +111,13 @@ namespace NodeLib.Updaters
                     );
             }
 
-        public static INgUpdater ForSquareTorus0
+        public static INgUpdater ForSquareTorus
             (
                 float gain, 
                 float step,
                 float alpha,
                 float beta,
-                int squareSize, 
-                bool use8Way
+                int squareSize
             )
         {
             var biases = RingRadialCosBiases(step: step, rBias: alpha, aBias: beta);
