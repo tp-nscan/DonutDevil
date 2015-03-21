@@ -5,7 +5,7 @@ using DonutDevilControls.ViewModel.Legend;
 
 namespace DonutDevilControls.View.Legend
 {
-    public class LegendSelector : DataTemplateSelector
+    public class LegendLoadSelector : DataTemplateSelector
     {
         public DataTemplate RingTemplate { get; set; }
 

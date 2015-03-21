@@ -10,10 +10,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
+using MathLib.NumericTypes;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using WpfUtils;
 using WpfUtils.Utils;
-using WpfUtils.Views.Graphics;
 using Color = System.Windows.Media.Color;
 
 namespace DonutDevilControls.ViewModel.Legend
@@ -22,7 +22,7 @@ namespace DonutDevilControls.ViewModel.Legend
     {
         public TorusLegendVm()
         {
-            _plot2DVm = new Plot2DVm
+            _plot2DVm = new Plot2DVm(128, 128)
             {
                 Title = "Node values",
                 MinValueX = 0.0,
@@ -37,7 +37,6 @@ namespace DonutDevilControls.ViewModel.Legend
         {
             get { return _plot2DVm; }
         }
-
 
         #region LoadImageFileCommand
 
@@ -106,16 +105,17 @@ namespace DonutDevilControls.ViewModel.Legend
                         {
 
                             ImageFileName = imageFileName;
-                            Plot2DVm.GraphicsInfos =
+                            Plot2DVm.WbUniformGridVm.AddValues(
                                 Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
                                     .Select(
-                                        c => new PlotPoint
-                                            (
-                                            x: c % ImageWidth,
-                                            y: c / ImageWidth,
-                                            color: _imageColors[(c) / ImageHeight, (c) % ImageWidth]
-                                            )).ToList();
-
+                                        i=> new D2Val<Color>(
+                                            x: i % ImageWidth,
+                                            y: i / ImageWidth,
+                                            value: _imageColors[(i) / ImageHeight, (i) % ImageWidth]
+                                            )
+                                    
+                                    )
+                                );
                             IsDirty = true;
                             _legendVmChanged.OnNext(this);
                         },
@@ -196,23 +196,25 @@ namespace DonutDevilControls.ViewModel.Legend
             }
 
             Application.Current.Dispatcher.Invoke
-                (
-                    () =>
-                    {
-                        Plot2DVm.GraphicsInfos =
-                            Enumerable.Range(0, 1024 * 1024)
-                                .Select(
-                                    c => new PlotPoint
-                                        (
-                                        x: c % 1024,
-                                        y: c / 1024,
-                                        color: _imageColors[(c) / 1024, (c) % 1024]
-                                        )).ToList();
-                        IsDirty = true;
-                        _legendVmChanged.OnNext(this);
-                    },
-                    DispatcherPriority.Background
-                );
+            (
+                () =>
+                {
+                    Plot2DVm.WbUniformGridVm.AddValues(
+                        Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
+                            .Select(
+                                i => new D2Val<Color>(
+                                    x: i % 1024,
+                                    y: i / 1024,
+                                    value: _imageColors[(i) / 1024, (i) % 1024]
+                                    )
+
+                            )
+                        );
+                    IsDirty = true;
+                    _legendVmChanged.OnNext(this);
+                },
+                DispatcherPriority.Background
+            );
         }
 
 
@@ -254,15 +256,17 @@ namespace DonutDevilControls.ViewModel.Legend
                 (
                     () =>
                     {
-                        Plot2DVm.GraphicsInfos =
-                            Enumerable.Range(0, 1024 * 1024)
+                        Plot2DVm.WbUniformGridVm.AddValues(
+                            Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
                                 .Select(
-                                    c => new PlotPoint
-                                        (
-                                        x: c % 1024,
-                                        y: c / 1024,
-                                        color: _imageColors[(c) / 1024, (c) % 1024]
-                                        )).ToList();
+                                    i => new D2Val<Color>(
+                                        x: i % 1024,
+                                        y: i / 1024,
+                                        value: _imageColors[(i) / 1024, (i) % 1024]
+                                        )
+
+                                )
+                            );
                         IsDirty = true;
                         _legendVmChanged.OnNext(this);
                     },
@@ -307,24 +311,25 @@ namespace DonutDevilControls.ViewModel.Legend
             }
 
             Application.Current.Dispatcher.Invoke
-                (
-                    () =>
-                    {
-                        Plot2DVm.GraphicsInfos =
-                            Enumerable.Range(0, 1024 * 1024)
-                                .Select(
-                                    c => new PlotPoint
-                                        (
-                                        x: c % 1024,
-                                        y: c / 1024,
-                                        color: _imageColors[(c) / 1024, (c) % 1024]
-                                        )).ToList();
-                        IsDirty = true;
-                        _legendVmChanged.OnNext(this);
+            (
+                () =>
+                {
+                    Plot2DVm.WbUniformGridVm.AddValues(
+                        Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
+                            .Select(
+                                i => new D2Val<Color>(
+                                    x: i % 1024,
+                                    y: i / 1024,
+                                    value: _imageColors[(i) / 1024, (i) % 1024]
+                                    )
 
-                    },
-                    DispatcherPriority.Background
-                );
+                            )
+                        );
+                    IsDirty = true;
+                    _legendVmChanged.OnNext(this);
+                },
+                DispatcherPriority.Background
+            );
         }
 
 

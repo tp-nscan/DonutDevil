@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:legend="clr-namespace:DonutDevilControls.View.Legend">
+
+
+    <DataTemplate x:Key="DefaultLegendTemplate">
+        <TextBox Text="DefaultLegendTemplate"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="TorusTemplateLoad">
+        <legend:TorusLegendLoadControl/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="RingTemplateLoad">
+        <legend:RingLegendLoadControl/>
+    </DataTemplate>
+
+    <legend:LegendLoadSelector x:Key ="LegendLoadSelector"
+        TorusTemplate="{StaticResource TorusTemplateLoad}"
+        RingTemplate="{StaticResource RingTemplateLoad}"
+        DefaultTemplate="{StaticResource DefaultLegendTemplate}"            
+    />
+
+</ResourceDictionary>

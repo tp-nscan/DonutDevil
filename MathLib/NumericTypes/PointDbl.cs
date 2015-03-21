@@ -1,4 +1,6 @@
-﻿namespace MathLib.NumericTypes
+﻿using MathLib.Intervals;
+
+namespace MathLib.NumericTypes
 {
     /// <summary>
     /// The point class
@@ -24,7 +26,6 @@
         {
             get { return _x; }
         }
-
 
         static readonly PointDbl origin = new PointDbl(0, 0);
         public static PointDbl Origin { get { return origin; } }

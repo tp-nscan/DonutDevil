@@ -8,7 +8,19 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance {x:Type legend:DesignTorusHistogramVm}, IsDesignTimeCreatable=True}"
              d:DesignWidth="300">
-    <Grid>
-        <common:Plot2DControl DataContext="{Binding Plot2DVm}"/>
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Opacity="{Binding ShowHistogramSliderVm.Value}">
+            <common:Plot2DControl Height="300" Width="280" DataContext="{Binding LegendVm}" />
+        </Grid>
+        
+        <common:Plot2DControl Grid.Row="0" Height="300" Width="280" DataContext="{Binding HistogramVm}"/>
+
+        <common:SliderControl DataContext="{Binding ShowHistogramSliderVm}" Grid.Row="1"/>
+
     </Grid>
 </UserControl>

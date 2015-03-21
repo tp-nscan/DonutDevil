@@ -34,6 +34,7 @@ namespace DonutDevilMain.ViewModel
             InitializeRun();
         }
 
+
         #region local vars
 
         private readonly Stopwatch _stopwatch = new Stopwatch();

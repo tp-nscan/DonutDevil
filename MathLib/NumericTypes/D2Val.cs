@@ -1,4 +1,7 @@
-﻿namespace MathLib.NumericTypes
+﻿using System;
+using System.Collections.Generic;
+
+namespace MathLib.NumericTypes
 {
     public class D2Val<T>
     {
@@ -27,5 +30,22 @@
         {
             get { return _y; }
         }
+    }
+
+    public static class D2ValExt
+    {
+        public static IEnumerable<D2Val<T>> ToSquareD2Array<T>(this int arraySize,
+            Func<int, int, T> cellMakerFunc)
+        {
+            for (var i = 0; i < arraySize; i++)
+            {
+                for (var j = 0; j < arraySize; j++)
+                {
+                    yield return new D2Val<T>(i,j, cellMakerFunc(i,j));
+                }
+            }
+
+        }
+
     }
 }

@@ -25,8 +25,9 @@
 
         <graphics:WbImage
             Grid.Column="1"
-            ImageWidth="1024" ImageHeight="1024" 
-            PlotRectangles="{Binding GraphicsInfos}"/>
+            ImageWidth ="{Binding WbUniformGridVm.ImageWidth}"
+            ImageHeight ="{Binding WbUniformGridVm.ImageHeight}"
+            PlotRectangles ="{Binding WbUniformGridVm.PlotRectangles}"/>
 
 
         <Border

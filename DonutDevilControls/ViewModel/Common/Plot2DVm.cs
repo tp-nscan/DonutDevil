@@ -1,21 +1,21 @@
-﻿using System.Collections.Generic;
-using WpfUtils;
-using WpfUtils.Views.Graphics;
+﻿using WpfUtils;
+using WpfUtils.ViewModels.Graphics;
 
 namespace DonutDevilControls.ViewModel.Common
 {
     public class Plot2DVm : NotifyPropertyChanged
     {
-        private IReadOnlyList<PlotPoint> _graphicsInfos = new List<PlotPoint>();
-        public IReadOnlyList<PlotPoint> GraphicsInfos
+        public Plot2DVm(int width, int height)
         {
-            get { return _graphicsInfos; }
-            set
-            {
-                _graphicsInfos = value;
-                OnPropertyChanged("GraphicsInfos");
-            }
+            _wbUniformGridVm = new WbUniformGridVm(width, height);
+            
         }
+
+        private readonly WbUniformGridVm _wbUniformGridVm;
+        public WbUniformGridVm WbUniformGridVm
+        {
+            get { return _wbUniformGridVm; }
+        } 
 
 
         private double _minValueX;

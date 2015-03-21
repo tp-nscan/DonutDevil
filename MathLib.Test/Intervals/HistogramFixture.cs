@@ -9,15 +9,15 @@ namespace MathLib.Test.Intervals
     public class HistogramFixture
     {
         [TestMethod]
-        public void Hisotgram()
+        public void TestSortIntoBins()
         {
             const int binCount = 7;
             const int maxInt = 100;
             const int itemCount = 300;
             var randy = new Random(121);
             var items = Enumerable.Range(0, itemCount)
-                                    .Select(i => randy.Next(maxInt))
-                                    .ToList();
+                                  .Select(i => randy.Next(maxInt))
+                                  .ToList();
 
             var evaluator = new Func<int, double>(i => (double) i/100.0);
 
@@ -28,6 +28,9 @@ namespace MathLib.Test.Intervals
             Assert.AreEqual(histo.Count, binCount + 1);
             Assert.AreEqual(histo.Sum(b => b.Item2.Count), itemCount);
         }
+
+
+
     }
 
 }

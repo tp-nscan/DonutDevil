@@ -145,9 +145,10 @@ namespace DonutDevilMain.ViewModel
         {
             get
             {
-                return _stopUpdateNetworkCommand ?? (_stopUpdateNetworkCommand = new RelayCommand(
-                    param => DoCancelUpdateNetwork(),
-                    param => CanCancelUpdateNetwork()
+                return _stopUpdateNetworkCommand ?? (
+                    _stopUpdateNetworkCommand = new RelayCommand(
+                        param => DoCancelUpdateNetwork(),
+                        param => CanCancelUpdateNetwork()
                     ));
             }
         }

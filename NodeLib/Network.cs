@@ -13,6 +13,7 @@ namespace NodeLib
         IReadOnlyDictionary<string, IParameter> Parameters { get; }
         IReadOnlyList<INgIndexer> NodeGroupIndexers { get; }
         INodeGroup NodeGroup { get; }
+        int SquareSize { get; }
     }
 
     public static class Network
@@ -24,7 +25,8 @@ namespace NodeLib
                 parameters: NgUpdaterBuilder.StandardRingParams(),
                 ngUpdater: NgUpdaterBuilder.StandardRing(squareSize)(NgUpdaterBuilder.StandardRingParams()),
                 nodeGroupIndexers: new[] { NgIndexer.MakeD2Float("Node values", squareSize) },
-                ngUpdaterBuilder: NgUpdaterBuilder.StandardRing(squareSize)
+                ngUpdaterBuilder: NgUpdaterBuilder.StandardRing(squareSize),
+                squareSize: squareSize
             );
         }
 
@@ -37,7 +39,8 @@ namespace NodeLib
                 parameters: network.Parameters,
                 ngUpdater: network.NgUpdater,
                 nodeGroupIndexers: network.NodeGroupIndexers,
-                ngUpdaterBuilder: network.NgUpdaterBuilder
+                ngUpdaterBuilder: network.NgUpdaterBuilder,
+                squareSize: network.SquareSize
             );
         }
 
@@ -51,7 +54,8 @@ namespace NodeLib
                 parameters: paramDictionary,
                 ngUpdater: network.NgUpdaterBuilder(network.Parameters),
                 nodeGroupIndexers: network.NodeGroupIndexers,
-                ngUpdaterBuilder: network.NgUpdaterBuilder
+                ngUpdaterBuilder: network.NgUpdaterBuilder,
+                squareSize: network.SquareSize
             );
         }
 
@@ -64,19 +68,22 @@ namespace NodeLib
         private readonly IReadOnlyList<INgIndexer> _nodeGroupIndexers;
         private readonly INodeGroup _nodeGroup;
         private readonly Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> _ngUpdaterBuilder;
+        private readonly int _squareSize;
 
         public NetworkImpl(
             INodeGroup nodeGroup,
             IReadOnlyDictionary<string, IParameter> parameters, 
             INgUpdater ngUpdater, 
             IReadOnlyList<INgIndexer> nodeGroupIndexers, 
-            Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ngUpdaterBuilder)
+            Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ngUpdaterBuilder, 
+            int squareSize)
         {
             _nodeGroup = nodeGroup;
             _parameters = parameters;
             _ngUpdater = ngUpdater;
             _nodeGroupIndexers = nodeGroupIndexers;
             _ngUpdaterBuilder = ngUpdaterBuilder;
+            _squareSize = squareSize;
         }
 
         public Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> NgUpdaterBuilder
@@ -102,6 +109,11 @@ namespace NodeLib
         public INodeGroup NodeGroup
         {
             get { return _nodeGroup; }
+        }
+
+        public int SquareSize
+        {
+            get { return _squareSize; }
         }
     }
 }

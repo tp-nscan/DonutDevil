@@ -23,5 +23,40 @@ namespace MathLib.NumericTypes
                 Enumerable.Range(0, lstLeft.Length)
                     .All(i => comp(lstLeft[i], lstRight[i]));
         }
+
+        public static int Max(this int[,] values)
+        {
+            var maxVal = 0;
+            for (var i = 0; i < values.GetUpperBound(0); i++)
+            {
+                for (var j = 0; j < values.GetUpperBound(1); j++)
+                {
+                    if (values[i, j] > maxVal)
+                    {
+                        maxVal = values[i, j];
+                    }
+                }
+            }
+            return maxVal;
+        }
+
+        public static float Max(this float[,] values)
+        {
+            float maxVal = 0;
+            for (var i = 0; i < values.GetUpperBound(0); i++)
+            {
+                for (var j = 0; j < values.GetUpperBound(1); j++)
+                {
+                    if (values[i, j] > maxVal)
+                    {
+                        maxVal = values[i, j];
+                    }
+                }
+            }
+            return maxVal;
+        }
     }
+
+
+
 }

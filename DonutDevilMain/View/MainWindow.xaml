@@ -14,6 +14,7 @@
         <view:NetworkControl DataContext="{Binding NetworkVm}"/>
 
         <!--<view:RingValuedNodeGroupControl DataContext="{Binding RingValuedNodeGroupVm}"/>-->
+        
     </Grid>
 
 </Window>

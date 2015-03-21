@@ -26,7 +26,7 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 
         public static INgDisplayIndexing TorusIndexing(INgIndexer ngIndexerX, INgIndexer ngIndexerY)
         {
-            return new NgDisplayIndexingImpl(NgDisplayMode.Ring, indexerRing: null, indexerTorusX:ngIndexerX, indexerTorusY:ngIndexerY);
+            return new NgDisplayIndexingImpl(NgDisplayMode.Torus, indexerRing: null, indexerTorusX:ngIndexerX, indexerTorusY:ngIndexerY);
         }
 
     }

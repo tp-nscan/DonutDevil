@@ -126,13 +126,14 @@
     <Compile Include="View\Common\EnumEditorControl.xaml.cs">
       <DependentUpon>EnumEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Legend\HistogramSelector.cs" />
     <Compile Include="View\Legend\TorusHistogramControl.xaml.cs">
       <DependentUpon>TorusHistogramControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Legend\TorusLegendLoadControl.xaml.cs">
       <DependentUpon>TorusLegendLoadControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Legend\LegendSelector.cs" />
+    <Compile Include="View\Legend\LegendLoadSelector.cs" />
     <Compile Include="View\Legend\RingLegendLoadControl.xaml.cs">
       <DependentUpon>RingLegendLoadControl.xaml</DependentUpon>
     </Compile>
@@ -162,6 +163,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Legend\HistogramSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Legend\TorusHistogramControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -170,7 +175,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Legend\LegendSelector.xaml">
+    <Page Include="View\Legend\LegendLoadSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

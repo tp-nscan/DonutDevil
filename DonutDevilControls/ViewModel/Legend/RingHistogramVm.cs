@@ -24,7 +24,14 @@ namespace DonutDevilControls.ViewModel.Legend
             _histogramColorSequence = Colors.White.ToUniformColorSequence(Colorsteps);
         }
 
-        public void DrawLegend(Func<float, Color> colorFunc )
+        private readonly IColorSequence _histogramColorSequence;
+
+        public void DrawLegend(Func<float, float, Color> colorFunc)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DrawLegend(Func<float, Color> colorFunc)
         {
             LegendVm.AddValues
             (
@@ -33,9 +40,6 @@ namespace DonutDevilControls.ViewModel.Legend
                     new D1Val<Color>(i, colorFunc(i.FractionOf(Functions.TrigFuncSteps))))
             );
         }
-
-        private readonly IColorSequence _histogramColorSequence;
-
 
         private readonly WbRingPlotVm _legendVm;
         public WbRingPlotVm LegendVm
@@ -52,21 +56,24 @@ namespace DonutDevilControls.ViewModel.Legend
         public void MakeHistogram(IEnumerable<float> values)
         {
             var histogram =
-                values.ToHistogram
+                values.ToScaledHistogram
                 (
-                    bins: RealInterval.UnitRange.SplitToEvenIntervals(Functions.TrigFuncSteps - 1).ToList(),
-                    valuatorFunc: n => n
+                   resolution: Functions.TrigFuncSteps,
+                   max: 1.0f
                 );
-
-            var colorDexer = (1.0) / histogram.Max(t => Math.Sqrt(t.Item2.Item));
 
             HistogramVm.AddValues
             (
-                histogram.Select((bin, index)
-                    => new D1Val<Color>(index, _histogramColorSequence.ToUnitColor((float)(colorDexer * Math.Sqrt(bin.Item2.Item))
-                )))
+                histogram.Select((val, index)
+                    => new D1Val<Color>(index, _histogramColorSequence.ToUnitColor(val))
+                )
             );
 
+        }
+
+        public void MakeHistogram(IEnumerable<float> xVals, IEnumerable<float> yVals)
+        {
+            throw new NotImplementedException();
         }
 
         private string _title;

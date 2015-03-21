@@ -25,13 +25,18 @@ namespace MathLib.NumericTypes
             get { return _x; }
         }
 
-
         static readonly PointDbl origin = new PointDbl(0.0, 0.0);
+
         public static PointDbl Origin { get { return origin; } }
     }
 
     public static class PointFext
     {
+        public static IEnumerable<PointFlt> ToPoints(this IEnumerable<float> xVals, IEnumerable<float> yVals)
+        {
+            return xVals.Zip(yVals, (x, y) => new PointFlt(x, y));
+        }
+
         public static float[] ModEuclideanForce(this PointFlt target, PointFlt draw, float tentParam)
         {
             var dX = target.X.MfDelta(draw.X);

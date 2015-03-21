@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:legend="clr-namespace:DonutDevilControls.View.Legend">
+
+    
+    <DataTemplate x:Key="DefaultHistogramTemplate">
+        <TextBox Text="DefaultHistogramTemplate"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="TorusTemplateDisplay">
+        <legend:TorusHistogramControl/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="RingTemplateDisplay">
+        <legend:RingHistogramControl/>
+    </DataTemplate>
+
+    <legend:HistogramSelector x:Key ="HistogramSelector"
+        TorusTemplate="{StaticResource TorusTemplateDisplay}"
+        RingTemplate="{StaticResource RingTemplateDisplay}"
+        DefaultTemplate="{StaticResource DefaultHistogramTemplate}"            
+    />
+
+</ResourceDictionary>
