@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using NodeLib.Indexers;
 using WpfUtils;
 
@@ -35,22 +37,62 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             get { return _ngIndexer; }
         }
 
+
+        private bool _optionsAreVisible;
+        public bool OptionsAreVisible
+        {
+            get { return _optionsAreVisible; }
+            set
+            {
+                _optionsAreVisible = value;
+                OnPropertyChanged("OptionsAreVisible");
+            }
+        }
+
         public bool IsRing
         {
             get { return NgIndexerState == NgIndexerState.RingSelected; }
-            set { NgIndexerState = (value) ? NgIndexerState.RingSelected : NgIndexerState.RingUnselected; }
+            set
+            {
+                NgIndexerState = (value) ? NgIndexerState.RingSelected : NgIndexerState.RingUnselected;
+                if (value)
+                {
+                    _ngIndexerStateChanged.OnNext(this);
+                }
+            }
         }
 
         public bool IsTorusX
         {
             get { return NgIndexerState == NgIndexerState.TorusX; }
-            set { NgIndexerState = (value) ? NgIndexerState.TorusX : NgIndexerState.TorusUnselected; }
+            set
+            {
+                NgIndexerState = (value) ? NgIndexerState.TorusX : NgIndexerState.TorusUnselected;
+                if (value)
+                {
+                    _ngIndexerStateChanged.OnNext(this);
+                }
+            }
         }
 
         public bool IsTorusY
         {
             get { return NgIndexerState == NgIndexerState.TorusY; }
-            set { NgIndexerState = (value) ? NgIndexerState.TorusY : NgIndexerState.TorusUnselected; }
+            set
+            {
+                NgIndexerState = (value) ? NgIndexerState.TorusY : NgIndexerState.TorusUnselected;
+                if (value)
+                {
+                    _ngIndexerStateChanged.OnNext(this);
+                }
+            }
+        }
+
+        private readonly Subject<NgIndexerVm> _ngIndexerStateChanged
+            = new Subject<NgIndexerVm>();
+        public IObservable<NgIndexerVm> OnNgIndexerStateChanged
+        {
+            get { return _ngIndexerStateChanged; }
         }
     }
 

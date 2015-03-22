@@ -7,7 +7,7 @@
              xmlns:wpfUtils="clr-namespace:WpfUtils;assembly=WpfUtils"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance {x:Type win:DesignNgIndexerVm}, IsDesignTimeCreatable=True}"
-             d:DesignHeight="60" d:DesignWidth="300"
+             d:DesignWidth="300"
              wpfUtils:StateHelper.State="{Binding Path=State, Mode=OneWay}">
     
     <Border Background="Transparent" x:Name="Border" BorderBrush="Blue" BorderThickness="1" CornerRadius="4">
@@ -84,7 +84,7 @@
                        FontSize="16"
                        Foreground="Tomato" Text="{Binding NgIndexer.Name}"/>
 
-            <StackPanel Grid.Row="1"  Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel Grid.Row="1" Visibility="{Binding OptionsAreVisible, Converter={wpfUtils:BoolToVisibilityConverter}}"  Orientation="Horizontal" HorizontalAlignment="Center">
 
                 <ToggleButton 
                     x:Name="ToggleButtonRing"

@@ -332,7 +332,7 @@ namespace NodeLib.Updaters
 
                  var cOne = ng.Values[torusNbrhdOne.CC];
 
-                 var biasesOne = NgUpdaterRing.RingRadialCosBiases(step: step, rBias: alpha, aBias: cOne);
+                 var biasesOne = UpdateUtils.RingRadialCosBiases(step: step, rBias: alpha, aBias: cOne);
 
 
                  var resOne = cOne.MfDelta(ng.Values[torusNbrhdOne.UF]) * biasesOne[7];
@@ -379,7 +379,7 @@ namespace NodeLib.Updaters
                  var cTwo = ng.Values[torusNbrhdTwo.CC];
 
 
-                 var biasesOne = NgUpdaterRing.RingRadialCosBiases(step: step, rBias: alpha, aBias: cTwo);
+                 var biasesOne = UpdateUtils.RingRadialCosBiases(step: step, rBias: alpha, aBias: cTwo);
 
 
                  var resOne = cOne.MfDelta(ng.Values[torusNbrhdOne.UF]) * biasesOne[7];
@@ -394,7 +394,7 @@ namespace NodeLib.Updaters
                  resOne += (float)(( SafeRandom.NextDouble()- 0.5f) * beta);
 
 
-                 var biasesTwo = NgUpdaterRing.RingRadialSinBiases(step: step, rBias: alpha, aBias: cOne);
+                 var biasesTwo = UpdateUtils.RingRadialSinBiases(step: step, rBias: alpha, aBias: cOne);
 
                  var resTwo = cTwo.MfDelta(ng.Values[torusNbrhdTwo.UF]) * biasesTwo[7];
                  resTwo += cTwo.MfDelta(ng.Values[torusNbrhdTwo.UC]) * biasesTwo[0];
@@ -448,7 +448,7 @@ namespace NodeLib.Updaters
                  var cThree = ng.Values[torusNbrhdThree.CC];
 
 
-                 var biasesOne = NgUpdaterRing.RingRadialCosBiases(step: step, rBias: alpha, aBias: cTwo);
+                 var biasesOne = UpdateUtils.RingRadialCosBiases(step: step, rBias: alpha, aBias: cTwo);
 
 
                  var resOne = cOne.MfDelta(ng.Values[torusNbrhdOne.UF]) * biasesOne[7];
@@ -463,7 +463,7 @@ namespace NodeLib.Updaters
                  resOne += (float)((SafeRandom.NextDouble() - 0.5f) * beta);
 
 
-                 var biasesTwo = NgUpdaterRing.RingRadialSinBiases(step: step, rBias: alpha, aBias: cThree);
+                 var biasesTwo = UpdateUtils.RingRadialSinBiases(step: step, rBias: alpha, aBias: cThree);
 
                  var resTwo = cTwo.MfDelta(ng.Values[torusNbrhdTwo.UF]) * biasesTwo[7];
                  resTwo += cTwo.MfDelta(ng.Values[torusNbrhdTwo.UC]) * biasesTwo[0];
@@ -479,7 +479,7 @@ namespace NodeLib.Updaters
 
 
 
-                 var biasesThree = NgUpdaterRing.RingRadialSinBiases(step: step, rBias: alpha, aBias: cOne);
+                 var biasesThree = UpdateUtils.RingRadialSinBiases(step: step, rBias: alpha, aBias: cOne);
 
                  var resThree = cThree.MfDelta(ng.Values[torusNbrhdThree.UF]) * biasesThree[7];
                  resThree += cThree.MfDelta(ng.Values[torusNbrhdThree.UC]) * biasesThree[0];
@@ -542,7 +542,7 @@ namespace NodeLib.Updaters
                  var cFour = ng.Values[torusNbrhdFour.CC];
 
 
-                 var biasesOne = NgUpdaterRing.RingRadialCosBiases(step: step, rBias: alpha, aBias: cTwo);
+                 var biasesOne = UpdateUtils.RingRadialCosBiases(step: step, rBias: alpha, aBias: cTwo);
 
 
                  var resOne = cOne.MfDelta(ng.Values[torusNbrhdOne.UF]) * biasesOne[7];
@@ -557,7 +557,7 @@ namespace NodeLib.Updaters
                  resOne += (float)((SafeRandom.NextDouble() - 0.5f) * beta);
 
 
-                 var biasesTwo = NgUpdaterRing.RingRadialSinBiases(step: step, rBias: alpha, aBias: cThree);
+                 var biasesTwo = UpdateUtils.RingRadialSinBiases(step: step, rBias: alpha, aBias: cThree);
 
                  var resTwo = cTwo.MfDelta(ng.Values[torusNbrhdTwo.UF]) * biasesTwo[7];
                  resTwo += cTwo.MfDelta(ng.Values[torusNbrhdTwo.UC]) * biasesTwo[0];
@@ -573,7 +573,7 @@ namespace NodeLib.Updaters
 
 
 
-                 var biasesThree = NgUpdaterRing.RingRadialSinBiases(step: step, rBias: alpha, aBias: cFour);
+                 var biasesThree = UpdateUtils.RingRadialSinBiases(step: step, rBias: alpha, aBias: cFour);
 
                  var resThree = cThree.MfDelta(ng.Values[torusNbrhdThree.UF]) * biasesThree[7];
                  resThree += cThree.MfDelta(ng.Values[torusNbrhdThree.UC]) * biasesThree[0];
@@ -588,7 +588,7 @@ namespace NodeLib.Updaters
                  resThree += (float)((SafeRandom.NextDouble() - 0.5f) * beta);
 
 
-                 var biasesFour = NgUpdaterRing.RingRadialSinBiases(step: step, rBias: alpha, aBias: cOne);
+                 var biasesFour = UpdateUtils.RingRadialSinBiases(step: step, rBias: alpha, aBias: cOne);
 
                  var resFour = cFour.MfDelta(ng.Values[torusNbrhdFour.UF]) * biasesFour[7];
                  resFour += cFour.MfDelta(ng.Values[torusNbrhdFour.UC]) * biasesFour[0];

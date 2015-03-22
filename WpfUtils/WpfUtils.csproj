@@ -84,6 +84,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FEconverters.cs" />
+    <Compile Include="MediaConverters.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="TextFormat.cs" />
     <Compile Include="ViewModels\Graphics\WbImageVm.cs" />

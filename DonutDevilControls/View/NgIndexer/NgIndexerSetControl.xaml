@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:win="clr-namespace:DonutDevilControls.ViewModel.Design.NgIndexer"
              xmlns:ngIndexer="clr-namespace:DonutDevilControls.View.NgIndexer"
+             xmlns:wpfUtils="clr-namespace:WpfUtils;assembly=WpfUtils"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance {x:Type win:DesignNgIndexerSetVm}, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -27,7 +28,9 @@
                 <GroupBox Foreground="Wheat" Header="Display data type">
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <RadioButton IsChecked="{Binding IsRing}" Foreground="Wheat"  Margin="35,5" Content="Ring" />
-                        <RadioButton IsChecked="{Binding IsTorus}" Foreground="Wheat"  Margin="35,5" Content="Torus" />
+                        <RadioButton IsChecked="{Binding IsTorus}" 
+                                     IsEnabled="{Binding TorusIsEnabled}"
+                                     Foreground="Wheat"  Margin="35,5" Content="Torus" />
                     </StackPanel>
                 </GroupBox>
             </StackPanel>

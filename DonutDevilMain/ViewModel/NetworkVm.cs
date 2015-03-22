@@ -36,7 +36,7 @@ namespace DonutDevilMain.ViewModel
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
 
             _ngIndexerSetVm = new NgIndexerSetVm(network.NodeGroupIndexers.ToNgIndexerVms());
-            _ngIndexerSetVm.OnNgDisplayStateChanged.Subscribe(NgDisplayStateChangedHandler);
+            _ngIndexerSetVm.OnNgDisplayStateChanged.Subscribe(UpdateUi);
             _ngIndexerSetVm.IsRing = true;
 
             InitializeRun();
@@ -57,23 +57,6 @@ namespace DonutDevilMain.ViewModel
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private bool _isRunning;
-
-        public bool IsDirty
-        {
-            get
-            {
-                return false;
-                //return _stepSizeSliderVm.IsDirty || _alphaSliderVm.IsDirty || _betaSliderVm.IsDirty;
-            }
-
-        }
-
-        public void Clean()
-        {
-            //_stepSizeSliderVm.IsDirty = false;
-            //_alphaSliderVm.IsDirty = false;
-            //_betaSliderVm.IsDirty = false;
-        }
 
         #endregion
 
@@ -101,12 +84,15 @@ namespace DonutDevilMain.ViewModel
             await Task.Run(() =>
             {
                 _stopwatch.Start();
+
                 for (var i = 0; _isRunning; i++)
                 {
-                    if (IsDirty)
+                    if (ParamSetEditorVm.IsDirty)
                     {
                         Network = Network.UpdateParams(ParamSetEditorVm.EditedParameters.ToDictionary(p => p.Name));
+                        ParamSetEditorVm.IsDirty = false;
                     }
+
                     Network = Network.UpdateNodeGroup();
 
                     if (_cancellationTokenSource.IsCancellationRequested)
@@ -119,13 +105,7 @@ namespace DonutDevilMain.ViewModel
                     {
                         Application.Current.Dispatcher.Invoke
                             (
-                                () =>
-                                {
-                                    //ResetNgUpdaters();
-                                    //UpdateBindingProperties();
-                                    //MakeHistogram();
-                                    //DrawMainNetwork(_nodeGroup);
-                                },
+                                () => UpdateUi(NgIndexerSetVm.NgDisplayIndexing),
                                 DispatcherPriority.Background
                             );
                     }
@@ -133,13 +113,6 @@ namespace DonutDevilMain.ViewModel
             },
                 cancellationToken: _cancellationTokenSource.Token
             );
-        }
-
-        void UpdateUi()
-        {
-            CommandManager.InvalidateRequerySuggested();
-            OnPropertyChanged("Generation");
-            OnPropertyChanged("ElapsedTime");
         }
 
         bool CanUpdateNetwork()
@@ -213,13 +186,8 @@ namespace DonutDevilMain.ViewModel
 
         void InitializeRun()
         {
-            //_nodeGroup = NodeGroup.RandomNodeGroup(SquareSize * SquareSize, DateTime.Now.Millisecond);
-
-            //MakeHistogram();
-
-            //ResetNgUpdaters();
-
-            DrawMainNetwork();
+            Network = NodeLib.Network.StandardRing(Network.SquareSize, DateTime.Now.Millisecond);
+            UpdateUi(NgIndexerSetVm.NgDisplayIndexing);
         }
 
         void DrawMainNetwork()
@@ -251,7 +219,7 @@ namespace DonutDevilMain.ViewModel
                                 (
                                 x: d2F.X,
                                 y: d2F.Y,
-                                value: LegendVm.ColorForUnitRing(d2F.Value))
+                                value: LegendVm.ColorForUnitTorus(d2F.Value, d2F.Value))
                     )
                     .ToList();
 
@@ -261,10 +229,7 @@ namespace DonutDevilMain.ViewModel
 
         public int Generation
         {
-            get
-            {
-                return 0; // _nodeGroup.Generation; 
-            }
+            get { return Network.NodeGroup.Generation; }
         }
 
         public TimeSpan ElapsedTime
@@ -286,7 +251,7 @@ namespace DonutDevilMain.ViewModel
             get { return _ngIndexerSetVm; }
         }
 
-        void NgDisplayStateChangedHandler(INgDisplayIndexing ngDisplayIndexing)
+        void UpdateUi(INgDisplayIndexing ngDisplayIndexing)
         {
             switch (ngDisplayIndexing.NgisDisplayMode)
             {
@@ -309,12 +274,15 @@ namespace DonutDevilMain.ViewModel
                     {
                         LegendVm = _torusLegendVm;
                     }
-
-
                     break;
                 default:
                     throw new Exception("NgisDisplayMode not handled in NgDisplayStateChangedHandler");
             }
+
+            DrawMainNetwork();
+            OnPropertyChanged("Generation");
+            OnPropertyChanged("ElapsedTime");
+            CommandManager.InvalidateRequerySuggested();
         }
 
 

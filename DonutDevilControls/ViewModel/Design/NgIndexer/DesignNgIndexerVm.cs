@@ -9,7 +9,7 @@ namespace DonutDevilControls.ViewModel.Design.NgIndexer
             new NgIndexerImpl("Design name", null, 5, 5),
             NgIndexerState.RingSelected)
         {
-          
+            this.OptionsAreVisible = true;
         }
     }
 }
