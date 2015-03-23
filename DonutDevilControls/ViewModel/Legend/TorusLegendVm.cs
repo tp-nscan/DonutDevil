@@ -30,6 +30,8 @@ namespace DonutDevilControls.ViewModel.Legend
                 MinValueY = 0.0,
                 MaxValueY =  1.0
             };
+
+            IsStandard = true;
         }
 
         private readonly Plot2DVm _plot2DVm;
@@ -155,7 +157,7 @@ namespace DonutDevilControls.ViewModel.Legend
 
         public Color ColorForUnitTorus(float xVal, float yVal)
         {
-            return _imageColors[(int)(xVal*ImageHeight), (int)(yVal*ImageWidth)];
+            return _imageColors[(int)(xVal * 0.9999 * ImageHeight), (int)(yVal * 0.9999 * ImageWidth)];
         }
 
         bool CanLoadImage()
@@ -339,6 +341,68 @@ namespace DonutDevilControls.ViewModel.Legend
         }
 
         #endregion // YonlyCommand
+
+
+        private bool _isStandard;
+        public bool IsStandard
+        {
+            get { return _isStandard; }
+            set
+            {
+                if (value)
+                {
+                    _isXonly = false;
+                    OnPropertyChanged("IsXonly");
+                    _isYonly = false;
+                    OnPropertyChanged("IsYonly");
+                    DoStandard();
+                }
+
+                _isStandard = value;
+                OnPropertyChanged("IsStandard");
+            }
+        }
+
+        private bool _isXonly;
+        public bool IsXonly
+        {
+            get { return _isXonly; }
+            set
+            {
+                if (value)
+                {
+                    _isStandard = false;
+                    OnPropertyChanged("IsStandard");
+                    _isYonly = false;
+                    OnPropertyChanged("IsYonly");
+                    DoXOnly();
+                }
+
+                _isXonly = value;
+                OnPropertyChanged("IsXonly");
+            }
+        }
+
+        private bool _isYonly;
+        public bool IsYonly
+        {
+            get { return _isYonly; }
+            set
+            {
+                if (value)
+                {
+                    _isStandard = false;
+                    OnPropertyChanged("IsStandard");
+                    _isXonly = false;
+                    OnPropertyChanged("IsXonly");
+                    DoYOnly();
+                }
+
+                _isYonly = value;
+                OnPropertyChanged("IsYonly");
+            }
+        }
+
 
         private string _imageFileName;
         public string ImageFileName

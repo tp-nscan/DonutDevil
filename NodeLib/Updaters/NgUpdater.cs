@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NodeLib.Params;
 
 namespace NodeLib.Updaters
 {
@@ -8,6 +9,19 @@ namespace NodeLib.Updaters
     {
         INodeGroup Update(INodeGroup nodeGroup);
         string Name { get; }
+    }
+
+    public static class NgUpdater
+    {
+        public static INgUpdater ForStandardRing(int squareSize, int arrayOffset)
+        {
+            return NgUpdaterBuilder.ForStandardRing
+                (
+                    squareSize: squareSize,
+                    arrayOffset: arrayOffset
+                )(ParamSets.StandardRingParams());
+        }
+
     }
 
     public class NgUpdaterImpl : INgUpdater

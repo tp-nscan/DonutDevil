@@ -192,6 +192,35 @@ namespace WpfUtils
     }
 
 
+    public class MfInvnConverter : MarkupExtension, IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            try
+            {
+                var val = value as Double?;
+
+                return 1.0 - val;
+            }
+            catch
+            {
+                return value;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return value;
+        }
+
+        public override object ProvideValue(IServiceProvider serviceProvider)
+        {
+            return this;
+        }
+    }
+
+
     public class BoolToNumberConverter : MarkupExtension, IValueConverter
     {
         #region FalseValue

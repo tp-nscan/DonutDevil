@@ -20,12 +20,46 @@ namespace NodeLib
     {
         public static INetwork StandardRing(int squareSize, int seed)
         {
+            var layerCount = squareSize*squareSize;
+
             return new NetworkImpl(
-                nodeGroup: NodeGroup.RandomNodeGroup(squareSize*squareSize, seed),
-                parameters: NgUpdaterBuilder.StandardRingParams(),
-                ngUpdater: NgUpdaterBuilder.StandardRing(squareSize)(NgUpdaterBuilder.StandardRingParams()),
+                nodeGroup: NodeGroup.RandomNodeGroup(layerCount, seed),
+                parameters: ParamSets.StandardRingParams(),
+                ngUpdater: NgUpdater.ForStandardRing
+                            (
+                                squareSize: squareSize,
+                                arrayOffset: layerCount
+                            ),
                 nodeGroupIndexers: new[] { NgIndexer.MakeD2Float("Node values", squareSize) },
-                ngUpdaterBuilder: NgUpdaterBuilder.StandardRing(squareSize),
+                ngUpdaterBuilder: NgUpdaterBuilder.ForStandardRing(
+                        squareSize: squareSize,
+                        arrayOffset: 0
+                ),
+                squareSize: squareSize
+            );
+        }
+
+        public static INetwork DoubleRing(int squareSize, int seed)
+        {
+            var layerCount = squareSize * squareSize;
+
+            return new NetworkImpl(
+                nodeGroup: NodeGroup.RandomNodeGroup(layerCount * 2, seed),
+                parameters: ParamSets.StandardRingParams(),
+                ngUpdater: NgUpdater.ForStandardRing
+                            (
+                                squareSize: squareSize,
+                                arrayOffset: layerCount
+                            ),
+                nodeGroupIndexers: new[]
+                {
+                    NgIndexer.MakeD2Float("Node values 1", squareSize),
+                    NgIndexer.MakeD2Float("Node values 2", squareSize, layerCount)
+                },
+                ngUpdaterBuilder: NgUpdaterBuilder.ForStandardRing(
+                        squareSize: squareSize,
+                        arrayOffset: layerCount
+                        ),
                 squareSize: squareSize
             );
         }

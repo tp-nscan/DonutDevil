@@ -27,7 +27,7 @@ namespace NodeLib.Indexers
             return new NgIndexerImpl(
                 name: name,
                 indexingFunc:
-                n => Enumerable.Range(offset, offset + squareSize*squareSize)
+                n => Enumerable.Range(offset, squareSize*squareSize)
                                 .Select(i => new D2Val<float>
                                     (
                                         (i - offset) / squareSize, 

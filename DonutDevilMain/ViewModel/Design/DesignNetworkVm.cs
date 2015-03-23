@@ -11,7 +11,7 @@ namespace DonutDevilMain.ViewModel.Design
 
         public static INetwork DesignNetwork()
         {
-            return Network.StandardRing(128, 1234);
+            return Network.DoubleRing(128, 1234);
         }
     }
 }

@@ -84,19 +84,35 @@
                        FontSize="16"
                        Foreground="Tomato" Text="{Binding NgIndexer.Name}"/>
 
-            <StackPanel Grid.Row="1" Visibility="{Binding OptionsAreVisible, Converter={wpfUtils:BoolToVisibilityConverter}}"  Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel Grid.Row="1" Visibility="{Binding OptionsAreVisible, Converter={wpfUtils:BoolToVisibilityConverter}}"  
+                        Orientation="Horizontal" HorizontalAlignment="Center">
 
                 <ToggleButton 
                     x:Name="ToggleButtonRing"
-                    Height="22" Margin="2" FontSize="14" Width="80" Content="Display" IsChecked="{Binding IsRing}" HorizontalAlignment="Center"/>
+                    Height="22" Margin="2" 
+                    FontSize="10" Width="80" 
+                    Content="Display" 
+                    IsChecked="{Binding IsRing}" 
+                    HorizontalAlignment="Center" 
+                    Style="{DynamicResource ToggleButtonStyle1}"/>
 
                 <ToggleButton 
                     x:Name="ToggleButtonTorusx"
-                    Height="22" Margin="2" FontSize="14" Width="80" Content="Display X" IsChecked="{Binding IsTorusX}" HorizontalAlignment="Center"/>
+                    Height="22" Margin="2" 
+                    FontSize="10" Width="80" 
+                    Content="Display X" 
+                    IsChecked="{Binding IsTorusX}" 
+                    HorizontalAlignment="Center"
+                    Style="{DynamicResource ToggleButtonStyle1}"/>
 
                 <ToggleButton 
                     x:Name="ToggleButtonTorusY"
-                    Height="22" Margin="2,4" FontSize="14" Width="80" Content="Display Y" IsChecked="{Binding IsTorusY}" HorizontalAlignment="Center"/>
+                    Height="22" Margin="2,4" 
+                    FontSize="10" Width="80" 
+                    Content="Display Y" 
+                    IsChecked="{Binding IsTorusY}" 
+                    HorizontalAlignment="Center"
+                    Style="{DynamicResource ToggleButtonStyle1}"/>
 
             </StackPanel>
 

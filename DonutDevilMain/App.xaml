@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="/DonutDevilControls;component/View/Params/ParamEditorSelector.xaml"/>
                 <ResourceDictionary Source="/DonutDevilControls;component/View/Legend/LegendLoadSelector.xaml"/>
                 <ResourceDictionary Source="/DonutDevilControls;component/View/Legend/HistogramSelector.xaml"/>
+                <ResourceDictionary Source="/DonutDevilControls;component/ControlStyles.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
 

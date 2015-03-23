@@ -6,15 +6,44 @@
              xmlns:legend="clr-namespace:DonutDevilControls.ViewModel.Design.Legend"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance {x:Type legend:DesignTorusLegendVm}, IsDesignTimeCreatable=True}"
-             d:DesignHeight="40" d:DesignWidth="300">
+             d:DesignHeight="40" d:DesignWidth="320">
     
     <Grid>
 
         <StackPanel Margin="0,5" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal">
             <Button Margin="5,0" Command="{Binding LoadImageFileCommand}">Load File</Button>
-            <Button Margin="5,0" Command="{Binding XonlyCommand}">X only</Button>
+            
+            <!--<Button Margin="5,0" Command="{Binding XonlyCommand}">X only</Button>
             <Button Margin="5,0" Command="{Binding YonlyCommand}">Y only</Button>
-            <Button Margin="5,0" Command="{Binding StandardCommand}">Standard</Button>
+            <Button Margin="5,0" Command="{Binding StandardCommand}">Standard</Button>-->
+
+            <ToggleButton 
+                x:Name="ToggleButtonRing"
+                    Height="22" Margin="2" 
+                    FontSize="10" Width="60" 
+                    Content="Standard" 
+                    IsChecked="{Binding IsStandard}" 
+                    HorizontalAlignment="Center" 
+                    Style="{DynamicResource ToggleButtonStyle1}"/>
+
+            <ToggleButton 
+                    x:Name="ToggleButtonTorusx"
+                    Height="22" Margin="2" 
+                    FontSize="10" Width="60" 
+                    Content="X only" 
+                    IsChecked="{Binding IsXonly}" 
+                    HorizontalAlignment="Center"
+                    Style="{DynamicResource ToggleButtonStyle1}"/>
+
+            <ToggleButton 
+                    x:Name="ToggleButtonTorusY"
+                    Height="22" Margin="2,4" 
+                    FontSize="10" Width="60" 
+                    Content="Y only" 
+                    IsChecked="{Binding IsYonly}" 
+                    HorizontalAlignment="Center"
+                    Style="{DynamicResource ToggleButtonStyle1}"/>
+
         </StackPanel>
 
     </Grid>

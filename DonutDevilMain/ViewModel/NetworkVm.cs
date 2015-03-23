@@ -186,7 +186,7 @@ namespace DonutDevilMain.ViewModel
 
         void InitializeRun()
         {
-            Network = NodeLib.Network.StandardRing(Network.SquareSize, DateTime.Now.Millisecond);
+            Network = NodeLib.Network.DoubleRing(Network.SquareSize, DateTime.Now.Millisecond);
             UpdateUi(NgIndexerSetVm.NgDisplayIndexing);
         }
 
@@ -268,7 +268,7 @@ namespace DonutDevilMain.ViewModel
                     {
                         LegendVm = new TorusLegendVm();
                         _torusLegendVm = LegendVm;
-                        ((TorusLegendVm)LegendVm).StandardCommand.Execute(null);
+                        ((TorusLegendVm) LegendVm).IsStandard = true;
                     }
                     else
                     {
@@ -330,6 +330,7 @@ namespace DonutDevilMain.ViewModel
                 default:
                     throw new Exception("Unhandled DisplaySpaceType");
             }
+            DrawMainNetwork();
 
         }
 

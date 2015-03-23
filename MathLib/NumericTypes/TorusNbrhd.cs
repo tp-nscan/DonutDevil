@@ -14,7 +14,7 @@ namespace MathLib.NumericTypes
             var rowUuu = offset +  ((R - 3 + height) % height) * width;
             var rowUu  = offset +  ((R - 2 + height) % height) * width;
             var rowU   = offset +  ((R - 1 + height) % height) * width;
-            var rowC   = offset +    R * width;
+            var rowC =   offset +  (R % height) * width;
             var rowL   = offset +  ((R + 1) % height) * width;
             var rowLl  = offset +  ((R + 2) % height) * width;
             var rowLll = offset +  ((R + 3) % height) * width;

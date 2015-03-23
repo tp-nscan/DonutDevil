@@ -48,9 +48,61 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             _ngDisplayMode = NgDisplayMode.Ring;
         }
 
+        private bool _reEntrant;
+
+        private bool ReEntrant
+        {
+            get { return _reEntrant; }
+            set
+            {
+                _reEntrant = value;
+            }
+        }
+
         void ListenToIndexerStateChanged(NgIndexerVm vm)
         {
+            if (ReEntrant)
+            {
+                return;
+            }
+            switch (vm.NgIndexerState)
+            {
+                case NgIndexerState.RingSelected:
+                    AdjustStates(vm, NgIndexerState.RingSelected, NgIndexerState.RingUnselected);
+                    break;
+                case NgIndexerState.RingUnselected:
+                    break;
+                case NgIndexerState.TorusX:
+                    AdjustStates(vm, NgIndexerState.TorusX, NgIndexerState.TorusY);
+                    break;
+                case NgIndexerState.TorusY:
+                    AdjustStates(vm, NgIndexerState.TorusY, NgIndexerState.TorusX);
+                    break;
+                case NgIndexerState.TorusUnselected:
+                    break;
+                case NgIndexerState.Disabled:
+                    break;
+                default:
+                    throw new Exception("NgIndexerState not handled");
+            }
+
             NotifyNgDisplayStateChanged();
+        }
+
+        void AdjustStates(NgIndexerVm vm, NgIndexerState stateFrom, NgIndexerState stateTo)
+        {
+            foreach (var ngIndexerVm in NgIndexerVms)
+            {
+                if (ngIndexerVm == vm)
+                {
+                    continue;
+                }
+                if (vm.NgIndexerState == stateFrom)
+                {
+                    ngIndexerVm.NgIndexerState = stateTo;
+                }
+            }
+
         }
 
         private ObservableCollection<NgIndexerVm> _ngIndexerVms;
@@ -108,10 +160,30 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 
         void UpdateLayerSelectorVms()
         {
-            foreach (var ngLayerSelectorVm in NgIndexerVms)
+            ReEntrant = true;
+
+            if (IsTorus)
             {
-                ngLayerSelectorVm.NgIndexerState = ngLayerSelectorVm.NgIndexerState.Convert(NgDisplayMode);
+                foreach (var ngIndexerVm in NgIndexerVms)
+                {
+                    ngIndexerVm.NgIndexerState = NgIndexerState.TorusUnselected;
+                }
+
+                NgIndexerVms[0].NgIndexerState = NgIndexerState.TorusX;
+                NgIndexerVms[1].NgIndexerState = NgIndexerState.TorusY;
             }
+
+            if (IsRing)
+            {
+                foreach (var ngIndexerVm in NgIndexerVms)
+                {
+                    ngIndexerVm.NgIndexerState = NgIndexerState.RingUnselected;
+                }
+
+                NgIndexerVms[0].NgIndexerState = NgIndexerState.RingSelected;
+            }
+
+            ReEntrant = false;
         }
 
         private void NotifyNgDisplayStateChanged()

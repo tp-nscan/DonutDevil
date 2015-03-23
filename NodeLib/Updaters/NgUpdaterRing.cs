@@ -10,7 +10,7 @@ namespace NodeLib.Updaters
         public static INgUpdater Standard(
                 string name,
                 int squareSize,
-                int offset,
+                int arrayOffset,
                 float stepSize,
                 NeighborhoodType neighborhoodType,
                 float noise
@@ -22,11 +22,11 @@ namespace NodeLib.Updaters
                     return new NgUpdaterImpl
                     (
                         name: name,
-                        updateFunctions: Enumerable.Range(offset, squareSize * squareSize + offset)
+                        updateFunctions: Enumerable.Range(arrayOffset, squareSize * squareSize)
                                 .Select(n2 =>
                                         SidesFunc
                                             (
-                                                torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
+                                                torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize, arrayOffset),
                                                 step: stepSize,
                                                 noise: noise
                                             )
@@ -38,11 +38,11 @@ namespace NodeLib.Updaters
                     return new NgUpdaterImpl
                     (
                         name: name,
-                        updateFunctions: Enumerable.Range(offset, squareSize * squareSize + offset)
+                        updateFunctions: Enumerable.Range(arrayOffset, squareSize * squareSize)
                                 .Select(n2 =>
                                         PerimeterFunc
                                             (
-                                                torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
+                                                torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize, arrayOffset),
                                                 step: stepSize,
                                                 noise: noise
                                             )
@@ -54,32 +54,32 @@ namespace NodeLib.Updaters
                     return new NgUpdaterImpl
                     (
                         name: name,
-                            updateFunctions: Enumerable.Range(offset, squareSize * squareSize + offset)
-                                  .Select(n2 =>
-                                          StarFunc
-                                              (
-                                                  torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
-                                                  step: stepSize,
-                                                  noise: noise
-                                              )
-                                      )
-                                  .ToList()
+                        updateFunctions: Enumerable.Range(arrayOffset, squareSize * squareSize)
+                                .Select(n2 =>
+                                        StarFunc
+                                            (
+                                                torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize, arrayOffset),
+                                                step: stepSize,
+                                                noise: noise
+                                            )
+                                    )
+                                .ToList()
                     );
 
                 case NeighborhoodType.DoublePerimeter:
                     return new NgUpdaterImpl
                     (
                         name: name,
-                            updateFunctions: Enumerable.Range(offset, squareSize * squareSize + offset)
-                                  .Select(n2 =>
-                                          DoubleRingFunc
-                                              (
-                                                  torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
-                                                  step: stepSize,
-                                                  noise: noise
-                                              )
-                                      )
-                                  .ToList()
+                        updateFunctions: Enumerable.Range(arrayOffset, squareSize * squareSize)
+                                .Select(n2 =>
+                                        DoubleRingFunc
+                                            (
+                                                torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize, arrayOffset),
+                                                step: stepSize,
+                                                noise: noise
+                                            )
+                                    )
+                                .ToList()
                     );
 
                 default:
