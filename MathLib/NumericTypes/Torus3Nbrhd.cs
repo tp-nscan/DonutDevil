@@ -2,10 +2,10 @@
 
 namespace MathLib.NumericTypes
 {
-    public static class TorusNbrhdExt
+    public static class Torus3NbrhdExt
     {
 
-        public static TorusNbrhd ToTorusNbrs(this int index, int width, int height, int offset=0)
+        public static Torus3Nbrhd ToTorus3Nbrs(this int index, int width, int height, int offset=0)
         {
 
             var R = index / width;
@@ -30,7 +30,7 @@ namespace MathLib.NumericTypes
             var colRrr = (C + 3) % width;
 
 
-            return new TorusNbrhd
+            return new Torus3Nbrhd
                 (
                     uuuFff: rowUuu + colFff,
                     uuuFf:  rowUuu + colFf,
@@ -87,9 +87,9 @@ namespace MathLib.NumericTypes
     }
 
 
-    public class TorusNbrhd
+    public class Torus3Nbrhd
     {
-        public TorusNbrhd(
+        public Torus3Nbrhd(
             int uuuFff, int uuuFf, int uuuF, int uuuC, int uuuR, int uuuRr, int uuuRrr, 
             int uuFff,  int uuFf,  int uuF,  int uuC,  int uuR,  int uuRr,  int uuRrr, 
             int uFff,   int uFf,   int uf,   int uc,   int ur,   int uRr,   int uRrr, 

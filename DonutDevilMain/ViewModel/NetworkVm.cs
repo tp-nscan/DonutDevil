@@ -211,17 +211,17 @@ namespace DonutDevilMain.ViewModel
 
             else
             {
-                var cellColors = NgIndexerSetVm.TorusXIndexer()
-                    .IndexingFunc(Network.NodeGroup)
-                    .Select(
-                        d2F =>
-                            new D2Val<Color>
-                                (
-                                x: d2F.X,
-                                y: d2F.Y,
-                                value: LegendVm.ColorForUnitTorus(d2F.Value, d2F.Value))
-                    )
-                    .ToList();
+                var cellColors = NgIndexerSetVm.TorusXIndexer().IndexingFunc(Network.NodeGroup)
+                    .Zip
+                    (
+                        NgIndexerSetVm.TorusYIndexer().IndexingFunc(Network.NodeGroup),
+                            (x, y) => new D2Val<Color>
+                            (
+                                x: x.X,
+                                y: x.Y,
+                                value: LegendVm.ColorForUnitTorus(x.Value, y.Value)
+                            )
+                   ).ToList();
 
                 MainGridVm.AddValues(cellColors);
             }
@@ -263,7 +263,13 @@ namespace DonutDevilMain.ViewModel
                     break;
                 case NgDisplayMode.Torus:
                     HistogramVm = _torusHistogramVm;
-                    HistogramVm.MakeHistogram(Network.NodeGroup.Values, Network.NodeGroup.Values);
+                    HistogramVm.MakeHistogram
+                        (
+                             xVals: NgIndexerSetVm.TorusXIndexer().IndexingFunc(Network.NodeGroup)
+                                      .Select(d2v=>d2v.Value),
+                             yVals: NgIndexerSetVm.TorusYIndexer().IndexingFunc(Network.NodeGroup)
+                                      .Select(d2v => d2v.Value)
+                        );
                     if (_torusLegendVm == null)
                     {
                         LegendVm = new TorusLegendVm();
@@ -331,7 +337,6 @@ namespace DonutDevilMain.ViewModel
                     throw new Exception("Unhandled DisplaySpaceType");
             }
             DrawMainNetwork();
-
         }
 
         #endregion

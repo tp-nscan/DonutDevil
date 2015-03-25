@@ -42,6 +42,8 @@ namespace MathLib
         }
 
         private const int Steps = 10000;
+        private const float Indexer = Steps - 0.1f;
+
         static readonly float[,] sines = new float[Steps, 8];
         static readonly float[,] cosines = new float[Steps, 8];
 
@@ -58,22 +60,22 @@ namespace MathLib
 
         public static float UnitToSin(this float value)
         {
-            return sines[(int)(value * Steps), 0];
+            return sines[(int)(value * Indexer), 0];
         }
 
         public static float UnitToCos(this float value)
         {
-            return cosines[(int)(value * Steps), 0];
+            return cosines[(int)(value * Indexer), 0];
         }
 
         public static float UnitToSin(this float value, Perimeter perimeter)
         {
-            return sines[(int)(value * Steps), (int) perimeter];
+            return sines[(int)(value * Indexer), (int)perimeter];
         }
 
         public static float UnitToCos(this float value, Perimeter perimeter)
         {
-            return cosines[(int)(value * Steps), (int)perimeter];
+            return cosines[(int)(value * Indexer), (int)perimeter];
         }
 
     }

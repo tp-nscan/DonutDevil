@@ -45,20 +45,20 @@ namespace NodeLib
 
             return new NetworkImpl(
                 nodeGroup: NodeGroup.RandomNodeGroup(layerCount * 2, seed),
-                parameters: ParamSets.StandardRingParams(),
-                ngUpdater: NgUpdater.ForStandardRing
+                parameters: ParamSets.DoubleRingParams(),
+                ngUpdater: NgUpdater.ForDoubleRing
                             (
                                 squareSize: squareSize,
-                                arrayOffset: layerCount
+                                arrayOffset: 0
                             ),
                 nodeGroupIndexers: new[]
                 {
                     NgIndexer.MakeD2Float("Node values 1", squareSize),
                     NgIndexer.MakeD2Float("Node values 2", squareSize, layerCount)
                 },
-                ngUpdaterBuilder: NgUpdaterBuilder.ForStandardRing(
+                ngUpdaterBuilder: NgUpdaterBuilder.ForStandardTorus(
                         squareSize: squareSize,
-                        arrayOffset: layerCount
+                        arrayOffset: 0
                         ),
                 squareSize: squareSize
             );
@@ -86,7 +86,7 @@ namespace NodeLib
             return new NetworkImpl(
                 nodeGroup: network.NodeGroup,
                 parameters: paramDictionary,
-                ngUpdater: network.NgUpdaterBuilder(network.Parameters),
+                ngUpdater: network.NgUpdaterBuilder(paramDictionary),
                 nodeGroupIndexers: network.NodeGroupIndexers,
                 ngUpdaterBuilder: network.NgUpdaterBuilder,
                 squareSize: network.SquareSize

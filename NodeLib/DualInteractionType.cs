@@ -7,6 +7,7 @@ namespace NodeLib
     public enum DualInteractionType
     {
         None,
+        Direct,
         Euclidean,
         RotationalBias
     }

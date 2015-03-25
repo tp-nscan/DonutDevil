@@ -8,7 +8,7 @@ namespace NodeLib.Indexers
     public interface INgIndexer
     {
         string Name { get; }
-        NgIndexerType NgIndexerType { get; }
+        //NgIndexerType NgIndexerType { get; }
         Func<INodeGroup, IEnumerable<D2Val<float>>> IndexingFunc { get; }
         int Height { get; }
         int Width { get; }
@@ -27,12 +27,12 @@ namespace NodeLib.Indexers
             return new NgIndexerImpl(
                 name: name,
                 indexingFunc:
-                n => Enumerable.Range(offset, squareSize*squareSize)
+                n => Enumerable.Range(0, squareSize*squareSize)
                                 .Select(i => new D2Val<float>
                                     (
-                                        (i - offset) / squareSize, 
-                                        (i - offset) % squareSize, 
-                                        n.Values[i])
+                                        i / squareSize, 
+                                        i % squareSize,
+                                        n.Values[i + offset])
                                     ),
                 height: squareSize,
                 width: squareSize
@@ -65,10 +65,10 @@ namespace NodeLib.Indexers
             get { return _name; }
         }
 
-        public NgIndexerType NgIndexerType
-        {
-            get { return NgIndexerType.D2Float; }
-        }
+        //public NgIndexerType NgIndexerType
+        //{
+        //    get { return NgIndexerType.D2Float; }
+        //}
 
         public Func<INodeGroup, IEnumerable<D2Val<float>>> IndexingFunc
         {

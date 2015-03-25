@@ -26,7 +26,7 @@ namespace NodeLib.Updaters
                                 .Select(n2 =>
                                         SidesFunc
                                             (
-                                                torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize, arrayOffset),
+                                                torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, arrayOffset),
                                                 step: stepSize,
                                                 noise: noise
                                             )
@@ -42,7 +42,7 @@ namespace NodeLib.Updaters
                                 .Select(n2 =>
                                         PerimeterFunc
                                             (
-                                                torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize, arrayOffset),
+                                                torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, arrayOffset),
                                                 step: stepSize,
                                                 noise: noise
                                             )
@@ -58,7 +58,7 @@ namespace NodeLib.Updaters
                                 .Select(n2 =>
                                         StarFunc
                                             (
-                                                torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize, arrayOffset),
+                                                torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, arrayOffset),
                                                 step: stepSize,
                                                 noise: noise
                                             )
@@ -74,7 +74,7 @@ namespace NodeLib.Updaters
                                 .Select(n2 =>
                                         DoubleRingFunc
                                             (
-                                                torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize, arrayOffset),
+                                                torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, arrayOffset),
                                                 step: stepSize,
                                                 noise: noise
                                             )
@@ -87,8 +87,10 @@ namespace NodeLib.Updaters
             }
         }
 
+
+
         private static Func<INodeGroup, INode[]> PeriodicFunc(
-                TorusNbrhd torusNbrhd,
+                Torus3Nbrhd torusNbrhd,
                 float temporal,
                 float spatial
             )
@@ -110,7 +112,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> PerimeterFunc(
-                TorusNbrhd torusNbrhd,
+                Torus3Nbrhd torusNbrhd,
                 float step,
                 float noise
             )
@@ -144,7 +146,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> SidesFunc(
-                TorusNbrhd torusNbrhd,
+                Torus3Nbrhd torusNbrhd,
                 float step,
                 float noise
             )
@@ -174,7 +176,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> StarFunc(
-            TorusNbrhd torusNbrhd,
+            Torus3Nbrhd torusNbrhd,
             float step,
             float noise
         )
@@ -213,7 +215,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> DoubleRingFunc(
-            TorusNbrhd torusNbrhd,
+            Torus3Nbrhd torusNbrhd,
             float step,
             float noise
         )
@@ -260,7 +262,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> RingBiasFunc(
-          TorusNbrhd torusNbrhd,
+          Torus3Nbrhd torusNbrhd,
           float[] biasedSteps
 
         )
@@ -294,7 +296,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> BigRingFuncWithBias(
-              TorusNbrhd torusNbrhd,
+              Torus3Nbrhd torusNbrhd,
               float step,
               float hBias,
               float vBias
@@ -349,7 +351,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> RingSquareBiasFunc(
-          TorusNbrhd torusNbrhd,
+          Torus3Nbrhd torusNbrhd,
           float step,
           float hBias,
           float vBias
@@ -395,7 +397,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> LongStarFunc(
-              TorusNbrhd torusNbrhd,
+              Torus3Nbrhd torusNbrhd,
               float step,
               float hBias,
               float vBias
@@ -452,7 +454,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> StarFuncVbias(
-          TorusNbrhd torusNbrhd,
+          Torus3Nbrhd torusNbrhd,
           float step,
           float vBias
         )
@@ -508,7 +510,7 @@ namespace NodeLib.Updaters
                           .Select(n2 =>
                                   PeriodicFunc
                                       (
-                                          torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
+                                          torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize),
                                           temporal: step * 0.20f,
                                           spatial: spatial
                                       )
@@ -534,7 +536,7 @@ namespace NodeLib.Updaters
                           .Select(n2 =>
                                   RingBiasFunc
                                       (
-                                          torusNbrhd: n2.ToTorusNbrs(squareSize, squareSize),
+                                          torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize),
                                           biasedSteps: biases
                                       )
                               )

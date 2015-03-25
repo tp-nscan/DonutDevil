@@ -30,7 +30,27 @@ namespace NodeLib.Updaters
             };
         }
 
+        public static Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ForStandardTorus(
+            int squareSize,
+            int arrayOffset
+            )
+        {
+            return d =>
+            {
+                var stepSize = (float)d["StepSize"].Value;
+                DualInteractionType dualInteractionType;
+                Enum.TryParse((string)d["DualInteractionType"].Value, out dualInteractionType);
 
+                return NgUpdaterTorus.Standard(
+                    name: "StandardTorus",
+                    squareSize: squareSize,
+                    arrayOffset: arrayOffset,
+                    stepSize: stepSize,
+                    dualInteractionType: dualInteractionType,
+                    otherParams: d
+                );
+            };
+        }
 
 
     }
