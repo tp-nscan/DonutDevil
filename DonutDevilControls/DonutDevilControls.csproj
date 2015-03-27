@@ -90,9 +90,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ViewModel\Common\NetworkBuilderVm.cs" />
     <Compile Include="ViewModel\Common\NgLayerSelectorVm.cs" />
     <Compile Include="ViewModel\Common\Plot1DVm.cs" />
-    <Compile Include="ViewModel\Common\Plot2DVm.cs" />
+    <Compile Include="ViewModel\Legend\Plot2DVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignRingLegendVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignTorusHistogramVm.cs" />
     <Compile Include="ViewModel\Legend\DisplaySpaceType.cs" />
@@ -127,6 +128,9 @@
     <Compile Include="View\Common\EnumEditorControl.xaml.cs">
       <DependentUpon>EnumEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Common\NetworkBuilderControl.xaml.cs">
+      <DependentUpon>NetworkBuilderControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Legend\HistogramSelector.cs" />
     <Compile Include="View\Legend\TorusHistogramControl.xaml.cs">
       <DependentUpon>TorusHistogramControl.xaml</DependentUpon>
@@ -160,11 +164,19 @@
     <Compile Include="View\Params\ParamsEditorControl.xaml.cs">
       <DependentUpon>ParamsEditorControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="ButtonTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ControlStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Common\EnumEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Common\NetworkBuilderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

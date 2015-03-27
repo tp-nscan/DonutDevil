@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:view="clr-namespace:DonutDevilMain.View">
+
+    <DataTemplate x:Key="DefaultMainWindowTemplate">
+        <TextBox Text="DefaultMainWindowTemplate"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MenuTemplate">
+        <view:MenuControl/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="NetworkTemplate">
+        <view:NetworkControl/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SandboxTemplate">
+        <view:SandboxControl/>
+    </DataTemplate>
+
+    <view:MainWindowSelector x:Key ="MainWindowSelector"
+        MenuTemplate="{StaticResource MenuTemplate}"
+        SandboxTemplate="{StaticResource SandboxTemplate}"
+        NetworkTemplate="{StaticResource NetworkTemplate}"
+        DefaultTemplate="{StaticResource DefaultMainWindowTemplate}"            
+    />
+
+</ResourceDictionary>

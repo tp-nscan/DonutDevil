@@ -18,6 +18,7 @@ namespace NodeLib.Params
         Type Type { get; }
         string Name { get; }
         object Value { get; }
+        bool CanChangeAtRunTime { get; }
     }
 
     public static class ParamSets

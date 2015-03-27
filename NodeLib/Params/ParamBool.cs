@@ -4,10 +4,11 @@ namespace NodeLib.Params
 {
     public class ParamBool : IParameter
     {
-        public ParamBool(bool value, string name)
+        public ParamBool(bool value, string name, bool canChangeAtRunTime = true)
         {
             _value = value;
             _name = name;
+            _canChangeAtRunTime = canChangeAtRunTime;
         }
 
         public ParamType ParamType
@@ -30,6 +31,12 @@ namespace NodeLib.Params
         public object Value
         {
             get { return _value; }
+        }
+
+        private readonly bool _canChangeAtRunTime;
+        public bool CanChangeAtRunTime
+        {
+            get { return _canChangeAtRunTime; }
         }
     }
 }

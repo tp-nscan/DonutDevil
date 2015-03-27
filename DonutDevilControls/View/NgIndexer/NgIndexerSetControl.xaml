@@ -36,9 +36,9 @@
             </StackPanel>
 
             <ItemsControl
-            Grid.Row="1"
-            ItemsSource="{Binding NgIndexerVms}" 
-            ItemTemplate="{DynamicResource layerSelector}"/>
+                Grid.Row="1"
+                ItemsSource="{Binding NgIndexerVms}" 
+                ItemTemplate="{DynamicResource layerSelector}"/>
         </Grid>
 
     </Border>

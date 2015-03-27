@@ -10,10 +10,10 @@
 
 
     <Grid x:Name="grid" Background="Black">
-        
-        <view:NetworkControl DataContext="{Binding NetworkVm}"/>
 
-        <!--<view:RingValuedNodeGroupControl DataContext="{Binding RingValuedNodeGroupVm}"/>-->
+
+        <ContentControl Content="{Binding ContentVm}" ContentTemplateSelector="{DynamicResource MainWindowSelector}"/>
+        
         
     </Grid>
 

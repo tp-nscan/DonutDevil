@@ -9,7 +9,8 @@
              d:DesignHeight="300" d:DesignWidth="300">
     
     <Grid>
-        <ItemsControl Background="Black" ItemTemplateSelector="{DynamicResource ParamEditorSelector}" 
+        <ItemsControl Background="Black" 
+                      ItemTemplateSelector="{DynamicResource ParamEditorSelector}" 
                       ItemsSource="{Binding ParamVms}"/>
     </Grid>
     

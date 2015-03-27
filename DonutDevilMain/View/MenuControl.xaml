@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="DonutDevilMain.View.MenuControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModel="clr-namespace:DonutDevilMain.ViewModel"
+             xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
+             mc:Ignorable="d"
+             d:DesignHeight="500" d:DesignWidth="300">
+
+
+    <UserControl.Resources>
+
+        <DataTemplate x:Key="NetworkBuilderSummaryTemplate">
+            <Border Margin="5, 25" Width="100" CornerRadius="8" Padding="5,10" BorderBrush="Blue" BorderThickness="1">
+                <TextBlock HorizontalAlignment="Center" Foreground="Wheat" Text="{Binding NetworkBuilder.Name}"/>
+            </Border>
+        </DataTemplate>
+        
+    </UserControl.Resources>
+
+    <Grid>
+            
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer 
+            VerticalScrollBarVisibility="Visible" 
+            HorizontalScrollBarVisibility="Visible"
+            Template="{DynamicResource DonutDevilScrollViewerTemplate}">
+
+            <ListBox ItemsSource="{Binding NetworkBuilderVms}" 
+                     BorderThickness="0"
+                     IsSynchronizedWithCurrentItem="True"
+                     Background="Transparent" VerticalAlignment="Center" 
+                     SelectedItem="{Binding Path=NetworkBuilderVm, Mode=TwoWay}"
+                     ItemTemplate="{DynamicResource NetworkBuilderSummaryTemplate}"/>
+
+        </ScrollViewer>
+
+
+        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="2" ResizeBehavior="PreviousAndNext"  
+                    ResizeDirection="Columns" Background="#4CE41818"/>
+
+
+        <GridSplitter Grid.Row="1" Grid.ColumnSpan="3" 
+                        HorizontalAlignment="Stretch" Height="2" 
+                        ResizeBehavior="PreviousAndNext"  
+                        ResizeDirection="Rows" Background="#4CE41818"/>
+
+        <StackPanel Margin="0,5,0,5" Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Command="{Binding GoToNetworkCommand}" Margin="0,0,50,0" Style="{DynamicResource AppPartButtonStyle}">Make Network</Button>
+            <Button Command="{Binding GoToSandboxCommand}" Style="{DynamicResource AppPartButtonStyle}">Sandbox</Button>
+        </StackPanel>
+
+        <common:NetworkBuilderControl
+            Margin="0,50,0,0"
+            HorizontalAlignment="Center"
+            Width="250"
+            Grid.Column="2" 
+            DataContext="{Binding NetworkBuilderVm}" />
+        
+            
+    </Grid>
+
+
+    
+</UserControl>

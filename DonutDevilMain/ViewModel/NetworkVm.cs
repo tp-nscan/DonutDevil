@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,8 +20,25 @@ using WpfUtils.ViewModels.Graphics;
 
 namespace DonutDevilMain.ViewModel
 {
-    public class NetworkVm : NotifyPropertyChanged
+    public class NetworkVm : NotifyPropertyChanged, IMainWindowVm
     {
+        #region Navigation
+
+        public MainWindowType MainWindowType
+        {
+            get { return MainWindowType.Network; }
+        }
+
+        private readonly Subject<IMainWindowVm> _mainWindowTypehanged
+            = new Subject<IMainWindowVm>();
+        public IObservable<IMainWindowVm> OnMainWindowTypeChanged
+        {
+            get { return _mainWindowTypehanged; }
+        }
+
+
+        #endregion
+
         public NetworkVm(INetwork network)
         {
             Network = network;
@@ -173,7 +191,7 @@ namespace DonutDevilMain.ViewModel
 
         private void DoReset()
         {
-            InitializeRun();
+            _mainWindowTypehanged.OnNext(new MenuVm());
         }
 
         bool CanDoReset()

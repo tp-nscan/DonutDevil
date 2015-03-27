@@ -4,12 +4,13 @@ namespace NodeLib.Params
 {
     public class ParamInt : IParameter
     {
-        public ParamInt(int min, int max, int value, string name)
+        public ParamInt(int min, int max, int value, string name, bool canChangeAtRunTime = true)
         {
             _min = min;
             _max = max;
             _value = value;
             _name = name;
+            _canChangeAtRunTime = canChangeAtRunTime;
         }
 
         public ParamType ParamType
@@ -44,6 +45,12 @@ namespace NodeLib.Params
         public string Name
         {
             get { return _name; }
+        }
+
+        private readonly bool _canChangeAtRunTime;
+        public bool CanChangeAtRunTime
+        {
+            get { return _canChangeAtRunTime; }
         }
     }
 }
