@@ -151,15 +151,11 @@
     
     
     <ControlTemplate x:Key="SmallButtonTemplate" TargetType="{x:Type Button}">
-        <Border x:Name="border" BorderBrush="AliceBlue" BorderThickness="3" Background="#FF8BB9E1">
+        <Border x:Name="border" BorderBrush="DarkGray" BorderThickness="3" Background="#444">
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Normal">
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="textBlock">
-                                <EasingColorKeyFrame KeyTime="0" Value="#FF211808"/>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
+
                     </VisualState>
                     <VisualState x:Name="MouseOver">
                         <Storyboard>
@@ -179,27 +175,39 @@
                         </Storyboard>
                     </VisualState>
                     <VisualState x:Name="Disabled">
-                    	<Storyboard>
-                    		<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="border">
-                    			<EasingColorKeyFrame KeyTime="0" Value="#FF5C6A76"/>
-                    		</ColorAnimationUsingKeyFrames>
-                    	</Storyboard>
+                        <Storyboard>
+                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="textBlock">
+                                <EasingColorKeyFrame KeyTime="0" Value="#FF211808"/>
+                            </ColorAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="FocusStates">
+                    <VisualState x:Name="Unfocused"/>
+                    <VisualState x:Name="Focused">
+                        
+                        <Storyboard>
+                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="border">
+                                <EasingColorKeyFrame KeyTime="0" Value="#FF5C6A76"/>
+                            </ColorAnimationUsingKeyFrames>
+                        </Storyboard>
+
                     </VisualState>
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
             <Viewbox Stretch="Uniform">
                 <TextBlock x:Name="textBlock"
-                           Margin="3"
-                           Text="{TemplateBinding Content}" Foreground="#FF241905"/>
+                    Margin="3"
+                    Text="{TemplateBinding Content}" Foreground="AliceBlue"/>
             </Viewbox>
         </Border>
     </ControlTemplate>
 
 
     <Style x:Key="AppPartButtonStyle" TargetType="{x:Type Button}">
-        <Setter Property="Height" Value="50" />
+        <Setter Property="Height" Value="40" />
         <Setter Property="Margin" Value="10" />
-        <Setter Property="Width" Value="100" />
+        <Setter Property="Width" Value="80" />
         <Setter Property="Template" Value="{DynamicResource SmallButtonTemplate}"/>
     </Style>
 

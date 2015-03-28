@@ -42,8 +42,8 @@ namespace DonutDevilMain.ViewModel
         public NetworkVm(INetwork network)
         {
             Network = network;
-
-            _mainGridVm = new WbUniformGridVm(Network.SquareSize, Network.SquareSize);
+            var arrayStride = (int)network.Parameters["ArrayStride"].Value;
+            _mainGridVm = new WbUniformGridVm(arrayStride, arrayStride);
 
             _paramSetEditorVm = new ParamSetEditorVm();
             _paramSetEditorVm.ParamVms.AddMany(network.Parameters.Values.Select(v => v.ToParamEditorVm()));
@@ -57,7 +57,7 @@ namespace DonutDevilMain.ViewModel
             _ngIndexerSetVm.OnNgDisplayStateChanged.Subscribe(UpdateUi);
             _ngIndexerSetVm.IsRing = true;
 
-            InitializeRun();
+            UpdateUi(NgIndexerSetVm.NgDisplayIndexing);
         }
 
         private readonly ParamSetEditorVm _paramSetEditorVm;
@@ -67,6 +67,7 @@ namespace DonutDevilMain.ViewModel
         }
 
         INetwork Network { get; set; }
+
 
         #region local vars
 
@@ -201,12 +202,6 @@ namespace DonutDevilMain.ViewModel
 
         #endregion // ResetCommand
 
-
-        void InitializeRun()
-        {
-            Network = NodeLib.Network.DoubleRing(Network.SquareSize, DateTime.Now.Millisecond);
-            UpdateUi(NgIndexerSetVm.NgDisplayIndexing);
-        }
 
         void DrawMainNetwork()
         {

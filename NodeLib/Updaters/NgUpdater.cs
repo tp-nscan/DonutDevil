@@ -13,20 +13,18 @@ namespace NodeLib.Updaters
 
     public static class NgUpdater
     {
-        public static INgUpdater ForStandardRing(int squareSize, int arrayOffset)
+        public static INgUpdater ForStandardRing(int arrayOffset)
         {
             return NgUpdaterBuilder.ForStandardRing
                 (
-                    squareSize: squareSize,
                     arrayOffset: arrayOffset
                 )(ParamSets.StandardRingParams());
         }
 
-        public static INgUpdater ForDoubleRing(int squareSize, int arrayOffset)
+        public static INgUpdater ForDoubleRing(int arrayOffset)
         {
             return NgUpdaterBuilder.ForStandardTorus
                 (
-                    squareSize: squareSize,
                     arrayOffset: arrayOffset
                 )(ParamSets.DoubleRingParams());
         }

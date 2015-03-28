@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Windows.Input;
@@ -14,7 +15,7 @@ namespace DonutDevilMain.ViewModel
     {
         public MenuVm()
         {
-            _networkBuilderVms = new ObservableCollection<NetworkBuilderVm>
+            _networkBuilderVms = new List<NetworkBuilderVm>
                 (
                     NetworkBuilder.CurrentBuilders.Select(cb=> new NetworkBuilderVm(cb))
                 );
@@ -51,7 +52,7 @@ namespace DonutDevilMain.ViewModel
 
         private void DoGoToNetwork()
         {
-            _mainWindowTypehanged.OnNext(new NetworkVm(Network.DoubleRing(128, 1234)));
+            _mainWindowTypehanged.OnNext(new NetworkVm(Network.Donut(256, 1234)));
         }
 
         bool CanGoToNetwork()
@@ -88,11 +89,10 @@ namespace DonutDevilMain.ViewModel
         #endregion // GoToSandboxCommand
 
 
-        private ObservableCollection<NetworkBuilderVm> _networkBuilderVms;
-        public ObservableCollection<NetworkBuilderVm> NetworkBuilderVms
+        private readonly List<NetworkBuilderVm> _networkBuilderVms;
+        public IList NetworkBuilderVms
         {
             get { return _networkBuilderVms; }
-            set { _networkBuilderVms = value; }
         }
 
         private NetworkBuilderVm _networkBuilderVm;

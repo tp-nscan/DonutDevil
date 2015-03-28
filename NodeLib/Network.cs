@@ -13,7 +13,6 @@ namespace NodeLib
         IReadOnlyDictionary<string, IParameter> Parameters { get; }
         IReadOnlyList<INgIndexer> NodeGroupIndexers { get; }
         INodeGroup NodeGroup { get; }
-        int SquareSize { get; }
     }
 
     public static class Network
@@ -27,19 +26,16 @@ namespace NodeLib
                 parameters: ParamSets.StandardRingParams(),
                 ngUpdater: NgUpdater.ForStandardRing
                             (
-                                squareSize: squareSize,
                                 arrayOffset: layerCount
                             ),
                 nodeGroupIndexers: new[] { NgIndexer.MakeD2Float("Node values", squareSize) },
                 ngUpdaterBuilder: NgUpdaterBuilder.ForStandardRing(
-                        squareSize: squareSize,
                         arrayOffset: 0
-                ),
-                squareSize: squareSize
+                )
             );
         }
 
-        public static INetwork DoubleRing(int squareSize, int seed)
+        public static INetwork Donut(int squareSize, int seed)
         {
             var layerCount = squareSize * squareSize;
 
@@ -48,7 +44,6 @@ namespace NodeLib
                 parameters: ParamSets.DoubleRingParams(),
                 ngUpdater: NgUpdater.ForDoubleRing
                             (
-                                squareSize: squareSize,
                                 arrayOffset: 0
                             ),
                 nodeGroupIndexers: new[]
@@ -57,10 +52,8 @@ namespace NodeLib
                     NgIndexer.MakeD2Float("Node values 2", squareSize, layerCount)
                 },
                 ngUpdaterBuilder: NgUpdaterBuilder.ForStandardTorus(
-                        squareSize: squareSize,
                         arrayOffset: 0
-                        ),
-                squareSize: squareSize
+                        )
             );
         }
 
@@ -73,8 +66,7 @@ namespace NodeLib
                 parameters: network.Parameters,
                 ngUpdater: network.NgUpdater,
                 nodeGroupIndexers: network.NodeGroupIndexers,
-                ngUpdaterBuilder: network.NgUpdaterBuilder,
-                squareSize: network.SquareSize
+                ngUpdaterBuilder: network.NgUpdaterBuilder
             );
         }
 
@@ -88,11 +80,9 @@ namespace NodeLib
                 parameters: paramDictionary,
                 ngUpdater: network.NgUpdaterBuilder(paramDictionary),
                 nodeGroupIndexers: network.NodeGroupIndexers,
-                ngUpdaterBuilder: network.NgUpdaterBuilder,
-                squareSize: network.SquareSize
+                ngUpdaterBuilder: network.NgUpdaterBuilder
             );
         }
-
     }
 
     public class NetworkImpl : INetwork
@@ -102,22 +92,21 @@ namespace NodeLib
         private readonly IReadOnlyList<INgIndexer> _nodeGroupIndexers;
         private readonly INodeGroup _nodeGroup;
         private readonly Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> _ngUpdaterBuilder;
-        private readonly int _squareSize;
 
-        public NetworkImpl(
-            INodeGroup nodeGroup,
-            IReadOnlyDictionary<string, IParameter> parameters, 
-            INgUpdater ngUpdater, 
-            IReadOnlyList<INgIndexer> nodeGroupIndexers, 
-            Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ngUpdaterBuilder, 
-            int squareSize)
+        public NetworkImpl
+            (
+                INodeGroup nodeGroup,
+                IReadOnlyDictionary<string, IParameter> parameters, 
+                INgUpdater ngUpdater, 
+                IReadOnlyList<INgIndexer> nodeGroupIndexers, 
+                Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ngUpdaterBuilder
+            )
         {
             _nodeGroup = nodeGroup;
             _parameters = parameters;
             _ngUpdater = ngUpdater;
             _nodeGroupIndexers = nodeGroupIndexers;
             _ngUpdaterBuilder = ngUpdaterBuilder;
-            _squareSize = squareSize;
         }
 
         public Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> NgUpdaterBuilder
@@ -143,11 +132,6 @@ namespace NodeLib
         public INodeGroup NodeGroup
         {
             get { return _nodeGroup; }
-        }
-
-        public int SquareSize
-        {
-            get { return _squareSize; }
         }
     }
 }

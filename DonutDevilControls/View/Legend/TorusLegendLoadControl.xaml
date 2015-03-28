@@ -11,7 +11,7 @@
     <Grid>
 
         <StackPanel Margin="0,5" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal">
-            <Button Margin="5,0" Command="{Binding LoadImageFileCommand}">Load File</Button>
+            <Button Margin="5,0" Height="30" Command="{Binding LoadImageFileCommand}" Style="{DynamicResource AppPartButtonStyle}">Load File</Button>
             
             <!--<Button Margin="5,0" Command="{Binding XonlyCommand}">X only</Button>
             <Button Margin="5,0" Command="{Binding YonlyCommand}">Y only</Button>

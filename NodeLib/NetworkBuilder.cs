@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NodeLib.Indexers;
 using NodeLib.Params;
 using NodeLib.Updaters;
 
@@ -10,12 +11,20 @@ namespace NodeLib
     {
         public interface INetworkBuilder
         {
-            string Name { get;}
-            Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> NodeGroupInitializer { get;}
+            NetworkBuilderType NetworkBuilderType { get; }
+            Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> NgInitializer { get;}
             IReadOnlyDictionary<string, IParameter> Parameters { get; }
             Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> NgUpdaterBuilder { get; }
+            IReadOnlyList<INgIndexer> NgIndexers { get; }
         }
 
+        public enum NetworkBuilderType
+        {
+            Ring,
+            Donut,
+            Twister,
+            Spots
+        }
 
         public static class NetworkBuilder
         {
@@ -27,28 +36,39 @@ namespace NodeLib
 
             public static INetwork ToNetwork(this INetworkBuilder networkBuilder)
             {
-                return null;
+                var arrayStride = (int)networkBuilder.Parameters["ArrayStride"].Value;
+                return new NetworkImpl
+                (
+                    nodeGroup: networkBuilder.NgInitializer(networkBuilder.Parameters),
+                    parameters: networkBuilder.Parameters,
+                    ngUpdater: networkBuilder.NgUpdaterBuilder(networkBuilder.Parameters),
+                    nodeGroupIndexers: networkBuilder.NgIndexers,
+                    ngUpdaterBuilder: networkBuilder.NgUpdaterBuilder
+                );
             }
 
             public static IEnumerable<INetworkBuilder> CurrentBuilders
             {
                 get
                 {
-                    yield return OneLayerLocal;
+                    yield return Ring;
                     yield return Donut;
                     yield return Twister;
                     yield return Spots;
                 }
             }
 
-            public static INetworkBuilder OneLayerLocal
+            public static INetworkBuilder Ring
             {
                 get
                 {
                     return new NetworkBuilderImpl
                         (
-                            name: "OneLayerLocal",
-                            parameters: SimpleRingParams
+                            networkBuilderType: NetworkBuilderType.Ring,
+                            parameters: SimpleRingParams,
+                            ngInitializer: null,
+                            ngUpdaterBuilder: null,
+                            ngIndexers: new[] { NgIndexer.MakeD2Float("Node values", 0) }
                         );
                 }
             }
@@ -59,8 +79,11 @@ namespace NodeLib
                 {
                     return new NetworkBuilderImpl
                         (
-                            name: "Donut",
-                            parameters: SimpleRingParams
+                            networkBuilderType: NetworkBuilderType.Donut,
+                            parameters: SimpleRingParams,
+                            ngInitializer: null,
+                            ngUpdaterBuilder: null,
+                            ngIndexers: null
                         );
                 }
             }
@@ -71,8 +94,11 @@ namespace NodeLib
                 {
                     return new NetworkBuilderImpl
                         (
-                            name: "Twister",
-                            parameters: SimpleRingParams
+                            networkBuilderType: NetworkBuilderType.Twister,
+                            parameters: SimpleRingParams,
+                            ngInitializer: null,
+                            ngUpdaterBuilder: null,
+                            ngIndexers: null
                         );
                 }
             }
@@ -83,23 +109,26 @@ namespace NodeLib
                 {
                     return new NetworkBuilderImpl
                         (
-                            name: "Spots",
-                            parameters: SimpleRingParams
+                            networkBuilderType: NetworkBuilderType.Spots,
+                            parameters: SimpleRingParams,
+                            ngInitializer: null,
+                            ngUpdaterBuilder: null,
+                            ngIndexers: null
                         );
                 }
             }
 
-            public static INetworkBuilder TwistySpots
-            {
-                get
-                {
-                    return new NetworkBuilderImpl
-                        (
-                            name: "TwistySpots",
-                            parameters: SimpleRingParams
-                        );
-                }
-            }
+            //public static INetworkBuilder TwistySpots
+            //{
+            //    get
+            //    {
+            //        return new NetworkBuilderImpl
+            //            (
+            //                networkBuilderType: "TwistySpots",
+            //                parameters: SimpleRingParams
+            //            );
+            //    }
+            //}
 
 
             public static IReadOnlyDictionary<string, IParameter> SimpleRingParams
@@ -109,6 +138,7 @@ namespace NodeLib
                 {
                     return new IParameter[]
                             {
+                                new ParamInt(4, 1024, 128, "ArrayStride", false),
                                 new ParamEnum(typeof (NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType"),
                                 new ParamFloat(0.0f, 0.4f, 0.1f, "StepSize"),
                                 new ParamFloat(0.0f, 0.4f, 0.1f, "Noise")
@@ -120,17 +150,32 @@ namespace NodeLib
 
         public class NetworkBuilderImpl : INetworkBuilder
         {
-
-            private readonly string _name;
-            public string Name
+            public NetworkBuilderImpl
+                (
+                    NetworkBuilderType networkBuilderType, 
+                    IReadOnlyDictionary<string, IParameter> parameters, 
+                    Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> ngInitializer, 
+                    Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ngUpdaterBuilder, 
+                    IReadOnlyList<INgIndexer> ngIndexers
+                )
             {
-                get { return _name; }
+                _networkBuilderType = networkBuilderType;
+                _parameters = parameters;
+                _ngInitializer = ngInitializer;
+                _ngUpdaterBuilder = ngUpdaterBuilder;
+                _ngIndexers = ngIndexers;
             }
 
-            private Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> _nodeGroupInitializer;
-            public Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> NodeGroupInitializer
+            private readonly NetworkBuilderType _networkBuilderType;
+            public NetworkBuilderType NetworkBuilderType
             {
-                get { return _nodeGroupInitializer; }
+                get { return _networkBuilderType; }
+            }
+
+            private readonly Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> _ngInitializer;
+            public Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> NgInitializer
+            {
+                get { return _ngInitializer; }
             }
 
             private readonly IReadOnlyDictionary<string, IParameter> _parameters;
@@ -139,17 +184,16 @@ namespace NodeLib
                 get { return _parameters; }
             }
 
-            private Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> _ngUpdaterBuilder;
-
-            public NetworkBuilderImpl(string name, IReadOnlyDictionary<string, IParameter> parameters)
-            {
-                _name = name;
-                _parameters = parameters;
-            }
-
+            private readonly Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> _ngUpdaterBuilder;
             public Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> NgUpdaterBuilder
             {
                 get { return _ngUpdaterBuilder; }
+            }
+
+            private readonly IReadOnlyList<INgIndexer> _ngIndexers;
+            public IReadOnlyList<INgIndexer> NgIndexers
+            {
+                get { return _ngIndexers; }
             }
         }
     }

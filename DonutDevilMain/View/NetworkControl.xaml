@@ -23,11 +23,11 @@
 
             <StackPanel Orientation="Horizontal" Margin="0,5" HorizontalAlignment="Center">
 
-                <Button Height="40" Command="{Binding UpdateNetworkCommand}" Content="Run" Width="40" HorizontalAlignment="Center"/>
+                <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding UpdateNetworkCommand}" Content="Run" />
 
-                <Button Height="40" Command="{Binding StopUpdateNetworkCommand}" Content="Stop" Width="40" HorizontalAlignment="Center"/>
+                <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding StopUpdateNetworkCommand}" Content="Stop" />
 
-                <Button Height="40" Command="{Binding ResetNetworkCommand}" Content="Reset" Width="40" HorizontalAlignment="Center"/>
+                <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetNetworkCommand}" Content="Reset" />
 
             </StackPanel>
 
