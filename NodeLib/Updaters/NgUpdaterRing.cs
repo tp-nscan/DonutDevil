@@ -10,10 +10,11 @@ namespace NodeLib.Updaters
         public static INgUpdater Standard(
                 string name,
                 int squareSize,
-                int arrayOffset,
-                float stepSize,
                 NeighborhoodType neighborhoodType,
-                float noise
+                float stepSize,
+                float noise,
+                float tent,
+                float saw
             )
         {
             switch (neighborhoodType)
@@ -22,11 +23,11 @@ namespace NodeLib.Updaters
                     return new NgUpdaterImpl
                     (
                         name: name,
-                        updateFunctions: Enumerable.Range(arrayOffset, squareSize * squareSize)
+                        updateFunctions: Enumerable.Range(0, squareSize * squareSize)
                                 .Select(n2 =>
                                         SidesFunc
                                             (
-                                                torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, arrayOffset),
+                                                torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, 0),
                                                 step: stepSize,
                                                 noise: noise
                                             )
@@ -38,11 +39,11 @@ namespace NodeLib.Updaters
                     return new NgUpdaterImpl
                     (
                         name: name,
-                        updateFunctions: Enumerable.Range(arrayOffset, squareSize * squareSize)
+                        updateFunctions: Enumerable.Range(0, squareSize * squareSize)
                                 .Select(n2 =>
                                         PerimeterFunc
                                             (
-                                                torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, arrayOffset),
+                                                torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, 0),
                                                 step: stepSize,
                                                 noise: noise
                                             )
@@ -54,11 +55,11 @@ namespace NodeLib.Updaters
                     return new NgUpdaterImpl
                     (
                         name: name,
-                        updateFunctions: Enumerable.Range(arrayOffset, squareSize * squareSize)
+                        updateFunctions: Enumerable.Range(0, squareSize * squareSize)
                                 .Select(n2 =>
                                         StarFunc
                                             (
-                                                torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, arrayOffset),
+                                                torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, 0),
                                                 step: stepSize,
                                                 noise: noise
                                             )
@@ -70,11 +71,11 @@ namespace NodeLib.Updaters
                     return new NgUpdaterImpl
                     (
                         name: name,
-                        updateFunctions: Enumerable.Range(arrayOffset, squareSize * squareSize)
+                        updateFunctions: Enumerable.Range(0, squareSize * squareSize)
                                 .Select(n2 =>
                                         DoubleRingFunc
                                             (
-                                                torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, arrayOffset),
+                                                torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, 0),
                                                 step: stepSize,
                                                 noise: noise
                                             )
@@ -83,14 +84,14 @@ namespace NodeLib.Updaters
                     );
 
                 default:
-                    throw new Exception("NeighboorhoodType not handled");
+                    throw new Exception("NeighborhoodType not handled");
             }
         }
 
 
 
         private static Func<INodeGroup, INode[]> PeriodicFunc(
-                Torus3Nbrhd torusNbrhd,
+                Torus3NbrhdIndexer torusNbrhd,
                 float temporal,
                 float spatial
             )
@@ -112,7 +113,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> PerimeterFunc(
-                Torus3Nbrhd torusNbrhd,
+                Torus3NbrhdIndexer torusNbrhd,
                 float step,
                 float noise
             )
@@ -146,7 +147,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> SidesFunc(
-                Torus3Nbrhd torusNbrhd,
+                Torus3NbrhdIndexer torusNbrhd,
                 float step,
                 float noise
             )
@@ -176,7 +177,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> StarFunc(
-            Torus3Nbrhd torusNbrhd,
+            Torus3NbrhdIndexer torusNbrhd,
             float step,
             float noise
         )
@@ -215,7 +216,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> DoubleRingFunc(
-            Torus3Nbrhd torusNbrhd,
+            Torus3NbrhdIndexer torusNbrhd,
             float step,
             float noise
         )
@@ -262,7 +263,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> RingBiasFunc(
-          Torus3Nbrhd torusNbrhd,
+          Torus3NbrhdIndexer torusNbrhd,
           float[] biasedSteps
 
         )
@@ -296,7 +297,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> BigRingFuncWithBias(
-              Torus3Nbrhd torusNbrhd,
+              Torus3NbrhdIndexer torusNbrhd,
               float step,
               float hBias,
               float vBias
@@ -351,7 +352,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> RingSquareBiasFunc(
-          Torus3Nbrhd torusNbrhd,
+          Torus3NbrhdIndexer torusNbrhd,
           float step,
           float hBias,
           float vBias
@@ -397,7 +398,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> LongStarFunc(
-              Torus3Nbrhd torusNbrhd,
+              Torus3NbrhdIndexer torusNbrhd,
               float step,
               float hBias,
               float vBias
@@ -454,7 +455,7 @@ namespace NodeLib.Updaters
 
 
         static Func<INodeGroup, INode[]> StarFuncVbias(
-          Torus3Nbrhd torusNbrhd,
+          Torus3NbrhdIndexer torusNbrhd,
           float step,
           float vBias
         )

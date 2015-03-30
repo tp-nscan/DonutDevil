@@ -52,7 +52,15 @@ namespace DonutDevilMain.ViewModel
 
         private void DoGoToNetwork()
         {
-            _mainWindowTypehanged.OnNext(new NetworkVm(Network.Donut(256, 1234)));
+            //_mainWindowTypehanged.OnNext(new NetworkVm(Network.Donut(256, 1234)));
+
+            _mainWindowTypehanged.OnNext(
+                new NetworkVm(
+               NetworkBuilderVm.BuildNetwork())
+                
+                );
+
+
         }
 
         bool CanGoToNetwork()

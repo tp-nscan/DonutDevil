@@ -15,65 +15,90 @@
     <Grid Background="Black">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Margin="10" Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center">
 
-            <StackPanel Orientation="Horizontal" Margin="0,5" HorizontalAlignment="Center">
+        <ScrollViewer 
+            VerticalScrollBarVisibility="Visible" 
+            HorizontalScrollBarVisibility="Visible"
+            Template="{DynamicResource DonutDevilScrollViewerTemplate}">
 
-                <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding UpdateNetworkCommand}" Content="Run" />
 
-                <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding StopUpdateNetworkCommand}" Content="Stop" />
 
-                <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetNetworkCommand}" Content="Reset" />
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+
+                <StackPanel Orientation="Horizontal" Margin="0,5" HorizontalAlignment="Center">
+
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding UpdateNetworkCommand}" Content="Run" />
+
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding StopUpdateNetworkCommand}" Content="Stop" />
+
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetNetworkCommand}" Content="Reset" />
+
+                </StackPanel>
+
+                <StackPanel Margin="0,5" Orientation="Horizontal" HorizontalAlignment="Center">
+
+                    <StackPanel Margin="0,0,20,0" Orientation="Horizontal">
+                        <TextBlock Foreground="Beige" Text="Generation:" Margin="0,0,5,0" />
+                        <TextBlock Text="{Binding Generation}" Foreground="Beige"/>
+                    </StackPanel>
+
+                    <StackPanel  Orientation="Horizontal">
+                        <TextBlock Foreground="Beige" Text="Elapsed:" Margin="0,0,5,0" />
+
+                        <TextBlock Foreground="Beige">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0}:{1}:{2}">
+                                    <Binding Path="ElapsedTime.Hours"/>
+                                    <Binding Path="ElapsedTime.Minutes"/>
+                                    <Binding Path="ElapsedTime.Seconds"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+
+                <Border BorderBrush="#F444" BorderThickness="4,2,4,2">
+                    <common:SliderControl DataContext="{Binding DisplayFrequencySliderVm}"/>
+                </Border>
+
+                <params:ParamsEditorControl DataContext="{Binding ParamSetEditorVm}"  />
+
+                <ngIndexer:NgIndexerSetControl Margin="0,10,0,0" Height="250" DataContext="{Binding NgIndexerSetVm}"/>
+
+                <ContentControl Width="600" Content="{Binding HistogramVm}" ContentTemplateSelector="{DynamicResource HistogramSelector}" />
+
+                <ContentControl Width="600" Content="{Binding LegendVm}" ContentTemplateSelector="{DynamicResource LegendLoadSelector}" />
 
             </StackPanel>
 
-            <StackPanel Margin="0,5" Orientation="Horizontal" HorizontalAlignment="Center">
 
-                <StackPanel Margin="0,0,20,0" Orientation="Horizontal">
-                    <TextBlock Foreground="Beige" Text="Generation:" Margin="0,0,5,0" />
-                    <TextBlock Text="{Binding Generation}" Foreground="Beige"/>
-                </StackPanel>
+        </ScrollViewer>
 
-                <StackPanel  Orientation="Horizontal">
-                    <TextBlock Foreground="Beige" Text="Elapsed:" Margin="0,0,5,0" />
-
-                    <TextBlock Foreground="Beige">
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0}:{1}:{2}">
-                                <Binding Path="ElapsedTime.Hours"/>
-                                <Binding Path="ElapsedTime.Minutes"/>
-                                <Binding Path="ElapsedTime.Seconds"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                </StackPanel>
-            </StackPanel>
-
-            <Border BorderBrush="#F444" BorderThickness="4,2,4,2">
-                <common:SliderControl DataContext="{Binding DisplayFrequencySliderVm}"/>
-            </Border>
-
-            <params:ParamsEditorControl DataContext="{Binding ParamSetEditorVm}"  />
-
-            <ngIndexer:NgIndexerSetControl Margin="0,10,0,0" Height="250" DataContext="{Binding NgIndexerSetVm}"/>
-
-            <ContentControl Content="{Binding HistogramVm}" ContentTemplateSelector="{DynamicResource HistogramSelector}" />
-
-            <ContentControl Content="{Binding LegendVm}" ContentTemplateSelector="{DynamicResource LegendLoadSelector}" />
-            
-        </StackPanel>
+        <ScrollViewer
+            Grid.Column="2"
+            VerticalScrollBarVisibility="Visible" 
+            HorizontalScrollBarVisibility="Visible"
+            Template="{DynamicResource DonutDevilScrollViewerTemplate}">
 
 
-        <graphics:WbImage Grid.Column="1" Margin="10" 
-                          ImageWidth="{Binding MainGridVm.ImageWidth}" 
-                          ImageHeight="{Binding MainGridVm.ImageHeight}"
-                          PlotRectangles="{Binding MainGridVm.PlotRectangles}" 
-                          />
-        
+            <graphics:WbImage
+                ImageWidth="{Binding MainGridVm.ImageWidth}" 
+                ImageHeight="{Binding MainGridVm.ImageHeight}"
+                PlotRectangles="{Binding MainGridVm.PlotRectangles}" 
+                />
+
+
+        </ScrollViewer>
+
+        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="2" ResizeBehavior="PreviousAndNext"  
+                    ResizeDirection="Columns" Background="#4CE41818"/>
+
+
         
     </Grid>
 </UserControl>

@@ -17,46 +17,6 @@ namespace NodeLib
 
     public static class Network
     {
-        public static INetwork StandardRing(int squareSize, int seed)
-        {
-            var layerCount = squareSize*squareSize;
-
-            return new NetworkImpl(
-                nodeGroup: NodeGroup.RandomNodeGroup(layerCount, seed),
-                parameters: ParamSets.StandardRingParams(),
-                ngUpdater: NgUpdater.ForStandardRing
-                            (
-                                arrayOffset: layerCount
-                            ),
-                nodeGroupIndexers: new[] { NgIndexer.MakeD2Float("Node values", squareSize) },
-                ngUpdaterBuilder: NgUpdaterBuilder.ForStandardRing(
-                        arrayOffset: 0
-                )
-            );
-        }
-
-        public static INetwork Donut(int squareSize, int seed)
-        {
-            var layerCount = squareSize * squareSize;
-
-            return new NetworkImpl(
-                nodeGroup: NodeGroup.RandomNodeGroup(layerCount * 2, seed),
-                parameters: ParamSets.DoubleRingParams(),
-                ngUpdater: NgUpdater.ForDoubleRing
-                            (
-                                arrayOffset: 0
-                            ),
-                nodeGroupIndexers: new[]
-                {
-                    NgIndexer.MakeD2Float("Node values 1", squareSize),
-                    NgIndexer.MakeD2Float("Node values 2", squareSize, layerCount)
-                },
-                ngUpdaterBuilder: NgUpdaterBuilder.ForStandardTorus(
-                        arrayOffset: 0
-                        )
-            );
-        }
-
         public static INetwork UpdateNodeGroup(
             this INetwork network
         )

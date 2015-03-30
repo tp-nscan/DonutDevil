@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MathLib.NumericTypes;
+using NodeLib.Params;
 
 namespace NodeLib.Indexers
 {
@@ -37,6 +38,37 @@ namespace NodeLib.Indexers
                 height: squareSize,
                 width: squareSize
             );
+        }
+
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> D1IndexMaker
+        {
+            get
+            {
+                return d =>
+                {
+                    var arrayStride = (int)d["ArrayStride"].Value;
+                    return new[]
+                    {
+                        MakeD2Float("X values", arrayStride)
+                    };
+                };
+            }
+        }
+
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> D2IndexMaker
+        {
+            get
+            {
+                return d =>
+                {
+                    var arrayStride = (int) d["ArrayStride"].Value;
+                    return new[]
+                    {
+                        MakeD2Float("X values", arrayStride),
+                        MakeD2Float("Y values", arrayStride, arrayStride*arrayStride)
+                    };
+                };
+            }
         }
     }
 

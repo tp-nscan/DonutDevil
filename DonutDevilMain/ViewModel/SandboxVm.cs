@@ -2,11 +2,17 @@
 using System.Reactive.Subjects;
 using System.Windows.Input;
 using WpfUtils;
+using WpfUtils.ViewModels.Graphics;
 
 namespace DonutDevilMain.ViewModel
 {
     public class SandboxVm : NotifyPropertyChanged, IMainWindowVm
     {
+        public SandboxVm()
+        {
+            
+        }
+
         #region Navigation
 
         public MainWindowType MainWindowType
@@ -22,6 +28,42 @@ namespace DonutDevilMain.ViewModel
         }
 
         #endregion // Navigation
+
+        private int _radius;
+        public int Radius
+        {
+            get { return _radius; }
+            set
+            {
+                _radius = value;
+                OnPropertyChanged("Radius");
+            }
+        }
+
+
+        private double _f;
+        public double F
+        {
+            get { return _f; }
+            set
+            {
+                _f = value;
+                OnPropertyChanged("F");
+            }
+        }
+
+
+        private double _x;
+        public double X
+        {
+            get { return _x; }
+            set
+            {
+                _x = value;
+                OnPropertyChanged("X");
+            }
+        }
+
 
         #region GoToMenuCommand
 
@@ -48,5 +90,12 @@ namespace DonutDevilMain.ViewModel
         }
 
         #endregion // GoToMenuCommand
+
+
+        private readonly WbUniformGridVm _mainGridVm;
+        public WbUniformGridVm MainGridVm
+        {
+            get { return _mainGridVm; }
+        }
     }
 }

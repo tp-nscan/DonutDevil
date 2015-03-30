@@ -5,7 +5,6 @@ namespace MathLib.NumericTypes
 {
     public class D2Val<T>
     {
-
         public D2Val(int x, int y, T value)
         {
             _x = x;

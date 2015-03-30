@@ -62,12 +62,20 @@
             <Button Command="{Binding GoToSandboxCommand}" Style="{DynamicResource AppPartButtonStyle}">Sandbox</Button>
         </StackPanel>
 
-        <common:NetworkBuilderControl
-            Margin="0,50,0,0"
-            HorizontalAlignment="Center"
-            Width="250"
+        <ScrollViewer 
             Grid.Column="2" 
-            DataContext="{Binding NetworkBuilderVm}" />
+            VerticalScrollBarVisibility="Visible" 
+            HorizontalScrollBarVisibility="Visible"
+            Template="{DynamicResource DonutDevilScrollViewerTemplate}">
+
+            <common:NetworkBuilderControl
+                Margin="0,50,0,0"
+                HorizontalAlignment="Center"
+                Width="275"
+                DataContext="{Binding NetworkBuilderVm}" />
+
+        </ScrollViewer>
+        
         
             
     </Grid>

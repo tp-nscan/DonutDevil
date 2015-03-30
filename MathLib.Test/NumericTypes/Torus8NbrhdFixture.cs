@@ -10,7 +10,8 @@ namespace MathLib.Test.NumericTypes
         [TestMethod]
         public void TestToTorus8Nbrs()
         {
-            var t8 = 0.ToTorus8Nbrs(100, 100);
+            var t8 = 0.ToTorus8Nbrs(100, 100, 8);
+
 
         }
     }

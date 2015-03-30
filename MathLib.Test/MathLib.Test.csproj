@@ -78,6 +78,7 @@
     <Compile Include="NumericTypes\PointFltFixture.cs" />
     <Compile Include="NumericTypes\NumericExtFixture.cs" />
     <Compile Include="NumericTypes\Torus8NbrhdFixture.cs" />
+    <Compile Include="NumericTypes\NeighborhoodFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Intervals\HistogramFixture.cs" />
     <Compile Include="FunctionsFixture.cs" />

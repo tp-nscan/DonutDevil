@@ -2,13 +2,13 @@
 {
     public static class Torus8NbrhdExt
     {
-        public static Torus8Nbrhd ToTorus8Nbrs(this int index, int width, int height, int offset = 0)
+        public static TorusNbrhdIndexer ToTorus8Nbrs(this int index, int width, int height, int radius, int offset = 0)
         {
             var R = index / width;
             var C = index % width;
 
-            var rowOffsets = new int[17];
-            var colOffsets = new int[17];
+            var rowOffsets = new int[radius * 2 + 1];
+            var colOffsets = new int[radius * 2 + 1];
 
             for (var i = -8; i < 9; i++)
             {
@@ -16,16 +16,17 @@
                 colOffsets[i + 8] = (C + i + width) % width;
             }
 
-            return new Torus8Nbrhd(rowOffsets, colOffsets);
+            return new TorusNbrhdIndexer(rowOffsets, colOffsets, radius);
         }
     }
 
-    public class Torus8Nbrhd
+    public class TorusNbrhdIndexer
     {
-        public Torus8Nbrhd(int[] rowOffsets, int[] colOffsets)
+        public TorusNbrhdIndexer(int[] rowOffsets, int[] colOffsets, int radius)
         {
             _rowOffsets = rowOffsets;
             _colOffsets = colOffsets;
+            _radius = radius;
         }
 
         private readonly int[] _rowOffsets;
@@ -38,6 +39,12 @@
         public int[] ColOffsets
         {
             get { return _colOffsets; }
+        }
+        
+        private readonly int _radius;
+        public int Radius
+        {
+            get { return _radius; }
         }
     }
 }

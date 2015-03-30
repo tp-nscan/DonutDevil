@@ -13,7 +13,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
-                <RowDefinition Height="20"/>
+                <RowDefinition Height="16"/>
             </Grid.RowDefinitions>
 
             <TextBlock
@@ -22,7 +22,7 @@
                 Text="{Binding Title}" 
                 HorizontalAlignment="Center"
                 Foreground="Yellow"
-                Margin="0,0,0,3"/>
+                Margin="0,0,0,0"/>
 
             <Slider
                 Delay="50"
@@ -33,17 +33,17 @@
                 IsSnapToTickEnabled="True" 
                 TickFrequency="{Binding TickFrequency}"/>
         
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="2" Margin="0,-6,0,0">
 
                 <TextBlock 
-                    Padding="5,0" Text="{Binding LegendMinimum}" 
+                    Padding="0" Text="{Binding LegendMinimum}" 
                     HorizontalAlignment="Left" 
                     Margin="5,0,0,0" 
                     VerticalAlignment="Top" 
                     Foreground="Yellow"/>
 
                 <TextBlock
-                    Padding="5,0"  
+                    Padding="0"  
                     Margin="0"
                     Text="{Binding LegendValue}" 
                     VerticalAlignment="Bottom" 

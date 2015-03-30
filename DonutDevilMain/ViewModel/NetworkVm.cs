@@ -46,7 +46,12 @@ namespace DonutDevilMain.ViewModel
             _mainGridVm = new WbUniformGridVm(arrayStride, arrayStride);
 
             _paramSetEditorVm = new ParamSetEditorVm();
-            _paramSetEditorVm.ParamVms.AddMany(network.Parameters.Values.Select(v => v.ToParamEditorVm()));
+            _paramSetEditorVm.ParamVms.AddMany
+                (
+                    network.Parameters.Values
+                                      .Where(v=>v.CanChangeAtRunTime)
+                                      .Select(v => v.ToParamEditorVm())
+                );
 
             _displayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
 
@@ -309,7 +314,7 @@ namespace DonutDevilMain.ViewModel
         ILegendVm _torusLegendVm;
 
         readonly IHistogramVm _ringHistogramVm = new RingHistogramVm("Wubba r");
-        readonly IHistogramVm _torusHistogramVm = new TorusHistogramVm("Wubba t", 128);
+        readonly IHistogramVm _torusHistogramVm = new TorusHistogramVm("Wubba t", 512);
 
         #endregion
 

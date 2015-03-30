@@ -9,8 +9,6 @@
     mc:Ignorable="d"
     x:Name="UserControl"
     d:DataContext="{d:DesignInstance {x:Type common:DesignPlot2DVm}, IsDesignTimeCreatable=True}"
-    Width="225" 
-    Height="225"
     d:DesignHeight="300" d:DesignWidth="300">
     
     <Grid>
