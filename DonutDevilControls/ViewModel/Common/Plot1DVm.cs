@@ -9,11 +9,11 @@ namespace DonutDevilControls.ViewModel.Common
     {
         public Plot1DVm(int cellDimX, double heightOverWidth, Func<float, Color> colorMap)
         {
-            _wbVerticalStripesVm = new WbVerticalStripesVm(cellDimX, heightOverWidth, colorMap);
+            _wbVerticalStripesVm = new WbVerticalStripesVmOld(cellDimX, heightOverWidth, colorMap);
         }
 
-        private WbVerticalStripesVm _wbVerticalStripesVm;
-        public WbVerticalStripesVm WbVerticalStripesVm
+        private WbVerticalStripesVmOld _wbVerticalStripesVm;
+        public WbVerticalStripesVmOld WbVerticalStripesVm
         {
             get { return _wbVerticalStripesVm; }
             set

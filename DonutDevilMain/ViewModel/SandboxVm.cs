@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Reactive.Subjects;
 using System.Windows.Input;
+using DonutDevilControls.ViewModel.Common;
+using DonutDevilControls.ViewModel.Design.Legend;
+using DonutDevilControls.ViewModel.Legend;
+using MathLib.Intervals;
 using WpfUtils;
 using WpfUtils.ViewModels.Graphics;
 
@@ -10,10 +14,19 @@ namespace DonutDevilMain.ViewModel
     {
         public SandboxVm()
         {
-            
+            _radiusSliderVm = new SliderVm(RealInterval.Make(1, 24), 1, "0") { Title = "Radius", Value = 10 };
+            _frequencySliderVm = new SliderVm(RealInterval.Make(1, 24), 1, "0") { Title = "Frequency", Value = 10 };
+            _decaySliderVm = new SliderVm(RealInterval.Make(1, 24), 1, "0") { Title = "Decay", Value = 10 };
+            _mainGridVm = new WbUniformGridVm(GridStride, GridStride);
+            LinearHistogramVm = new DesignLinearHistogramVm();
         }
 
         #region Navigation
+
+        public int GridStride
+        {
+            get { return (int) (_radiusSliderVm.Value * 2 + 1); }
+        }
 
         public MainWindowType MainWindowType
         {
@@ -29,17 +42,23 @@ namespace DonutDevilMain.ViewModel
 
         #endregion // Navigation
 
-        private int _radius;
-        public int Radius
+        private readonly SliderVm _radiusSliderVm;
+        public SliderVm RadiusSliderVm
         {
-            get { return _radius; }
-            set
-            {
-                _radius = value;
-                OnPropertyChanged("Radius");
-            }
+            get { return _radiusSliderVm; }
         }
 
+        private readonly SliderVm _frequencySliderVm;
+        public SliderVm FrequencySliderVm
+        {
+            get { return _frequencySliderVm; }
+        }
+
+        private readonly SliderVm _decaySliderVm;
+        public SliderVm DecaySliderVm
+        {
+            get { return _decaySliderVm; }
+        }
 
         private double _f;
         public double F
@@ -96,6 +115,28 @@ namespace DonutDevilMain.ViewModel
         public WbUniformGridVm MainGridVm
         {
             get { return _mainGridVm; }
+        }
+
+        private ILegendVm _legendVm;
+        public ILegendVm LegendVm
+        {
+            get { return _legendVm; }
+            set
+            {
+                _legendVm = value;
+                OnPropertyChanged("LegendVm");
+            }
+        }
+
+        private LinearHistogramVm _linearHistogramVm;
+        public LinearHistogramVm LinearHistogramVm
+        {
+            get { return _linearHistogramVm; }
+            set
+            {
+                _linearHistogramVm = value;
+                OnPropertyChanged("LinearHistogramVm");
+            }
         }
     }
 }

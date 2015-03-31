@@ -11,7 +11,6 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
     <Grid>
-
         <graphics:WbImage
             ImageWidth="{Binding LegendVm.ImageWidth}" ImageHeight="{Binding LegendVm.ImageHeight}"
             PlotLines="{Binding LegendVm.PlotLines}"
@@ -28,8 +27,6 @@
             CornerRadius="2">
             <TextBlock Text="{Binding Title}" Foreground="Yellow"/>
         </Border>
-
-
     </Grid>
 
 </UserControl>

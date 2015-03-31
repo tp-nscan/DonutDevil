@@ -13,6 +13,8 @@ namespace DonutDevilControls.View.Legend
 
         public DataTemplate TorusTemplate { get; set; }
 
+        public DataTemplate UnitTemplate { get; set; }
+
         public DataTemplate DefaultTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
@@ -27,6 +29,8 @@ namespace DonutDevilControls.View.Legend
                         return TorusTemplate;
                     case DisplaySpaceType.Ring:
                         return RingTemplate;
+                    case DisplaySpaceType.Unit:
+                        return UnitTemplate;
                     default:
                         throw new Exception(String.Format("LegendVmType {0} not handled in SelectTemplate", legendVm.DisplaySpaceType));
                 }

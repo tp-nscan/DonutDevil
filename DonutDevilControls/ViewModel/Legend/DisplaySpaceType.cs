@@ -3,6 +3,7 @@
     public enum DisplaySpaceType
     {
         Ring,
-        Torus
+        Torus,
+        Unit
     }
 }

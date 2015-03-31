@@ -15,9 +15,14 @@
         <legend:RingHistogramControl/>
     </DataTemplate>
 
+    <DataTemplate x:Key="LinearTemplateDisplay">
+        <legend:LinearHistogramControl/>
+    </DataTemplate>
+
     <legend:HistogramSelector x:Key ="HistogramSelector"
         TorusTemplate="{StaticResource TorusTemplateDisplay}"
         RingTemplate="{StaticResource RingTemplateDisplay}"
+        UnitTemplate="{StaticResource LinearTemplateDisplay}"
         DefaultTemplate="{StaticResource DefaultHistogramTemplate}"            
     />
 

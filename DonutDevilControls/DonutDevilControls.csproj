@@ -93,6 +93,8 @@
     <Compile Include="ViewModel\Common\NetworkBuilderVm.cs" />
     <Compile Include="ViewModel\Common\NgLayerSelectorVm.cs" />
     <Compile Include="ViewModel\Common\Plot1DVm.cs" />
+    <Compile Include="ViewModel\Design\Legend\DesignLinearHistogramVm.cs" />
+    <Compile Include="ViewModel\Legend\LinearHistogramVm.cs" />
     <Compile Include="ViewModel\Legend\Plot2DVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignRingLegendVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignTorusHistogramVm.cs" />
@@ -132,6 +134,9 @@
       <DependentUpon>NetworkBuilderControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Legend\HistogramSelector.cs" />
+    <Compile Include="View\Legend\LinearHistogramControl.xaml.cs">
+      <DependentUpon>LinearHistogramControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Legend\TorusHistogramControl.xaml.cs">
       <DependentUpon>TorusHistogramControl.xaml</DependentUpon>
     </Compile>
@@ -181,6 +186,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Legend\HistogramSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Legend\LinearHistogramControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

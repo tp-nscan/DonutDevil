@@ -4,28 +4,43 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
+             xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
+             xmlns:legend="clr-namespace:DonutDevilControls.View.Legend;assembly=DonutDevilControls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Background="Gray">
+    
+    
+    <Grid Background="Black">
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         
         <StackPanel>
 
-            <graphics:WbImage
+            <Button Command="{Binding GoToMenuCommand}">Menu</Button>
+
+            <common:SliderControl DataContext="{Binding RadiusSliderVm}"/>
+            <common:SliderControl DataContext="{Binding FrequencySliderVm}"/>
+            <common:SliderControl DataContext="{Binding DecaySliderVm}"/>
+            <legend:LinearHistogramControl DataContext="{Binding LinearHistogramVm}"/>
+            
+        </StackPanel>
+
+
+
+        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="2" ResizeBehavior="PreviousAndNext"  
+                    ResizeDirection="Columns" Background="#4CE41818"/>
+        
+        <!--<graphics:WbImage Grid.Column="2"
                 ImageWidth="{Binding MainGridVm.ImageWidth}" 
                 ImageHeight="{Binding MainGridVm.ImageHeight}"
                 PlotRectangles="{Binding MainGridVm.PlotRectangles}" 
-                />
+                />-->
 
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Freq:"/>
-                <TextBlock Text="Decay:"/>
-            </StackPanel>
-            
-            
 
-            <Button Command="{Binding GoToMenuCommand}">Menu</Button>
-        </StackPanel>
-                
 
     </Grid>
 </UserControl>

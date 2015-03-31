@@ -340,7 +340,6 @@ namespace DonutDevilMain.ViewModel
             }
         }
 
-
         void LegendChangedHandler(ILegendVm legendVm)
         {
             switch (_histogramVm.DisplaySpaceType)

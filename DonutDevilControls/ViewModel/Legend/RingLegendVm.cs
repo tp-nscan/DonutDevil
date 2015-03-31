@@ -34,6 +34,11 @@ namespace DonutDevilControls.ViewModel.Legend
             get { return _colorSequenceRing; }
         }
 
+        public Color ColorForUnitInterval(float val)
+        {
+            return ColorSequenceRing.ToUnitColor((val + OffsetSliderVm.Value).AsMf());
+        }
+
         public Color ColorForUnitRing(float val)
         {
             return ColorSequenceRing.ToUnitColor((val + OffsetSliderVm.Value).AsMf());

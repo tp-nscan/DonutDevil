@@ -6,11 +6,12 @@ namespace DonutDevilControls.ViewModel.Design.NgIndexer
 {
     public class DesignNgIndexerSetVm : NgIndexerSetVm
     {
-        public DesignNgIndexerSetVm() : base(NgIndexerVms)
+        public DesignNgIndexerSetVm()
+            : base(DesignNgIndexerVms)
         {
         }
 
-        static IEnumerable<NgIndexerVm> NgIndexerVms
+        static IEnumerable<NgIndexerVm> DesignNgIndexerVms
         {
             get
             {

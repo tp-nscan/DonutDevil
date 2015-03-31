@@ -150,6 +150,11 @@ namespace DonutDevilControls.ViewModel.Legend
             get { return _imageColors; }
         }
 
+        public Color ColorForUnitInterval(float val)
+        {
+            throw new NotImplementedException();
+        }
+
         public Color ColorForUnitRing(float val)
         {
             throw new NotImplementedException();

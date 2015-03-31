@@ -92,6 +92,7 @@
     <Compile Include="ViewModels\Graphics\WbRingPlotVm.cs" />
     <Compile Include="ViewModels\Graphics\WbUniformGridVm.cs" />
     <Compile Include="ViewModels\Graphics\WbVerticalStripesVm.cs" />
+    <Compile Include="ViewModels\Graphics\WbVerticalStripesVmOld.cs" />
     <Compile Include="Views\Graphics\PlotLine.cs" />
     <Compile Include="Views\Graphics\PlotRectangle.cs" />
     <Compile Include="Views\Graphics\WbImage.cs" />

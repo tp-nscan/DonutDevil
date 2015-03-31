@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="DonutDevilControls.View.Legend.LinearHistogramControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
+             xmlns:legend="clr-namespace:DonutDevilControls.ViewModel.Design.Legend"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance {x:Type legend:DesignLinearHistogramVm}, IsDesignTimeCreatable=True}"
+             d:DesignWidth="300">
+    
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <graphics:WbImage Grid.Row="1"
+            ImageWidth="{Binding LegendVm.ImageWidth}" ImageHeight="{Binding LegendVm.ImageHeight}"
+            PlotRectangles="{Binding LegendVm.PlotRectangles}"
+           />
+
+        <graphics:WbImage Grid.Row="2"
+            ImageWidth="{Binding HistogramVm.ImageWidth}" ImageHeight="{Binding HistogramVm.ImageHeight}"
+            PlotRectangles="{Binding HistogramVm.PlotRectangles, Delay=100}"/>
+     
+        
+        <Border
+            Grid.Row="0" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center" 
+            Padding="2,0" 
+            CornerRadius="2">
+            <TextBlock FontSize="16" Margin="0,0,0,4" Text="{Binding Title}" Foreground="Yellow"/>
+        </Border>
+
+        <Border Grid.Row="0" HorizontalAlignment="Left" Margin="5,0,0,-2" VerticalAlignment="Bottom" Padding="4,0" CornerRadius="2">
+            <TextBlock FontSize="12" Text="{Binding MinValue, StringFormat=N2}" Foreground="Yellow"/>
+        </Border>
+
+        <Border Grid.Row="0" HorizontalAlignment="Right" Margin="5,0,0,-2" VerticalAlignment="Bottom" Padding="4,0" CornerRadius="2">
+            <TextBlock FontSize="12" Text="{Binding MaxValue, StringFormat=N2}" Foreground="Yellow"/>
+        </Border>
+
+    </Grid>
+</UserControl>
