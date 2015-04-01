@@ -29,7 +29,7 @@ namespace DonutDevilControls.View.Legend
                         return TorusTemplate;
                     case DisplaySpaceType.Ring:
                         return RingTemplate;
-                    case DisplaySpaceType.Unit:
+                    case DisplaySpaceType.Interval:
                         return UnitTemplate;
                     default:
                         throw new Exception(String.Format("LegendVmType {0} not handled in SelectTemplate", legendVm.DisplaySpaceType));

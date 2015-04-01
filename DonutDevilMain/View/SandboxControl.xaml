@@ -7,7 +7,7 @@
              xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
              xmlns:legend="clr-namespace:DonutDevilControls.View.Legend;assembly=DonutDevilControls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+            d:DesignHeight="600" d:DesignWidth="600">
     
     
     <Grid Background="Black">
@@ -22,11 +22,39 @@
 
             <Button Command="{Binding GoToMenuCommand}">Menu</Button>
 
-            <common:SliderControl DataContext="{Binding RadiusSliderVm}"/>
-            <common:SliderControl DataContext="{Binding FrequencySliderVm}"/>
-            <common:SliderControl DataContext="{Binding DecaySliderVm}"/>
-            <legend:LinearHistogramControl DataContext="{Binding LinearHistogramVm}"/>
+            <Border BorderBrush="Black" BorderThickness="2">
+                <Border BorderBrush="#1FFF" BorderThickness="1">
+                    <common:SliderControl DataContext="{Binding RadiusSliderVm}"/>
+                </Border>
+            </Border>
+
+            <Border BorderBrush="Black" BorderThickness="2">
+                <Border BorderBrush="#1FFF" BorderThickness="1">
+                    <common:SliderControl DataContext="{Binding FrequencySliderVm}"/>
+                </Border>
+            </Border>
+
+
+            <Border BorderBrush="Black" BorderThickness="2">
+                <Border BorderBrush="#1FFF" BorderThickness="1">
+                    <common:SliderControl DataContext="{Binding DecaySliderVm}"/>
+                </Border>
+            </Border>
             
+            
+            <Border BorderBrush="Black" BorderThickness="2">
+                <Border BorderBrush="#1FFF" BorderThickness="1">
+                    <ContentControl Content="{Binding HistogramVm}" ContentTemplateSelector="{DynamicResource HistogramSelector}" />
+                </Border>
+            </Border>
+
+            <Border BorderBrush="Black" BorderThickness="2">
+                <Border BorderBrush="#1FFF" BorderThickness="1">
+                    <ContentControl Content="{Binding LegendVm}" ContentTemplateSelector="{DynamicResource LegendLoadSelector}" />
+                </Border>
+            </Border>
+            
+
         </StackPanel>
 
 
@@ -34,13 +62,11 @@
         <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="2" ResizeBehavior="PreviousAndNext"  
                     ResizeDirection="Columns" Background="#4CE41818"/>
         
-        <!--<graphics:WbImage Grid.Column="2"
+        <graphics:WbImage Grid.Column="2"
                 ImageWidth="{Binding MainGridVm.ImageWidth}" 
                 ImageHeight="{Binding MainGridVm.ImageHeight}"
                 PlotRectangles="{Binding MainGridVm.PlotRectangles}" 
-                />-->
-
-
+                />
 
     </Grid>
 </UserControl>

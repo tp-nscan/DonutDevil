@@ -220,7 +220,7 @@ namespace DonutDevilMain.ViewModel
                                 (
                                 x: d2F.X,
                                 y: d2F.Y,
-                                value: LegendVm.ColorForUnitRing(d2F.Value))
+                                value: LegendVm.ColorForRing(d2F.Value))
                     )
                     .ToList();
 
@@ -237,7 +237,7 @@ namespace DonutDevilMain.ViewModel
                             (
                                 x: x.X,
                                 y: x.Y,
-                                value: LegendVm.ColorForUnitTorus(x.Value, y.Value)
+                                value: LegendVm.ColorForTorus(x.Value, y.Value)
                             )
                    ).ToList();
 
@@ -277,7 +277,7 @@ namespace DonutDevilMain.ViewModel
                     LegendVm = _ringLegendVm;
                     HistogramVm = _ringHistogramVm;
                     HistogramVm.MakeHistogram(Network.NodeGroup.Values);
-                    HistogramVm.DrawLegend(f=>LegendVm.ColorForUnitRing(f));
+                    HistogramVm.DrawLegend(f=>LegendVm.ColorForRing(f));
                     break;
                 case NgDisplayMode.Torus:
                     HistogramVm = _torusHistogramVm;
@@ -345,10 +345,10 @@ namespace DonutDevilMain.ViewModel
             switch (_histogramVm.DisplaySpaceType)
             {
                 case DisplaySpaceType.Ring:
-                    _histogramVm.DrawLegend(legendVm.ColorForUnitRing);
+                    _histogramVm.DrawLegend(legendVm.ColorForRing);
                     break;
                 case DisplaySpaceType.Torus:
-                    _histogramVm.DrawLegend(legendVm.ColorForUnitTorus);
+                    _histogramVm.DrawLegend(legendVm.ColorForTorus);
                     break;
                 default:
                     throw new Exception("Unhandled DisplaySpaceType");

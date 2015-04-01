@@ -9,30 +9,40 @@
     </DataTemplate>
 
     <DataTemplate x:Key="BoolTemplate">
-        <Border BorderBrush="#F444" BorderThickness="4,2,4,2">
-            <CheckBox 
-                Margin="5"
-                IsChecked="{Binding Value}" 
-                Content="{Binding Title}"
-                HorizontalAlignment="Center"
-                Foreground="Yellow"
-             />
+        <Border BorderBrush="Black" BorderThickness="2">
+            <Border BorderBrush="#1FFF" BorderThickness="1">
+                <CheckBox 
+                    Margin="5"
+                    IsChecked="{Binding Value}" 
+                    Content="{Binding Title}"
+                    HorizontalAlignment="Center"
+                    Foreground="Yellow"
+                />
+            </Border>
         </Border>
     </DataTemplate>
 
     <DataTemplate x:Key="FloatTemplate">
-        <Border BorderBrush="#F444" BorderThickness="4,2,4,2">
-            <common:SliderControl/>
+        <Border BorderBrush="Black" BorderThickness="2">
+            <Border BorderBrush="#1FFF" BorderThickness="1">
+                <common:SliderControl/>
+            </Border>
         </Border>
     </DataTemplate>
 
     <DataTemplate x:Key="EnumTemplate">
-        <common:EnumEditorControl/>
+        <Border BorderBrush="Black" BorderThickness="2">
+            <Border BorderBrush="#1FFF" BorderThickness="1">
+                <common:EnumEditorControl/>
+            </Border>
+        </Border>
     </DataTemplate>
 
     <DataTemplate x:Key="IntTemplate">
-        <Border BorderBrush="#F444" BorderThickness="4,2,4,2">
-            <common:SliderControl/>
+        <Border BorderBrush="Black" BorderThickness="2">
+            <Border BorderBrush="#1FFF" BorderThickness="1">
+                <common:SliderControl/>
+            </Border>
         </Border>
     </DataTemplate>
 

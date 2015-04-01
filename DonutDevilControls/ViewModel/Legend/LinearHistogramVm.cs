@@ -113,7 +113,7 @@ namespace DonutDevilControls.ViewModel.Legend
 
         public DisplaySpaceType DisplaySpaceType
         {
-            get { return DisplaySpaceType.Unit; }
+            get { return DisplaySpaceType.Interval; }
         }
     }
 }

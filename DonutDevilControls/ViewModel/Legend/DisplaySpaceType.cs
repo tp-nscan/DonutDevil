@@ -4,6 +4,6 @@
     {
         Ring,
         Torus,
-        Unit
+        Interval
     }
 }

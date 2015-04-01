@@ -62,8 +62,10 @@
                     </StackPanel>
                 </StackPanel>
 
-                <Border BorderBrush="#F444" BorderThickness="4,2,4,2">
-                    <common:SliderControl DataContext="{Binding DisplayFrequencySliderVm}"/>
+                <Border BorderBrush="Black" BorderThickness="2">
+                    <Border BorderBrush="#1FFF" BorderThickness="1">
+                        <common:SliderControl DataContext="{Binding DisplayFrequencySliderVm}"/>
+                    </Border>
                 </Border>
 
                 <params:ParamsEditorControl DataContext="{Binding ParamSetEditorVm}"  />

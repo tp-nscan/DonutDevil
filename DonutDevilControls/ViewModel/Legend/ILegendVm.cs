@@ -7,11 +7,11 @@ namespace DonutDevilControls.ViewModel.Legend
     {
         DisplaySpaceType DisplaySpaceType { get; }
 
-        System.Windows.Media.Color ColorForUnitInterval(float val);
+        System.Windows.Media.Color ColorForInterval(float val);
 
-        System.Windows.Media.Color ColorForUnitRing(float val);
+        System.Windows.Media.Color ColorForRing(float val);
 
-        System.Windows.Media.Color ColorForUnitTorus(float xVal, float yVal);
+        System.Windows.Media.Color ColorForTorus(float xVal, float yVal);
 
         IObservable<ILegendVm> OnLegendVmChanged { get; }
 

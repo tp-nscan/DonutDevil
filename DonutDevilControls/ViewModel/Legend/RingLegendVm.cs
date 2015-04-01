@@ -34,12 +34,12 @@ namespace DonutDevilControls.ViewModel.Legend
             get { return _colorSequenceRing; }
         }
 
-        public Color ColorForUnitInterval(float val)
+        public Color ColorForInterval(float val)
         {
             return ColorSequenceRing.ToUnitColor((val + OffsetSliderVm.Value).AsMf());
         }
 
-        public Color ColorForUnitRing(float val)
+        public Color ColorForRing(float val)
         {
             return ColorSequenceRing.ToUnitColor((val + OffsetSliderVm.Value).AsMf());
         }
@@ -47,7 +47,7 @@ namespace DonutDevilControls.ViewModel.Legend
         private readonly IColorSequence _nodeGroupColorSequence;
         private readonly IColorSequence _histogramColorSequence;
 
-        public Color ColorForUnitTorus(float xVal, float yVal)
+        public Color ColorForTorus(float xVal, float yVal)
         {
             throw new NotImplementedException();
         }

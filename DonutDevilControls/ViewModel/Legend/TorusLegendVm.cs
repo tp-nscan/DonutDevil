@@ -150,17 +150,17 @@ namespace DonutDevilControls.ViewModel.Legend
             get { return _imageColors; }
         }
 
-        public Color ColorForUnitInterval(float val)
+        public Color ColorForInterval(float val)
         {
             throw new NotImplementedException();
         }
 
-        public Color ColorForUnitRing(float val)
+        public Color ColorForRing(float val)
         {
             throw new NotImplementedException();
         }
 
-        public Color ColorForUnitTorus(float xVal, float yVal)
+        public Color ColorForTorus(float xVal, float yVal)
         {
             return _imageColors[(int)(xVal * 0.9999 * ImageHeight), (int)(yVal * 0.9999 * ImageWidth)];
         }

@@ -220,7 +220,7 @@
 //                    ggi.Add(new PlotPoint(
 //                            x:(int) i,
 //                            y:(int) j,
-//                            color: TorusLegendVm.ColorForUnitTorus(
+//                            color: TorusLegendVm.ColorForTorus(
 //                                xVal: _nodeGroup.Values[(int) (j*SquareSize + i)],
 //                                yVal: _nodeGroup.Values[offset + (int)(j * SquareSize + i)]
 //                              )

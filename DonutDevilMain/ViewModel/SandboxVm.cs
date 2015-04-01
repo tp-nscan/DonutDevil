@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Subjects;
 using System.Windows.Input;
+using System.Windows.Media;
 using DonutDevilControls.ViewModel.Common;
 using DonutDevilControls.ViewModel.Design.Legend;
 using DonutDevilControls.ViewModel.Legend;
 using MathLib.Intervals;
+using MathLib.NumericTypes;
 using WpfUtils;
 using WpfUtils.ViewModels.Graphics;
 
@@ -17,8 +20,15 @@ namespace DonutDevilMain.ViewModel
             _radiusSliderVm = new SliderVm(RealInterval.Make(1, 24), 1, "0") { Title = "Radius", Value = 10 };
             _frequencySliderVm = new SliderVm(RealInterval.Make(1, 24), 1, "0") { Title = "Frequency", Value = 10 };
             _decaySliderVm = new SliderVm(RealInterval.Make(1, 24), 1, "0") { Title = "Decay", Value = 10 };
+
+            _radiusSliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
+            _frequencySliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
+            _decaySliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
+
             _mainGridVm = new WbUniformGridVm(GridStride, GridStride);
-            LinearHistogramVm = new DesignLinearHistogramVm();
+            _histogramVm = new DesignLinearHistogramVm();
+            _legendVm = new RingLegendVm();
+            _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
         }
 
         #region Navigation
@@ -42,6 +52,38 @@ namespace DonutDevilMain.ViewModel
 
         #endregion // Navigation
 
+        public int Radius
+        {
+            get { return (int) RadiusSliderVm.Value; }
+        }
+
+        public double Decay
+        {
+            get { return _decaySliderVm.Value; }
+        }
+
+        public double Frequency
+        {
+            get { return _frequencySliderVm.Value; }
+        }
+
+        private void DrawMainNetwork()
+        {
+           MainGridVm = new WbUniformGridVm(GridStride, GridStride);
+            var randy = new Random();
+            var cellColors =
+            Enumerable.Range(0, GridStride * GridStride).Select(
+                i => new D2Val<Color>
+                            (
+                                x: i % (GridStride),
+                                y: i / (GridStride),
+                                value: LegendVm.ColorForRing((float) randy.NextDouble())
+                            )
+                   ).ToList();
+
+            MainGridVm.AddValues(cellColors);
+        }
+
         private readonly SliderVm _radiusSliderVm;
         public SliderVm RadiusSliderVm
         {
@@ -60,30 +102,6 @@ namespace DonutDevilMain.ViewModel
             get { return _decaySliderVm; }
         }
 
-        private double _f;
-        public double F
-        {
-            get { return _f; }
-            set
-            {
-                _f = value;
-                OnPropertyChanged("F");
-            }
-        }
-
-
-        private double _x;
-        public double X
-        {
-            get { return _x; }
-            set
-            {
-                _x = value;
-                OnPropertyChanged("X");
-            }
-        }
-
-
         #region GoToMenuCommand
 
         RelayCommand _goToMenuCommand;
@@ -92,10 +110,10 @@ namespace DonutDevilMain.ViewModel
             get
             {
                 return _goToMenuCommand ?? (_goToMenuCommand = new RelayCommand(
-                    param => DoGoToMenu(),
-                    param => CanGoToMenu()
-                    ));
-            }
+                            param => DoGoToMenu(),
+                            param => CanGoToMenu()
+                        ));
+                }
         }
 
         private void DoGoToMenu()
@@ -111,10 +129,15 @@ namespace DonutDevilMain.ViewModel
         #endregion // GoToMenuCommand
 
 
-        private readonly WbUniformGridVm _mainGridVm;
+        private WbUniformGridVm _mainGridVm;
         public WbUniformGridVm MainGridVm
         {
             get { return _mainGridVm; }
+            set
+            {
+                _mainGridVm = value;
+                OnPropertyChanged("MainGridVm");
+            }
         }
 
         private ILegendVm _legendVm;
@@ -128,14 +151,34 @@ namespace DonutDevilMain.ViewModel
             }
         }
 
-        private LinearHistogramVm _linearHistogramVm;
-        public LinearHistogramVm LinearHistogramVm
+        void LegendChangedHandler(ILegendVm legendVm)
         {
-            get { return _linearHistogramVm; }
+            switch (_histogramVm.DisplaySpaceType)
+            {
+                case DisplaySpaceType.Ring:
+                    _histogramVm.DrawLegend(legendVm.ColorForRing);
+                    break;
+                case DisplaySpaceType.Torus:
+                    _histogramVm.DrawLegend(legendVm.ColorForTorus);
+                    break;
+                case DisplaySpaceType.Interval:
+                    _histogramVm.DrawLegend(legendVm.ColorForInterval);
+                    break;
+                default:
+                    throw new Exception("Unhandled DisplaySpaceType");
+            }
+
+            DrawMainNetwork();
+        }
+
+        private LinearHistogramVm _histogramVm;
+        public LinearHistogramVm HistogramVm
+        {
+            get { return _histogramVm; }
             set
             {
-                _linearHistogramVm = value;
-                OnPropertyChanged("LinearHistogramVm");
+                _histogramVm = value;
+                OnPropertyChanged("HistogramVm");
             }
         }
     }

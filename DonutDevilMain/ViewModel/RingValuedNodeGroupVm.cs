@@ -43,7 +43,7 @@ namespace DonutDevilMain.ViewModel
 
         void RespondToLegendChange(ILegendVm legendVm)
         {
-            RingHistogramVm.DrawLegend(f=>LegendVm.ColorForUnitRing(f));
+            RingHistogramVm.DrawLegend(f=>LegendVm.ColorForRing(f));
 
             DrawMainNetwork(_nodeGroup);
         }
@@ -209,7 +209,7 @@ namespace DonutDevilMain.ViewModel
         void DrawMainNetwork(INodeGroup nodeGroup)
         {
             WbUniformGridVm.AddValues(nodeGroup.Values.Select((v,i)=> 
-                new D2Val<Color>(i/SquareSize, i%SquareSize,  LegendVm.ColorForUnitRing(v) )));
+                new D2Val<Color>(i/SquareSize, i%SquareSize,  LegendVm.ColorForRing(v) )));
         }
 
         private readonly WbUniformGridVm _wbUniformGridVm;

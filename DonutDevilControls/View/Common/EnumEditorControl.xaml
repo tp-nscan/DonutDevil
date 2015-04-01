@@ -394,7 +394,7 @@
 
     </UserControl.Resources>
 
-    <Border BorderBrush="#F444" BorderThickness="4,2,4,2">
+    <Border Background="#2FFF">
         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="5">
             <TextBlock Foreground="Yellow" Text="{Binding Title}"
                            Margin="0,0,10,0"/>
