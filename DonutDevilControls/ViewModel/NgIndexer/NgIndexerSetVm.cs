@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Subjects;
+using DonutDevilControls.ViewModel.Legend;
 using NodeLib.Indexers;
 using WpfUtils;
 
@@ -10,23 +11,23 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 {
     public static class NgIndexerSetVmEx
     {
-        public static INgIndexer RingIndexer(this NgIndexerSetVm ngIndexerSetVm)
+        public static INgIndexer Indexer1D(this NgIndexerSetVm ngIndexerSetVm)
         {
-            var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerState.RingSelected);
+            var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerVmState.OneDSelected);
 
             return (ivm == null )? null : ivm.NgIndexer;
         }
 
-        public static INgIndexer TorusXIndexer(this NgIndexerSetVm ngIndexerSetVm)
+        public static INgIndexer Indexer2Dx(this NgIndexerSetVm ngIndexerSetVm)
         {
-            var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerState.TorusX);
+            var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerVmState.TwoDx);
 
             return (ivm == null) ? null : ivm.NgIndexer;
         }
 
-        public static INgIndexer TorusYIndexer(this NgIndexerSetVm ngIndexerSetVm)
+        public static INgIndexer Indexer2Dy(this NgIndexerSetVm ngIndexerSetVm)
         {
-            var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerState.TorusY);
+            var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerVmState.TwoDy);
 
             return (ivm == null) ? null : ivm.NgIndexer;
         }
@@ -45,7 +46,7 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             }
 
             TorusIsEnabled = NgIndexerVms.Count > 1;
-            _ngDisplayMode = NgDisplayMode.Ring;
+            _legendMode = LegendMode.OneLayer;
         }
 
         private bool _reEntrant;
@@ -67,20 +68,20 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             }
             switch (vm.NgIndexerState)
             {
-                case NgIndexerState.RingSelected:
-                    AdjustStates(vm, NgIndexerState.RingSelected, NgIndexerState.RingUnselected);
+                case NgIndexerVmState.OneDSelected:
+                    AdjustStates(vm, NgIndexerVmState.OneDSelected, NgIndexerVmState.OneDUnselected);
                     break;
-                case NgIndexerState.RingUnselected:
+                case NgIndexerVmState.OneDUnselected:
                     break;
-                case NgIndexerState.TorusX:
-                    AdjustStates(vm, NgIndexerState.TorusX, NgIndexerState.TorusY);
+                case NgIndexerVmState.TwoDx:
+                    AdjustStates(vm, NgIndexerVmState.TwoDx, NgIndexerVmState.TwoDy);
                     break;
-                case NgIndexerState.TorusY:
-                    AdjustStates(vm, NgIndexerState.TorusY, NgIndexerState.TorusX);
+                case NgIndexerVmState.TwoDy:
+                    AdjustStates(vm, NgIndexerVmState.TwoDy, NgIndexerVmState.TwoDx);
                     break;
-                case NgIndexerState.TorusUnselected:
+                case NgIndexerVmState.TwoDUnselected:
                     break;
-                case NgIndexerState.Disabled:
+                case NgIndexerVmState.Disabled:
                     break;
                 default:
                     throw new Exception("NgIndexerState not handled");
@@ -89,7 +90,7 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             NotifyNgDisplayStateChanged();
         }
 
-        void AdjustStates(NgIndexerVm vm, NgIndexerState stateFrom, NgIndexerState stateTo)
+        void AdjustStates(NgIndexerVm vm, NgIndexerVmState stateFrom, NgIndexerVmState stateTo)
         {
             foreach (var ngIndexerVm in NgIndexerVms)
             {
@@ -112,25 +113,24 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             set { _ngIndexerVms = value; }
         }
 
-        private NgDisplayMode _ngDisplayMode;
-        public NgDisplayMode NgDisplayMode
+        private LegendMode _legendMode;
+        public LegendMode LegendMode
         {
-            get { return _ngDisplayMode; }
+            get { return _legendMode; }
             set
             {
-                _ngDisplayMode = value;
-                OnPropertyChanged("State");
-                OnPropertyChanged("IsRing");
-                OnPropertyChanged("IsTorus");
+                _legendMode = value;
+                OnPropertyChanged("Is1D");
+                OnPropertyChanged("Is2D");
             }
         }
 
-        public bool IsRing
+        public bool Is1D
         {
-            get { return NgDisplayMode == NgDisplayMode.Ring; }
+            get { return LegendMode == LegendMode.OneLayer; }
             set
             {
-                NgDisplayMode = (value) ? NgDisplayMode.Ring : NgDisplayMode.Torus;
+                LegendMode = (value) ? LegendMode.OneLayer : LegendMode.TwoLayers;
                 UpdateLayerSelectorVms();
                 NotifyNgDisplayStateChanged();
             }
@@ -147,12 +147,12 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             }
         }
 
-        public bool IsTorus
+        public bool Is2D
         {
-            get { return NgDisplayMode == NgDisplayMode.Torus; }
+            get { return LegendMode == LegendMode.TwoLayers; }
             set
             {
-                NgDisplayMode = (value) ? NgDisplayMode.Torus : NgDisplayMode.Ring;
+                LegendMode = (value) ? LegendMode.TwoLayers : LegendMode.OneLayer;
                 UpdateLayerSelectorVms();
                 NotifyNgDisplayStateChanged();
             }
@@ -162,25 +162,25 @@ namespace DonutDevilControls.ViewModel.NgIndexer
         {
             ReEntrant = true;
 
-            if (IsTorus)
+            if (Is2D)
             {
                 foreach (var ngIndexerVm in NgIndexerVms)
                 {
-                    ngIndexerVm.NgIndexerState = NgIndexerState.TorusUnselected;
+                    ngIndexerVm.NgIndexerState = NgIndexerVmState.TwoDUnselected;
                 }
 
-                NgIndexerVms[0].NgIndexerState = NgIndexerState.TorusX;
-                NgIndexerVms[1].NgIndexerState = NgIndexerState.TorusY;
+                NgIndexerVms[0].NgIndexerState = NgIndexerVmState.TwoDx;
+                NgIndexerVms[1].NgIndexerState = NgIndexerVmState.TwoDy;
             }
 
-            if (IsRing)
+            if (Is1D)
             {
                 foreach (var ngIndexerVm in NgIndexerVms)
                 {
-                    ngIndexerVm.NgIndexerState = NgIndexerState.RingUnselected;
+                    ngIndexerVm.NgIndexerState = NgIndexerVmState.OneDUnselected;
                 }
 
-                NgIndexerVms[0].NgIndexerState = NgIndexerState.RingSelected;
+                NgIndexerVms[0].NgIndexerState = NgIndexerVmState.OneDSelected;
             }
 
             ReEntrant = false;
@@ -198,21 +198,21 @@ namespace DonutDevilControls.ViewModel.NgIndexer
         {
             get
             {
-                if (NgDisplayMode == NgDisplayMode.Ring)
+                if (LegendMode == LegendMode.OneLayer)
                 {
                     return NgDisplayState.RingIndexing(
-                        ngIndexer: NgIndexerFor(NgIndexerState.RingSelected));
+                        ngIndexer: NgIndexerFor(NgIndexerVmState.OneDSelected));
                 }
 
                 return NgDisplayState.TorusIndexing
                     (
-                        ngIndexerX: NgIndexerFor(NgIndexerState.TorusX),
-                        ngIndexerY: NgIndexerFor(NgIndexerState.TorusY)
+                        ngIndexerX: NgIndexerFor(NgIndexerVmState.TwoDx),
+                        ngIndexerY: NgIndexerFor(NgIndexerVmState.TwoDy)
                     );
             }
         }
 
-        INgIndexer NgIndexerFor(NgIndexerState ngIndexerState)
+        INgIndexer NgIndexerFor(NgIndexerVmState ngIndexerState)
         {
             var indexerVm = NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == ngIndexerState);
             if (indexerVm != null)

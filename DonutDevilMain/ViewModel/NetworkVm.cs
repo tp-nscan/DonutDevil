@@ -42,8 +42,7 @@ namespace DonutDevilMain.ViewModel
         public NetworkVm(INetwork network)
         {
             Network = network;
-            var arrayStride = (int)network.Parameters["ArrayStride"].Value;
-            _mainGridVm = new WbUniformGridVm(arrayStride, arrayStride);
+            _mainGridVm = new WbUniformGridVm(1024, 1024);
 
             _paramSetEditorVm = new ParamSetEditorVm();
             _paramSetEditorVm.ParamVms.AddMany
@@ -55,12 +54,12 @@ namespace DonutDevilMain.ViewModel
 
             _displayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
 
-            _legendVm = new RingLegendVm();
+            _legendVm = new OneDlegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
 
             _ngIndexerSetVm = new NgIndexerSetVm(network.NodeGroupIndexers.ToNgIndexerVms());
             _ngIndexerSetVm.OnNgDisplayStateChanged.Subscribe(UpdateUi);
-            _ngIndexerSetVm.IsRing = true;
+            _ngIndexerSetVm.Is1D = true;
 
             UpdateUi(NgIndexerSetVm.NgDisplayIndexing);
         }
@@ -210,9 +209,9 @@ namespace DonutDevilMain.ViewModel
 
         void DrawMainNetwork()
         {
-            if (NgIndexerSetVm.IsRing)
+            if (NgIndexerSetVm.Is1D)
             {
-                var cellColors = NgIndexerSetVm.RingIndexer()
+                var cellColors = NgIndexerSetVm.Indexer1D()
                     .IndexingFunc(Network.NodeGroup)
                     .Select(
                         d2F =>
@@ -220,24 +219,27 @@ namespace DonutDevilMain.ViewModel
                                 (
                                 x: d2F.X,
                                 y: d2F.Y,
-                                value: LegendVm.ColorForRing(d2F.Value))
-                    )
-                    .ToList();
+                                value: LegendVm.ColorFor1D(NgIndexerSetVm.Indexer1D().ValuesToUnitRange(d2F.Value))
+                    )).ToList();
 
                 MainGridVm.AddValues(cellColors);
             }
 
             else
             {
-                var cellColors = NgIndexerSetVm.TorusXIndexer().IndexingFunc(Network.NodeGroup)
+                var cellColors = NgIndexerSetVm.Indexer2Dx().IndexingFunc(Network.NodeGroup)
                     .Zip
                     (
-                        NgIndexerSetVm.TorusYIndexer().IndexingFunc(Network.NodeGroup),
+                        NgIndexerSetVm.Indexer2Dy().IndexingFunc(Network.NodeGroup),
                             (x, y) => new D2Val<Color>
                             (
                                 x: x.X,
                                 y: x.Y,
-                                value: LegendVm.ColorForTorus(x.Value, y.Value)
+                                value: LegendVm.ColorFor2D
+                                            (
+                                                xVal: NgIndexerSetVm.Indexer2Dx().ValuesToUnitRange(x.Value),
+                                                yVal: NgIndexerSetVm.Indexer2Dy().ValuesToUnitRange(y.Value)
+                                            )
                             )
                    ).ToList();
 
@@ -271,28 +273,28 @@ namespace DonutDevilMain.ViewModel
 
         void UpdateUi(INgDisplayIndexing ngDisplayIndexing)
         {
-            switch (ngDisplayIndexing.NgisDisplayMode)
+            switch (ngDisplayIndexing.LegendMode)
             {
-                case NgDisplayMode.Ring:
+                case LegendMode.OneLayer:
                     LegendVm = _ringLegendVm;
                     HistogramVm = _ringHistogramVm;
                     HistogramVm.MakeHistogram(Network.NodeGroup.Values);
-                    HistogramVm.DrawLegend(f=>LegendVm.ColorForRing(f));
+                    HistogramVm.DrawLegend(f=>LegendVm.ColorFor1D(f));
                     break;
-                case NgDisplayMode.Torus:
+                case LegendMode.TwoLayers:
                     HistogramVm = _torusHistogramVm;
                     HistogramVm.MakeHistogram
                         (
-                             xVals: NgIndexerSetVm.TorusXIndexer().IndexingFunc(Network.NodeGroup)
-                                      .Select(d2v=>d2v.Value),
-                             yVals: NgIndexerSetVm.TorusYIndexer().IndexingFunc(Network.NodeGroup)
-                                      .Select(d2v => d2v.Value)
+                             xVals: NgIndexerSetVm.Indexer2Dx().IndexingFunc(Network.NodeGroup)
+                                      .Select(d2V=>  d2V.Value),
+                             yVals: NgIndexerSetVm.Indexer2Dy().IndexingFunc(Network.NodeGroup)
+                                      .Select(d2V => d2V.Value)
                         );
                     if (_torusLegendVm == null)
                     {
-                        LegendVm = new TorusLegendVm();
+                        LegendVm = new TwoDLegendVm();
                         _torusLegendVm = LegendVm;
-                        ((TorusLegendVm) LegendVm).IsStandard = true;
+                        ((TwoDLegendVm) LegendVm).IsStandard = true;
                     }
                     else
                     {
@@ -300,7 +302,7 @@ namespace DonutDevilMain.ViewModel
                     }
                     break;
                 default:
-                    throw new Exception("NgisDisplayMode not handled in NgDisplayStateChangedHandler");
+                    throw new Exception("LegendMode not handled in NgDisplayStateChangedHandler");
             }
 
             DrawMainNetwork();
@@ -310,11 +312,11 @@ namespace DonutDevilMain.ViewModel
         }
 
 
-        readonly ILegendVm _ringLegendVm = new RingLegendVm();
+        readonly ILegendVm _ringLegendVm = new OneDlegendVm();
         ILegendVm _torusLegendVm;
 
         readonly IHistogramVm _ringHistogramVm = new RingHistogramVm("Wubba r");
-        readonly IHistogramVm _torusHistogramVm = new TorusHistogramVm("Wubba t", 512);
+        readonly IHistogramVm _torusHistogramVm = new TwoDhistogramVm("Wubba t", 512);
 
         #endregion
 
@@ -344,14 +346,14 @@ namespace DonutDevilMain.ViewModel
         {
             switch (_histogramVm.DisplaySpaceType)
             {
-                case DisplaySpaceType.Ring:
-                    _histogramVm.DrawLegend(legendVm.ColorForRing);
+                case LegendType.Ring:
+                    _histogramVm.DrawLegend(legendVm.ColorFor1D);
                     break;
-                case DisplaySpaceType.Torus:
-                    _histogramVm.DrawLegend(legendVm.ColorForTorus);
+                case LegendType.Torus:
+                    _histogramVm.DrawLegend(legendVm.ColorFor2D);
                     break;
                 default:
-                    throw new Exception("Unhandled DisplaySpaceType");
+                    throw new Exception("Unhandled LegendType");
             }
             DrawMainNetwork();
         }

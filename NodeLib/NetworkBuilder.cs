@@ -75,7 +75,7 @@ namespace NodeLib
                             parameters: RingParams,
                             ngInitializer: NgInitializer.KStrideSquared(1),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForRing(),
-                            ngIndexMaker: NgIndexer.D1IndexMaker
+                            ngIndexMaker: NgIndexer.RingArray2DIndexMaker
                         );
                 }
             }
@@ -90,7 +90,7 @@ namespace NodeLib
                             parameters: DonutParams,
                             ngInitializer: NgInitializer.KStrideSquared(2),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForDonut(),
-                            ngIndexMaker: NgIndexer.D2IndexMaker
+                            ngIndexMaker: NgIndexer.TorusArray2DIndexMaker
                         );
                 }
             }
@@ -105,7 +105,7 @@ namespace NodeLib
                             parameters: TwisterParams,
                             ngInitializer: NgInitializer.KStrideSquared(2),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForTwister(),
-                            ngIndexMaker: NgIndexer.D2IndexMaker
+                            ngIndexMaker: NgIndexer.TorusArray2DIndexMaker
                         );
                 }
             }

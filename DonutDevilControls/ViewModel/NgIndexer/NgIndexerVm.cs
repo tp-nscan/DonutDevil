@@ -9,7 +9,7 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 {
     public class NgIndexerVm : NotifyPropertyChanged
     {
-        public NgIndexerVm(INgIndexer ngIndexer, NgIndexerState ngIndexerState)
+        public NgIndexerVm(INgIndexer ngIndexer, NgIndexerVmState ngIndexerState)
         {
             _ngIndexer = ngIndexer;
             _ngIndexerState = ngIndexerState;
@@ -17,15 +17,15 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 
         public string State { get { return NgIndexerState.ToString(); }}
 
-        private NgIndexerState _ngIndexerState;
-        public NgIndexerState NgIndexerState
+        private NgIndexerVmState _ngIndexerState;
+        public NgIndexerVmState NgIndexerState
         {
             get { return _ngIndexerState; }
             set
             {
                 _ngIndexerState = value;
                 OnPropertyChanged("State");
-                OnPropertyChanged("IsRing");
+                OnPropertyChanged("Is1D");
                 OnPropertyChanged("IsTorusX");
                 OnPropertyChanged("IsTorusY");
             }
@@ -49,12 +49,12 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             }
         }
 
-        public bool IsRing
+        public bool Is1D
         {
-            get { return NgIndexerState == NgIndexerState.RingSelected; }
+            get { return NgIndexerState == NgIndexerVmState.OneDSelected; }
             set
             {
-                NgIndexerState = (value) ? NgIndexerState.RingSelected : NgIndexerState.RingUnselected;
+                NgIndexerState = (value) ? NgIndexerVmState.OneDSelected : NgIndexerVmState.OneDUnselected;
                 if (value)
                 {
                     _ngIndexerStateChanged.OnNext(this);
@@ -64,10 +64,10 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 
         public bool IsTorusX
         {
-            get { return NgIndexerState == NgIndexerState.TorusX; }
+            get { return NgIndexerState == NgIndexerVmState.TwoDx; }
             set
             {
-                NgIndexerState = (value) ? NgIndexerState.TorusX : NgIndexerState.TorusUnselected;
+                NgIndexerState = (value) ? NgIndexerVmState.TwoDx : NgIndexerVmState.TwoDUnselected;
                 if (value)
                 {
                     _ngIndexerStateChanged.OnNext(this);
@@ -77,10 +77,10 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 
         public bool IsTorusY
         {
-            get { return NgIndexerState == NgIndexerState.TorusY; }
+            get { return NgIndexerState == NgIndexerVmState.TwoDy; }
             set
             {
-                NgIndexerState = (value) ? NgIndexerState.TorusY : NgIndexerState.TorusUnselected;
+                NgIndexerState = (value) ? NgIndexerVmState.TwoDy : NgIndexerVmState.TwoDUnselected;
                 if (value)
                 {
                     _ngIndexerStateChanged.OnNext(this);
@@ -98,7 +98,7 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 
     public static class NgIndexerVmEx
     {
-        public static NgIndexerVm ToNgIndexerVm(this INgIndexer ngIndexer, NgIndexerState ngIndexerState)
+        public static NgIndexerVm ToNgIndexerVm(this INgIndexer ngIndexer, NgIndexerVmState ngIndexerState)
         {
             return new NgIndexerVm(ngIndexer, ngIndexerState);
         }
@@ -107,11 +107,11 @@ namespace DonutDevilControls.ViewModel.NgIndexer
         {
             if (ngIndexer.Any())
             {
-                yield return ngIndexer[0].ToNgIndexerVm(NgIndexerState.RingSelected);
+                yield return ngIndexer[0].ToNgIndexerVm(NgIndexerVmState.OneDSelected);
             }
             for (var i = 1; i < ngIndexer.Count ; i++)
             {
-                yield return ngIndexer[i].ToNgIndexerVm(NgIndexerState.RingUnselected);
+                yield return ngIndexer[i].ToNgIndexerVm(NgIndexerVmState.OneDUnselected);
             }
         }
     }

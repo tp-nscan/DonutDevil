@@ -25,8 +25,8 @@ namespace WpfUtils.Utils
         public static IN1ColorSequence Dipolar(Color negativeColor, Color positiveColor, int halfStepCount)
         {
             return new Ir1ColorSequence(
-                    new ColorSequenceImpl(positiveColor.FadingSpread(halfStepCount)),
-                    new ColorSequenceImpl(negativeColor.FadingSpread(halfStepCount))
+                    new ColorSequenceImpl(positiveColor.LessFadingSpread(halfStepCount)),
+                    new ColorSequenceImpl(negativeColor.LessFadingSpread(halfStepCount))
                 );
         }
 

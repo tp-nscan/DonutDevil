@@ -19,14 +19,14 @@ namespace DonutDevilControls.View.Legend
 
             if (legendVm != null)
             {
-                switch (legendVm.DisplaySpaceType)
+                switch (legendVm.LegendType)
                 {
-                    case DisplaySpaceType.Torus:
+                    case LegendType.Torus:
                         return TorusTemplate;
-                    case DisplaySpaceType.Ring:
+                    case LegendType.Ring:
                         return RingTemplate;
                     default:
-                        throw new Exception(String.Format("LegendVmType {0} not handled in SelectTemplate", legendVm.DisplaySpaceType));
+                        throw new Exception(String.Format("LegendVmType {0} not handled in SelectTemplate", legendVm.LegendType));
                 }
             }
 

@@ -1,6 +1,6 @@
 ﻿namespace DonutDevilControls.ViewModel.Legend
 {
-    public enum DisplaySpaceType
+    public enum LegendType
     {
         Ring,
         Torus,

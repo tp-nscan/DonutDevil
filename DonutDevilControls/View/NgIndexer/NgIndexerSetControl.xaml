@@ -27,10 +27,10 @@
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <GroupBox Foreground="Wheat" Header="Display data type">
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <RadioButton IsChecked="{Binding IsRing}" Foreground="Wheat"  Margin="35,5" Content="Ring" />
-                        <RadioButton IsChecked="{Binding IsTorus}" 
+                        <RadioButton IsChecked="{Binding Is1D}" Foreground="Wheat"  Margin="35,5" Content="1 Layer" />
+                        <RadioButton IsChecked="{Binding Is2D}" 
                                      IsEnabled="{Binding TorusIsEnabled}"
-                                     Foreground="Wheat"  Margin="35,5" Content="Torus" />
+                                     Foreground="Wheat"  Margin="35,5" Content="2 Layer" />
                     </StackPanel>
                 </GroupBox>
             </StackPanel>

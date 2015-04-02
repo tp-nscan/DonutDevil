@@ -87,9 +87,9 @@ namespace DonutDevilControls.ViewModel.Legend
             }
         }
 
-        public DisplaySpaceType DisplaySpaceType
+        public LegendType DisplaySpaceType
         {
-            get { return DisplaySpaceType.Ring; }
+            get { return LegendType.Ring; }
         }
     }
 

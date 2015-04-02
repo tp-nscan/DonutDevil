@@ -2,7 +2,7 @@
 
 namespace DonutDevilControls.ViewModel.Design.Legend
 {
-    public class DesignTorusLegendVm : TorusLegendVm
+    public class DesignTorusLegendVm : TwoDLegendVm
     {
 
     }

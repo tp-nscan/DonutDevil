@@ -98,11 +98,11 @@
     <Compile Include="ViewModel\Legend\Plot2DVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignRingLegendVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignTorusHistogramVm.cs" />
-    <Compile Include="ViewModel\Legend\DisplaySpaceType.cs" />
+    <Compile Include="ViewModel\Legend\LegendType.cs" />
     <Compile Include="ViewModel\Legend\IHistogramVm.cs" />
     <Compile Include="ViewModel\Legend\ILegendVm.cs" />
-    <Compile Include="ViewModel\Legend\TorusHistogramVm.cs" />
-    <Compile Include="ViewModel\Legend\TorusLegendVm.cs" />
+    <Compile Include="ViewModel\Legend\TwoDhistogramVm.cs" />
+    <Compile Include="ViewModel\Legend\TwoDLegendVm.cs" />
     <Compile Include="ViewModel\Common\NodeGroupVm.cs" />
     <Compile Include="ViewModel\Common\NodeVm.cs" />
     <Compile Include="ViewModel\Legend\RingHistogramVm.cs" />
@@ -115,9 +115,9 @@
     <Compile Include="ViewModel\Design\Common\DesignSliderVm.cs" />
     <Compile Include="ViewModel\Design\NgIndexer\DesignNgIndexerSetVm.cs" />
     <Compile Include="ViewModel\Design\NgIndexer\DesignNgIndexerVm.cs" />
-    <Compile Include="ViewModel\Legend\RingLegendVm.cs" />
-    <Compile Include="ViewModel\NgIndexer\NgDisplayMode.cs" />
-    <Compile Include="ViewModel\NgIndexer\NgIndexerState.cs" />
+    <Compile Include="ViewModel\Legend\OneDlegendVm.cs" />
+    <Compile Include="ViewModel\Legend\LegendMode.cs" />
+    <Compile Include="ViewModel\NgIndexer\NgIndexerVmState.cs" />
     <Compile Include="ViewModel\Design\Params\DesignParamSetEditorVm.cs" />
     <Compile Include="ViewModel\NgIndexer\NgIndexerVm.cs" />
     <Compile Include="ViewModel\NgIndexer\NgIndexerSetVm.cs" />

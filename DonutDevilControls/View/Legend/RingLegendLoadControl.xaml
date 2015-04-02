@@ -15,8 +15,9 @@
         </Grid.RowDefinitions>
         <GroupBox Foreground="Wheat" Header="Color scheme">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <RadioButton IsChecked="{Binding UseScheme1}" Foreground="Wheat"  Margin="15,5" Content="Scheme 1" />
-                <RadioButton IsChecked="{Binding UseScheme2}" Foreground="Wheat"  Margin="15,5" Content="Scheme 2" />
+                <RadioButton IsChecked="{Binding UseScheme1}" Foreground="Wheat"  Margin="10,5" Content="Scheme 1" />
+                <RadioButton IsChecked="{Binding UseScheme2}" Foreground="Wheat"  Margin="10,5" Content="Scheme 2" />
+                <RadioButton IsChecked="{Binding UseScheme3}" Foreground="Wheat"  Margin="10,5" Content="Scheme 3" />
             </StackPanel>
         </GroupBox>
 

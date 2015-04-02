@@ -9,11 +9,11 @@ using WpfUtils.Utils;
 
 namespace DonutDevilControls.ViewModel.Legend
 {
-    public class TorusHistogramVm : NotifyPropertyChanged, IHistogramVm
+    public class TwoDhistogramVm : NotifyPropertyChanged, IHistogramVm
     {
         private const int Colorsteps = 512;
 
-        public TorusHistogramVm(string title, int size)
+        public TwoDhistogramVm(string title, int size)
         {
             _title = title;
             _legendVm = new Plot2DVm(size, size)
@@ -45,12 +45,12 @@ namespace DonutDevilControls.ViewModel.Legend
 
         public void DrawLegend(Func<float, float, Color> colorFunc)
         {
-            var gridSize = LegendVm.WbUniformGridVm.CellDimX;
+            //var gridSize = LegendVm.WbUniformGridVm.CellDimX;
 
             LegendVm.WbUniformGridVm.AddValues
             (
-                gridSize.ToSquareD2Array(
-                    (i, j) => colorFunc(i.FractionOf(gridSize), j.FractionOf(gridSize))
+                Colorsteps.ToSquareD2Array(
+                    (i, j) => colorFunc(i.FractionOf(Colorsteps), j.FractionOf(Colorsteps))
                 )
             );
         }
@@ -67,21 +67,21 @@ namespace DonutDevilControls.ViewModel.Legend
 
         public void MakeHistogram(IEnumerable<float> xVals, IEnumerable<float> yVals)
         {
-            var gridSize = LegendVm.WbUniformGridVm.CellDimX;
+           // var gridSize = LegendVm.WbUniformGridVm.CellDimX;
             var hist = xVals.ToPoints(yVals)
-                            .ToScaledHistogram(gridSize, 1.0f, 1.0f);
+                            .ToScaledHistogram(Colorsteps, 1.0f, 1.0f);
 
             HistogramVm.WbUniformGridVm.AddValues
                 (
-                    gridSize.ToSquareD2Array(
+                    Colorsteps.ToSquareD2Array(
                         (i, j) => _histogramColorSequence.ToUnitColor(hist[i,j])
                     )
                 );
         }
 
-        public DisplaySpaceType DisplaySpaceType
+        public LegendType DisplaySpaceType
         {
-            get { return DisplaySpaceType.Torus; }
+            get { return LegendType.Torus; }
         }
 
         private string _title;

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using DonutDevilControls.ViewModel.NgIndexer;
-using NodeLib.Indexers;
 
 namespace DonutDevilControls.ViewModel.Design.NgIndexer
 {
@@ -15,15 +14,14 @@ namespace DonutDevilControls.ViewModel.Design.NgIndexer
         {
             get
             {
-                yield return new NgIndexerImpl("Design Disabled", null, 5, 5).ToNgIndexerVm(NgIndexerState.Disabled);
-                yield return new NgIndexerImpl("Design RingSelected", null, 5, 5).ToNgIndexerVm(NgIndexerState.RingSelected);
-                yield return new NgIndexerImpl("Design RingUnselected", null, 5, 5).ToNgIndexerVm(NgIndexerState.RingUnselected);
-                yield return new NgIndexerImpl("Design TorusUnselected", null, 5, 5).ToNgIndexerVm(NgIndexerState.TorusUnselected);
-                yield return new NgIndexerImpl("Design TorusX", null, 5, 5).ToNgIndexerVm(NgIndexerState.TorusX);
-                yield return new NgIndexerImpl("Design TorusY", null, 5, 5).ToNgIndexerVm(NgIndexerState.TorusY);
+                yield return NodeLib.Indexers.NgIndexer.MakeRingArray2D("Design Disabled", 5).ToNgIndexerVm(NgIndexerVmState.Disabled);
+                yield return NodeLib.Indexers.NgIndexer.MakeRingArray2D("Design OneDSelected", 5).ToNgIndexerVm(NgIndexerVmState.OneDSelected);
+                yield return NodeLib.Indexers.NgIndexer.MakeRingArray2D("Design OneDUnselected", 5).ToNgIndexerVm(NgIndexerVmState.OneDUnselected);
+                yield return NodeLib.Indexers.NgIndexer.MakeRingArray2D("Design TwoDUnselected", 5).ToNgIndexerVm(NgIndexerVmState.TwoDUnselected);
+                yield return NodeLib.Indexers.NgIndexer.MakeRingArray2D("Design TwoDx", 5).ToNgIndexerVm(NgIndexerVmState.TwoDx);
+                yield return NodeLib.Indexers.NgIndexer.MakeRingArray2D("Design TwoDy", 5).ToNgIndexerVm(NgIndexerVmState.TwoDy);
             }
         }
     }
 
-    
 }

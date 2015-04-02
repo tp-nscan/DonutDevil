@@ -7,7 +7,7 @@
              xmlns:common="clr-namespace:DonutDevilControls.View.Common"
              xmlns:wpfUtils="clr-namespace:WpfUtils;assembly=WpfUtils"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance {x:Type legend:DesignTorusHistogramVm}, IsDesignTimeCreatable=True}"
+             d:DataContext="{d:DesignInstance {x:Type legend:DesignTwoDhistogramVm}, IsDesignTimeCreatable=True}"
              d:DesignWidth="300">
     <Grid >
         <Grid.RowDefinitions>

@@ -62,11 +62,25 @@
         <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="2" ResizeBehavior="PreviousAndNext"  
                     ResizeDirection="Columns" Background="#4CE41818"/>
         
-        <graphics:WbImage Grid.Column="2"
+        <StackPanel Grid.Column="2">
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                <TextBlock Foreground="Wheat" FontSize="18" Margin="5" Text="{Binding Total, StringFormat=0.000}"/>
+                <TextBlock Foreground="Wheat" FontSize="18" Margin="5" Text="{Binding AbsTotal, StringFormat=0.000}"/>
+
+
+            </StackPanel>
+            
+            <graphics:WbImage
                 ImageWidth="{Binding MainGridVm.ImageWidth}" 
                 ImageHeight="{Binding MainGridVm.ImageHeight}"
                 PlotRectangles="{Binding MainGridVm.PlotRectangles}" 
                 />
+            
+        </StackPanel>
+
+        
+        
 
     </Grid>
 </UserControl>

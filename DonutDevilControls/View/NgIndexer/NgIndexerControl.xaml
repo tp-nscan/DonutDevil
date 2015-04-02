@@ -13,7 +13,7 @@
     <Border Background="Transparent" x:Name="Border" BorderBrush="Blue" BorderThickness="1" CornerRadius="4">
     	<VisualStateManager.VisualStateGroups>
     		<VisualStateGroup x:Name="NgIndexerState">
-    			<VisualState x:Name="RingSelected">
+                <VisualState x:Name="OneDSelected">
     				<Storyboard>
     					<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ToggleButtonTorusx">
     						<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
@@ -23,7 +23,7 @@
     					</ObjectAnimationUsingKeyFrames>
     				</Storyboard>
     			</VisualState>
-    			<VisualState x:Name="RingUnselected">
+                <VisualState x:Name="OneDUnselected">
     				<Storyboard>
     					<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ToggleButtonTorusx">
     						<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
@@ -33,21 +33,21 @@
     					</ObjectAnimationUsingKeyFrames>
     				</Storyboard>
     			</VisualState>
-    			<VisualState x:Name="TorusX">
+                <VisualState x:Name="TwoDx">
     				<Storyboard>
     					<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ToggleButtonRing">
     						<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
     					</ObjectAnimationUsingKeyFrames>
     				</Storyboard>
     			</VisualState>
-    			<VisualState x:Name="TorusY">
+                <VisualState x:Name="TwoDy">
     				<Storyboard>
     					<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ToggleButtonRing">
     						<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
     					</ObjectAnimationUsingKeyFrames>
     				</Storyboard>
     			</VisualState>
-    			<VisualState x:Name="TorusUnselected">
+                <VisualState x:Name="TwoDUnselected">
     				<Storyboard>
     					<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ToggleButtonRing">
     						<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
@@ -92,7 +92,7 @@
                     Height="22" Margin="2" 
                     FontSize="10" Width="80" 
                     Content="Display" 
-                    IsChecked="{Binding IsRing}" 
+                    IsChecked="{Binding Is1D}" 
                     HorizontalAlignment="Center" 
                     Style="{DynamicResource ToggleButtonStyle1}"/>
 

@@ -9,46 +9,31 @@ namespace WpfUtils.ViewModels.Graphics
 {
     public class WbUniformGridVm : WbImageVm
     {
-        public WbUniformGridVm(int cellDimX, int cellDimY)
-            : base(CalcPixelResolution(cellDimX, cellDimY) * cellDimX, CalcPixelResolution(cellDimX, cellDimY) * cellDimY)
+        public WbUniformGridVm(int cellDimX, int cellDimY) : base(cellDimX, cellDimY)
         {
-            if ((cellDimX > MaxCellDim) || (cellDimY > MaxCellDim))
-            {
-                throw new Exception("Cell dimension too large");
-            }
-
-            _cellDimX = cellDimX;
-            _cellDimY = cellDimY;
-            PixelResolution = CalcPixelResolution(cellDimX, cellDimY);
         }
-
-        private readonly int _cellDimX;
-        public int CellDimX
-        {
-            get { return _cellDimX; }
-        }
-
-        private readonly int _cellDimY;
-        public int CellDimY
-        {
-            get { return _cellDimY; }
-        }
-
-        public int PixelResolution { get; set; }
 
         public void AddValues(IEnumerable<D2Val<Color>> cellColors)
         {
             PlotRectangleList.Clear();
 
-            PlotRectangleList = cellColors.Select(
+            var cellColorList = cellColors.ToList();
+            var squareStride = Math.Min
+                (
+                    ImageWidth/(cellColorList.Max(c => c.X) + 1),
+                    ImageHeight / (cellColorList.Max(c => c.Y) + 1)
+                );
+
+
+            PlotRectangleList = cellColorList.Select(
 
                 gv =>
                     new PlotRectangle
                         (
-                            x: PixelResolution * gv.X,
-                            y: PixelResolution * gv.Y,
-                            width: PixelResolution,
-                            height: PixelResolution,
+                            x: squareStride * gv.X,
+                            y: squareStride * gv.Y,
+                            width: squareStride,
+                            height: squareStride,
                             color: gv.Value
                         )
                     ).ToList();
@@ -57,11 +42,5 @@ namespace WpfUtils.ViewModels.Graphics
 
         }
 
-        public static int CalcPixelResolution(int cellDimX, int cellDimY)
-        {
-            return Math.Min(MaxCellDim / Math.Max(cellDimX, cellDimY), 20);
-        }
-
-        public const int MaxCellDim = 1024;
     }
 }

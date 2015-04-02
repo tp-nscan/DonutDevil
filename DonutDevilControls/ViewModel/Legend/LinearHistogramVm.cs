@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
-using MathLib;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
 using WpfUtils;
@@ -111,9 +110,9 @@ namespace DonutDevilControls.ViewModel.Legend
             }
         }
 
-        public DisplaySpaceType DisplaySpaceType
+        public LegendType DisplaySpaceType
         {
-            get { return DisplaySpaceType.Interval; }
+            get { return LegendType.Interval; }
         }
     }
 }

@@ -1,15 +1,16 @@
 ﻿using DonutDevilControls.ViewModel.NgIndexer;
-using NodeLib.Indexers;
 
 namespace DonutDevilControls.ViewModel.Design.NgIndexer
 {
     public class DesignNgIndexerVm : NgIndexerVm
     {
-        public DesignNgIndexerVm() : base(
-            new NgIndexerImpl("Design name", null, 5, 5),
-            NgIndexerState.RingSelected)
+        public DesignNgIndexerVm()
+            : base(
+                NodeLib.Indexers.NgIndexer.MakeRingArray2D("Design name", 5),
+                NgIndexerVmState.OneDSelected)
         {
-            this.OptionsAreVisible = true;
+            OptionsAreVisible = true;
         }
+
     }
 }

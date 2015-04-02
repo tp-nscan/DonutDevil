@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Windows.Media;
 using DonutDevilControls.ViewModel.Common;
+using DonutDevilControls.ViewModel.Legend;
 using MathLib.NumericTypes;
 using WpfUtils.Views.Graphics;
 

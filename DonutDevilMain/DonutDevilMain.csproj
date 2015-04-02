@@ -164,9 +164,7 @@
     <Compile Include="ViewModel\IMainWindowVm.cs" />
     <Compile Include="ViewModel\MenuVm.cs" />
     <Compile Include="ViewModel\NetworkVm.cs" />
-    <Compile Include="ViewModel\RingValuedNodeGroupVm.cs" />
     <Compile Include="ViewModel\SandboxVm.cs" />
-    <Compile Include="ViewModel\TorusValuedNodeGroupVm.cs" />
     <Compile Include="View\MainWindowSelector.cs" />
     <Compile Include="View\MenuControl.xaml.cs">
       <DependentUpon>MenuControl.xaml</DependentUpon>

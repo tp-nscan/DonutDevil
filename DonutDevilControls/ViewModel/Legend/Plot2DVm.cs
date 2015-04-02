@@ -1,7 +1,7 @@
 ﻿using WpfUtils;
 using WpfUtils.ViewModels.Graphics;
 
-namespace DonutDevilControls.ViewModel.Common
+namespace DonutDevilControls.ViewModel.Legend
 {
     public class Plot2DVm : NotifyPropertyChanged
     {

@@ -35,9 +35,14 @@ namespace MathLib.NumericTypes
         {
              for(var i=0; i< neighborhood.Radius + 1; i++)
             {
-                 for(var j=0; j< neighborhood.Radius + 1; j++)
+                 for(var j=1; j< neighborhood.Radius + 1; j++)
                  {
-                     var fVal = radiusFunc(Math.Sqrt(i*i + j*j));
+                     var dist = Math.Sqrt(i*i + j*j);
+                     if (dist > neighborhood.Radius + 0.415)
+                     {
+                         continue;
+                     }
+                     var fVal = radiusFunc(dist);
 
                      neighborhood.SetValue( i,  j, fVal);
                      neighborhood.SetValue(-i,  j, fVal);

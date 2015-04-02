@@ -17,17 +17,17 @@ namespace DonutDevilMain.ViewModel
     {
         public SandboxVm()
         {
-            _radiusSliderVm = new SliderVm(RealInterval.Make(1, 24), 1, "0") { Title = "Radius", Value = 10 };
-            _frequencySliderVm = new SliderVm(RealInterval.Make(1, 24), 1, "0") { Title = "Frequency", Value = 10 };
-            _decaySliderVm = new SliderVm(RealInterval.Make(1, 24), 1, "0") { Title = "Decay", Value = 10 };
+            _radiusSliderVm = new SliderVm(RealInterval.Make(1, 40), 1, "0") { Title = "Radius", Value = 10 };
+            _frequencySliderVm = new SliderVm(RealInterval.Make(0.0, 3), 0.015, "0.000") { Title = "Frequency * Pi / Radius", Value = 0.5 };
+            _decaySliderVm = new SliderVm(RealInterval.Make(0, 1), 0.005, "0.000") { Title = "Decay", Value = 0.5 };
 
             _radiusSliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
             _frequencySliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
             _decaySliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
 
-            _mainGridVm = new WbUniformGridVm(GridStride, GridStride);
+            _mainGridVm = new WbUniformGridVm(1024, 1024);
             _histogramVm = new DesignLinearHistogramVm();
-            _legendVm = new RingLegendVm();
+            _legendVm = new OneDlegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
         }
 
@@ -69,7 +69,30 @@ namespace DonutDevilMain.ViewModel
 
         private void DrawMainNetwork()
         {
-           MainGridVm = new WbUniformGridVm(GridStride, GridStride);
+            var n = NeighborhoodExt.CircularGlauber(Radius, Frequency *  Math.PI/ Radius, Decay);
+            var valueList = n.ToReadingOrder.Select(v=> v) .ToList();
+
+            var cellColors = valueList.Select(
+                (v,i) => new D2Val<Color>
+                            (
+                                x: i % (GridStride),
+                                y: i / (GridStride),
+                                value: LegendVm.ColorFor1D((float)(v / 2.0 + 0.5))
+                            )
+                ).ToList();
+
+            MainGridVm.AddValues(cellColors);
+
+            Total = valueList.Sum(v => v);
+
+            AbsTotal = valueList.Sum(v => Math.Abs(v));
+
+            _histogramVm.MakeHistogram(valueList.Select(cc => (float)(cc / 2.0 + 0.5)));
+        }
+
+
+        private void DrawMainNetwork0()
+        {
             var randy = new Random();
             var cellColors =
             Enumerable.Range(0, GridStride * GridStride).Select(
@@ -77,7 +100,7 @@ namespace DonutDevilMain.ViewModel
                             (
                                 x: i % (GridStride),
                                 y: i / (GridStride),
-                                value: LegendVm.ColorForRing((float) randy.NextDouble())
+                                value: LegendVm.ColorFor1D((float)randy.NextDouble())
                             )
                    ).ToList();
 
@@ -155,17 +178,17 @@ namespace DonutDevilMain.ViewModel
         {
             switch (_histogramVm.DisplaySpaceType)
             {
-                case DisplaySpaceType.Ring:
-                    _histogramVm.DrawLegend(legendVm.ColorForRing);
+                case LegendType.Ring:
+                    _histogramVm.DrawLegend(legendVm.ColorFor1D);
                     break;
-                case DisplaySpaceType.Torus:
-                    _histogramVm.DrawLegend(legendVm.ColorForTorus);
+                case LegendType.Torus:
+                    _histogramVm.DrawLegend(legendVm.ColorFor2D);
                     break;
-                case DisplaySpaceType.Interval:
+                case LegendType.Interval:
                     _histogramVm.DrawLegend(legendVm.ColorForInterval);
                     break;
                 default:
-                    throw new Exception("Unhandled DisplaySpaceType");
+                    throw new Exception("Unhandled LegendType");
             }
 
             DrawMainNetwork();
@@ -179,6 +202,28 @@ namespace DonutDevilMain.ViewModel
             {
                 _histogramVm = value;
                 OnPropertyChanged("HistogramVm");
+            }
+        }
+
+        private double _total;
+        public double Total
+        {
+            get { return _total; }
+            set
+            {
+                _total = value;
+                OnPropertyChanged("Total");
+            }
+        }
+
+        private double _absTotal;
+        public double AbsTotal
+        {
+            get { return _absTotal; }
+            set
+            {
+                _absTotal = value;
+                OnPropertyChanged("AbsTotal");
             }
         }
     }

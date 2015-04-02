@@ -9,23 +9,24 @@ using WpfUtils.Utils;
 
 namespace DonutDevilControls.ViewModel.Legend
 {
-    public class RingLegendVm : NotifyPropertyChanged, ILegendVm
+    public class OneDlegendVm : NotifyPropertyChanged, ILegendVm
     {
         private const int Colorsteps = 512;
 
-        public RingLegendVm()
+        public OneDlegendVm()
         {
             _offsetSliderVm = new SliderVm(RealInterval.Make(0, 1.0), 0.02, "0.00") { Title = "Offset" };
             _offsetSliderVm.OnSliderVmChanged.Subscribe(s => _legendVmChanged.OnNext(this));
-            _nodeGroupColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colorsteps / 4);
+            _ringColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colorsteps / 4);
+            _unitZColorSequence = ColorSequence.Dipolar(Colors.Red, Colors.Blue, Colorsteps / 2);
             _histogramColorSequence = Colors.White.ToUniformColorSequence(Colorsteps);
-            _colorSequenceRing = _nodeGroupColorSequence;
+            _colorSequenceRing = _ringColorSequence;
             _useScheme1 = true;
         }
 
-        public DisplaySpaceType DisplaySpaceType
+        public LegendType LegendType
         {
-            get { return DisplaySpaceType.Ring; }
+            get { return LegendType.Ring; }
         }
 
         private IColorSequence _colorSequenceRing;
@@ -39,15 +40,16 @@ namespace DonutDevilControls.ViewModel.Legend
             return ColorSequenceRing.ToUnitColor((val + OffsetSliderVm.Value).AsMf());
         }
 
-        public Color ColorForRing(float val)
+        public Color ColorFor1D(float val)
         {
             return ColorSequenceRing.ToUnitColor((val + OffsetSliderVm.Value).AsMf());
         }
 
-        private readonly IColorSequence _nodeGroupColorSequence;
+        private readonly IColorSequence _ringColorSequence;
+        private readonly IColorSequence _unitZColorSequence;
         private readonly IColorSequence _histogramColorSequence;
 
-        public Color ColorForTorus(float xVal, float yVal)
+        public Color ColorFor2D(float xVal, float yVal)
         {
             throw new NotImplementedException();
         }
@@ -75,7 +77,7 @@ namespace DonutDevilControls.ViewModel.Legend
                 OnPropertyChanged("UseScheme1");
                 if (value)
                 {
-                    _colorSequenceRing = _nodeGroupColorSequence;
+                    _colorSequenceRing = _ringColorSequence;
                     _legendVmChanged.OnNext(this);
                 }
             }
@@ -96,5 +98,22 @@ namespace DonutDevilControls.ViewModel.Legend
                 }
             }
         }
+
+        private bool _useScheme3;
+        public bool UseScheme3
+        {
+            get { return _useScheme3; }
+            set
+            {
+                _useScheme3 = value;
+                OnPropertyChanged("UseScheme3");
+                if (value)
+                {
+                    _colorSequenceRing = _unitZColorSequence;
+                    _legendVmChanged.OnNext(this);
+                }
+            }
+        }
+
     }
 }

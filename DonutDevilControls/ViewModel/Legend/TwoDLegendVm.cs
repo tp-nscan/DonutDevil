@@ -18,9 +18,9 @@ using Color = System.Windows.Media.Color;
 
 namespace DonutDevilControls.ViewModel.Legend
 {
-    public class TorusLegendVm : NotifyPropertyChanged, ILegendVm
+    public class TwoDLegendVm : NotifyPropertyChanged, ILegendVm
     {
-        public TorusLegendVm()
+        public TwoDLegendVm()
         {
             _plot2DVm = new Plot2DVm(128, 128)
             {
@@ -155,12 +155,12 @@ namespace DonutDevilControls.ViewModel.Legend
             throw new NotImplementedException();
         }
 
-        public Color ColorForRing(float val)
+        public Color ColorFor1D(float val)
         {
             throw new NotImplementedException();
         }
 
-        public Color ColorForTorus(float xVal, float yVal)
+        public Color ColorFor2D(float xVal, float yVal)
         {
             return _imageColors[(int)(xVal * 0.9999 * ImageHeight), (int)(yVal * 0.9999 * ImageWidth)];
         }
@@ -423,9 +423,9 @@ namespace DonutDevilControls.ViewModel.Legend
 
         public bool IsDirty { get; set; }
 
-        public DisplaySpaceType DisplaySpaceType
+        public LegendType LegendType
         {
-            get { return DisplaySpaceType.Torus; }
+            get { return LegendType.Torus; }
         }
     }
 }

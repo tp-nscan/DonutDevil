@@ -84,5 +84,20 @@ namespace WpfUtils.Utils
                     }
                 );
         }
+
+        public static IEnumerable<Color> LessFadingSpread(this Color color, int stepCount)
+        {
+            return Enumerable.Range(0, stepCount).Select
+                (
+                    i => new Color
+                    {
+                        ScA = RealIntervalExt.TicAtIndex((float)0.0, color.ScA, (int)(Math.Pow((double)i/stepCount, 0.7)*stepCount), stepCount + 1),
+                        ScR = color.ScR,
+                        ScG = color.ScG,
+                        ScB = color.ScB
+                    }
+                );
+        }
+
     }
 }

@@ -2,9 +2,9 @@
 
 namespace DonutDevilControls.ViewModel.Design.Legend
 {
-    public class DesignTorusHistogramVm : TorusHistogramVm
+    public class DesignTwoDhistogramVm : TwoDhistogramVm
     {
-        public DesignTorusHistogramVm() : base("Design title", 128)
+        public DesignTwoDhistogramVm() : base("Design title", 128)
         {
         }
     }
