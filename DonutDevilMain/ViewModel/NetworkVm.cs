@@ -54,7 +54,7 @@ namespace DonutDevilMain.ViewModel
 
             _displayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
 
-            _legendVm = new OneDlegendVm();
+            _legendVm = new LinearLegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
 
             _ngIndexerSetVm = new NgIndexerSetVm(network.NodeGroupIndexers.ToNgIndexerVms());
@@ -237,8 +237,8 @@ namespace DonutDevilMain.ViewModel
                                 y: x.Y,
                                 value: LegendVm.ColorFor2D
                                             (
-                                                xVal: NgIndexerSetVm.Indexer2Dx().ValuesToUnitRange(x.Value),
-                                                yVal: NgIndexerSetVm.Indexer2Dy().ValuesToUnitRange(y.Value)
+                                                xVal: NgIndexerSetVm.Indexer1D().ValuesToUnitRange(x.Value),
+                                                yVal: NgIndexerSetVm.Indexer1D().ValuesToUnitRange(y.Value)
                                             )
                             )
                    ).ToList();
@@ -276,20 +276,31 @@ namespace DonutDevilMain.ViewModel
             switch (ngDisplayIndexing.LegendMode)
             {
                 case LegendMode.OneLayer:
-                    LegendVm = _ringLegendVm;
-                    HistogramVm = _ringHistogramVm;
-                    HistogramVm.MakeHistogram(Network.NodeGroup.Values);
+                    LegendVm = _linearLegendVm;
+                    HistogramVm = _linearHistogramVm;
+
+                    HistogramVm.MakeHistogram
+                    (
+                        NgIndexerSetVm.Indexer1D().IndexingFunc(Network.NodeGroup)
+                                .Select(d2V => NgIndexerSetVm.Indexer1D().ValuesToUnitRange(d2V.Value))
+                    );
                     HistogramVm.DrawLegend(f=>LegendVm.ColorFor1D(f));
+
+
+
                     break;
                 case LegendMode.TwoLayers:
                     HistogramVm = _torusHistogramVm;
+
                     HistogramVm.MakeHistogram
-                        (
-                             xVals: NgIndexerSetVm.Indexer2Dx().IndexingFunc(Network.NodeGroup)
-                                      .Select(d2V=>  d2V.Value),
-                             yVals: NgIndexerSetVm.Indexer2Dy().IndexingFunc(Network.NodeGroup)
-                                      .Select(d2V => d2V.Value)
-                        );
+                            (
+                                 xVals: NgIndexerSetVm.Indexer2Dx().IndexingFunc(Network.NodeGroup)
+                                          .Select(d2V => NgIndexerSetVm.Indexer2Dx().ValuesToUnitRange(d2V.Value)),
+                                 yVals: NgIndexerSetVm.Indexer2Dy().IndexingFunc(Network.NodeGroup)
+                                          .Select(d2V => NgIndexerSetVm.Indexer2Dy().ValuesToUnitRange(d2V.Value))
+                            );
+
+
                     if (_torusLegendVm == null)
                     {
                         LegendVm = new TwoDLegendVm();
@@ -311,11 +322,12 @@ namespace DonutDevilMain.ViewModel
             CommandManager.InvalidateRequerySuggested();
         }
 
-
-        readonly ILegendVm _ringLegendVm = new OneDlegendVm();
+        readonly ILegendVm _linearLegendVm = new LinearLegendVm();
+        readonly ILegendVm _ringLegendVm = new LinearLegendVm();
         ILegendVm _torusLegendVm;
 
         readonly IHistogramVm _ringHistogramVm = new RingHistogramVm("Wubba r");
+        readonly IHistogramVm _linearHistogramVm = new LinearHistogramVm("Wubba r", -1.0, 1.0);
         readonly IHistogramVm _torusHistogramVm = new TwoDhistogramVm("Wubba t", 512);
 
         #endregion
@@ -346,6 +358,9 @@ namespace DonutDevilMain.ViewModel
         {
             switch (_histogramVm.DisplaySpaceType)
             {
+                case LegendType.Interval:
+                    _histogramVm.DrawLegend(legendVm.ColorFor1D);
+                    break;
                 case LegendType.Ring:
                     _histogramVm.DrawLegend(legendVm.ColorFor1D);
                     break;

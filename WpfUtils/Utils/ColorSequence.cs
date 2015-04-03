@@ -22,7 +22,7 @@ namespace WpfUtils.Utils
 
     public static class ColorSequence
     {
-        public static IN1ColorSequence Dipolar(Color negativeColor, Color positiveColor, int halfStepCount)
+        public static IColorSequence Dipolar(Color negativeColor, Color positiveColor, int halfStepCount)
         {
             return new Ir1ColorSequence(
                     new ColorSequenceImpl(positiveColor.LessFadingSpread(halfStepCount)),
@@ -119,6 +119,13 @@ namespace WpfUtils.Utils
         {
             _positiveColors = positiveColors;
             _negativeColors = negativeColors;
+            _colors = NegativeColors
+                            .Colors
+                            .Reverse()
+                            .Concat
+                            (
+                                PositiveColors.Colors
+                            ).ToList();
         }
 
         private readonly IColorSequence _positiveColors;
@@ -126,6 +133,8 @@ namespace WpfUtils.Utils
         {
             get { return _positiveColors; }
         }
+
+        private IReadOnlyList<Color> _colors;
 
         private readonly IColorSequence _negativeColors;
         public IColorSequence NegativeColors
@@ -135,16 +144,7 @@ namespace WpfUtils.Utils
 
         public IReadOnlyList<Color> Colors
         {
-            get
-            {
-                return NegativeColors
-                            .Colors
-                            .Reverse()
-                            .Concat
-                            (
-                                PositiveColors.Colors
-                            ).ToList();
-            }
+            get { return _colors; }
         }
     }
 

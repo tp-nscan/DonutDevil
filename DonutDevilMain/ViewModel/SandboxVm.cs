@@ -27,7 +27,7 @@ namespace DonutDevilMain.ViewModel
 
             _mainGridVm = new WbUniformGridVm(1024, 1024);
             _histogramVm = new DesignLinearHistogramVm();
-            _legendVm = new OneDlegendVm();
+            _legendVm = new LinearLegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
         }
 

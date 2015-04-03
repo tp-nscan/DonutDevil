@@ -45,8 +45,6 @@ namespace DonutDevilControls.ViewModel.Legend
 
         public void DrawLegend(Func<float, float, Color> colorFunc)
         {
-            //var gridSize = LegendVm.WbUniformGridVm.CellDimX;
-
             LegendVm.WbUniformGridVm.AddValues
             (
                 Colorsteps.ToSquareD2Array(
@@ -67,7 +65,6 @@ namespace DonutDevilControls.ViewModel.Legend
 
         public void MakeHistogram(IEnumerable<float> xVals, IEnumerable<float> yVals)
         {
-           // var gridSize = LegendVm.WbUniformGridVm.CellDimX;
             var hist = xVals.ToPoints(yVals)
                             .ToScaledHistogram(Colorsteps, 1.0f, 1.0f);
 

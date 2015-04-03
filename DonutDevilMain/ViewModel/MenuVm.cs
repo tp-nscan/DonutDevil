@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reactive.Subjects;
 using System.Windows.Input;
 using DonutDevilControls.ViewModel.Common;
-using NodeLib;
 using NodeLib.NodeLib;
 using WpfUtils;
 
@@ -52,15 +51,9 @@ namespace DonutDevilMain.ViewModel
 
         private void DoGoToNetwork()
         {
-            //_mainWindowTypehanged.OnNext(new NetworkVm(Network.Donut(256, 1234)));
-
             _mainWindowTypehanged.OnNext(
-                new NetworkVm(
-               NetworkBuilderVm.BuildNetwork())
-                
+                new NetworkVm( NetworkBuilderVm.BuildNetwork())
                 );
-
-
         }
 
         bool CanGoToNetwork()
@@ -69,6 +62,7 @@ namespace DonutDevilMain.ViewModel
         }
 
         #endregion // GoToNetworkCommand
+
 
         #region GoToSandboxCommand
 

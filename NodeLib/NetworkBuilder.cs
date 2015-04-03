@@ -20,6 +20,7 @@ namespace NodeLib
 
         public enum NetworkBuilderType
         {
+            Linear,
             Ring,
             Donut,
             Twister,
@@ -58,12 +59,29 @@ namespace NodeLib
             {
                 get
                 {
+                    yield return Linear;
                     yield return Ring;
                     yield return Donut;
                     yield return Twister;
                     yield return Spots;
                 }
             }
+
+            public static INetworkBuilder Linear
+            {
+                get
+                {
+                    return new NetworkBuilderImpl
+                        (
+                            networkBuilderType: NetworkBuilderType.Linear,
+                            parameters: LinearParams,
+                            ngInitializer: NgInitializer.KStrideSquaredUnitZ(1),
+                            ngUpdaterBuilder: NgUpdaterBuilder.ForLinear(),
+                            ngIndexMaker: NgIndexer.LinearArray2DIndexMaker
+                        );
+                }
+            }
+
 
             public static INetworkBuilder Ring
             {
@@ -73,7 +91,7 @@ namespace NodeLib
                         (
                             networkBuilderType: NetworkBuilderType.Ring,
                             parameters: RingParams,
-                            ngInitializer: NgInitializer.KStrideSquared(1),
+                            ngInitializer: NgInitializer.KStrideSquaredUnitR(1),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForRing(),
                             ngIndexMaker: NgIndexer.RingArray2DIndexMaker
                         );
@@ -88,7 +106,7 @@ namespace NodeLib
                         (
                             networkBuilderType: NetworkBuilderType.Donut,
                             parameters: DonutParams,
-                            ngInitializer: NgInitializer.KStrideSquared(2),
+                            ngInitializer: NgInitializer.KStrideSquaredUnitR(2),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForDonut(),
                             ngIndexMaker: NgIndexer.TorusArray2DIndexMaker
                         );
@@ -103,7 +121,7 @@ namespace NodeLib
                         (
                             networkBuilderType: NetworkBuilderType.Twister,
                             parameters: TwisterParams,
-                            ngInitializer: NgInitializer.KStrideSquared(2),
+                            ngInitializer: NgInitializer.KStrideSquaredUnitR(2),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForTwister(),
                             ngIndexMaker: NgIndexer.TorusArray2DIndexMaker
                         );
@@ -118,7 +136,7 @@ namespace NodeLib
                         (
                             networkBuilderType: NetworkBuilderType.Spots,
                             parameters: SpotParams,
-                            ngInitializer: NgInitializer.KStrideSquared(1),
+                            ngInitializer: NgInitializer.KStrideSquaredUnitR(1),
                             ngUpdaterBuilder: null,
                             ngIndexMaker: null
                         );
@@ -137,6 +155,20 @@ namespace NodeLib
             //    }
             //}
 
+            public static IReadOnlyDictionary<string, IParameter> LinearParams
+            {
+
+                get
+                {
+                    return new IParameter[]
+                        {
+                            new ParamInt(4, 1024, 128, "ArrayStride", false),
+                            new ParamEnum(typeof (NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType"),
+                            new ParamFloat(0.0f, 0.4f, 0.1f, "StepSize"),
+                            new ParamFloat(0.0f, 0.4f, 0.1f, "Noise")
+                        }.ToDictionary(v => v.Name);
+                }
+            }
 
             public static IReadOnlyDictionary<string, IParameter> RingParams
             {

@@ -74,7 +74,7 @@
 
                 <ContentControl Width="600" Content="{Binding HistogramVm}" ContentTemplateSelector="{DynamicResource HistogramSelector}" />
 
-                <ContentControl Width="600" Content="{Binding LegendVm}" ContentTemplateSelector="{DynamicResource LegendLoadSelector}" />
+                <ContentControl Width="600" Content="{Binding LegendVm}" ContentTemplateSelector="{DynamicResource LegendSelector}" />
 
             </StackPanel>
 

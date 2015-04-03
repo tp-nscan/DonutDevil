@@ -5,11 +5,13 @@ using DonutDevilControls.ViewModel.Legend;
 
 namespace DonutDevilControls.View.Legend
 {
-    public class LegendLoadSelector : DataTemplateSelector
+    public class LegendSelector : DataTemplateSelector
     {
         public DataTemplate RingTemplate { get; set; }
 
         public DataTemplate TorusTemplate { get; set; }
+
+        public DataTemplate IntervalTemplate { get; set; }
 
         public DataTemplate DefaultTemplate { get; set; }
 
@@ -25,6 +27,8 @@ namespace DonutDevilControls.View.Legend
                         return TorusTemplate;
                     case LegendType.Ring:
                         return RingTemplate;
+                    case LegendType.Interval:
+                        return IntervalTemplate;
                     default:
                         throw new Exception(String.Format("LegendVmType {0} not handled in SelectTemplate", legendVm.LegendType));
                 }

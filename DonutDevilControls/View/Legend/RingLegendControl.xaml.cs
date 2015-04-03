@@ -3,9 +3,9 @@
     /// <summary>
     /// Interaction logic for RingLegendControl.xaml
     /// </summary>
-    public partial class RingLegendLoadControl
+    public partial class RingLegendControl
     {
-        public RingLegendLoadControl()
+        public RingLegendControl()
         {
             InitializeComponent();
         }

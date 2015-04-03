@@ -7,17 +7,22 @@
         <TextBox Text="DefaultLegendTemplate"/>
     </DataTemplate>
 
-    <DataTemplate x:Key="TorusTemplateLoad">
-        <legend:TorusLegendLoadControl/>
+    <DataTemplate x:Key="TorusTemplate">
+        <legend:TorusLegendControl/>
     </DataTemplate>
 
-    <DataTemplate x:Key="RingTemplateLoad">
-        <legend:RingLegendLoadControl/>
+    <DataTemplate x:Key="RingTemplate">
+        <legend:RingLegendControl/>
     </DataTemplate>
 
-    <legend:LegendLoadSelector x:Key ="LegendLoadSelector"
-        TorusTemplate="{StaticResource TorusTemplateLoad}"
-        RingTemplate="{StaticResource RingTemplateLoad}"
+    <DataTemplate x:Key="IntervalTemplate">
+        <legend:LinearLegendControl/>
+    </DataTemplate>
+
+    <legend:LegendSelector x:Key ="LegendSelector"
+        TorusTemplate="{StaticResource TorusTemplate}"
+        RingTemplate="{StaticResource RingTemplate}"
+        IntervalTemplate="{StaticResource IntervalTemplate}"
         DefaultTemplate="{StaticResource DefaultLegendTemplate}"            
     />
 

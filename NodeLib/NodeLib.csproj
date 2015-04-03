@@ -72,6 +72,7 @@
     <Compile Include="Updaters\NgUpdater.cs" />
     <Compile Include="Updaters\NgUpdaterBuilder.cs" />
     <Compile Include="Updaters\NgUpdaterDonut.cs" />
+    <Compile Include="Updaters\NgUpdaterLinear.cs" />
     <Compile Include="Updaters\NgUpdaterRing.cs" />
     <Compile Include="Updaters\NgUpdaterTorus.cs" />
     <Compile Include="Params\IParameter.cs" />

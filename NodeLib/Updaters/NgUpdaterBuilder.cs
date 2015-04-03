@@ -6,6 +6,25 @@ namespace NodeLib.Updaters
 {
     public static class NgUpdaterBuilder
     {
+        public static Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ForLinear()
+        {
+            return d =>
+            {
+                var arrayStride = (int)d["ArrayStride"].Value;
+                NeighborhoodType neighborhoodType;
+                Enum.TryParse((string)d["NeighborhoodType"].Value, out neighborhoodType);
+                var stepSize = (float)d["StepSize"].Value;
+                var noise = (float)d["Noise"].Value;
+
+                return NgUpdaterLinear.Standard(
+                    name: "StandardRing",
+                    squareSize: arrayStride,
+                    stepSize: stepSize,
+                    neighborhoodType: neighborhoodType,
+                    noise: noise
+                );
+            };
+        }
 
         public static Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ForRing()
         {

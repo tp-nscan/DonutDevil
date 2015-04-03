@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using MathLib.NumericTypes;
 
@@ -14,7 +13,7 @@ namespace NodeLib
 
     public static class NodeGroup
     {
-        public static INodeGroup RandomNodeGroup(
+        public static INodeGroup RandomNodeGroupUnitR(
             int nodeCount,
             int seed
         )
@@ -29,6 +28,21 @@ namespace NodeLib
                 );
         }
 
+
+        public static INodeGroup RandomNodeGroupUnitZ(
+            int nodeCount,
+            int seed
+        )
+        {
+            var randy = new Random(seed);
+            return new NodeGroupImpl
+                (
+                    nodes: Enumerable.Range(0, nodeCount)
+                              .Select(i => Node.Make((float)randy.NextDouble() * 2 - 1.0f, groupIndex: i)),
+                    nodeCount: nodeCount,
+                    generation: 0
+                );
+        }
         public static INodeGroup TorusPeriodicNodeGroup(int squareSize, float waviness)
         {
             var nodes = new INode[squareSize * squareSize * 2];

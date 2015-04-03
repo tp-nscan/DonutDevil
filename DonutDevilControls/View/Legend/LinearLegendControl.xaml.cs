@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DonutDevilMain.View
+namespace DonutDevilControls.View.Legend
 {
     /// <summary>
-    /// Interaction logic for RingValuedNodeGroupControl.xaml
+    /// Interaction logic for LinearLegendControl.xaml
     /// </summary>
-    public partial class RingValuedNodeGroupControl : UserControl
+    public partial class LinearLegendControl : UserControl
     {
-        public RingValuedNodeGroupControl()
+        public LinearLegendControl()
         {
             InitializeComponent();
         }

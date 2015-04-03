@@ -25,6 +25,26 @@ namespace NodeLib.Indexers
 
     public static class NgIndexer
     {
+
+        public static INgIndexer MakeLinearArray2D(string name, int squareSize, int offset = 0)
+        {
+            return new NgIndexerImpl(
+                name: name,
+                indexingFunc:
+                n => Enumerable.Range(0, squareSize * squareSize)
+                                .Select(i => new D2Val<float>
+                                    (
+                                        i / squareSize,
+                                        i % squareSize,
+                                        n.Values[i + offset])
+                                    ),
+                height: squareSize,
+                width: squareSize,
+                valuesToUnitRange: f => f/2 + 0.5f,
+                unitRangeToValues: f => f*2 - 1.0f
+            );
+        }
+
         public static INgIndexer MakeRingArray2D(string name, int squareSize, int offset=0)
         {
             return new NgIndexerImpl(
@@ -44,6 +64,21 @@ namespace NodeLib.Indexers
             );
         }
 
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> LinearArray2DIndexMaker
+        {
+            get
+            {
+                return d =>
+                {
+                    var arrayStride = (int)d["ArrayStride"].Value;
+                    return new[]
+                    {
+                        MakeLinearArray2D("Values", arrayStride)
+                    };
+                };
+            }
+        }
+
         public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> RingArray2DIndexMaker
         {
             get
@@ -53,7 +88,7 @@ namespace NodeLib.Indexers
                     var arrayStride = (int)d["ArrayStride"].Value;
                     return new[]
                     {
-                        MakeRingArray2D("X values", arrayStride)
+                        MakeRingArray2D("Values", arrayStride)
                     };
                 };
             }

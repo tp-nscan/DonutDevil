@@ -112,39 +112,6 @@ namespace NodeLib.Updaters
         }
 
 
-        static Func<INodeGroup, INode[]> PerimeterFunc(
-                Torus3NbrhdIndexer torusNbrhd,
-                float step,
-                float noise
-            )
-        {
-             return (ng) =>
-             {
-                 var cOne = ng.Values[torusNbrhd.CC];
-
-                 var resOne = cOne.MfDelta(ng.Values[torusNbrhd.UF]) * step;
-                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.UC]) * step;
-                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.UR]) * step;
-                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.CF]) * step;
-                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.CR]) * step;
-                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.LF]) * step;
-                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.LC]) * step;
-                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.LR]) * step;
-
-                 resOne += (float)((SafeRandom.NextDouble() - 0.5f) * noise);
-
-            return new[]
-                    {
-                        Node.Make
-                            (
-                                value: (cOne + resOne).AsMf(),
-                                groupIndex: torusNbrhd.CC
-                            )
-                    };
-             };
-
-        }
-
 
         static Func<INodeGroup, INode[]> SidesFunc(
                 Torus3NbrhdIndexer torusNbrhd,
@@ -174,6 +141,40 @@ namespace NodeLib.Updaters
             };
 
         }
+
+        static Func<INodeGroup, INode[]> PerimeterFunc(
+        Torus3NbrhdIndexer torusNbrhd,
+        float step,
+        float noise
+    )
+        {
+            return (ng) =>
+            {
+                var cOne = ng.Values[torusNbrhd.CC];
+
+                var resOne = cOne.MfDelta(ng.Values[torusNbrhd.UF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.UR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.CR]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LF]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LC]) * step;
+                resOne += cOne.MfDelta(ng.Values[torusNbrhd.LR]) * step;
+
+                resOne += (float)((SafeRandom.NextDouble() - 0.5f) * noise);
+
+                return new[]
+                    {
+                        Node.Make
+                            (
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhd.CC
+                            )
+                    };
+            };
+
+        }
+
 
 
         static Func<INodeGroup, INode[]> StarFunc(
@@ -213,6 +214,7 @@ namespace NodeLib.Updaters
             };
 
         }
+
 
 
         static Func<INodeGroup, INode[]> DoubleRingFunc(
@@ -262,6 +264,7 @@ namespace NodeLib.Updaters
         }
 
 
+
         static Func<INodeGroup, INode[]> RingBiasFunc(
           Torus3NbrhdIndexer torusNbrhd,
           float[] biasedSteps
@@ -294,6 +297,7 @@ namespace NodeLib.Updaters
             };
 
         }
+
 
 
         static Func<INodeGroup, INode[]> BigRingFuncWithBias(
@@ -349,6 +353,7 @@ namespace NodeLib.Updaters
             };
 
         }
+
 
 
         static Func<INodeGroup, INode[]> RingSquareBiasFunc(

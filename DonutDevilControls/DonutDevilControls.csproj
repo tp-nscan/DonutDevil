@@ -115,7 +115,7 @@
     <Compile Include="ViewModel\Design\Common\DesignSliderVm.cs" />
     <Compile Include="ViewModel\Design\NgIndexer\DesignNgIndexerSetVm.cs" />
     <Compile Include="ViewModel\Design\NgIndexer\DesignNgIndexerVm.cs" />
-    <Compile Include="ViewModel\Legend\OneDlegendVm.cs" />
+    <Compile Include="ViewModel\Legend\LinearLegendVm.cs" />
     <Compile Include="ViewModel\Legend\LegendMode.cs" />
     <Compile Include="ViewModel\NgIndexer\NgIndexerVmState.cs" />
     <Compile Include="ViewModel\Design\Params\DesignParamSetEditorVm.cs" />
@@ -137,15 +137,18 @@
     <Compile Include="View\Legend\LinearHistogramControl.xaml.cs">
       <DependentUpon>LinearHistogramControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Legend\LinearLegendControl.xaml.cs">
+      <DependentUpon>LinearLegendControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Legend\TorusHistogramControl.xaml.cs">
       <DependentUpon>TorusHistogramControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Legend\TorusLegendLoadControl.xaml.cs">
-      <DependentUpon>TorusLegendLoadControl.xaml</DependentUpon>
+    <Compile Include="View\Legend\TorusLegendControl.xaml.cs">
+      <DependentUpon>TorusLegendControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Legend\LegendLoadSelector.cs" />
-    <Compile Include="View\Legend\RingLegendLoadControl.xaml.cs">
-      <DependentUpon>RingLegendLoadControl.xaml</DependentUpon>
+    <Compile Include="View\Legend\LegendSelector.cs" />
+    <Compile Include="View\Legend\RingLegendControl.xaml.cs">
+      <DependentUpon>RingLegendControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\NgIndexer\NgIndexerControl.xaml.cs">
       <DependentUpon>NgIndexerControl.xaml</DependentUpon>
@@ -193,19 +196,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Legend\LinearLegendControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Legend\TorusHistogramControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Legend\TorusLegendLoadControl.xaml">
+    <Page Include="View\Legend\TorusLegendControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Legend\LegendLoadSelector.xaml">
+    <Page Include="View\Legend\LegendSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Legend\RingLegendLoadControl.xaml">
+    <Page Include="View\Legend\RingLegendControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

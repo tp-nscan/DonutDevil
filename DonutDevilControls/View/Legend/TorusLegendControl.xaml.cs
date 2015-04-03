@@ -3,9 +3,9 @@
     /// <summary>
     /// Interaction logic for TorusLegendControl.xaml
     /// </summary>
-    public partial class TorusLegendLoadControl
+    public partial class TorusLegendControl
     {
-        public TorusLegendLoadControl()
+        public TorusLegendControl()
         {
             InitializeComponent();
         }

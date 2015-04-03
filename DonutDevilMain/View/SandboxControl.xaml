@@ -50,7 +50,7 @@
 
             <Border BorderBrush="Black" BorderThickness="2">
                 <Border BorderBrush="#1FFF" BorderThickness="1">
-                    <ContentControl Content="{Binding LegendVm}" ContentTemplateSelector="{DynamicResource LegendLoadSelector}" />
+                    <ContentControl Content="{Binding LegendVm}" ContentTemplateSelector="{DynamicResource LegendSelector}" />
                 </Border>
             </Border>
             
