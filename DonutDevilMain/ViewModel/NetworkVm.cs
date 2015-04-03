@@ -237,8 +237,8 @@ namespace DonutDevilMain.ViewModel
                                 y: x.Y,
                                 value: LegendVm.ColorFor2D
                                             (
-                                                xVal: NgIndexerSetVm.Indexer1D().ValuesToUnitRange(x.Value),
-                                                yVal: NgIndexerSetVm.Indexer1D().ValuesToUnitRange(y.Value)
+                                                xVal: NgIndexerSetVm.Indexer2Dx().ValuesToUnitRange(x.Value),
+                                                yVal: NgIndexerSetVm.Indexer2Dy().ValuesToUnitRange(y.Value)
                                             )
                             )
                    ).ToList();
@@ -276,9 +276,24 @@ namespace DonutDevilMain.ViewModel
             switch (ngDisplayIndexing.LegendMode)
             {
                 case LegendMode.OneLayer:
-                    LegendVm = _linearLegendVm;
-                    HistogramVm = _linearHistogramVm;
+                switch (NgIndexerSetVm.Indexer1D().NgIndexerType)
+                    {
+                        case NodeLib.Indexers.NgIndexerType.LinearArray2D:
+                            LegendVm = _linearLegendVm;
+                            HistogramVm = _linearHistogramVm;
+                            break;
+                        case NodeLib.Indexers.NgIndexerType.RingArray2D:
+                            LegendVm = _ringLegendVm;
+                            HistogramVm = _ringHistogramVm;
 
+                            break;
+                        default:
+                            throw new Exception("Incorrect NgIndexerType");
+                    }
+
+                    HistogramVm.MinValue = NgIndexerSetVm.Indexer1D().UnitRangeToValues(0.0f);
+                    HistogramVm.MaxValue = NgIndexerSetVm.Indexer1D().UnitRangeToValues(1.0f);
+                    HistogramVm.Title = NgIndexerSetVm.Indexer1D().Name;
                     HistogramVm.MakeHistogram
                     (
                         NgIndexerSetVm.Indexer1D().IndexingFunc(Network.NodeGroup)
@@ -286,11 +301,17 @@ namespace DonutDevilMain.ViewModel
                     );
                     HistogramVm.DrawLegend(f=>LegendVm.ColorFor1D(f));
 
-
-
                     break;
                 case LegendMode.TwoLayers:
                     HistogramVm = _torusHistogramVm;
+                    HistogramVm.TitleX = NgIndexerSetVm.Indexer2Dx().Name;
+                    HistogramVm.TitleY = NgIndexerSetVm.Indexer2Dy().Name;
+
+                    HistogramVm.MinValueX = NgIndexerSetVm.Indexer2Dx().UnitRangeToValues(0.0f);
+                    HistogramVm.MaxValueX = NgIndexerSetVm.Indexer2Dx().UnitRangeToValues(1.0f);
+                    HistogramVm.MinValueY = NgIndexerSetVm.Indexer2Dy().UnitRangeToValues(0.0f);
+                    HistogramVm.MaxValueY = NgIndexerSetVm.Indexer2Dy().UnitRangeToValues(1.0f);
+
 
                     HistogramVm.MakeHistogram
                             (
@@ -323,12 +344,12 @@ namespace DonutDevilMain.ViewModel
         }
 
         readonly ILegendVm _linearLegendVm = new LinearLegendVm();
-        readonly ILegendVm _ringLegendVm = new LinearLegendVm();
+        readonly ILegendVm _ringLegendVm = new RingLegendVm();
         ILegendVm _torusLegendVm;
 
-        readonly IHistogramVm _ringHistogramVm = new RingHistogramVm("Wubba r");
-        readonly IHistogramVm _linearHistogramVm = new LinearHistogramVm("Wubba r", -1.0, 1.0);
-        readonly IHistogramVm _torusHistogramVm = new TwoDhistogramVm("Wubba t", 512);
+        readonly IHistogramVm _ringHistogramVm = new RingHistogramVm("", 0.0, 1.0);
+        readonly IHistogramVm _linearHistogramVm = new LinearHistogramVm("", -1.0, 1.0);
+        readonly IHistogramVm _torusHistogramVm = new TwoDhistogramVm("", 512);
 
         #endregion
 

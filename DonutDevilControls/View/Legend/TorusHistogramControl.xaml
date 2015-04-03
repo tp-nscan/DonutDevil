@@ -16,17 +16,13 @@
         </Grid.RowDefinitions>
 
         <Grid Opacity="{Binding ShowHistogramSliderVm.Value, Converter={wpfUtils:MfInvnConverter}}">
-            <common:Plot2DControl 
-                DataContext="{Binding LegendVm}" />
+            
+            <common:Plot2DControl DataContext="{Binding LegendVm}" />
         </Grid>
 
         <Grid Opacity="{Binding ShowHistogramSliderVm.Value}">
-            <common:Plot2DControl
-                 
-                DataContext="{Binding HistogramVm}"/>
-
-            <!--Height = "{Binding ActualWidth, ElementName=userControl, Mode=OneWay}" 
-                Width = "{Binding ActualWidth, ElementName=userControl, Mode=OneWay}"-->
+            
+            <common:Plot2DControl DataContext="{Binding HistogramVm}"/>
         </Grid>
 
 

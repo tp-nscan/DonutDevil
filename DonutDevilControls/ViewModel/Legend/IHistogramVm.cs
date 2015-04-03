@@ -12,5 +12,17 @@ namespace DonutDevilControls.ViewModel.Legend
 
         void MakeHistogram(IEnumerable<float> values);
         void MakeHistogram(IEnumerable<float> xVals, IEnumerable<float> yVals);
+
+        string Title { get; set; }
+        string TitleX { get; set; }
+        string TitleY { get; set; }
+
+        double MinValue { get; set; }
+        double MaxValue { get; set; }
+
+        double MinValueX { get; set; }
+        double MaxValueX { get; set; }
+        double MinValueY { get; set; }
+        double MaxValueY { get; set; }
     }
 }

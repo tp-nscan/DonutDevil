@@ -19,7 +19,8 @@ namespace NodeLib.Indexers
 
     public enum NgIndexerType
     {
-        FloatArray2D,
+        LinearArray2D,
+        RingArray2D,
         FullClique
     }
 
@@ -30,6 +31,7 @@ namespace NodeLib.Indexers
         {
             return new NgIndexerImpl(
                 name: name,
+                ngIndexerType: NgIndexerType.LinearArray2D, 
                 indexingFunc:
                 n => Enumerable.Range(0, squareSize * squareSize)
                                 .Select(i => new D2Val<float>
@@ -49,6 +51,7 @@ namespace NodeLib.Indexers
         {
             return new NgIndexerImpl(
                 name: name,
+                ngIndexerType: NgIndexerType.RingArray2D, 
                 indexingFunc:
                 n => Enumerable.Range(0, squareSize*squareSize)
                                 .Select(i => new D2Val<float>
@@ -119,12 +122,15 @@ namespace NodeLib.Indexers
         private readonly int _width;
         private readonly Func<float, float> _valuesToUnitRange;
         private readonly Func<float, float> _unitRangeToValues;
-
+        private readonly NgIndexerType _ngIndexerType;
         public NgIndexerImpl(
-            string name, 
+            string name,
+            NgIndexerType ngIndexerType, 
             Func<INodeGroup, IEnumerable<D2Val<float>>> indexingFunc, 
             int height,
-            int width, Func<float, float> valuesToUnitRange, Func<float, float> unitRangeToValues)
+            int width, 
+            Func<float, float> valuesToUnitRange, 
+            Func<float, float> unitRangeToValues)
         {
             _name = name;
             _indexingFunc = indexingFunc;
@@ -132,6 +138,7 @@ namespace NodeLib.Indexers
             _width = width;
             _valuesToUnitRange = valuesToUnitRange;
             _unitRangeToValues = unitRangeToValues;
+            _ngIndexerType = ngIndexerType;
         }
 
         public string Name
@@ -141,7 +148,7 @@ namespace NodeLib.Indexers
 
         public NgIndexerType NgIndexerType
         {
-            get { return NgIndexerType.FloatArray2D; }
+            get { return _ngIndexerType; }
         }
 
         public Func<INodeGroup, IEnumerable<D2Val<float>>> IndexingFunc

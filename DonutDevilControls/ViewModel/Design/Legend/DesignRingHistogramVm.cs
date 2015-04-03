@@ -11,7 +11,7 @@ namespace DonutDevilControls.ViewModel.Design.Legend
     public class DesignRingHistogramVm : RingHistogramVm
     {
         public DesignRingHistogramVm() 
-            : base("Designer title")
+            : base("Designer title", 0.0, 1.0)
         {
             var legendColorSequence = ColorSequence.Quadrupolar(Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Functions.TrigFuncSteps / 4);
             var histogramColorSequence = Colors.White.ToUniformColorSequence(Functions.TrigFuncSteps);

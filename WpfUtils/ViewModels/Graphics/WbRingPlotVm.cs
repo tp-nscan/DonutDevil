@@ -12,7 +12,6 @@ namespace WpfUtils.ViewModels.Graphics
         private const int ImageSize = 500;
         private const float Center = ImageSize / 2;
         private const float RingWidth = 80;
-        private static readonly float[,] scaffold;
 
 
         public WbRingPlotVm(int radius)
@@ -20,13 +19,13 @@ namespace WpfUtils.ViewModels.Graphics
         {
             Radius = radius;
 
-            Coords = new int[Functions.TrigFuncSteps, 2, 2];
+            _coords = new int[Functions.TrigFuncSteps, 2, 2];
             for (var i = 0; i < Functions.TrigFuncSteps; i++)
             {
-                Coords[i, 0, 0] = (int)(Functions.CosLu(((float)i) / Functions.TrigFuncSteps) * Radius + Center);
-                Coords[i, 0, 1] = (int)(Functions.SinLu(((float)i) / Functions.TrigFuncSteps) * Radius + Center);
-                Coords[i, 1, 0] = (int)(Functions.CosLu(((float)i) / Functions.TrigFuncSteps) * (Radius + RingWidth) + Center);
-                Coords[i, 1, 1] = (int)(Functions.SinLu(((float)i) / Functions.TrigFuncSteps) * (Radius + RingWidth) + Center);
+                _coords[i, 0, 0] = (int)(Functions.CosLu(((float)i) / Functions.TrigFuncSteps) * Radius + Center);
+                _coords[i, 0, 1] = (int)(Functions.SinLu(((float)i) / Functions.TrigFuncSteps) * Radius + Center);
+                _coords[i, 1, 0] = (int)(Functions.CosLu(((float)i) / Functions.TrigFuncSteps) * (Radius + RingWidth) + Center);
+                _coords[i, 1, 1] = (int)(Functions.SinLu(((float)i) / Functions.TrigFuncSteps) * (Radius + RingWidth) + Center);
             }
         }
 
@@ -39,10 +38,10 @@ namespace WpfUtils.ViewModels.Graphics
                 gv =>
                     new PlotLine
                        (
-                            x1: Coords[gv.Index, 0, 0],
-                            y1: Coords[gv.Index, 0, 1],
-                            x2: Coords[gv.Index, 1, 0],
-                            y2: Coords[gv.Index, 1, 1],
+                            x1: _coords[gv.Index, 0, 0],
+                            y1: _coords[gv.Index, 0, 1],
+                            x2: _coords[gv.Index, 1, 0],
+                            y2: _coords[gv.Index, 1, 1],
                             color: gv.Value
                        )
                     ).ToList();
@@ -52,7 +51,7 @@ namespace WpfUtils.ViewModels.Graphics
 
         public float Radius { get; set; }
 
-        private readonly int[,,] Coords;
+        private readonly int[,,] _coords;
 
     }
 

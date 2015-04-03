@@ -3,16 +3,17 @@ using System.Reactive.Subjects;
 using System.Windows.Media;
 using DonutDevilControls.ViewModel.Common;
 using MathLib.Intervals;
+using MathLib.NumericTypes;
 using WpfUtils;
 using WpfUtils.Utils;
 
 namespace DonutDevilControls.ViewModel.Legend
 {
-    public class LinearLegendVm : NotifyPropertyChanged, ILegendVm
+    public class RingLegendVm : NotifyPropertyChanged, ILegendVm
     {
-        private const int Colorsteps = 512;
+                private const int Colorsteps = 512;
 
-        public LinearLegendVm()
+        public RingLegendVm()
         {
             _offsetSliderVm = new SliderVm(RealInterval.Make(0, 1.0), 0.02, "0.00") { Title = "Offset" };
             _offsetSliderVm.OnSliderVmChanged.Subscribe(s => _legendVmChanged.OnNext(this));
@@ -25,7 +26,7 @@ namespace DonutDevilControls.ViewModel.Legend
 
         public LegendType LegendType
         {
-            get { return LegendType.Interval; }
+            get { return LegendType.Ring; }
         }
 
         private IColorSequence _colorSequenceRing;
@@ -36,14 +37,12 @@ namespace DonutDevilControls.ViewModel.Legend
 
         public Color ColorForInterval(float val)
         {
-            //return ColorSequenceRing.ToUnitColor((val + OffsetSliderVm.Value).AsMf());
-            return ColorSequenceRing.ToUnitColor(val);
+            return ColorSequenceRing.ToUnitColor((val + OffsetSliderVm.Value).AsMf());
         }
 
         public Color ColorFor1D(float val)
         {
-            //return ColorSequenceRing.ToUnitColor((val + OffsetSliderVm.Value).AsMf());
-            return ColorSequenceRing.ToUnitColor(val);
+            return ColorSequenceRing.ToUnitColor((val + OffsetSliderVm.Value).AsMf());
         }
 
         private readonly IColorSequence _ringColorSequence;
@@ -115,6 +114,7 @@ namespace DonutDevilControls.ViewModel.Legend
                 }
             }
         }
+
 
     }
 }

@@ -15,9 +15,11 @@ namespace DonutDevilControls.ViewModel.Legend
     {
         private const int Colorsteps = 512;
 
-        public RingHistogramVm(string title)
+        public RingHistogramVm(string title, double minValue, double maxValue)
         {
             _title = title;
+            _minValue = minValue;
+            _maxValue = maxValue;
             _legendVm = new WbRingPlotVm(80);
             _histogramVm = new WbRingPlotVm(165);
 
@@ -77,6 +79,9 @@ namespace DonutDevilControls.ViewModel.Legend
         }
 
         private string _title;
+        private double _minValue;
+        private double _maxValue;
+
         public string Title
         {
             get { return _title; }
@@ -85,6 +90,54 @@ namespace DonutDevilControls.ViewModel.Legend
                 _title = value;
                 OnPropertyChanged("Title");
             }
+        }
+
+        public string TitleX
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
+        public string TitleY
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
+        public double MinValue
+        {
+            get { return _minValue; }
+            set { _minValue = value; }
+        }
+
+        public double MaxValue
+        {
+            get { return _maxValue; }
+            set { _maxValue = value; }
+        }
+
+        public double MinValueX
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
+        public double MaxValueX
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
+        public double MinValueY
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
+        public double MaxValueY
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
         }
 
         public LegendType DisplaySpaceType

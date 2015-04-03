@@ -101,6 +101,7 @@
     <Compile Include="ViewModel\Legend\LegendType.cs" />
     <Compile Include="ViewModel\Legend\IHistogramVm.cs" />
     <Compile Include="ViewModel\Legend\ILegendVm.cs" />
+    <Compile Include="ViewModel\Legend\RingLegendVm.cs" />
     <Compile Include="ViewModel\Legend\TwoDhistogramVm.cs" />
     <Compile Include="ViewModel\Legend\TwoDLegendVm.cs" />
     <Compile Include="ViewModel\Common\NodeGroupVm.cs" />

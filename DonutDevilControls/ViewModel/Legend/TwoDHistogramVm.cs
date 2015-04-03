@@ -92,6 +92,77 @@ namespace DonutDevilControls.ViewModel.Legend
             }
         }
 
+        public string TitleX
+        {
+            get { return HistogramVm.TitleX; }
+            set
+            {
+                LegendVm.TitleX = value;
+                HistogramVm.TitleX = value;
+            }
+        }
+
+        public string TitleY
+        {
+            get { return HistogramVm.TitleY; }
+            set
+            {
+                LegendVm.TitleY = value;
+                HistogramVm.TitleY = value;
+            }
+        }
+
+        public double MinValue
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
+        public double MaxValue
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
+        public double MinValueX
+        {
+            get { return LegendVm.MinValueX; }
+            set
+            {
+                LegendVm.MinValueX = value;
+                HistogramVm.MinValueX = value;
+            }
+        }
+
+        public double MaxValueX
+        {
+            get { return LegendVm.MaxValueX; }
+            set
+            {
+                LegendVm.MaxValueX = value;
+                HistogramVm.MaxValueX = value;
+            }
+        }
+
+        public double MinValueY
+        {
+            get { return LegendVm.MinValueY; }
+            set
+            {
+                LegendVm.MinValueY = value;
+                HistogramVm.MinValueY = value;
+            }
+        }
+
+        public double MaxValueY
+        {
+            get { return LegendVm.MaxValueY; }
+            set
+            {
+                LegendVm.MaxValueY = value;
+                HistogramVm.MaxValueY = value;
+            }
+        }
 
         private readonly Plot2DVm _legendVm;
         public Plot2DVm LegendVm

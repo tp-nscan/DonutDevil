@@ -73,5 +73,28 @@ namespace DonutDevilControls.ViewModel.Legend
             }
         }
 
+        private string _titleX;
+        public string TitleX
+        {
+            get { return _titleX; }
+            set
+            {
+                _titleX = value;
+                OnPropertyChanged("TitleX");
+            }
+        }
+
+        private string _titleY;
+        public string TitleY
+        {
+            get { return _titleY; }
+            set
+            {
+                _titleY = value;
+                OnPropertyChanged("TitleY");
+            }
+        }
+
+
     }
 }

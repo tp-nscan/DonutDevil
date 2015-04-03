@@ -11,18 +11,6 @@ namespace NodeLib.Updaters
         string Name { get; }
     }
 
-    public static class NgUpdater
-    {
-        public static INgUpdater ForStandardRing()
-        {
-            return NgUpdaterBuilder.ForRing()(ParamSets.StandardRingParams());
-        }
-
-        public static INgUpdater ForDoubleRing()
-        {
-            return NgUpdaterBuilder.ForDonut()(ParamSets.DoubleRingParams());
-        }
-    }
 
     public class NgUpdaterImpl : INgUpdater
     {
