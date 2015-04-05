@@ -1,4 +1,8 @@
-﻿namespace NodeLib
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace NodeLib
 {
     public interface INode
     {
@@ -11,6 +15,16 @@
         public static INode Make(float value, int groupIndex)
         {
             return new NodeImpl(value, groupIndex);
+        }
+
+        public static IEnumerable<INode> ToNodes(this IEnumerable<float> values, int startingIndex)
+        {
+            return values.Select(val => Make(val, startingIndex++));
+        }
+
+        public static IEnumerable<INode> ToNodes(this IEnumerable<double> values, int startingIndex)
+        {
+            return values.Select(val => Make((float) val, startingIndex++));
         }
     }
 

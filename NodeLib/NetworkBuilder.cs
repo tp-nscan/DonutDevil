@@ -20,7 +20,8 @@ namespace NodeLib
 
         public enum NetworkBuilderType
         {
-            Linear,
+            LinearLocal,
+            LinearClique,
             Ring,
             Donut,
             Twister,
@@ -59,7 +60,8 @@ namespace NodeLib
             {
                 get
                 {
-                    yield return Linear;
+                    yield return LinearLocal;
+                    yield return LinearClique;
                     yield return Ring;
                     yield return Donut;
                     yield return Twister;
@@ -67,14 +69,14 @@ namespace NodeLib
                 }
             }
 
-            public static INetworkBuilder Linear
+            public static INetworkBuilder LinearLocal
             {
                 get
                 {
                     return new NetworkBuilderImpl
                         (
-                            networkBuilderType: NetworkBuilderType.Linear,
-                            parameters: LinearParams,
+                            networkBuilderType: NetworkBuilderType.LinearLocal,
+                            parameters: LinearLocalParams,
                             ngInitializer: NgInitializer.KStrideSquaredUnitZ(1),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForLinear(),
                             ngIndexMaker: NgIndexer.LinearArray2DIndexMaker
@@ -82,6 +84,20 @@ namespace NodeLib
                 }
             }
 
+            public static INetworkBuilder LinearClique
+            {
+                get
+                {
+                    return new NetworkBuilderImpl
+                        (
+                            networkBuilderType: NetworkBuilderType.LinearClique,
+                            parameters: LinearCliqueParams,
+                            ngInitializer: NgInitializer.KStrideSquareCliqueUnitZ(),
+                            ngUpdaterBuilder: NgUpdaterBuilder.ForLinearClique(),
+                            ngIndexMaker: NgIndexer.Clique2DIndexMaker
+                        );
+                }
+            }
 
             public static INetworkBuilder Ring
             {
@@ -155,7 +171,7 @@ namespace NodeLib
             //    }
             //}
 
-            public static IReadOnlyDictionary<string, IParameter> LinearParams
+            public static IReadOnlyDictionary<string, IParameter> LinearLocalParams
             {
 
                 get
@@ -166,6 +182,25 @@ namespace NodeLib
                             new ParamEnum(typeof (NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType"),
                             new ParamFloat(0.0f, 0.8f, 0.1f, "StepSize"),
                             new ParamFloat(0.0f, 0.8f, 0.1f, "Noise")
+                        }.ToDictionary(v => v.Name);
+                }
+            }
+
+            public static IReadOnlyDictionary<string, IParameter> LinearCliqueParams
+            {
+
+                get
+                {
+                    return new IParameter[]
+                        {
+                            new ParamInt(4, 64, 16, "ArrayStride", false),
+                            new ParamInt(1, 640, 32, "StartSeed", false),
+                            new ParamInt(1, 640, 32, "CnxnSeed", false),
+                            new ParamInt(1, 100, 10, "MemCount", false),
+                            new ParamFloat(0.0f, 1.0f, 0.4f, "StartMag", false),
+                            new ParamFloat(0.0f, 1.0f, 0.1f, "CnxnMag", false),
+                            new ParamFloat(0.0f, 0.02f, 0.01f, "StepSize"),
+                            new ParamFloat(0.0f, 0.5f, 0.0f, "Noise")
                         }.ToDictionary(v => v.Name);
                 }
             }

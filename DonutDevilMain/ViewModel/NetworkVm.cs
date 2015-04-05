@@ -22,6 +22,7 @@ namespace DonutDevilMain.ViewModel
 {
     public class NetworkVm : NotifyPropertyChanged, IMainWindowVm
     {
+
         #region Navigation
 
         public MainWindowType MainWindowType
@@ -38,6 +39,7 @@ namespace DonutDevilMain.ViewModel
 
 
         #endregion
+
 
         public NetworkVm(INetwork network)
         {

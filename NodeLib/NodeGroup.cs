@@ -13,7 +13,8 @@ namespace NodeLib
 
     public static class NodeGroup
     {
-        public static INodeGroup RandomNodeGroupUnitR(
+        public static INodeGroup RandomNodeGroupUnitR
+        (
             int nodeCount,
             int seed
         )
@@ -29,7 +30,8 @@ namespace NodeLib
         }
 
 
-        public static INodeGroup RandomNodeGroupUnitZ(
+        public static INodeGroup RandomNodeGroupUnitZ
+        (
             int nodeCount,
             int seed
         )
@@ -43,6 +45,8 @@ namespace NodeLib
                     generation: 0
                 );
         }
+
+
         public static INodeGroup TorusPeriodicNodeGroup(int squareSize, float waviness)
         {
             var nodes = new INode[squareSize * squareSize * 2];
@@ -105,6 +109,10 @@ namespace NodeLib
             _values = new float[nodeCount];
             foreach (var node in nodes)
             {
+                //if (_values[node.GroupIndex] != 0f)
+                //{
+                //    throw new Exception("index collision in NodeGroupImpl");
+                //}
                 _values[node.GroupIndex] = node.Value;
             }
         }

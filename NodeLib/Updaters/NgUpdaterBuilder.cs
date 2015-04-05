@@ -17,10 +17,29 @@ namespace NodeLib.Updaters
                 var noise = (float)d["Noise"].Value;
 
                 return NgUpdaterLinear.Standard(
-                    name: "StandardRing",
+                    name: "StandardLinear",
                     squareSize: arrayStride,
                     stepSize: stepSize,
                     neighborhoodType: neighborhoodType,
+                    noise: noise
+                );
+            };
+        }
+
+        public static Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ForLinearClique()
+        {
+            return d =>
+            {
+                var arrayStride = (int)d["ArrayStride"].Value;
+                var memCount = (int)d["MemCount"].Value;
+                var stepSize = (float)d["StepSize"].Value;
+                var noise = (float)d["Noise"].Value;
+
+                return NgUpdaterClique.Standard(
+                    name: "StandardLinear",
+                    arrayStride: arrayStride,
+                    memCount: memCount,
+                    stepSize: stepSize,
                     noise: noise
                 );
             };

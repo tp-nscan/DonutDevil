@@ -82,6 +82,21 @@ namespace NodeLib.Indexers
             }
         }
 
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> Clique2DIndexMaker
+        {
+            get
+            {
+                return d =>
+                {
+                    var arrayStride = (int)d["ArrayStride"].Value;
+                    return new[]
+                    {
+                        MakeLinearArray2D("Values", arrayStride)
+                    };
+                };
+            }
+        }
+
         public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> RingArray2DIndexMaker
         {
             get

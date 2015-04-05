@@ -63,6 +63,7 @@
     <Compile Include="NumericTypes\Dt.cs" />
     <Compile Include="NumericTypes\EnumerableExt.cs" />
     <Compile Include="NumericTypes\FixedRange.cs" />
+    <Compile Include="ListArrayExt.cs" />
     <Compile Include="NumericTypes\ModBits\M.cs" />
     <Compile Include="NumericTypes\ModBits\M10By10.cs" />
     <Compile Include="NumericTypes\ModBits\M8By8.cs" />
