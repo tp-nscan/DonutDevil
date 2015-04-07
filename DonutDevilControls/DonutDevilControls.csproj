@@ -94,6 +94,9 @@
     <Compile Include="ViewModel\Common\NgLayerSelectorVm.cs" />
     <Compile Include="ViewModel\Common\Plot1DVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignLinearHistogramVm.cs" />
+    <Compile Include="ViewModel\Design\NgIndexer\DesignLayerCorrelationVm.cs" />
+    <Compile Include="ViewModel\NgIndexer\CorrelationVm.cs" />
+    <Compile Include="ViewModel\NgIndexer\LayerCorrelationVm.cs" />
     <Compile Include="ViewModel\Legend\LinearHistogramVm.cs" />
     <Compile Include="ViewModel\Legend\Plot2DVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignRingLegendVm.cs" />
@@ -133,6 +136,9 @@
     </Compile>
     <Compile Include="View\Common\NetworkBuilderControl.xaml.cs">
       <DependentUpon>NetworkBuilderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\NgIndexer\LayerCorrelationControl.xaml.cs">
+      <DependentUpon>LayerCorrelationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Legend\HistogramSelector.cs" />
     <Compile Include="View\Legend\LinearHistogramControl.xaml.cs">
@@ -186,6 +192,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Common\NetworkBuilderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\NgIndexer\LayerCorrelationControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

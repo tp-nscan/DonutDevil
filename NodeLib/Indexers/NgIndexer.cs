@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MathLib;
 using MathLib.NumericTypes;
 using NodeLib.Params;
 
@@ -26,6 +27,19 @@ namespace NodeLib.Indexers
 
     public static class NgIndexer
     {
+        public static Func<INgIndexer, INgIndexer, double> AbsCorrelationZFunc(INodeGroup nodeGroup)
+        {
+
+            return (m, s) =>
+            {
+                var masterList = m.IndexingFunc(nodeGroup).Select(n=>n.Value).ToList();
+                var slaveList = s.IndexingFunc(nodeGroup).Select(n => n.Value).ToList();
+
+                var correlation = masterList.Zip(slaveList, (nm, ns) => Math.Abs(nm - ns)).Sum();
+
+                return (correlation < masterList.Count) ? correlation : (masterList.Count*2) - correlation;
+            };
+        }
 
         public static INgIndexer MakeLinearArray2D(string name, int squareSize, int offset = 0)
         {
@@ -89,10 +103,19 @@ namespace NodeLib.Indexers
                 return d =>
                 {
                     var arrayStride = (int)d["ArrayStride"].Value;
-                    return new[]
+                    var memCount = (int)d["MemCount"].Value;
+                    var arraySize = arrayStride*arrayStride;
+                    var baseOffset = arraySize.ToLowerTriangularArraySize() + arraySize;
+                    var listRet = new List<INgIndexer>();
+                    listRet.Add(MakeLinearArray2D("Values", arrayStride));
+
+                    for (var i = 0; i < memCount; i++)
                     {
-                        MakeLinearArray2D("Values", arrayStride)
-                    };
+                        listRet.Add(MakeLinearArray2D("Mem_" + i, arrayStride, baseOffset + arraySize*i));
+                    }
+
+
+                    return listRet;
                 };
             }
         }

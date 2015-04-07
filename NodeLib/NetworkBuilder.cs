@@ -22,6 +22,7 @@ namespace NodeLib
         {
             LinearLocal,
             LinearClique,
+            BasinCheck,
             Ring,
             Donut,
             Twister,
@@ -62,6 +63,7 @@ namespace NodeLib
                 {
                     yield return LinearLocal;
                     yield return LinearClique;
+                    yield return BasinCheck;
                     yield return Ring;
                     yield return Donut;
                     yield return Twister;
@@ -93,6 +95,22 @@ namespace NodeLib
                             networkBuilderType: NetworkBuilderType.LinearClique,
                             parameters: LinearCliqueParams,
                             ngInitializer: NgInitializer.KStrideSquareCliqueUnitZ(),
+                            ngUpdaterBuilder: NgUpdaterBuilder.ForLinearClique(),
+                            ngIndexMaker: NgIndexer.Clique2DIndexMaker
+                        );
+                }
+            }
+
+
+            public static INetworkBuilder BasinCheck
+            {
+                get
+                {
+                    return new NetworkBuilderImpl
+                        (
+                            networkBuilderType: NetworkBuilderType.BasinCheck,
+                            parameters: BasinCheckParams,
+                            ngInitializer: NgInitializer.BasinCheck(),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForLinearClique(),
                             ngIndexMaker: NgIndexer.Clique2DIndexMaker
                         );
@@ -195,10 +213,30 @@ namespace NodeLib
                         {
                             new ParamInt(4, 64, 16, "ArrayStride", false),
                             new ParamInt(1, 640, 32, "StartSeed", false),
-                            new ParamInt(1, 640, 32, "CnxnSeed", false),
+                            new ParamInt(1, 640, 32, "MemSeed", false),
                             new ParamInt(1, 100, 10, "MemCount", false),
                             new ParamFloat(0.0f, 1.0f, 0.4f, "StartMag", false),
                             new ParamFloat(0.0f, 1.0f, 0.1f, "CnxnMag", false),
+                            new ParamFloat(0.0f, 0.02f, 0.01f, "StepSize"),
+                            new ParamFloat(0.0f, 0.5f, 0.0f, "Noise")
+                        }.ToDictionary(v => v.Name);
+                }
+            }
+
+            public static IReadOnlyDictionary<string, IParameter> BasinCheckParams
+            {
+
+                get
+                {
+                    return new IParameter[]
+                        {
+                            new ParamInt(4, 64, 32, "ArrayStride", false),
+                            new ParamInt(1, 640, 32, "StartSeed", false),
+                            new ParamInt(0, 640, 0, "StartIndex", false),
+                            new ParamInt(1, 640, 100, "StartDistance", false),
+                            new ParamInt(1, 640, 32, "MemSeed", false),
+                            new ParamInt(1, 200, 100, "MemCount", false),
+                            new ParamFloat(0.0f, 1.0f, 0.01f, "CnxnMag", false),
                             new ParamFloat(0.0f, 0.02f, 0.01f, "StepSize"),
                             new ParamFloat(0.0f, 0.5f, 0.0f, "Noise")
                         }.ToDictionary(v => v.Name);

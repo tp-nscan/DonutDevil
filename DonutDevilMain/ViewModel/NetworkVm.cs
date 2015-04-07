@@ -15,6 +15,7 @@ using DonutDevilControls.ViewModel.Params;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
 using NodeLib;
+using NodeLib.Indexers;
 using WpfUtils;
 using WpfUtils.ViewModels.Graphics;
 
@@ -44,6 +45,12 @@ namespace DonutDevilMain.ViewModel
         public NetworkVm(INetwork network)
         {
             Network = network;
+            _layerCorrelationVm = new LayerCorrelationVm(
+                    name: "Memory Correlations",
+                    master: Network.NodeGroupIndexers[0],
+                    slaves: Network.NodeGroupIndexers.Skip(1)
+                );
+
             _mainGridVm = new WbUniformGridVm(1024, 1024);
 
             _paramSetEditorVm = new ParamSetEditorVm();
@@ -74,6 +81,11 @@ namespace DonutDevilMain.ViewModel
 
         INetwork Network { get; set; }
 
+        private readonly LayerCorrelationVm _layerCorrelationVm;
+        public LayerCorrelationVm LayerCorrelationVm
+        {
+            get { return _layerCorrelationVm; }
+        }
 
         #region local vars
 
@@ -340,6 +352,7 @@ namespace DonutDevilMain.ViewModel
             }
 
             DrawMainNetwork();
+            LayerCorrelationVm.UpdateCorrelations(NgIndexer.AbsCorrelationZFunc(Network.NodeGroup));
             OnPropertyChanged("Generation");
             OnPropertyChanged("ElapsedTime");
             CommandManager.InvalidateRequerySuggested();

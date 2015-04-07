@@ -20,22 +20,15 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
+        
+        <DockPanel LastChildFill="True">
 
-        <ScrollViewer 
-            VerticalScrollBarVisibility="Visible" 
-            HorizontalScrollBarVisibility="Visible"
-            Template="{DynamicResource DonutDevilScrollViewerTemplate}">
+            <StackPanel DockPanel.Dock="Top" Orientation="Vertical" HorizontalAlignment="Center">
 
-
-
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-
-                <StackPanel Orientation="Horizontal" Margin="0,5" HorizontalAlignment="Center">
+                <StackPanel  Orientation="Horizontal" Margin="0,5" HorizontalAlignment="Center">
 
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding UpdateNetworkCommand}" Content="Run" />
-
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding StopUpdateNetworkCommand}" Content="Stop" />
-
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetNetworkCommand}" Content="Reset" />
 
                 </StackPanel>
@@ -68,37 +61,115 @@
                     </Border>
                 </Border>
 
-                <params:ParamsEditorControl DataContext="{Binding ParamSetEditorVm}"  />
-
-                <ngIndexer:NgIndexerSetControl Margin="0,10,0,0" Height="250" DataContext="{Binding NgIndexerSetVm}"/>
-
-                <ContentControl Width="600" Content="{Binding HistogramVm}" ContentTemplateSelector="{DynamicResource HistogramSelector}" />
-
-                <ContentControl Width="600" Content="{Binding LegendVm}" ContentTemplateSelector="{DynamicResource LegendSelector}" />
-
             </StackPanel>
 
 
-        </ScrollViewer>
 
-        <ScrollViewer
-            Grid.Column="2"
+            <ContentControl DockPanel.Dock="Bottom" Width="600" 
+                            Content="{Binding LegendVm}" 
+                            ContentTemplateSelector="{DynamicResource LegendSelector}" />
+
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+
+                <ScrollViewer Grid.Row="0" 
+                    VerticalScrollBarVisibility="Visible" 
+                    HorizontalScrollBarVisibility="Visible"
+                    Template="{DynamicResource DonutDevilScrollViewerTemplate}">
+
+                    <params:ParamsEditorControl DataContext="{Binding ParamSetEditorVm}"  />
+
+                </ScrollViewer>
+
+
+                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="2" ResizeBehavior="PreviousAndNext"  
+                    ResizeDirection="Rows" Background="#4CE41818"/>
+
+
+                <ScrollViewer Grid.Row="2" 
+                    VerticalScrollBarVisibility="Visible" 
+                    HorizontalScrollBarVisibility="Visible"
+                    Template="{DynamicResource DonutDevilScrollViewerTemplate}">
+
+                    <ngIndexer:NgIndexerSetControl Margin="0,10,0,0" DataContext="{Binding NgIndexerSetVm}"/>
+
+
+                </ScrollViewer>
+
+
+                <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" Height="2" ResizeBehavior="PreviousAndNext"  
+                    ResizeDirection="Rows" Background="#4CE41818"/>
+
+
+                <ScrollViewer Grid.Row="4" 
+                    VerticalScrollBarVisibility="Visible" 
+                    HorizontalScrollBarVisibility="Visible"
+                    Template="{DynamicResource DonutDevilScrollViewerTemplate}">
+
+                <ContentControl Width="600" Content="{Binding HistogramVm}" ContentTemplateSelector="{DynamicResource HistogramSelector}" />
+
+                </ScrollViewer>
+
+
+            </Grid>
+
+
+        </DockPanel>
+
+
+
+
+
+        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="2" ResizeBehavior="PreviousAndNext"  
+                    ResizeDirection="Columns" Background="#4CE41818"/>
+
+
+
+
+
+
+            <Grid  Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Viewbox Stretch="Uniform">
+
+                    <graphics:WbImage Height="300"
+                    ImageWidth="{Binding MainGridVm.ImageWidth}" 
+                    ImageHeight="{Binding MainGridVm.ImageHeight}"
+                    PlotRectangles="{Binding MainGridVm.PlotRectangles}" 
+                    />
+                    
+                </Viewbox>
+
+
+
+                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="2" ResizeBehavior="PreviousAndNext"  
+                    ResizeDirection="Rows" Background="#4CE41818"/>
+
+            <ScrollViewer Grid.Row="2"
             VerticalScrollBarVisibility="Visible" 
             HorizontalScrollBarVisibility="Visible"
             Template="{DynamicResource DonutDevilScrollViewerTemplate}">
 
+                <ngIndexer:LayerCorrelationControl Grid.Row="2" DataContext="{Binding LayerCorrelationVm}"/>
+            </ScrollViewer>
 
-            <graphics:WbImage
-                ImageWidth="{Binding MainGridVm.ImageWidth}" 
-                ImageHeight="{Binding MainGridVm.ImageHeight}"
-                PlotRectangles="{Binding MainGridVm.PlotRectangles}" 
-                />
+        </Grid>
+            
 
 
-        </ScrollViewer>
-
-        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="2" ResizeBehavior="PreviousAndNext"  
-                    ResizeDirection="Columns" Background="#4CE41818"/>
 
 
         

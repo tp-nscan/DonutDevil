@@ -34,7 +34,7 @@ namespace NodeLib
             {
                 var arrayStride = (int)d["ArrayStride"].Value;
                 var startSeed = (int)d["StartSeed"].Value;
-                var cnxnSeed = (int)d["CnxnSeed"].Value;
+                var memSeed = (int)d["MemSeed"].Value;
                 var memCount = (int)d["MemCount"].Value;
                 var startMag = (float)d["StartMag"].Value;
                 var cnxnMag = (float)d["CnxnMag"].Value;
@@ -43,14 +43,7 @@ namespace NodeLib
 
                 var startingVals = startSeed.ToRandomAbsoluteDoubles(arraySize, startMag).ToNodes(0).ToList();
 
-
-                //var cnxnVals = cnxnSeed.ToRandomAbsoluteDoubles(arraySize.ToLowerTriangularArraySize(), cnxnMag)
-                //                       .ToNodes(arraySize);
-
-                //var cnxnVals = arrayStride.ToCnxnValsOne(cnxnMag)
-                //                        .ToNodes(arraySize);
-
-                var mems = cnxnSeed.Mems(arraySize, memCount);
+                var mems = memSeed.Mems(arraySize, memCount);
                 var cnxnVals = mems.ToCnxnMatrix(cnxnMag)
                                     .ToNodes(arraySize);
 
@@ -67,6 +60,45 @@ namespace NodeLib
             };
         }
 
+
+
+        public static Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> BasinCheck()
+        {
+            return d =>
+            {
+                var arrayStride = (int)d["ArrayStride"].Value;
+                var startSeed = (int)d["StartSeed"].Value;
+                var startIndex = (int)d["StartIndex"].Value;
+                var startDistance = (int)d["StartDistance"].Value;
+                var memSeed = (int)d["MemSeed"].Value;
+                var memCount = (int)d["MemCount"].Value;
+                var cnxnMag = (float)d["CnxnMag"].Value;
+
+                var arraySize = arrayStride * arrayStride;
+
+
+                var mems = memSeed.Mems(arraySize, memCount);
+
+                var startingVals = startSeed.ToRandomPlusMinus(startDistance).Select(i=> (float)i)
+                                                   .Concat(mems[startIndex].Skip(startDistance).Select(i=>(float)i))
+                                                   .ToNodes(0)
+                                                   .ToList();
+
+                var cnxnVals = mems.ToCnxnMatrix(cnxnMag)
+                                    .ToNodes(arraySize);
+
+                var smash = mems.SelectMany(m => m.AsEnumerable()
+                                .Select(b => (float)b))
+                                .ToNodes(arraySize + arraySize.ToLowerTriangularArraySize());
+
+                return startingVals
+                        .Concat(cnxnVals)
+                        .Concat(smash)
+                        .ToNodeGroup(arraySize + arraySize.ToLowerTriangularArraySize() + arraySize * memCount, 0);
+
+
+            };
+        }
 
     }
 

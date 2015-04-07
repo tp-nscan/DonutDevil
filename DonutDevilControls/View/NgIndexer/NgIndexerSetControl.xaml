@@ -5,10 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:win="clr-namespace:DonutDevilControls.ViewModel.Design.NgIndexer"
              xmlns:ngIndexer="clr-namespace:DonutDevilControls.View.NgIndexer"
-             xmlns:wpfUtils="clr-namespace:WpfUtils;assembly=WpfUtils"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance {x:Type win:DesignNgIndexerSetVm}, IsDesignTimeCreatable=True}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="400">
 
     <UserControl.Resources>
         <DataTemplate x:Key="layerSelector">
