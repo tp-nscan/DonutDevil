@@ -16,7 +16,6 @@ namespace DonutDevilMain
             var mainWindow = new MainWindow();
 
             mainWindow.DataContext = windowVm;
-
             mainWindow.Show();
         }
     }

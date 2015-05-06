@@ -197,9 +197,9 @@ namespace NodeLib
                     return new IParameter[]
                         {
                             new ParamInt(4, 1024, 128, "ArrayStride", false),
-                            new ParamEnum(typeof (NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType"),
-                            new ParamFloat(0.0f, 0.8f, 0.1f, "StepSize"),
-                            new ParamFloat(0.0f, 0.8f, 0.1f, "Noise")
+                            new ParamEnum(typeof (NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType", true),
+                            new ParamFloat(0.0f, 0.8f, 0.1f, "StepSize", true),
+                            new ParamFloat(0.0f, 0.8f, 0.1f, "Noise", true)
                         }.ToDictionary(v => v.Name);
                 }
             }
@@ -217,8 +217,8 @@ namespace NodeLib
                             new ParamInt(1, 100, 10, "MemCount", false),
                             new ParamFloat(0.0f, 1.0f, 0.4f, "StartMag", false),
                             new ParamFloat(0.0f, 1.0f, 0.1f, "CnxnMag", false),
-                            new ParamFloat(0.0f, 0.02f, 0.01f, "StepSize"),
-                            new ParamFloat(0.0f, 0.5f, 0.0f, "Noise")
+                            new ParamFloat(0.0f, 0.02f, 0.01f, "StepSize", true),
+                            new ParamFloat(0.0f, 0.5f, 0.0f, "Noise", true)
                         }.ToDictionary(v => v.Name);
                 }
             }
@@ -237,8 +237,8 @@ namespace NodeLib
                             new ParamInt(1, 640, 32, "MemSeed", false),
                             new ParamInt(1, 200, 100, "MemCount", false),
                             new ParamFloat(0.0f, 1.0f, 0.01f, "CnxnMag", false),
-                            new ParamFloat(0.0f, 0.02f, 0.01f, "StepSize"),
-                            new ParamFloat(0.0f, 0.5f, 0.0f, "Noise")
+                            new ParamFloat(0.0f, 0.02f, 0.01f, "StepSize", true),
+                            new ParamFloat(0.0f, 0.5f, 0.0f, "Noise", true)
                         }.ToDictionary(v => v.Name);
                 }
             }
@@ -251,11 +251,11 @@ namespace NodeLib
                     return new IParameter[]
                         {
                             new ParamInt(4, 1024, 128, "ArrayStride", false),
-                            new ParamEnum(typeof (NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType"),
-                            new ParamFloat(0.0f, 0.4f, 0.1f, "StepSize"),
-                            new ParamFloat(0.0f, 0.4f, 0.1f, "Noise"),
-                            new ParamFloat(0f, 1f, 0.5f, "Tent"),
-                            new ParamFloat(0f, 1f, 0.0f, "Saw")
+                            new ParamEnum(typeof (NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType", true),
+                            new ParamFloat(0.0f, 0.4f, 0.1f, "StepSize", true),
+                            new ParamFloat(0.0f, 0.4f, 0.1f, "Noise", true),
+                            new ParamFloat(0f, 1f, 0.5f, "Tent", true),
+                            new ParamFloat(0f, 1f, 0.0f, "Saw", true)
                         }.ToDictionary(v => v.Name);
                 }
             }
@@ -267,12 +267,12 @@ namespace NodeLib
                     return new IParameter[]
                         {
                             new ParamInt(4, 1024, 128, "ArrayStride", false),
-                            new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType"),
-                            new ParamFloat(0f, 1f, 0.5f, "StepSize_X"),
-                            new ParamFloat(0f, 1f, 0.5f, "StepSize_Y"),
-                            new ParamFloat(0f, 1f, 0.0f, "Noise"),
-                            new ParamFloat(0f, 1f, 0.5f, "Tent"),
-                            new ParamFloat(0f, 1f, 0.0f, "Saw")
+                            new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType", true),
+                            new ParamFloat(0f, 1f, 0.5f, "StepSize_X", true),
+                            new ParamFloat(0f, 1f, 0.5f, "StepSize_Y", true),
+                            new ParamFloat(0f, 1f, 0.0f, "Noise", true),
+                            new ParamFloat(0f, 1f, 0.5f, "Tent", true),
+                            new ParamFloat(0f, 1f, 0.0f, "Saw", true)
                         }.ToDictionary(v => v.Name);
                 }
             }
@@ -285,13 +285,13 @@ namespace NodeLib
                     return new IParameter[]
                         {
                             new ParamInt(4, 1024, 128, "ArrayStride", false),
-                            new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType"),
-                            new ParamFloat(0f, 1f, 0.5f, "StepSize_X"),
-                            new ParamFloat(0f, 1f, 0.5f, "StepSize_Y"),
-                            new ParamFloat(0f, 1f, 0.5f, "Bias"),
-                            new ParamFloat(0f, 1f, 0.0f, "Noise"),
-                            new ParamFloat(0f, 1f, 0.5f, "Tent"),
-                            new ParamFloat(0f, 1f, 0.0f, "Saw")
+                            new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType", true),
+                            new ParamFloat(0f, 1f, 0.5f, "StepSize_X", true),
+                            new ParamFloat(0f, 1f, 0.5f, "StepSize_Y", true),
+                            new ParamFloat(0f, 1f, 0.5f, "Bias", true),
+                            new ParamFloat(0f, 1f, 0.0f, "Noise", true),
+                            new ParamFloat(0f, 1f, 0.5f, "Tent", true),
+                            new ParamFloat(0f, 1f, 0.0f, "Saw", true)
                         }.ToDictionary(v => v.Name);
                 }
             }
@@ -304,11 +304,11 @@ namespace NodeLib
                     return new IParameter[]
                         {
                             new ParamInt(4, 1024, 128, "ArrayStride", false),
-                            new ParamEnum(typeof (NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType"),
-                            new ParamFloat(0.0f, 0.4f, 0.1f, "StepSize"),
-                            new ParamFloat(0.0f, 0.4f, 0.1f, "Noise"),
-                            new ParamFloat(0f, 1f, 0.5f, "Tent"),
-                            new ParamFloat(0f, 1f, 0.0f, "Saw")
+                            new ParamEnum(typeof (NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType", true),
+                            new ParamFloat(0.0f, 0.4f, 0.1f, "StepSize", true),
+                            new ParamFloat(0.0f, 0.4f, 0.1f, "Noise", true),
+                            new ParamFloat(0f, 1f, 0.5f, "Tent", true),
+                            new ParamFloat(0f, 1f, 0.0f, "Saw", true)
                         }.ToDictionary(v => v.Name);
                 }
             }

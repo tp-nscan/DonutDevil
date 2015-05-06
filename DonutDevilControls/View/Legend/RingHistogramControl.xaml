@@ -12,12 +12,14 @@
 
     <Grid>
         <graphics:WbImage
-            ImageWidth="{Binding LegendVm.ImageWidth}" ImageHeight="{Binding LegendVm.ImageHeight}"
+            ImageWidth="{Binding LegendVm.ImageWidth}" 
+            ImageHeight="{Binding LegendVm.ImageHeight}"
             PlotLines="{Binding LegendVm.PlotLines}"
            />
 
         <graphics:WbImage
-            ImageWidth="{Binding HistogramVm.ImageWidth}" ImageHeight="{Binding HistogramVm.ImageHeight}"
+            ImageWidth="{Binding HistogramVm.ImageWidth}" 
+            ImageHeight="{Binding HistogramVm.ImageHeight}"
             PlotLines="{Binding HistogramVm.PlotLines, Delay=100}"/>
         
         <Border

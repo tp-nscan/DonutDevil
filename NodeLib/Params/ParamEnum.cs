@@ -4,7 +4,7 @@ namespace NodeLib.Params
 {
     public class ParamEnum : IParameter
     {
-        public ParamEnum(Type type, string value, string name, bool canChangeAtRunTime = true)
+        public ParamEnum(Type type, string value, string name, bool canChangeAtRunTime)
         {
             _type = type;
             _value = value;

@@ -4,7 +4,7 @@ namespace NodeLib.Params
 {
     public class ParamInt : IParameter
     {
-        public ParamInt(int min, int max, int value, string name, bool canChangeAtRunTime = true)
+        public ParamInt(int min, int max, int value, string name, bool canChangeAtRunTime)
         {
             _min = min;
             _max = max;

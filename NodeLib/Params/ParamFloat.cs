@@ -4,7 +4,7 @@ namespace NodeLib.Params
 {
     public class ParamFloat : IParameter
     {
-        public ParamFloat(float min, float max, float value, string name, bool canChangeAtRunTime = true)
+        public ParamFloat(float min, float max, float value, string name, bool canChangeAtRunTime)
         {
             _min = min;
             _max = max;

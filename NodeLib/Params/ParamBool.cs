@@ -4,7 +4,7 @@ namespace NodeLib.Params
 {
     public class ParamBool : IParameter
     {
-        public ParamBool(bool value, string name, bool canChangeAtRunTime = true)
+        public ParamBool(bool value, string name, bool canChangeAtRunTime)
         {
             _value = value;
             _name = name;

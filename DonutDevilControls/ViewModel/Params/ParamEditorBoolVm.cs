@@ -44,7 +44,7 @@ namespace DonutDevilControls.ViewModel.Params
 
         public IParameter EditedValue
         {
-            get { return new ParamBool(Value, _paramBool.Name); }
+            get { return new ParamBool(Value, _paramBool.Name, _paramBool.CanChangeAtRunTime); }
         }
     }
 }

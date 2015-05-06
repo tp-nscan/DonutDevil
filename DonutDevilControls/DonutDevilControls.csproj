@@ -91,7 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ViewModel\Common\NetworkBuilderVm.cs" />
-    <Compile Include="ViewModel\Common\NgLayerSelectorVm.cs" />
     <Compile Include="ViewModel\Common\Plot1DVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignLinearHistogramVm.cs" />
     <Compile Include="ViewModel\Design\NgIndexer\DesignLayerCorrelationVm.cs" />

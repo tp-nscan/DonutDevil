@@ -84,7 +84,7 @@ namespace DonutDevilControls.ViewModel.Params
 
         public IParameter EditedValue
         {
-            get { return new ParamInt(_paramInt.Min, _paramInt.Max, Value, _paramInt.Name); }
+            get { return new ParamInt(_paramInt.Min, _paramInt.Max, Value, _paramInt.Name, _paramInt.CanChangeAtRunTime); }
         }
     }
 }

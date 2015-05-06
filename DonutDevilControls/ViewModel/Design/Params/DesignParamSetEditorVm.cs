@@ -1,4 +1,6 @@
-﻿using DonutDevilControls.ViewModel.Params;
+﻿using System.Linq;
+using System.Collections.Generic;
+using DonutDevilControls.ViewModel.Params;
 using NodeLib;
 using NodeLib.Params;
 
@@ -6,12 +8,20 @@ namespace DonutDevilControls.ViewModel.Design.Params
 {
     public class DesignParamSetEditorVm : ParamSetEditorVm
     {
-        public DesignParamSetEditorVm()
+        public DesignParamSetEditorVm() : base(DesignParams.ToList(), true)
         {
-            ParamVms.Add(new ParamEditorFloatVm(new ParamFloat(0f, 1f, 0.1234f, "Float 1")));
-            ParamVms.Add(new ParamEditorIntVm(new ParamInt(16, 166, 33, "Int1")));
-            ParamVms.Add(new ParamEditorEnumVm(new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.DoublePerimeter.ToString(), "Enum1")));
-            ParamVms.Add(new ParamEditorBoolVm(new ParamBool(true, "Bool1")));
+        }
+
+        public static IEnumerable<IParameter> DesignParams
+        {
+            get
+            {
+                yield return new ParamFloat(0f, 1f, 0.1234f, "Float 1", true);
+                yield return new ParamInt(16, 166, 33, "Int1", true);
+                yield return new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.DoublePerimeter.ToString(), "Enum1", true);
+                yield return new ParamBool(true, "Bool1", true);
+            }
+
         }
 
     }

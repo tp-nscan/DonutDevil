@@ -23,7 +23,6 @@ namespace DonutDevilMain.ViewModel
 {
     public class NetworkVm : NotifyPropertyChanged, IMainWindowVm
     {
-
         #region Navigation
 
         public MainWindowType MainWindowType
@@ -53,13 +52,7 @@ namespace DonutDevilMain.ViewModel
 
             _mainGridVm = new WbUniformGridVm(1024, 1024);
 
-            _paramSetEditorVm = new ParamSetEditorVm();
-            _paramSetEditorVm.ParamVms.AddMany
-                (
-                    network.Parameters.Values
-                                      .Where(v=>v.CanChangeAtRunTime)
-                                      .Select(v => v.ToParamEditorVm())
-                );
+            _paramSetEditorVm = new ParamSetEditorVm(network.Parameters.Values.ToList(), false);
 
             _displayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
 
@@ -88,8 +81,6 @@ namespace DonutDevilMain.ViewModel
         }
 
         #region local vars
-
-        private readonly Stopwatch _stopwatch = new Stopwatch();
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -126,7 +117,7 @@ namespace DonutDevilMain.ViewModel
                 {
                     if (ParamSetEditorVm.IsDirty)
                     {
-                        Network = Network.UpdateParams(ParamSetEditorVm.EditedParameters.ToDictionary(p => p.Name));
+                        Network = Network.UpdateParams(ParamSetEditorVm.LatestParameters.ToDictionary(p => p.Name));
                         ParamSetEditorVm.IsDirty = false;
                     }
 
@@ -266,6 +257,7 @@ namespace DonutDevilMain.ViewModel
             get { return Network.NodeGroup.Generation; }
         }
 
+        private readonly Stopwatch _stopwatch = new Stopwatch();
         public TimeSpan ElapsedTime
         {
             get { return _stopwatch.Elapsed; }

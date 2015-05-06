@@ -23,7 +23,7 @@
         
         <DockPanel LastChildFill="True">
 
-            <StackPanel DockPanel.Dock="Top" Orientation="Vertical" HorizontalAlignment="Center">
+            <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
 
                 <StackPanel  Orientation="Horizontal" Margin="0,5" HorizontalAlignment="Center">
 
@@ -65,7 +65,7 @@
 
 
 
-            <ContentControl DockPanel.Dock="Bottom" Width="600" 
+            <ContentControl DockPanel.Dock="Bottom" 
                             Content="{Binding LegendVm}" 
                             ContentTemplateSelector="{DynamicResource LegendSelector}" />
 
@@ -85,7 +85,8 @@
                     HorizontalScrollBarVisibility="Visible"
                     Template="{DynamicResource DonutDevilScrollViewerTemplate}">
 
-                    <params:ParamsEditorControl DataContext="{Binding ParamSetEditorVm}"  />
+
+                    <params:ParamsEditorControl DataContext="{Binding ParamSetEditorVm}"/>
 
                 </ScrollViewer>
 
@@ -109,14 +110,26 @@
                     ResizeDirection="Rows" Background="#4CE41818"/>
 
 
-                <ScrollViewer Grid.Row="4" 
+                <!--<ScrollViewer Grid.Row="4" 
                     VerticalScrollBarVisibility="Visible" 
                     HorizontalScrollBarVisibility="Visible"
                     Template="{DynamicResource DonutDevilScrollViewerTemplate}">
+                    
+                 
 
-                <ContentControl Width="600" Content="{Binding HistogramVm}" ContentTemplateSelector="{DynamicResource HistogramSelector}" />
 
-                </ScrollViewer>
+                    
+
+                </ScrollViewer>-->
+
+
+                <Viewbox Grid.Row="4" >
+
+                    <ContentControl Content="{Binding HistogramVm}" 
+                                        ContentTemplateSelector="{DynamicResource HistogramSelector}" />
+
+
+                </Viewbox>
 
 
             </Grid>

@@ -2,7 +2,6 @@
 using DonutDevilControls.ViewModel.Params;
 using NodeLib;
 using NodeLib.NodeLib;
-using WpfUtils;
 
 namespace DonutDevilControls.ViewModel.Common
 {
@@ -11,7 +10,7 @@ namespace DonutDevilControls.ViewModel.Common
         public NetworkBuilderVm(INetworkBuilder networkBuilder)
         {
             _networkBuilder = networkBuilder;
-            _paramSetEditorVm.ParamVms.AddMany(networkBuilder.Parameters.Values.Select(v => v.ToParamEditorVm()));
+            _paramSetEditorVm = new ParamSetEditorVm(NetworkBuilder.Parameters.Values.ToList(), true);
         }
 
         private readonly INetworkBuilder _networkBuilder;
@@ -20,17 +19,16 @@ namespace DonutDevilControls.ViewModel.Common
             get { return _networkBuilder; }
         }
 
-        private ParamSetEditorVm _paramSetEditorVm = new ParamSetEditorVm();
+        private readonly ParamSetEditorVm _paramSetEditorVm;
         public ParamSetEditorVm ParamSetEditorVm
         {
             get { return _paramSetEditorVm; }
-            set { _paramSetEditorVm = value; }
         }
 
         public INetwork BuildNetwork()
         {
             var editedBuilder = NetworkBuilder.UpdateParams(
-                ParamSetEditorVm.EditedParameters.ToDictionary(p => p.Name));
+                ParamSetEditorVm.LatestParameters.ToDictionary(p => p.Name));
 
             return editedBuilder.ToNetwork();
         }

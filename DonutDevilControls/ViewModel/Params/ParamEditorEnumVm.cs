@@ -59,7 +59,7 @@ namespace DonutDevilControls.ViewModel.Params
 
         public IParameter EditedValue
         {
-            get { return new ParamEnum(_paramEnum.Type, Value, _paramEnum.Name); }
+            get { return new ParamEnum(_paramEnum.Type, Value, _paramEnum.Name, _paramEnum.CanChangeAtRunTime); }
         }
     }
 }
