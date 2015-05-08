@@ -58,7 +58,7 @@ namespace MathLib.NumericTypes
             return neighborhood;
         }
 
-        public static IEnumerable<D2Val<T>> ToPairStream<T>(this Neighborhood<T> neighborhood)
+        public static IEnumerable<D2Val<T>> ToElementsColumnMajor<T>(this Neighborhood<T> neighborhood)
         {
             for (var i = 0; i < neighborhood.Radius * 2 + 1; i++)
             {
@@ -74,6 +74,7 @@ namespace MathLib.NumericTypes
             return new Neighborhood<double>(radius).ApplyRadiusFunc(r=>Math.Exp(-decay*r)*Math.Cos(freq*r));
         }
     }
+
 
     public class Neighborhood<T>
     {
@@ -101,7 +102,7 @@ namespace MathLib.NumericTypes
 
         public IEnumerable<T> ToReadingOrder
         {
-            get { return _values.ToReadingOrder(); }
+            get { return _values.ToColumnMajorOrder(); }
         }
 
         private readonly T[,] _values;

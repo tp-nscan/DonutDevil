@@ -15,7 +15,7 @@ namespace MathLib.Test.NumericTypes
             var nbrhd = new Neighborhood<double>(2);
             nbrhd.ApplyRadiusFunc<double>(v=>v);
 
-            foreach (var ps in nbrhd.ToPairStream())
+            foreach (var ps in nbrhd.ToElementsColumnMajor())
             {
                 Debug.WriteLine("{0} {1} {2}", ps.X, ps.Y, ps.Value);
             }
@@ -29,7 +29,7 @@ namespace MathLib.Test.NumericTypes
             var decay = 2.2;
             var nbrhd = NeighborhoodExt.CircularGlauber(2, freq, decay);
 
-            foreach (var ps in nbrhd.ToPairStream())
+            foreach (var ps in nbrhd.ToElementsColumnMajor())
             {
                 Debug.WriteLine("{0} {1} {2}", ps.X, ps.Y, ps.Value);
             }

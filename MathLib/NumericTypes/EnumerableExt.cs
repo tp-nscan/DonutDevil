@@ -56,7 +56,7 @@ namespace MathLib.NumericTypes
             return maxVal;
         }
 
-        public static IEnumerable<T> ToReadingOrder<T>(this T[,] matrix)
+        public static IEnumerable<T> ToColumnMajorOrder<T>(this T[,] matrix)
         {
             for (var i = 0; i < matrix.GetLength(0); i++)
             {
