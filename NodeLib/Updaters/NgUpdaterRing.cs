@@ -7,6 +7,7 @@ namespace NodeLib.Updaters
 {
     public static class NgUpdaterRing
     {
+
         public static INgUpdater Standard(
                 string name,
                 int squareSize,
@@ -41,11 +42,12 @@ namespace NodeLib.Updaters
                         name: name,
                         updateFunctions: Enumerable.Range(0, squareSize * squareSize)
                                 .Select(n2 =>
-                                        PerimeterFunc
+                                        PerimeterFuncSaw
                                             (
                                                 torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, 0),
                                                 step: stepSize,
-                                                noise: noise
+                                                noise: noise,
+                                                saw: saw
                                             )
                                     )
                                 .ToList()
@@ -143,10 +145,10 @@ namespace NodeLib.Updaters
         }
 
         static Func<INodeGroup, INode[]> PerimeterFunc(
-        Torus3NbrhdIndexer torusNbrhd,
-        float step,
-        float noise
-    )
+            Torus3NbrhdIndexer torusNbrhd,
+            float step,
+            float noise
+        )
         {
             return (ng) =>
             {
@@ -160,6 +162,40 @@ namespace NodeLib.Updaters
                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.LF]) * step;
                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.LC]) * step;
                 resOne += cOne.MfDelta(ng.Values[torusNbrhd.LR]) * step;
+
+                resOne += (float)((SafeRandom.NextDouble() - 0.5f) * noise);
+
+                return new[]
+                    {
+                        Node.Make
+                            (
+                                value: (cOne + resOne).AsMf(),
+                                groupIndex: torusNbrhd.CC
+                            )
+                    };
+            };
+
+        }
+
+        static Func<INodeGroup, INode[]> PerimeterFuncSaw(
+            Torus3NbrhdIndexer torusNbrhd,
+            float saw,
+            float step,
+            float noise
+        )
+        {
+            return (ng) =>
+            {
+                var cOne = ng.Values[torusNbrhd.CC];
+
+                var resOne = cOne.MfDeltaSaw(ng.Values[torusNbrhd.UF], saw) * step;
+                resOne += cOne.MfDeltaSaw(ng.Values[torusNbrhd.UC], saw) * step;
+                resOne += cOne.MfDeltaSaw(ng.Values[torusNbrhd.UR], saw) * step;
+                resOne += cOne.MfDeltaSaw(ng.Values[torusNbrhd.CF], saw) * step;
+                resOne += cOne.MfDeltaSaw(ng.Values[torusNbrhd.CR], saw) * step;
+                resOne += cOne.MfDeltaSaw(ng.Values[torusNbrhd.LF], saw) * step;
+                resOne += cOne.MfDeltaSaw(ng.Values[torusNbrhd.LC], saw) * step;
+                resOne += cOne.MfDeltaSaw(ng.Values[torusNbrhd.LR], saw) * step;
 
                 resOne += (float)((SafeRandom.NextDouble() - 0.5f) * noise);
 

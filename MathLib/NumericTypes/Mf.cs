@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reflection.Emit;
 
 namespace MathLib.NumericTypes
 {
@@ -108,6 +110,21 @@ namespace MathLib.NumericTypes
             return - delta - saw;
         }
 
+
+        public static float Cap(this float value)
+        {
+            if (value > 1.25f)
+            {
+                return 0;
+            }
+            if (value < - 1.25f)
+            {
+                return 0;
+            }
+
+            return value;
+        }
+
         //returns the circular distance betweeh lhs and rhs.
         public static float MfAbsDeltaAsFloat(this float lhs, float rhs)
         {
@@ -174,4 +191,41 @@ namespace MathLib.NumericTypes
         }
     }
 
+
+    public static class Mf3
+    {
+        /// <summary>
+        /// returns [(+/-) x^2/d^2 , (+/-) y^2/d^2, d^2]. The returned values are pure float
+        /// </summary>
+        public static float[] VDiff(float lhsX, float lhsY, float lhsZ, float rhsX, float rhsY, float rhsZ)
+        {
+            var dX = lhsX.MfDelta(rhsX);
+            var dY = lhsY.MfDelta(rhsY);
+
+            return new[] { dX * Math.Abs(dX), dY * Math.Abs(dY), dX * dX + dY * dY };
+        }
+
+        /// <summary>
+        /// returns [(+/-) x^2/d^2 , (+/-) y^2/d^2, d^2]. The returned values are pure float
+        /// </summary>
+        public static float[] VDiffSaw(float lhsX, float lhsY, float rhsX, float rhsY, float tentMax, float saw)
+        {
+            var dX = lhsX.MfDelta(rhsX);
+            var dY = lhsY.MfDelta(rhsY);
+
+            var mag = dX * dX + dY * dY;
+
+            return new[] { dX * Math.Abs(dX), dY * Math.Abs(dY), mag.Tent(tentMax) - saw };
+        }
+        /// <summary>
+        /// returns [(+/-) x^2/d^2 , (+/-) y^2/d^2, d^2]. The returned values are pure float
+        /// </summary>
+        public static float[] VDiffTent(float lhsX, float lhsY, float rhsX, float rhsY, float tentMax)
+        {
+            var dX = lhsX.MfDelta(rhsX);
+            var dY = lhsY.MfDelta(rhsY);
+
+            return new[] { dX * Math.Abs(dX), dY * Math.Abs(dY), (dX * dX + dY * dY).Tent(tentMax) };
+        }
+    }
 }

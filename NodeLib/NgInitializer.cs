@@ -28,6 +28,34 @@ namespace NodeLib
             };
         }
 
+        public static Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> KStrideSquaredSphereZ(int k)
+        {
+            return d =>
+            {
+                var arrayStride = (int)d["ArrayStride"].Value;
+                var arraySize = arrayStride*arrayStride;
+                var randy = new Random((int)DateTime.Now.Ticks);
+                var sps = Enumerable.Range(0, arrayStride * arrayStride).Select(i => SpherePoint.Random(randy)).ToList();
+
+
+                return new NodeGroupImpl
+                    (
+                        nodes: Enumerable.Range(0, arraySize)
+                                  .Select(i => Node.Make(sps[i][0], groupIndex: i))
+                                  .Concat(
+                                      Enumerable.Range(0, arraySize)
+                                        .Select(i => Node.Make(sps[i][1], groupIndex: i + arraySize))
+                                  )
+                                  .Concat(
+                                      Enumerable.Range(0, arraySize)
+                                        .Select(i => Node.Make(sps[i][2], groupIndex: i + arraySize*2))
+                                  ),
+                        nodeCount: arraySize*3,
+                        generation: 0
+                    );
+            };
+        }
+
         public static Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> KStrideSquareCliqueUnitZ()
         {
             return d =>

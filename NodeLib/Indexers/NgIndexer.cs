@@ -150,6 +150,23 @@ namespace NodeLib.Indexers
                 };
             }
         }
+
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> SphereArray2DIndexMaker
+        {
+            get
+            {
+                return d =>
+                {
+                    var arrayStride = (int)d["ArrayStride"].Value;
+                    return new[]
+                    {
+                        MakeLinearArray2D("X values", arrayStride),
+                        MakeLinearArray2D("Y values", arrayStride, arrayStride*arrayStride),
+                        MakeLinearArray2D("Z values", arrayStride, 2 * arrayStride*arrayStride)
+                    };
+                };
+            }
+        }
     }
 
     public class NgIndexerImpl : INgIndexer

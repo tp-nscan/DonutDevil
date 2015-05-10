@@ -76,6 +76,7 @@
     <Compile Include="Intervals\RealInterval.cs" />
     <Compile Include="Intervals\RealIntervalExt.cs" />
     <Compile Include="NumericTypes\PointFlt.cs" />
+    <Compile Include="NumericTypes\SpherePoint.cs" />
     <Compile Include="NumericTypes\Torus3NbrhdIndexer.cs" />
     <Compile Include="NumericTypes\TorusNbrhdIndexer.cs" />
     <Compile Include="Perimeter.cs" />

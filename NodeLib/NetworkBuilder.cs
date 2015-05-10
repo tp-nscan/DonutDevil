@@ -20,13 +20,14 @@ namespace NodeLib
 
         public enum NetworkBuilderType
         {
+            BasinCheck,
+            Donut,
             LinearLocal,
             LinearClique,
-            BasinCheck,
             Ring,
-            Donut,
+            Sphere,
+            Spots,
             Twister,
-            Spots
         }
 
         public static class NetworkBuilder
@@ -66,6 +67,7 @@ namespace NodeLib
                     yield return BasinCheck;
                     yield return Ring;
                     yield return Donut;
+                    yield return Sphere;
                     yield return Twister;
                     yield return Spots;
                 }
@@ -128,6 +130,21 @@ namespace NodeLib
                             ngInitializer: NgInitializer.KStrideSquaredUnitR(1),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForRing(),
                             ngIndexMaker: NgIndexer.RingArray2DIndexMaker
+                        );
+                }
+            }
+
+            public static INetworkBuilder Sphere
+            {
+                get
+                {
+                    return new NetworkBuilderImpl
+                        (
+                            networkBuilderType: NetworkBuilderType.Sphere,
+                            parameters: SphereParams,
+                            ngInitializer: NgInitializer.KStrideSquaredSphereZ(1),
+                            ngUpdaterBuilder: NgUpdaterBuilder.ForSphere(),
+                            ngIndexMaker: NgIndexer.SphereArray2DIndexMaker
                         );
                 }
             }
@@ -244,6 +261,23 @@ namespace NodeLib
             }
 
             public static IReadOnlyDictionary<string, IParameter> RingParams
+            {
+
+                get
+                {
+                    return new IParameter[]
+                        {
+                            new ParamInt(4, 1024, 128, "ArrayStride", false),
+                            new ParamEnum(typeof (NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType", true),
+                            new ParamFloat(0.0f, 0.4f, 0.1f, "StepSize", true),
+                            new ParamFloat(0.0f, 0.4f, 0.1f, "Noise", true),
+                            new ParamFloat(0f, 1f, 0.5f, "Tent", true),
+                            new ParamFloat(0f, 1f, 0.0f, "Saw", true)
+                        }.ToDictionary(v => v.Name);
+                }
+            }
+
+            public static IReadOnlyDictionary<string, IParameter> SphereParams
             {
 
                 get

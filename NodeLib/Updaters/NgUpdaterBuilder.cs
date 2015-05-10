@@ -95,6 +95,30 @@ namespace NodeLib.Updaters
             };
         }
 
+        public static Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ForSphere()
+        {
+            return d =>
+            {
+                var arrayStride = (int)d["ArrayStride"].Value;
+                NeighborhoodType neighborhoodType;
+                Enum.TryParse((string)d["NeighborhoodType"].Value, out neighborhoodType);
+                var stepSize = (float)d["StepSize"].Value;
+                var noise = (float)d["Noise"].Value;
+                var tent = (float)d["Tent"].Value;
+                var saw = (float)d["Saw"].Value;
+
+                return NgUpdaterSphere.Standard(
+                    name: "StandardSphere",
+                    squareSize: arrayStride,
+                    stepSize: stepSize,
+                    neighborhoodType: neighborhoodType,
+                    noise: noise,
+                    tent: tent,
+                    saw: saw
+                );
+            };
+        }
+
 
         public static Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ForTwister()
         {
