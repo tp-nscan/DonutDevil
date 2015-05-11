@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using DonutDevilControls.ViewModel.Common;
 using MathLib.NumericTypes;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using WpfUtils;

@@ -6,7 +6,7 @@ namespace DonutDevilControls.ViewModel.Design.NgIndexer
     {
         public DesignNgIndexerVm()
             : base(
-                NodeLib.Indexers.NgIndexer.MakeRingArray2D("Design name", 5),
+                NodeLib.Indexers.D2Indexer.MakeRingArray2D("Design name", 5),
                 NgIndexerVmState.OneDSelected)
         {
             OptionsAreVisible = true;

@@ -11,22 +11,22 @@ namespace DonutDevilControls.ViewModel.Legend
     public interface INgDisplayIndexing
     {
         LegendMode LegendMode { get; }
-        INgIndexer Indexer1D { get; }
-        INgIndexer Indexer2Dx { get; }
-        INgIndexer Indexer2Dy { get; }
+        ID2Indexer<float> Indexer1D { get; }
+        ID2Indexer<float> Indexer2Dx { get; }
+        ID2Indexer<float> Indexer2Dy { get; }
     }
 
 
     public static class NgDisplayState
     {
-        public static INgDisplayIndexing RingIndexing(INgIndexer ngIndexer)
+        public static INgDisplayIndexing RingIndexing(ID2Indexer<float> id2Indexer)
         {
-            return new NgDisplayIndexingImpl(LegendMode.OneLayer, indexer1D: ngIndexer, indexer2Dx:null, indexer2Dy:null);
+            return new NgDisplayIndexingImpl(LegendMode.OneLayer, indexer1D: id2Indexer, indexer2Dx:null, indexer2Dy:null);
         }
 
-        public static INgDisplayIndexing TorusIndexing(INgIndexer ngIndexerX, INgIndexer ngIndexerY)
+        public static INgDisplayIndexing TorusIndexing(ID2Indexer<float> id2IndexerX, ID2Indexer<float> id2IndexerY)
         {
-            return new NgDisplayIndexingImpl(LegendMode.TwoLayers, indexer1D: null, indexer2Dx:ngIndexerX, indexer2Dy:ngIndexerY);
+            return new NgDisplayIndexingImpl(LegendMode.TwoLayers, indexer1D: null, indexer2Dx:id2IndexerX, indexer2Dy:id2IndexerY);
         }
 
     }
@@ -34,14 +34,14 @@ namespace DonutDevilControls.ViewModel.Legend
     public class NgDisplayIndexingImpl : INgDisplayIndexing
     {
         private readonly LegendMode _legendMode;
-        private readonly INgIndexer _indexer1D;
-        private readonly INgIndexer _indexer2Dx;
-        private readonly INgIndexer _indexer2Dy;
+        private readonly ID2Indexer<float> _indexer1D;
+        private readonly ID2Indexer<float> _indexer2Dx;
+        private readonly ID2Indexer<float> _indexer2Dy;
 
-        public NgDisplayIndexingImpl(LegendMode legendMode, 
-                                INgIndexer indexer1D, 
-                                INgIndexer indexer2Dx, 
-                                INgIndexer indexer2Dy)
+        public NgDisplayIndexingImpl(LegendMode legendMode,
+                                ID2Indexer<float> indexer1D,
+                                ID2Indexer<float> indexer2Dx,
+                                ID2Indexer<float> indexer2Dy)
         {
             _legendMode = legendMode;
             _indexer1D = indexer1D;
@@ -54,17 +54,17 @@ namespace DonutDevilControls.ViewModel.Legend
             get { return _legendMode; }
         }
 
-        public INgIndexer Indexer1D
+        public ID2Indexer<float> Indexer1D
         {
             get { return _indexer1D; }
         }
 
-        public INgIndexer Indexer2Dx
+        public ID2Indexer<float> Indexer2Dx
         {
             get { return _indexer2Dx; }
         }
 
-        public INgIndexer Indexer2Dy
+        public ID2Indexer<float> Indexer2Dy
         {
             get { return _indexer2Dy; }
         }

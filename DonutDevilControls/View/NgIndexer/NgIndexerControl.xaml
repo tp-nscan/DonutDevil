@@ -81,7 +81,7 @@
                 <TextBlock Margin="10,0"
                        Background="Transparent" 
                        FontSize="16"
-                       Foreground="Tomato" Text="{Binding NgIndexer.Name}"/>
+                       Foreground="Tomato" Text="{Binding Id2Indexer.Name}"/>
                 
                 <ToggleButton 
                     x:Name="ToggleButtonRing"

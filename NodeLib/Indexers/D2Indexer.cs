@@ -7,29 +7,27 @@ using NodeLib.Params;
 
 namespace NodeLib.Indexers
 {
-    public interface INgIndexer
+    public interface ID2Indexer<T>
     {
         string Name { get; }
-        NgIndexerType NgIndexerType { get; }
-        Func<INodeGroup, IEnumerable<D2Val<float>>> IndexingFunc { get; }
-        Func<float, float> ValuesToUnitRange { get; }
-        Func<float, float> UnitRangeToValues { get; } 
-        int Height { get; }
-        int Width { get; }
+        IndexerDataType IndexerDataType { get; }
+        D2ArrayShape D2ArrayShape { get; }
+        Func<INodeGroup, IEnumerable<D2Val<T>>> IndexingFunc { get; }
+        int Stride { get; }
     }
 
-    public enum NgIndexerType
+    public enum D2ArrayShape
     {
-        LinearArray2D,
-        RingArray2D,
-        FullClique
+        Square,
+        Tube,
+        Donut
     }
 
-    public static class NgIndexer
+
+    public static class D2Indexer
     {
-        public static Func<INgIndexer, INgIndexer, double> AbsCorrelationZFunc(INodeGroup nodeGroup)
+        public static Func<ID2Indexer<float>, ID2Indexer<float>, double> AbsCorrelationZFunc(INodeGroup nodeGroup)
         {
-
             return (m, s) =>
             {
                 var masterList = m.IndexingFunc(nodeGroup).Select(n=>n.Value).ToList();
@@ -41,11 +39,10 @@ namespace NodeLib.Indexers
             };
         }
 
-        public static INgIndexer MakeLinearArray2D(string name, int squareSize, int offset = 0)
+        public static ID2Indexer<float> MakeLinearArray2D(string name, int squareSize, int offset = 0)
         {
-            return new NgIndexerImpl(
+            return new D2IndexerBase<float>(
                 name: name,
-                ngIndexerType: NgIndexerType.LinearArray2D, 
                 indexingFunc:
                 n => Enumerable.Range(0, squareSize * squareSize)
                                 .Select(i => new D2Val<float>
@@ -54,18 +51,16 @@ namespace NodeLib.Indexers
                                         i % squareSize,
                                         n.Values[i + offset])
                                     ),
-                height: squareSize,
-                width: squareSize,
-                valuesToUnitRange: f => f/2 + 0.5f,
-                unitRangeToValues: f => f*2 - 1.0f
+                stride: squareSize,
+                indexerDataType: IndexerDataType.IntervalZ, 
+                d2ArrayShape: D2ArrayShape.Donut
             );
         }
 
-        public static INgIndexer MakeRingArray2D(string name, int squareSize, int offset=0)
+        public static ID2Indexer<float> MakeRingArray2D(string name, int squareSize, int offset = 0)
         {
-            return new NgIndexerImpl(
+            return new D2IndexerBase<float>(
                 name: name,
-                ngIndexerType: NgIndexerType.RingArray2D, 
                 indexingFunc:
                 n => Enumerable.Range(0, squareSize*squareSize)
                                 .Select(i => new D2Val<float>
@@ -74,14 +69,13 @@ namespace NodeLib.Indexers
                                         i % squareSize,
                                         n.Values[i + offset])
                                     ),
-                height: squareSize,
-                width: squareSize,
-                valuesToUnitRange: f=>f,
-                unitRangeToValues: f=>f
+                stride: squareSize,
+                indexerDataType: IndexerDataType.IntervalR,
+                d2ArrayShape: D2ArrayShape.Donut
             );
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> LinearArray2DIndexMaker
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> LinearArray2DIndexMaker
         {
             get
             {
@@ -96,7 +90,7 @@ namespace NodeLib.Indexers
             }
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> Clique2DIndexMaker
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> Clique2DIndexMaker
         {
             get
             {
@@ -106,7 +100,7 @@ namespace NodeLib.Indexers
                     var memCount = (int)d["MemCount"].Value;
                     var arraySize = arrayStride*arrayStride;
                     var baseOffset = arraySize.ToLowerTriangularArraySize() + arraySize;
-                    var listRet = new List<INgIndexer>();
+                    var listRet = new List<ID2Indexer<float>>();
                     listRet.Add(MakeLinearArray2D("Values", arrayStride));
 
                     for (var i = 0; i < memCount; i++)
@@ -120,7 +114,7 @@ namespace NodeLib.Indexers
             }
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> RingArray2DIndexMaker
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> RingArray2DIndexMaker
         {
             get
             {
@@ -135,7 +129,7 @@ namespace NodeLib.Indexers
             }
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> TorusArray2DIndexMaker
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> TorusArray2DIndexMaker
         {
             get
             {
@@ -151,7 +145,7 @@ namespace NodeLib.Indexers
             }
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> SphereArray2DIndexMaker
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> SphereArray2DIndexMaker
         {
             get
             {
@@ -169,31 +163,26 @@ namespace NodeLib.Indexers
         }
     }
 
-    public class NgIndexerImpl : INgIndexer
+
+    internal class D2IndexerBase<T> : ID2Indexer<T>
     {
         private readonly string _name;
-        private readonly Func<INodeGroup, IEnumerable<D2Val<float>>> _indexingFunc;
-        private readonly int _height;
-        private readonly int _width;
-        private readonly Func<float, float> _valuesToUnitRange;
-        private readonly Func<float, float> _unitRangeToValues;
-        private readonly NgIndexerType _ngIndexerType;
-        public NgIndexerImpl(
+        private readonly Func<INodeGroup, IEnumerable<D2Val<T>>> _indexingFunc;
+        private readonly int _stride;
+
+        public D2IndexerBase(
             string name,
-            NgIndexerType ngIndexerType, 
-            Func<INodeGroup, IEnumerable<D2Val<float>>> indexingFunc, 
-            int height,
-            int width, 
-            Func<float, float> valuesToUnitRange, 
-            Func<float, float> unitRangeToValues)
+            Func<INodeGroup, IEnumerable<D2Val<T>>> indexingFunc, 
+            int stride,
+            IndexerDataType indexerDataType, 
+            D2ArrayShape d2ArrayShape
+            )
         {
             _name = name;
             _indexingFunc = indexingFunc;
-            _height = height;
-            _width = width;
-            _valuesToUnitRange = valuesToUnitRange;
-            _unitRangeToValues = unitRangeToValues;
-            _ngIndexerType = ngIndexerType;
+            _stride = stride;
+            _indexerDataType = indexerDataType;
+            _d2ArrayShape = d2ArrayShape;
         }
 
         public string Name
@@ -201,34 +190,26 @@ namespace NodeLib.Indexers
             get { return _name; }
         }
 
-        public NgIndexerType NgIndexerType
+        private readonly IndexerDataType _indexerDataType;
+        public IndexerDataType IndexerDataType
         {
-            get { return _ngIndexerType; }
+            get { return _indexerDataType; }
         }
 
-        public Func<INodeGroup, IEnumerable<D2Val<float>>> IndexingFunc
+        private readonly D2ArrayShape _d2ArrayShape;
+        public D2ArrayShape D2ArrayShape
+        {
+            get { return _d2ArrayShape; }
+        }
+
+        public Func<INodeGroup, IEnumerable<D2Val<T>>> IndexingFunc
         {
             get { return _indexingFunc; }
         }
 
-        public Func<float, float> ValuesToUnitRange
+        public int Stride
         {
-            get { return _valuesToUnitRange; }
-        }
-
-        public Func<float, float> UnitRangeToValues
-        {
-            get { return _unitRangeToValues; }
-        }
-
-        public int Height
-        {
-            get { return _height; }
-        }
-
-        public int Width
-        {
-            get { return _width; }
+            get { return _stride; }
         }
     }
 }

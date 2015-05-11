@@ -15,7 +15,7 @@ namespace NodeLib
             Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> NgInitializer { get;}
             IReadOnlyDictionary<string, IParameter> Parameters { get; }
             Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> NgUpdaterBuilder { get; }
-            Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> NgIndexMaker { get; }
+            Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> NgIndexMaker { get; }
         }
 
         public enum NetworkBuilderType
@@ -83,7 +83,7 @@ namespace NodeLib
                             parameters: LinearLocalParams,
                             ngInitializer: NgInitializer.KStrideSquaredUnitZ(1),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForLinear(),
-                            ngIndexMaker: NgIndexer.LinearArray2DIndexMaker
+                            ngIndexMaker: D2Indexer.LinearArray2DIndexMaker
                         );
                 }
             }
@@ -98,7 +98,7 @@ namespace NodeLib
                             parameters: LinearCliqueParams,
                             ngInitializer: NgInitializer.KStrideSquareCliqueUnitZ(),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForLinearClique(),
-                            ngIndexMaker: NgIndexer.Clique2DIndexMaker
+                            ngIndexMaker: D2Indexer.Clique2DIndexMaker
                         );
                 }
             }
@@ -114,7 +114,7 @@ namespace NodeLib
                             parameters: BasinCheckParams,
                             ngInitializer: NgInitializer.BasinCheck(),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForLinearClique(),
-                            ngIndexMaker: NgIndexer.Clique2DIndexMaker
+                            ngIndexMaker: D2Indexer.Clique2DIndexMaker
                         );
                 }
             }
@@ -129,7 +129,7 @@ namespace NodeLib
                             parameters: RingParams,
                             ngInitializer: NgInitializer.KStrideSquaredUnitR(1),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForRing(),
-                            ngIndexMaker: NgIndexer.RingArray2DIndexMaker
+                            ngIndexMaker: D2Indexer.RingArray2DIndexMaker
                         );
                 }
             }
@@ -144,7 +144,7 @@ namespace NodeLib
                             parameters: SphereParams,
                             ngInitializer: NgInitializer.KStrideSquaredSphereZ(1),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForSphere(),
-                            ngIndexMaker: NgIndexer.SphereArray2DIndexMaker
+                            ngIndexMaker: D2Indexer.SphereArray2DIndexMaker
                         );
                 }
             }
@@ -159,7 +159,7 @@ namespace NodeLib
                             parameters: DonutParams,
                             ngInitializer: NgInitializer.KStrideSquaredUnitR(2),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForDonut(),
-                            ngIndexMaker: NgIndexer.TorusArray2DIndexMaker
+                            ngIndexMaker: D2Indexer.TorusArray2DIndexMaker
                         );
                 }
             }
@@ -174,7 +174,7 @@ namespace NodeLib
                             parameters: TwisterParams,
                             ngInitializer: NgInitializer.KStrideSquaredUnitR(2),
                             ngUpdaterBuilder: NgUpdaterBuilder.ForTwister(),
-                            ngIndexMaker: NgIndexer.TorusArray2DIndexMaker
+                            ngIndexMaker: D2Indexer.TorusArray2DIndexMaker
                         );
                 }
             }
@@ -356,7 +356,7 @@ namespace NodeLib
                     IReadOnlyDictionary<string, IParameter> parameters, 
                     Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> ngInitializer, 
                     Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ngUpdaterBuilder,
-                    Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> ngIndexMaker
+                    Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> ngIndexMaker
                 )
             {
                 _networkBuilderType = networkBuilderType;
@@ -390,8 +390,8 @@ namespace NodeLib
                 get { return _ngUpdaterBuilder; }
             }
 
-            private readonly Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> _ngIndexMaker;
-            public Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<INgIndexer>> NgIndexMaker
+            private readonly Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> _ngIndexMaker;
+            public Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> NgIndexMaker
             {
                 get { return _ngIndexMaker; }
             }

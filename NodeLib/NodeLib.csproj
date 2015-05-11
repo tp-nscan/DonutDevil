@@ -60,13 +60,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DualInteractionType.cs" />
+    <Compile Include="Indexers\D2IndexerImpls.cs" />
+    <Compile Include="Indexers\IndexerDataType.cs" />
     <Compile Include="NeighborhoodType.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="NetworkBuilder.cs" />
     <Compile Include="NgInitializer.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NodeGroup.cs" />
-    <Compile Include="Indexers\NgIndexer.cs" />
+    <Compile Include="Indexers\D2Indexer.cs" />
     <Compile Include="Params\ParamInt.cs" />
     <Compile Include="Updaters\NgCycler.cs" />
     <Compile Include="Updaters\NgUpdater.cs" />

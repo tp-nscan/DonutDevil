@@ -11,7 +11,7 @@ namespace NodeLib
         Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> NgUpdaterBuilder { get; }
         INgUpdater NgUpdater { get; }
         IReadOnlyDictionary<string, IParameter> Parameters { get; }
-        IReadOnlyList<INgIndexer> NodeGroupIndexers { get; }
+        IReadOnlyList<ID2Indexer<float>> NodeGroupIndexers { get; }
         INodeGroup NodeGroup { get; }
     }
 
@@ -49,7 +49,7 @@ namespace NodeLib
     {
         private readonly INgUpdater _ngUpdater;
         private readonly IReadOnlyDictionary<string, IParameter> _parameters;
-        private readonly IReadOnlyList<INgIndexer> _nodeGroupIndexers;
+        private readonly IReadOnlyList<ID2Indexer<float>> _nodeGroupIndexers;
         private readonly INodeGroup _nodeGroup;
         private readonly Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> _ngUpdaterBuilder;
 
@@ -57,8 +57,8 @@ namespace NodeLib
             (
                 INodeGroup nodeGroup,
                 IReadOnlyDictionary<string, IParameter> parameters, 
-                INgUpdater ngUpdater, 
-                IReadOnlyList<INgIndexer> nodeGroupIndexers, 
+                INgUpdater ngUpdater,
+                IReadOnlyList<ID2Indexer<float>> nodeGroupIndexers, 
                 Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ngUpdaterBuilder
             )
         {
@@ -84,7 +84,7 @@ namespace NodeLib
             get { return _parameters; }
         }
 
-        public IReadOnlyList<INgIndexer> NodeGroupIndexers
+        public IReadOnlyList<ID2Indexer<float>> NodeGroupIndexers
         {
             get { return _nodeGroupIndexers; }
         }

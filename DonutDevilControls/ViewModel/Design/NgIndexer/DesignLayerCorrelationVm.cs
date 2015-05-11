@@ -14,22 +14,22 @@ namespace DonutDevilControls.ViewModel.Design.NgIndexer
         {
         }
 
-        static IEnumerable<INgIndexer> DesignNgIndexers
+        static IEnumerable<ID2Indexer<float>> DesignNgIndexers
         {
             get
             {
 
-                yield return NodeLib.Indexers.NgIndexer.MakeRingArray2D("Mem 1", 5);
-                yield return NodeLib.Indexers.NgIndexer.MakeRingArray2D("Mem 2", 5);
-                yield return NodeLib.Indexers.NgIndexer.MakeRingArray2D("Mem 3", 5);
-                yield return NodeLib.Indexers.NgIndexer.MakeRingArray2D("Mem 4", 5);
-                yield return NodeLib.Indexers.NgIndexer.MakeRingArray2D("Mem 5", 5);
+                yield return NodeLib.Indexers.D2Indexer.MakeRingArray2D("Mem 1", 5);
+                yield return NodeLib.Indexers.D2Indexer.MakeRingArray2D("Mem 2", 5);
+                yield return NodeLib.Indexers.D2Indexer.MakeRingArray2D("Mem 3", 5);
+                yield return NodeLib.Indexers.D2Indexer.MakeRingArray2D("Mem 4", 5);
+                yield return NodeLib.Indexers.D2Indexer.MakeRingArray2D("Mem 5", 5);
             }
         }
 
-        static INgIndexer MasterIndexer
+        static ID2Indexer<float> MasterIndexer
         {
-            get { return NodeLib.Indexers.NgIndexer.MakeRingArray2D("Master", 5); }
+            get { return NodeLib.Indexers.D2Indexer.MakeRingArray2D("Master", 5); }
         }
 
         private const int NodesPerLayer = 25;

@@ -9,9 +9,9 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 {
     public class NgIndexerVm : NotifyPropertyChanged
     {
-        public NgIndexerVm(INgIndexer ngIndexer, NgIndexerVmState ngIndexerState)
+        public NgIndexerVm(ID2Indexer<float> id2Indexer, NgIndexerVmState ngIndexerState)
         {
-            _ngIndexer = ngIndexer;
+            _id2Indexer = id2Indexer;
             _ngIndexerState = ngIndexerState;
         }
 
@@ -31,10 +31,10 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             }
         }
 
-        private readonly INgIndexer _ngIndexer;
-        public INgIndexer NgIndexer
+        private readonly ID2Indexer<float> _id2Indexer;
+        public ID2Indexer<float> Id2Indexer
         {
-            get { return _ngIndexer; }
+            get { return _id2Indexer; }
         }
 
 
@@ -54,11 +54,10 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             get { return NgIndexerState == NgIndexerVmState.OneDSelected; }
             set
             {
+                var oldState = NgIndexerState;
                 NgIndexerState = (value) ? NgIndexerVmState.OneDSelected : NgIndexerVmState.OneDUnselected;
-                if (value)
-                {
-                    _ngIndexerStateChanged.OnNext(this);
-                }
+                _ngIndexerStateChanged.OnNext
+                    (new Tuple<NgIndexerVm, NgIndexerVmState>(this, oldState));
             }
         }
 
@@ -67,11 +66,10 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             get { return NgIndexerState == NgIndexerVmState.TwoDx; }
             set
             {
+                var oldState = NgIndexerState;
                 NgIndexerState = (value) ? NgIndexerVmState.TwoDx : NgIndexerVmState.TwoDUnselected;
-                if (value)
-                {
-                    _ngIndexerStateChanged.OnNext(this);
-                }
+                _ngIndexerStateChanged.OnNext
+                    (new Tuple<NgIndexerVm, NgIndexerVmState>(this, oldState));
             }
         }
 
@@ -80,17 +78,16 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             get { return NgIndexerState == NgIndexerVmState.TwoDy; }
             set
             {
+                var oldState = NgIndexerState;
                 NgIndexerState = (value) ? NgIndexerVmState.TwoDy : NgIndexerVmState.TwoDUnselected;
-                if (value)
-                {
-                    _ngIndexerStateChanged.OnNext(this);
-                }
+                _ngIndexerStateChanged.OnNext
+                    (new Tuple<NgIndexerVm, NgIndexerVmState>(this, oldState));
             }
         }
 
-        private readonly Subject<NgIndexerVm> _ngIndexerStateChanged
-            = new Subject<NgIndexerVm>();
-        public IObservable<NgIndexerVm> OnNgIndexerStateChanged
+        private readonly Subject<Tuple<NgIndexerVm, NgIndexerVmState>> _ngIndexerStateChanged
+            = new Subject<Tuple<NgIndexerVm, NgIndexerVmState>>();
+        public IObservable<Tuple<NgIndexerVm, NgIndexerVmState>> OnNgIndexerStateChanged
         {
             get { return _ngIndexerStateChanged; }
         }
@@ -98,12 +95,12 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 
     public static class NgIndexerVmEx
     {
-        public static NgIndexerVm ToNgIndexerVm(this INgIndexer ngIndexer, NgIndexerVmState ngIndexerState)
+        public static NgIndexerVm ToNgIndexerVm(this ID2Indexer<float> id2Indexer, NgIndexerVmState ngIndexerState)
         {
-            return new NgIndexerVm(ngIndexer, ngIndexerState);
+            return new NgIndexerVm(id2Indexer, ngIndexerState);
         }
 
-        public static IEnumerable<NgIndexerVm> ToNgIndexerVms(this IReadOnlyList<INgIndexer> ngIndexer)
+        public static IEnumerable<NgIndexerVm> ToNgIndexerVms(this IReadOnlyList<ID2Indexer<float>> ngIndexer)
         {
             if (ngIndexer.Any())
             {

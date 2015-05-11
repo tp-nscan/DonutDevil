@@ -9,11 +9,11 @@ namespace DonutDevilControls.ViewModel.NgIndexer
     {
         public LayerCorrelationVm(
             string name,
-            INgIndexer master, 
-            IEnumerable<INgIndexer> slaves)
+            ID2Indexer<float> master,
+            IEnumerable<ID2Indexer<float>> slaves)
         {
             _name = name;
-            _masterNgIndexer = master;
+            _masterId2Indexer = master;
             foreach (var slave in slaves)
             {
                 var slave1 = slave;
@@ -22,7 +22,7 @@ namespace DonutDevilControls.ViewModel.NgIndexer
                         new CorrelationVm
                             (
                               name: slave.Name,
-                              ngIndexer: slave1
+                              id2Indexer: slave1
                             )
                     );
             }
@@ -34,17 +34,17 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             get { return _name; }
         }
 
-        private readonly INgIndexer _masterNgIndexer;
-        public INgIndexer MasterNgIndexer
+        private readonly ID2Indexer<float> _masterId2Indexer;
+        public ID2Indexer<float> MasterId2Indexer
         {
-            get { return _masterNgIndexer; }
+            get { return _masterId2Indexer; }
         }
 
-        public void UpdateCorrelations(Func<INgIndexer, INgIndexer, double> correlationFunc)
+        public void UpdateCorrelations(Func<ID2Indexer<float>, ID2Indexer<float>, double> correlationFunc)
         {
             foreach (var correlationVm in CorrelationVms)
             {
-                correlationVm.Correlation = correlationFunc(MasterNgIndexer, correlationVm.NgIndexer);
+                correlationVm.Correlation = correlationFunc(MasterId2Indexer, correlationVm.Id2Indexer);
             }
         }
 

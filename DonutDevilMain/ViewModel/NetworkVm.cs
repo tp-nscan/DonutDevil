@@ -127,6 +127,7 @@ namespace DonutDevilMain.ViewModel
                     {
                         _isRunning = false;
                         _stopwatch.Stop();
+                        CommandManager.InvalidateRequerySuggested();
                     }
 
                     if (i % (int)DisplayFrequencySliderVm.Value == 0)
@@ -224,7 +225,7 @@ namespace DonutDevilMain.ViewModel
                                 (
                                 x: d2F.X,
                                 y: d2F.Y,
-                                value: LegendVm.ColorFor1D(NgIndexerSetVm.Indexer1D().ValuesToUnitRange(d2F.Value))
+                                value: LegendVm.ColorFor1D(NgIndexerSetVm.Indexer1D().IndexerDataType.ValuesToUnitRange()(d2F.Value))
                     )).ToList();
 
                 MainGridVm.AddValues(cellColors);
@@ -242,8 +243,8 @@ namespace DonutDevilMain.ViewModel
                                 y: x.Y,
                                 value: LegendVm.ColorFor2D
                                             (
-                                                xVal: NgIndexerSetVm.Indexer2Dx().ValuesToUnitRange(x.Value),
-                                                yVal: NgIndexerSetVm.Indexer2Dy().ValuesToUnitRange(y.Value)
+                                                xVal: NgIndexerSetVm.Indexer2Dx().IndexerDataType.ValuesToUnitRange()(x.Value),
+                                                yVal: NgIndexerSetVm.Indexer2Dy().IndexerDataType.ValuesToUnitRange()(y.Value)
                                             )
                             )
                    ).ToList();
@@ -282,28 +283,28 @@ namespace DonutDevilMain.ViewModel
             switch (ngDisplayIndexing.LegendMode)
             {
                 case LegendMode.OneLayer:
-                switch (NgIndexerSetVm.Indexer1D().NgIndexerType)
-                    {
-                        case NodeLib.Indexers.NgIndexerType.LinearArray2D:
-                            LegendVm = _linearLegendVm;
-                            HistogramVm = _linearHistogramVm;
-                            break;
-                        case NodeLib.Indexers.NgIndexerType.RingArray2D:
-                            LegendVm = _ringLegendVm;
-                            HistogramVm = _ringHistogramVm;
+                    switch (NgIndexerSetVm.Indexer1D().IndexerDataType)
+                        {
+                            case IndexerDataType.IntervalR:
+                                LegendVm = _linearLegendVm;
+                                HistogramVm = _linearHistogramVm;
+                                break;
+                            case IndexerDataType.Ring:
+                                LegendVm = _ringLegendVm;
+                                HistogramVm = _ringHistogramVm;
 
-                            break;
-                        default:
-                            throw new Exception("Incorrect NgIndexerType");
-                    }
+                                break;
+                            default:
+                                throw new Exception("Incorrect IndexerDataType");
+                        }
 
-                    HistogramVm.MinValue = NgIndexerSetVm.Indexer1D().UnitRangeToValues(0.0f);
-                    HistogramVm.MaxValue = NgIndexerSetVm.Indexer1D().UnitRangeToValues(1.0f);
+                    HistogramVm.MinValue = NgIndexerSetVm.Indexer1D().IndexerDataType.UnitRangeToValues()(0.0f);
+                    HistogramVm.MaxValue = NgIndexerSetVm.Indexer1D().IndexerDataType.UnitRangeToValues()(1.0f);
                     HistogramVm.Title = NgIndexerSetVm.Indexer1D().Name;
                     HistogramVm.MakeHistogram
                     (
                         NgIndexerSetVm.Indexer1D().IndexingFunc(Network.NodeGroup)
-                                .Select(d2V => NgIndexerSetVm.Indexer1D().ValuesToUnitRange(d2V.Value))
+                                .Select(d2V => NgIndexerSetVm.Indexer1D().IndexerDataType.ValuesToUnitRange()(d2V.Value))
                     );
                     HistogramVm.DrawLegend(f=>LegendVm.ColorFor1D(f));
 
@@ -313,19 +314,19 @@ namespace DonutDevilMain.ViewModel
                     HistogramVm.TitleX = NgIndexerSetVm.Indexer2Dx().Name;
                     HistogramVm.TitleY = NgIndexerSetVm.Indexer2Dy().Name;
 
-                    HistogramVm.MinValueX = NgIndexerSetVm.Indexer2Dx().UnitRangeToValues(0.0f);
-                    HistogramVm.MaxValueX = NgIndexerSetVm.Indexer2Dx().UnitRangeToValues(1.0f);
-                    HistogramVm.MinValueY = NgIndexerSetVm.Indexer2Dy().UnitRangeToValues(0.0f);
-                    HistogramVm.MaxValueY = NgIndexerSetVm.Indexer2Dy().UnitRangeToValues(1.0f);
+                    HistogramVm.MinValueX = NgIndexerSetVm.Indexer2Dx().IndexerDataType.UnitRangeToValues()(0.0f);
+                    HistogramVm.MaxValueX = NgIndexerSetVm.Indexer2Dx().IndexerDataType.UnitRangeToValues()(1.0f);
+                    HistogramVm.MinValueY = NgIndexerSetVm.Indexer2Dy().IndexerDataType.UnitRangeToValues()(0.0f);
+                    HistogramVm.MaxValueY = NgIndexerSetVm.Indexer2Dy().IndexerDataType.UnitRangeToValues()(1.0f);
 
 
                     HistogramVm.MakeHistogram
-                            (
-                                 xVals: NgIndexerSetVm.Indexer2Dx().IndexingFunc(Network.NodeGroup)
-                                          .Select(d2V => NgIndexerSetVm.Indexer2Dx().ValuesToUnitRange(d2V.Value)),
-                                 yVals: NgIndexerSetVm.Indexer2Dy().IndexingFunc(Network.NodeGroup)
-                                          .Select(d2V => NgIndexerSetVm.Indexer2Dy().ValuesToUnitRange(d2V.Value))
-                            );
+                        (
+                            xVals: NgIndexerSetVm.Indexer2Dx().IndexingFunc(Network.NodeGroup)
+                                    .Select(d2V => NgIndexerSetVm.Indexer2Dx().IndexerDataType.ValuesToUnitRange()(d2V.Value)),
+                            yVals: NgIndexerSetVm.Indexer2Dy().IndexingFunc(Network.NodeGroup)
+                                    .Select(d2V => NgIndexerSetVm.Indexer2Dy().IndexerDataType.ValuesToUnitRange()(d2V.Value))
+                        );
 
 
                     if (_torusLegendVm == null)
@@ -344,7 +345,7 @@ namespace DonutDevilMain.ViewModel
             }
 
             DrawMainNetwork();
-            LayerCorrelationVm.UpdateCorrelations(NgIndexer.AbsCorrelationZFunc(Network.NodeGroup));
+            LayerCorrelationVm.UpdateCorrelations(D2Indexer.AbsCorrelationZFunc(Network.NodeGroup));
             OnPropertyChanged("Generation");
             OnPropertyChanged("ElapsedTime");
             CommandManager.InvalidateRequerySuggested();

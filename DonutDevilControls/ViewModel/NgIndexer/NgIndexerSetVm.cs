@@ -11,25 +11,25 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 {
     public static class NgIndexerSetVmEx
     {
-        public static INgIndexer Indexer1D(this NgIndexerSetVm ngIndexerSetVm)
+        public static ID2Indexer<float> Indexer1D(this NgIndexerSetVm ngIndexerSetVm)
         {
             var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerVmState.OneDSelected);
 
-            return (ivm == null )? null : ivm.NgIndexer;
+            return (ID2Indexer<float>) ((ivm == null )? null : ivm.Id2Indexer);
         }
 
-        public static INgIndexer Indexer2Dx(this NgIndexerSetVm ngIndexerSetVm)
+        public static ID2Indexer<float> Indexer2Dx(this NgIndexerSetVm ngIndexerSetVm)
         {
             var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerVmState.TwoDx);
 
-            return (ivm == null) ? null : ivm.NgIndexer;
+            return (ID2Indexer<float>) ((ivm == null) ? null : ivm.Id2Indexer);
         }
 
-        public static INgIndexer Indexer2Dy(this NgIndexerSetVm ngIndexerSetVm)
+        public static ID2Indexer<float> Indexer2Dy(this NgIndexerSetVm ngIndexerSetVm)
         {
             var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerVmState.TwoDy);
 
-            return (ivm == null) ? null : ivm.NgIndexer;
+            return (ID2Indexer<float>) ((ivm == null) ? null : ivm.Id2Indexer);
         }
     }
 
@@ -60,24 +60,24 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             }
         }
 
-        void ListenToIndexerStateChanged(NgIndexerVm vm)
+        void ListenToIndexerStateChanged(Tuple<NgIndexerVm, NgIndexerVmState> tuple)
         {
             if (ReEntrant)
             {
                 return;
             }
-            switch (vm.NgIndexerState)
+            switch (tuple.Item1.NgIndexerState)
             {
                 case NgIndexerVmState.OneDSelected:
-                    AdjustStates(vm, NgIndexerVmState.OneDSelected, NgIndexerVmState.OneDUnselected);
+                    AdjustStates(tuple.Item1, NgIndexerVmState.OneDSelected, NgIndexerVmState.OneDUnselected);
                     break;
                 case NgIndexerVmState.OneDUnselected:
                     break;
                 case NgIndexerVmState.TwoDx:
-                    AdjustStates(vm, NgIndexerVmState.TwoDx, NgIndexerVmState.TwoDy);
+                    AdjustStates(tuple.Item1, NgIndexerVmState.TwoDy, NgIndexerVmState.TwoDx);
                     break;
                 case NgIndexerVmState.TwoDy:
-                    AdjustStates(vm, NgIndexerVmState.TwoDy, NgIndexerVmState.TwoDx);
+                    AdjustStates(tuple.Item1, NgIndexerVmState.TwoDx, NgIndexerVmState.TwoDy);
                     break;
                 case NgIndexerVmState.TwoDUnselected:
                     break;
@@ -98,9 +98,10 @@ namespace DonutDevilControls.ViewModel.NgIndexer
                 {
                     continue;
                 }
-                if (vm.NgIndexerState == stateFrom)
+                if (vm.NgIndexerState == stateTo)
                 {
-                    ngIndexerVm.NgIndexerState = stateTo;
+                    ngIndexerVm.NgIndexerState = stateFrom;
+                    return;
                 }
             }
 
@@ -131,7 +132,7 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             set
             {
                 LegendMode = (value) ? LegendMode.OneLayer : LegendMode.TwoLayers;
-                UpdateLayerSelectorVms();
+                ResetLayerSelectorVms();
                 NotifyNgDisplayStateChanged();
             }
         }
@@ -153,12 +154,12 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             set
             {
                 LegendMode = (value) ? LegendMode.TwoLayers : LegendMode.OneLayer;
-                UpdateLayerSelectorVms();
+                ResetLayerSelectorVms();
                 NotifyNgDisplayStateChanged();
             }
         }
 
-        void UpdateLayerSelectorVms()
+        void ResetLayerSelectorVms()
         {
             ReEntrant = true;
 
@@ -201,23 +202,23 @@ namespace DonutDevilControls.ViewModel.NgIndexer
                 if (LegendMode == LegendMode.OneLayer)
                 {
                     return NgDisplayState.RingIndexing(
-                        ngIndexer: NgIndexerFor(NgIndexerVmState.OneDSelected));
+                        id2Indexer: NgIndexerFor(NgIndexerVmState.OneDSelected));
                 }
 
                 return NgDisplayState.TorusIndexing
                     (
-                        ngIndexerX: NgIndexerFor(NgIndexerVmState.TwoDx),
-                        ngIndexerY: NgIndexerFor(NgIndexerVmState.TwoDy)
+                        id2IndexerX: NgIndexerFor(NgIndexerVmState.TwoDx),
+                        id2IndexerY: NgIndexerFor(NgIndexerVmState.TwoDy)
                     );
             }
         }
 
-        INgIndexer NgIndexerFor(NgIndexerVmState ngIndexerState)
+        ID2Indexer<float> NgIndexerFor(NgIndexerVmState ngIndexerState)
         {
             var indexerVm = NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == ngIndexerState);
             if (indexerVm != null)
             {
-                return indexerVm.NgIndexer;
+                return indexerVm.Id2Indexer;
             }
             return null;
         }
