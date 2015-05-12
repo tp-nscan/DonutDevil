@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Subjects;
@@ -9,8 +10,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
+using DonutDevilControls.ViewModel.D2Indexer;
 using DonutDevilControls.ViewModel.Legend;
-using DonutDevilControls.ViewModel.NgIndexer;
 using DonutDevilControls.ViewModel.Params;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
@@ -46,8 +47,8 @@ namespace DonutDevilMain.ViewModel
             Network = network;
             _layerCorrelationVm = new LayerCorrelationVm(
                     name: "Memory Correlations",
-                    master: Network.NodeGroupIndexers[0],
-                    slaves: Network.NodeGroupIndexers.Skip(1)
+                    master: (D2IndexerBase<float>) Network.NodeGroupIndexers[0],
+                    slaves: Network.NodeGroupIndexers.Skip(1).Select(i => (D2IndexerBase<float>)i)
                 );
 
             _mainGridVm = new WbUniformGridVm(1024, 1024);
@@ -286,6 +287,7 @@ namespace DonutDevilMain.ViewModel
                     switch (NgIndexerSetVm.Indexer1D().IndexerDataType)
                         {
                             case IndexerDataType.IntervalR:
+                            case IndexerDataType.IntervalZ:
                                 LegendVm = _linearLegendVm;
                                 HistogramVm = _linearHistogramVm;
                                 break;

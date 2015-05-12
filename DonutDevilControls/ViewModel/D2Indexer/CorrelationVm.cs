@@ -1,11 +1,11 @@
 ﻿using NodeLib.Indexers;
 using WpfUtils;
 
-namespace DonutDevilControls.ViewModel.NgIndexer
+namespace DonutDevilControls.ViewModel.D2Indexer
 {
     public class CorrelationVm : NotifyPropertyChanged
     {
-        public CorrelationVm(string name, ID2Indexer<float> id2Indexer)
+        public CorrelationVm(string name, D2IndexerBase<float> id2Indexer)
         {
             _name = name;
             _id2Indexer = id2Indexer;
@@ -28,8 +28,8 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             }
         }
 
-        private readonly ID2Indexer<float> _id2Indexer;
-        public ID2Indexer<float> Id2Indexer
+        private readonly D2IndexerBase<float> _id2Indexer;
+        public D2IndexerBase<float> Id2Indexer
         {
             get { return _id2Indexer; }
         }

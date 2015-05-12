@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using NodeLib.Indexers;
 using WpfUtils;
 
-namespace DonutDevilControls.ViewModel.NgIndexer
+namespace DonutDevilControls.ViewModel.D2Indexer
 {
     public class LayerCorrelationVm : NotifyPropertyChanged
     {
         public LayerCorrelationVm(
             string name,
-            ID2Indexer<float> master,
-            IEnumerable<ID2Indexer<float>> slaves)
+            D2IndexerBase<float> master,
+            IEnumerable<D2IndexerBase<float>> slaves)
         {
             _name = name;
             _masterId2Indexer = master;
@@ -34,13 +34,13 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             get { return _name; }
         }
 
-        private readonly ID2Indexer<float> _masterId2Indexer;
-        public ID2Indexer<float> MasterId2Indexer
+        private readonly D2IndexerBase<float> _masterId2Indexer;
+        public D2IndexerBase<float> MasterId2Indexer
         {
             get { return _masterId2Indexer; }
         }
 
-        public void UpdateCorrelations(Func<ID2Indexer<float>, ID2Indexer<float>, double> correlationFunc)
+        public void UpdateCorrelations(Func<D2IndexerBase<float>, D2IndexerBase<float>, double> correlationFunc)
         {
             foreach (var correlationVm in CorrelationVms)
             {

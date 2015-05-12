@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DonutDevilControls.ViewModel.NgIndexer;
+using DonutDevilControls.ViewModel.D2Indexer;
 using NodeLib;
 using NodeLib.Indexers;
 
@@ -14,7 +14,7 @@ namespace DonutDevilControls.ViewModel.Design.NgIndexer
         {
         }
 
-        static IEnumerable<ID2Indexer<float>> DesignNgIndexers
+        static IEnumerable<D2IndexerBase<float>> DesignNgIndexers
         {
             get
             {
@@ -27,7 +27,7 @@ namespace DonutDevilControls.ViewModel.Design.NgIndexer
             }
         }
 
-        static ID2Indexer<float> MasterIndexer
+        static D2IndexerBase<float> MasterIndexer
         {
             get { return NodeLib.Indexers.D2Indexer.MakeRingArray2D("Master", 5); }
         }

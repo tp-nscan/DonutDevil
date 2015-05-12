@@ -1,5 +1,5 @@
 ﻿
-namespace DonutDevilControls.View.NgIndexer
+namespace DonutDevilControls.View.D2Indexer
 {
     /// <summary>
     /// Interaction logic for NgLayerSetControl.xaml

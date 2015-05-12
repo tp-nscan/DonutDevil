@@ -1,7 +1,7 @@
 ﻿using System;
 using DonutDevilControls.ViewModel.Legend;
 
-namespace DonutDevilControls.ViewModel.NgIndexer
+namespace DonutDevilControls.ViewModel.D2Indexer
 {
     public enum NgIndexerVmState
     {

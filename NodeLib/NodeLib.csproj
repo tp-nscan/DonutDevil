@@ -60,8 +60,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DualInteractionType.cs" />
+    <Compile Include="Indexers\D2ArrayShape.cs" />
     <Compile Include="Indexers\D2IndexerImpls.cs" />
     <Compile Include="Indexers\IndexerDataType.cs" />
+    <Compile Include="Indexers\INgIndexer.cs" />
     <Compile Include="NeighborhoodType.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="NetworkBuilder.cs" />

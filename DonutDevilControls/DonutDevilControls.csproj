@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <ExpressionBlendVersion>12.0.41002.1</ExpressionBlendVersion>
+    <ExpressionBlendVersion>12.0.51020.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -90,12 +90,17 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ViewModel\D2Indexer\IndexerDisplayType.cs" />
+    <Compile Include="ViewModel\D2Indexer\D2IndexerSelectorVm.cs" />
+    <Compile Include="View\D2Indexer\D2IndexerSelectorControl.xaml.cs">
+      <DependentUpon>D2IndexerSelectorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\Common\NetworkBuilderVm.cs" />
     <Compile Include="ViewModel\Common\Plot1DVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignLinearHistogramVm.cs" />
     <Compile Include="ViewModel\Design\NgIndexer\DesignLayerCorrelationVm.cs" />
-    <Compile Include="ViewModel\NgIndexer\CorrelationVm.cs" />
-    <Compile Include="ViewModel\NgIndexer\LayerCorrelationVm.cs" />
+    <Compile Include="ViewModel\D2Indexer\CorrelationVm.cs" />
+    <Compile Include="ViewModel\D2Indexer\LayerCorrelationVm.cs" />
     <Compile Include="ViewModel\Legend\LinearHistogramVm.cs" />
     <Compile Include="ViewModel\Legend\Plot2DVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignRingLegendVm.cs" />
@@ -120,10 +125,10 @@
     <Compile Include="ViewModel\Design\NgIndexer\DesignNgIndexerVm.cs" />
     <Compile Include="ViewModel\Legend\LinearLegendVm.cs" />
     <Compile Include="ViewModel\Legend\LegendMode.cs" />
-    <Compile Include="ViewModel\NgIndexer\NgIndexerVmState.cs" />
+    <Compile Include="ViewModel\D2Indexer\NgIndexerVmState.cs" />
     <Compile Include="ViewModel\Design\Params\DesignParamSetEditorVm.cs" />
-    <Compile Include="ViewModel\NgIndexer\NgIndexerVm.cs" />
-    <Compile Include="ViewModel\NgIndexer\NgIndexerSetVm.cs" />
+    <Compile Include="ViewModel\D2Indexer\NgIndexerVm.cs" />
+    <Compile Include="ViewModel\D2Indexer\NgIndexerSetVm.cs" />
     <Compile Include="ViewModel\Params\IParamEditorVm.cs" />
     <Compile Include="ViewModel\Params\ParamEditorEnumVm.cs" />
     <Compile Include="ViewModel\Params\ParamEditorFloatVm.cs" />
@@ -136,7 +141,10 @@
     <Compile Include="View\Common\NetworkBuilderControl.xaml.cs">
       <DependentUpon>NetworkBuilderControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\NgIndexer\LayerCorrelationControl.xaml.cs">
+    <Compile Include="View\D2Indexer\D2IndexerSet.xaml.cs">
+      <DependentUpon>D2IndexerSet.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\D2Indexer\LayerCorrelationControl.xaml.cs">
       <DependentUpon>LayerCorrelationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Legend\HistogramSelector.cs" />
@@ -156,10 +164,10 @@
     <Compile Include="View\Legend\RingLegendControl.xaml.cs">
       <DependentUpon>RingLegendControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\NgIndexer\NgIndexerControl.xaml.cs">
+    <Compile Include="View\D2Indexer\NgIndexerControl.xaml.cs">
       <DependentUpon>NgIndexerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\NgIndexer\NgIndexerSetControl.xaml.cs">
+    <Compile Include="View\D2Indexer\NgIndexerSetControl.xaml.cs">
       <DependentUpon>NgIndexerSetControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Common\Plot1DControl.xaml.cs">
@@ -186,6 +194,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\D2Indexer\D2IndexerSelectorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Common\EnumEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -194,7 +206,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\NgIndexer\LayerCorrelationControl.xaml">
+    <Page Include="View\D2Indexer\D2IndexerSet.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\D2Indexer\IndexerViewSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\D2Indexer\LayerCorrelationControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -226,11 +246,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\NgIndexer\NgIndexerControl.xaml">
+    <Page Include="View\D2Indexer\NgIndexerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\NgIndexer\NgIndexerSetControl.xaml">
+    <Page Include="View\D2Indexer\NgIndexerSetControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

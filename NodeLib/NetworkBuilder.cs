@@ -15,7 +15,7 @@ namespace NodeLib
             Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> NgInitializer { get;}
             IReadOnlyDictionary<string, IParameter> Parameters { get; }
             Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> NgUpdaterBuilder { get; }
-            Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> NgIndexMaker { get; }
+            Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer>> NgIndexMaker { get; }
         }
 
         public enum NetworkBuilderType
@@ -356,7 +356,7 @@ namespace NodeLib
                     IReadOnlyDictionary<string, IParameter> parameters, 
                     Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> ngInitializer, 
                     Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ngUpdaterBuilder,
-                    Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> ngIndexMaker
+                    Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer>> ngIndexMaker
                 )
             {
                 _networkBuilderType = networkBuilderType;
@@ -390,8 +390,8 @@ namespace NodeLib
                 get { return _ngUpdaterBuilder; }
             }
 
-            private readonly Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> _ngIndexMaker;
-            public Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> NgIndexMaker
+            private readonly Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer>> _ngIndexMaker;
+            public Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer>> NgIndexMaker
             {
                 get { return _ngIndexMaker; }
             }

@@ -7,29 +7,29 @@ using DonutDevilControls.ViewModel.Legend;
 using NodeLib.Indexers;
 using WpfUtils;
 
-namespace DonutDevilControls.ViewModel.NgIndexer
+namespace DonutDevilControls.ViewModel.D2Indexer
 {
     public static class NgIndexerSetVmEx
     {
-        public static ID2Indexer<float> Indexer1D(this NgIndexerSetVm ngIndexerSetVm)
+        public static D2IndexerBase<float> Indexer1D(this NgIndexerSetVm ngIndexerSetVm)
         {
             var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerVmState.OneDSelected);
 
-            return (ID2Indexer<float>) ((ivm == null )? null : ivm.Id2Indexer);
+            return (D2IndexerBase<float>)((ivm == null) ? null : ivm.Id2Indexer);
         }
 
-        public static ID2Indexer<float> Indexer2Dx(this NgIndexerSetVm ngIndexerSetVm)
+        public static D2IndexerBase<float> Indexer2Dx(this NgIndexerSetVm ngIndexerSetVm)
         {
             var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerVmState.TwoDx);
 
-            return (ID2Indexer<float>) ((ivm == null) ? null : ivm.Id2Indexer);
+            return (D2IndexerBase<float>)((ivm == null) ? null : ivm.Id2Indexer);
         }
 
-        public static ID2Indexer<float> Indexer2Dy(this NgIndexerSetVm ngIndexerSetVm)
+        public static D2IndexerBase<float> Indexer2Dy(this NgIndexerSetVm ngIndexerSetVm)
         {
             var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerVmState.TwoDy);
 
-            return (ID2Indexer<float>) ((ivm == null) ? null : ivm.Id2Indexer);
+            return (D2IndexerBase<float>)((ivm == null) ? null : ivm.Id2Indexer);
         }
     }
 
@@ -213,7 +213,7 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             }
         }
 
-        ID2Indexer<float> NgIndexerFor(NgIndexerVmState ngIndexerState)
+        ID2Indexer NgIndexerFor(NgIndexerVmState ngIndexerState)
         {
             var indexerVm = NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == ngIndexerState);
             if (indexerVm != null)

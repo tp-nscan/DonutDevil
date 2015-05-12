@@ -5,11 +5,11 @@ using System.Reactive.Subjects;
 using NodeLib.Indexers;
 using WpfUtils;
 
-namespace DonutDevilControls.ViewModel.NgIndexer
+namespace DonutDevilControls.ViewModel.D2Indexer
 {
     public class NgIndexerVm : NotifyPropertyChanged
     {
-        public NgIndexerVm(ID2Indexer<float> id2Indexer, NgIndexerVmState ngIndexerState)
+        public NgIndexerVm(ID2Indexer id2Indexer, NgIndexerVmState ngIndexerState)
         {
             _id2Indexer = id2Indexer;
             _ngIndexerState = ngIndexerState;
@@ -31,8 +31,8 @@ namespace DonutDevilControls.ViewModel.NgIndexer
             }
         }
 
-        private readonly ID2Indexer<float> _id2Indexer;
-        public ID2Indexer<float> Id2Indexer
+        private readonly ID2Indexer _id2Indexer;
+        public ID2Indexer Id2Indexer
         {
             get { return _id2Indexer; }
         }
@@ -95,12 +95,12 @@ namespace DonutDevilControls.ViewModel.NgIndexer
 
     public static class NgIndexerVmEx
     {
-        public static NgIndexerVm ToNgIndexerVm(this ID2Indexer<float> id2Indexer, NgIndexerVmState ngIndexerState)
+        public static NgIndexerVm ToNgIndexerVm(this ID2Indexer id2Indexer, NgIndexerVmState ngIndexerState)
         {
             return new NgIndexerVm(id2Indexer, ngIndexerState);
         }
 
-        public static IEnumerable<NgIndexerVm> ToNgIndexerVms(this IReadOnlyList<ID2Indexer<float>> ngIndexer)
+        public static IEnumerable<NgIndexerVm> ToNgIndexerVms(this IReadOnlyList<ID2Indexer> ngIndexer)
         {
             if (ngIndexer.Any())
             {

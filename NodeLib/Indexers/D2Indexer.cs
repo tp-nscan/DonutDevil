@@ -7,26 +7,19 @@ using NodeLib.Params;
 
 namespace NodeLib.Indexers
 {
-    public interface ID2Indexer<T>
+    public interface ID2Indexer
     {
         string Name { get; }
         IndexerDataType IndexerDataType { get; }
         D2ArrayShape D2ArrayShape { get; }
-        Func<INodeGroup, IEnumerable<D2Val<T>>> IndexingFunc { get; }
+        //Func<INodeGroup, IEnumerable<D2Val<T>>> IndexingFunc { get; }
         int Stride { get; }
-    }
-
-    public enum D2ArrayShape
-    {
-        Square,
-        Tube,
-        Donut
     }
 
 
     public static class D2Indexer
     {
-        public static Func<ID2Indexer<float>, ID2Indexer<float>, double> AbsCorrelationZFunc(INodeGroup nodeGroup)
+        public static Func<D2IndexerBase<float>, D2IndexerBase<float>, double> AbsCorrelationZFunc(INodeGroup nodeGroup)
         {
             return (m, s) =>
             {
@@ -39,7 +32,7 @@ namespace NodeLib.Indexers
             };
         }
 
-        public static ID2Indexer<float> MakeLinearArray2D(string name, int squareSize, int offset = 0)
+        public static ID2Indexer MakeLinearArray2D(string name, int squareSize, int offset = 0)
         {
             return new D2IndexerBase<float>(
                 name: name,
@@ -57,7 +50,7 @@ namespace NodeLib.Indexers
             );
         }
 
-        public static ID2Indexer<float> MakeRingArray2D(string name, int squareSize, int offset = 0)
+        public static D2IndexerBase<float> MakeRingArray2D(string name, int squareSize, int offset = 0)
         {
             return new D2IndexerBase<float>(
                 name: name,
@@ -75,7 +68,7 @@ namespace NodeLib.Indexers
             );
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> LinearArray2DIndexMaker
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer>> LinearArray2DIndexMaker
         {
             get
             {
@@ -90,7 +83,7 @@ namespace NodeLib.Indexers
             }
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> Clique2DIndexMaker
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer>> Clique2DIndexMaker
         {
             get
             {
@@ -100,7 +93,7 @@ namespace NodeLib.Indexers
                     var memCount = (int)d["MemCount"].Value;
                     var arraySize = arrayStride*arrayStride;
                     var baseOffset = arraySize.ToLowerTriangularArraySize() + arraySize;
-                    var listRet = new List<ID2Indexer<float>>();
+                    var listRet = new List<ID2Indexer>();
                     listRet.Add(MakeLinearArray2D("Values", arrayStride));
 
                     for (var i = 0; i < memCount; i++)
@@ -114,7 +107,7 @@ namespace NodeLib.Indexers
             }
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> RingArray2DIndexMaker
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer>> RingArray2DIndexMaker
         {
             get
             {
@@ -129,7 +122,7 @@ namespace NodeLib.Indexers
             }
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> TorusArray2DIndexMaker
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer>> TorusArray2DIndexMaker
         {
             get
             {
@@ -145,7 +138,7 @@ namespace NodeLib.Indexers
             }
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer<float>>> SphereArray2DIndexMaker
+        public static Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer>> SphereArray2DIndexMaker
         {
             get
             {
@@ -164,7 +157,7 @@ namespace NodeLib.Indexers
     }
 
 
-    internal class D2IndexerBase<T> : ID2Indexer<T>
+    public class D2IndexerBase<T> : ID2Indexer
     {
         private readonly string _name;
         private readonly Func<INodeGroup, IEnumerable<D2Val<T>>> _indexingFunc;

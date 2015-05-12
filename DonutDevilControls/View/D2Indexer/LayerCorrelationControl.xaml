@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="DonutDevilControls.View.NgIndexer.LayerCorrelationControl"
+﻿<UserControl x:Class="DonutDevilControls.View.D2Indexer.LayerCorrelationControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

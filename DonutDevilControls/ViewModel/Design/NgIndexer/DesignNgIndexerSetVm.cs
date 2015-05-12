@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DonutDevilControls.ViewModel.NgIndexer;
+using DonutDevilControls.ViewModel.D2Indexer;
 
 namespace DonutDevilControls.ViewModel.Design.NgIndexer
 {

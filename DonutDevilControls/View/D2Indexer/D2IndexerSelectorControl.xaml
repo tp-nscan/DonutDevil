@@ -1,0 +1,21 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="DonutDevilControls.View.D2Indexer.D2IndexerSelectorControl"
+	x:Name="UserControl"
+	d:DesignWidth="265.54" d:DesignHeight="47.92">
+
+	<Grid x:Name="LayoutRoot">
+		<GroupBox Foreground="Wheat" Header="Display data type">
+			<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+				<RadioButton IsChecked="{Binding Is1D}" Foreground="Wheat"  Margin="35,5" Content="1 Layer" />
+				<RadioButton IsChecked="{Binding Is2D}" 
+					IsEnabled="{Binding TorusIsEnabled}"
+					Foreground="Wheat"  Margin="35,5" Content="2 Layer" />
+			</StackPanel>
+		</GroupBox>
+	</Grid>
+</UserControl>
