@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LibNode;
 using MathLib;
 using MathLib.NumericTypes;
 using NodeLib.Params;
@@ -12,14 +13,13 @@ namespace NodeLib.Indexers
         string Name { get; }
         IndexerDataType IndexerDataType { get; }
         D2ArrayShape D2ArrayShape { get; }
-        //Func<INodeGroup, IEnumerable<D2Val<T>>> IndexingFunc { get; }
         int Stride { get; }
     }
 
 
     public static class D2Indexer
     {
-        public static Func<D2IndexerBase<float>, D2IndexerBase<float>, double> AbsCorrelationZFunc(INodeGroup nodeGroup)
+        public static Func<D2IndexerBase<float>, D2IndexerBase<float>, double> AbsCorrelationZFunc(NodeGroup nodeGroup)
         {
             return (m, s) =>
             {
@@ -160,12 +160,12 @@ namespace NodeLib.Indexers
     public class D2IndexerBase<T> : ID2Indexer
     {
         private readonly string _name;
-        private readonly Func<INodeGroup, IEnumerable<D2Val<T>>> _indexingFunc;
+        private readonly Func<NodeGroup, IEnumerable<D2Val<T>>> _indexingFunc;
         private readonly int _stride;
 
         public D2IndexerBase(
             string name,
-            Func<INodeGroup, IEnumerable<D2Val<T>>> indexingFunc, 
+            Func<NodeGroup, IEnumerable<D2Val<T>>> indexingFunc, 
             int stride,
             IndexerDataType indexerDataType, 
             D2ArrayShape d2ArrayShape
@@ -195,7 +195,7 @@ namespace NodeLib.Indexers
             get { return _d2ArrayShape; }
         }
 
-        public Func<INodeGroup, IEnumerable<D2Val<T>>> IndexingFunc
+        public Func<NodeGroup, IEnumerable<D2Val<T>>> IndexingFunc
         {
             get { return _indexingFunc; }
         }

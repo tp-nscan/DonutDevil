@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NodeLib.Common;
+using LibNode;
 
-namespace NodeLib.Updaters
+namespace NodeLib.NgUpdaters
 {
     public interface INgUpdater
     {
-        INodeGroup Update(INodeGroup nodeGroup);
+        NodeGroup Update(NodeGroup nodeGroup);
         string Name { get; }
     }
 
@@ -15,19 +17,19 @@ namespace NodeLib.Updaters
     {
         public NgUpdaterImpl(
             string name,
-            IEnumerable<Func<INodeGroup, INode[]>> updateFunctions
+            IEnumerable<Func<NodeGroup, Node[]>> updateFunctions
         )
         {
             _name = name;
             _updateFunctions = updateFunctions.ToArray();
         }
 
-        public INodeGroup Update(INodeGroup nodeGroup)
+        public NodeGroup Update(NodeGroup nodeGroup)
         {
             return _updateFunctions
                         .AsParallel()
                         .SelectMany(n => n(nodeGroup))
-                        .ToNodeGroup(nodeGroup.Values.Count, nodeGroup.Generation + 1);
+                        .ToNodeGroup(nodeGroup.Values.Length);
         }
 
         private readonly string _name;
@@ -36,6 +38,6 @@ namespace NodeLib.Updaters
             get { return _name; }
         }
 
-        private readonly Func<INodeGroup, INode[]>[] _updateFunctions;
+        private readonly Func<NodeGroup, Node[]>[] _updateFunctions;
     }
 }

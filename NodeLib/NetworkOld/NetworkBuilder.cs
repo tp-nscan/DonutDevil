@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LibNode;
+using NodeLib.Common;
 using NodeLib.Indexers;
+using NodeLib.NgUpdaters;
 using NodeLib.Params;
-using NodeLib.Updaters;
 
-namespace NodeLib
+namespace NodeLib.NetworkOld
 {
     namespace NodeLib
     {
         public interface INetworkBuilder
         {
             NetworkBuilderType NetworkBuilderType { get; }
-            Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> NgInitializer { get;}
+            Func<IReadOnlyDictionary<string, IParameter>, NodeGroup> NgInitializer { get;}
             IReadOnlyDictionary<string, IParameter> Parameters { get; }
             Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> NgUpdaterBuilder { get; }
             Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer>> NgIndexMaker { get; }
@@ -47,14 +49,14 @@ namespace NodeLib
 
             public static INetwork ToNetwork(this INetworkBuilder networkBuilder)
             {
-                var arrayStride = (int)networkBuilder.Parameters["ArrayStride"].Value;
                 return new NetworkImpl
                 (
                     nodeGroup: networkBuilder.NgInitializer(networkBuilder.Parameters),
                     parameters: networkBuilder.Parameters,
                     ngUpdater: networkBuilder.NgUpdaterBuilder(networkBuilder.Parameters),
                     nodeGroupIndexers: networkBuilder.NgIndexMaker(networkBuilder.Parameters),
-                    ngUpdaterBuilder: networkBuilder.NgUpdaterBuilder
+                    ngUpdaterBuilder: networkBuilder.NgUpdaterBuilder,
+                    generation: 0
                 );
             }
 
@@ -354,7 +356,7 @@ namespace NodeLib
                 (
                     NetworkBuilderType networkBuilderType, 
                     IReadOnlyDictionary<string, IParameter> parameters, 
-                    Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> ngInitializer, 
+                    Func<IReadOnlyDictionary<string, IParameter>, NodeGroup> ngInitializer, 
                     Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ngUpdaterBuilder,
                     Func<IReadOnlyDictionary<string, IParameter>, IReadOnlyList<ID2Indexer>> ngIndexMaker
                 )
@@ -372,8 +374,8 @@ namespace NodeLib
                 get { return _networkBuilderType; }
             }
 
-            private readonly Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> _ngInitializer;
-            public Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> NgInitializer
+            private readonly Func<IReadOnlyDictionary<string, IParameter>, NodeGroup> _ngInitializer;
+            public Func<IReadOnlyDictionary<string, IParameter>, NodeGroup> NgInitializer
             {
                 get { return _ngInitializer; }
             }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using LibNode;
 using MathLib;
 using MathLib.NumericTypes;
+using NodeLib.Common;
 
-namespace NodeLib.Updaters
+namespace NodeLib.NgUpdaters
 {
     public static class NgUpdaterRing
     {
@@ -92,7 +94,7 @@ namespace NodeLib.Updaters
 
 
 
-        private static Func<INodeGroup, INode[]> PeriodicFunc(
+        private static Func<NodeGroup, Node[]> PeriodicFunc(
                 Torus3NbrhdIndexer torusNbrhd,
                 float temporal,
                 float spatial
@@ -103,9 +105,9 @@ namespace NodeLib.Updaters
             {
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
-                                value: (spv + ng.Generation * temporal).AsMf(),
+                                value: (spv + 5 * temporal).AsMf(),
                                 groupIndex: torusNbrhd.CC
                             )
                     };
@@ -115,7 +117,7 @@ namespace NodeLib.Updaters
 
 
 
-        static Func<INodeGroup, INode[]> SidesFunc(
+        static Func<NodeGroup, Node[]> SidesFunc(
                 Torus3NbrhdIndexer torusNbrhd,
                 float step,
                 float noise
@@ -134,7 +136,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhd.CC
@@ -144,7 +146,7 @@ namespace NodeLib.Updaters
 
         }
 
-        static Func<INodeGroup, INode[]> PerimeterFunc(
+        static Func<NodeGroup, Node[]> PerimeterFunc(
             Torus3NbrhdIndexer torusNbrhd,
             float step,
             float noise
@@ -167,7 +169,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhd.CC
@@ -177,7 +179,7 @@ namespace NodeLib.Updaters
 
         }
 
-        static Func<INodeGroup, INode[]> PerimeterFuncSaw(
+        static Func<NodeGroup, Node[]> PerimeterFuncSaw(
             Torus3NbrhdIndexer torusNbrhd,
             float saw,
             float step,
@@ -201,7 +203,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhd.CC
@@ -213,7 +215,7 @@ namespace NodeLib.Updaters
 
 
 
-        static Func<INodeGroup, INode[]> StarFunc(
+        static Func<NodeGroup, Node[]> StarFunc(
             Torus3NbrhdIndexer torusNbrhd,
             float step,
             float noise
@@ -241,7 +243,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhd.CC
@@ -253,7 +255,7 @@ namespace NodeLib.Updaters
 
 
 
-        static Func<INodeGroup, INode[]> DoubleRingFunc(
+        static Func<NodeGroup, Node[]> DoubleRingFunc(
             Torus3NbrhdIndexer torusNbrhd,
             float step,
             float noise
@@ -289,7 +291,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhd.CC
@@ -301,7 +303,7 @@ namespace NodeLib.Updaters
 
 
 
-        static Func<INodeGroup, INode[]> RingBiasFunc(
+        static Func<NodeGroup, Node[]> RingBiasFunc(
           Torus3NbrhdIndexer torusNbrhd,
           float[] biasedSteps
 
@@ -324,7 +326,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhd.CC
@@ -336,7 +338,7 @@ namespace NodeLib.Updaters
 
 
 
-        static Func<INodeGroup, INode[]> BigRingFuncWithBias(
+        static Func<NodeGroup, Node[]> BigRingFuncWithBias(
               Torus3NbrhdIndexer torusNbrhd,
               float step,
               float hBias,
@@ -380,7 +382,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhd.CC
@@ -392,7 +394,7 @@ namespace NodeLib.Updaters
 
 
 
-        static Func<INodeGroup, INode[]> RingSquareBiasFunc(
+        static Func<NodeGroup, Node[]> RingSquareBiasFunc(
           Torus3NbrhdIndexer torusNbrhd,
           float step,
           float hBias,
@@ -427,7 +429,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhd.CC
@@ -438,7 +440,7 @@ namespace NodeLib.Updaters
         }
 
 
-        static Func<INodeGroup, INode[]> LongStarFunc(
+        static Func<NodeGroup, Node[]> LongStarFunc(
               Torus3NbrhdIndexer torusNbrhd,
               float step,
               float hBias,
@@ -484,7 +486,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhd.CC
@@ -495,7 +497,7 @@ namespace NodeLib.Updaters
         }
 
 
-        static Func<INodeGroup, INode[]> StarFuncVbias(
+        static Func<NodeGroup, Node[]> StarFuncVbias(
           Torus3NbrhdIndexer torusNbrhd,
           float step,
           float vBias
@@ -525,7 +527,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhd.CC

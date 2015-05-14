@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using LibNode;
 using NodeLib.Indexers;
+using NodeLib.NgUpdaters;
 using NodeLib.Params;
-using NodeLib.Updaters;
 
-namespace NodeLib
+namespace NodeLib.NetworkOld
 {
     public interface INetwork
     {
@@ -12,7 +13,8 @@ namespace NodeLib
         INgUpdater NgUpdater { get; }
         IReadOnlyDictionary<string, IParameter> Parameters { get; }
         IReadOnlyList<ID2Indexer> NodeGroupIndexers { get; }
-        INodeGroup NodeGroup { get; }
+        NodeGroup NodeGroup { get; }
+        int Generation { get; }
     }
 
     public static class Network
@@ -26,7 +28,8 @@ namespace NodeLib
                 parameters: network.Parameters,
                 ngUpdater: network.NgUpdater,
                 nodeGroupIndexers: network.NodeGroupIndexers,
-                ngUpdaterBuilder: network.NgUpdaterBuilder
+                ngUpdaterBuilder: network.NgUpdaterBuilder,
+                generation: network.Generation + 1
             );
         }
 
@@ -40,7 +43,8 @@ namespace NodeLib
                 parameters: paramDictionary,
                 ngUpdater: network.NgUpdaterBuilder(paramDictionary),
                 nodeGroupIndexers: network.NodeGroupIndexers,
-                ngUpdaterBuilder: network.NgUpdaterBuilder
+                ngUpdaterBuilder: network.NgUpdaterBuilder,
+                generation: network.Generation
             );
         }
     }
@@ -50,23 +54,24 @@ namespace NodeLib
         private readonly INgUpdater _ngUpdater;
         private readonly IReadOnlyDictionary<string, IParameter> _parameters;
         private readonly IReadOnlyList<ID2Indexer> _nodeGroupIndexers;
-        private readonly INodeGroup _nodeGroup;
+        private readonly NodeGroup _nodeGroup;
         private readonly Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> _ngUpdaterBuilder;
+        private readonly int _generation;
 
         public NetworkImpl
             (
-                INodeGroup nodeGroup,
+                NodeGroup nodeGroup,
                 IReadOnlyDictionary<string, IParameter> parameters, 
                 INgUpdater ngUpdater,
                 IReadOnlyList<ID2Indexer> nodeGroupIndexers, 
-                Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ngUpdaterBuilder
-            )
+                Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> ngUpdaterBuilder, int generation)
         {
             _nodeGroup = nodeGroup;
             _parameters = parameters;
             _ngUpdater = ngUpdater;
             _nodeGroupIndexers = nodeGroupIndexers;
             _ngUpdaterBuilder = ngUpdaterBuilder;
+            _generation = generation;
         }
 
         public Func<IReadOnlyDictionary<string, IParameter>, INgUpdater> NgUpdaterBuilder
@@ -89,9 +94,14 @@ namespace NodeLib
             get { return _nodeGroupIndexers; }
         }
 
-        public INodeGroup NodeGroup
+        public NodeGroup NodeGroup
         {
             get { return _nodeGroup; }
+        }
+
+        public int Generation
+        {
+            get { return _generation; }
         }
     }
 }

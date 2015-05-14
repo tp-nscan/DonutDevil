@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Subjects;
@@ -15,8 +14,8 @@ using DonutDevilControls.ViewModel.Legend;
 using DonutDevilControls.ViewModel.Params;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
-using NodeLib;
 using NodeLib.Indexers;
+using NodeLib.NetworkOld;
 using WpfUtils;
 using WpfUtils.ViewModels.Graphics;
 
@@ -24,6 +23,7 @@ namespace DonutDevilMain.ViewModel
 {
     public class NetworkVm : NotifyPropertyChanged, IMainWindowVm
     {
+
         #region Navigation
 
         public MainWindowType MainWindowType
@@ -40,7 +40,6 @@ namespace DonutDevilMain.ViewModel
 
 
         #endregion
-
 
         public NetworkVm(INetwork network)
         {
@@ -256,7 +255,7 @@ namespace DonutDevilMain.ViewModel
 
         public int Generation
         {
-            get { return Network.NodeGroup.Generation; }
+            get { return Network.Generation; }
         }
 
         private readonly Stopwatch _stopwatch = new Stopwatch();

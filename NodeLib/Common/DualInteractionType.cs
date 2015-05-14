@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NodeLib.Params;
 
-namespace NodeLib
+namespace NodeLib.Common
 {
     public enum DualInteractionType
     {

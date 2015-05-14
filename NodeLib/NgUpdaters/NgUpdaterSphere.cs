@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using LibNode;
 using MathLib;
 using MathLib.NumericTypes;
+using NodeLib.Common;
 
-namespace NodeLib.Updaters
+namespace NodeLib.NgUpdaters
 {
     public static class NgUpdaterSphere
     {
@@ -65,7 +67,7 @@ namespace NodeLib.Updaters
         }
 
 
-        static Func<INodeGroup, INode[]> SidesFuncSaw(
+        static Func<NodeGroup, Node[]> SidesFuncSaw(
             Torus3NbrhdIndexer torusNbrhdOne,
             Torus3NbrhdIndexer torusNbrhdTwo,
             Torus3NbrhdIndexer torusNbrhdThree,
@@ -129,19 +131,19 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: onSphere[0],
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: onSphere[1],
                                 groupIndex: torusNbrhdTwo.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: onSphere[2],
                                 groupIndex: torusNbrhdThree.CC
@@ -154,7 +156,7 @@ namespace NodeLib.Updaters
         }
 
 
-        static Func<INodeGroup, INode[]> PerimeterFuncSaw(
+        static Func<NodeGroup, Node[]> PerimeterFuncSaw(
             Torus3NbrhdIndexer torusNbrhdOne,
             Torus3NbrhdIndexer torusNbrhdTwo,
             Torus3NbrhdIndexer torusNbrhdThree,
@@ -245,19 +247,19 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: onSphere[0],
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: onSphere[1],
                                 groupIndex: torusNbrhdTwo.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: onSphere[2],
                                 groupIndex: torusNbrhdThree.CC

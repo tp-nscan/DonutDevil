@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reactive.Subjects;
 using System.Windows.Input;
 using DonutDevilControls.ViewModel.Common;
-using NodeLib.NodeLib;
+using NodeLib.NetworkOld.NodeLib;
 using WpfUtils;
 
 namespace DonutDevilMain.ViewModel

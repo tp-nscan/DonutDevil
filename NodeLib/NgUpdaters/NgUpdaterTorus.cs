@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LibNode;
 using MathLib;
 using MathLib.NumericTypes;
+using NodeLib.Common;
 using NodeLib.Params;
 
-namespace NodeLib.Updaters
+namespace NodeLib.NgUpdaters
 {
     public static class NgUpdaterTorus
     {
@@ -160,7 +162,7 @@ namespace NodeLib.Updaters
          /// <summary>
          ///  2-ring metric with sides nbhd
          /// </summary>
-         static Func<INodeGroup, INode[]> Ring2UsingSides(
+         static Func<NodeGroup, Node[]> Ring2UsingSides(
                Torus3NbrhdIndexer torusNbrhdOne,
                Torus3NbrhdIndexer torusNbrhdTwo,
                float step
@@ -189,13 +191,13 @@ namespace NodeLib.Updaters
 
                  return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: (cTwo + resTwo).AsMf(),
                                 groupIndex: torusNbrhdTwo.CC
@@ -209,7 +211,7 @@ namespace NodeLib.Updaters
          /// <summary>
          ///  2-ring metric with perimeter nbhd and Saw distance
          /// </summary>
-         static Func<INodeGroup, INode[]> Ring2UsingPerimeterSaw(
+         static Func<NodeGroup, Node[]> Ring2UsingPerimeterSaw(
                 Torus3NbrhdIndexer torusNbrhdOne,
                 Torus3NbrhdIndexer torusNbrhdTwo,
                 float step,
@@ -248,13 +250,13 @@ namespace NodeLib.Updaters
 
                  return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: (cTwo + resTwo).AsMf(),
                                 groupIndex: torusNbrhdTwo.CC
@@ -267,7 +269,7 @@ namespace NodeLib.Updaters
          /// <summary>
          ///  2-ring metric with perimeter nbhd
          /// </summary>
-         static Func<INodeGroup, INode[]> Ring2UsingPerimeter(
+         static Func<NodeGroup, Node[]> Ring2UsingPerimeter(
               Torus3NbrhdIndexer torusNbrhdOne,
               Torus3NbrhdIndexer torusNbrhdTwo,
               float step
@@ -305,13 +307,13 @@ namespace NodeLib.Updaters
 
                  return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: (cTwo + resTwo).AsMf(),
                                 groupIndex: torusNbrhdTwo.CC
@@ -325,7 +327,7 @@ namespace NodeLib.Updaters
          /// <summary>
          ///  2-ring metric with perimeter nbhd and rotational bias
          /// </summary>
-         static Func<INodeGroup, INode[]> Ring1UsingPerimeterWithRotationalBias(
+         static Func<NodeGroup, Node[]> Ring1UsingPerimeterWithRotationalBias(
               Torus3NbrhdIndexer torusNbrhdOne,
               int squareSize,
               float step,
@@ -356,7 +358,7 @@ namespace NodeLib.Updaters
 
                  return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
@@ -371,7 +373,7 @@ namespace NodeLib.Updaters
          /// <summary>
          ///  2-ring metric with perimeter nbhd and rotational bias
          /// </summary>
-         static Func<INodeGroup, INode[]> Ring2UsingPerimeterWithRotationalBias(
+         static Func<NodeGroup, Node[]> Ring2UsingPerimeterWithRotationalBias(
               Torus3NbrhdIndexer torusNbrhdOne,
               Torus3NbrhdIndexer torusNbrhdTwo,
               float step,
@@ -418,13 +420,13 @@ namespace NodeLib.Updaters
 
                  return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: (cTwo + resTwo).AsMf(),
                                 groupIndex: torusNbrhdTwo.CC
@@ -438,7 +440,7 @@ namespace NodeLib.Updaters
          /// <summary>
          ///  3-ring metric with perimeter nbhd and rotational bias
          /// </summary>
-         static Func<INodeGroup, INode[]> Ring3UsingPerimeterWithRotationalBias(
+         static Func<NodeGroup, Node[]> Ring3UsingPerimeterWithRotationalBias(
               Torus3NbrhdIndexer torusNbrhdOne,
               Torus3NbrhdIndexer torusNbrhdTwo,
               Torus3NbrhdIndexer torusNbrhdThree,
@@ -504,19 +506,19 @@ namespace NodeLib.Updaters
 
                  return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: (cTwo + resTwo).AsMf(),
                                 groupIndex: torusNbrhdTwo.CC
                             ),
 
-                       Node.Make
+                       new Node
                             (
                                 value: (cThree + resThree).AsMf(),
                                 groupIndex: torusNbrhdThree.CC
@@ -530,7 +532,7 @@ namespace NodeLib.Updaters
          /// <summary>
          ///  4-ring metric with perimeter nbhd and rotational bias
          /// </summary>
-         static Func<INodeGroup, INode[]> Ring4UsingPerimeterWithRotationalBias(
+         static Func<NodeGroup, Node[]> Ring4UsingPerimeterWithRotationalBias(
               Torus3NbrhdIndexer torusNbrhdOne,
               Torus3NbrhdIndexer torusNbrhdTwo,
               Torus3NbrhdIndexer torusNbrhdThree,
@@ -613,25 +615,25 @@ namespace NodeLib.Updaters
 
                  return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: (cTwo + resTwo).AsMf(),
                                 groupIndex: torusNbrhdTwo.CC
                             ),
 
-                       Node.Make
+                       new Node
                             (
                                 value: (cThree + resThree).AsMf(),
                                 groupIndex: torusNbrhdThree.CC
                             ),
 
-                       Node.Make
+                       new Node
                             (
                                 value: (cFour + resFour).AsMf(),
                                 groupIndex: torusNbrhdFour.CC
@@ -648,7 +650,7 @@ namespace NodeLib.Updaters
          ///  Torus euclidean metric with sides nbhd
          /// </summary>
 
-         static Func<INodeGroup, INode[]> EuclidSides(
+         static Func<NodeGroup, Node[]> EuclidSides(
               Torus3NbrhdIndexer torusNbrhdOne,
               Torus3NbrhdIndexer torusNbrhdTwo,
               float step,
@@ -682,13 +684,13 @@ namespace NodeLib.Updaters
 
                  return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: (cTwo + resTwo).AsMf(),
                                 groupIndex: torusNbrhdTwo.CC
@@ -702,7 +704,7 @@ namespace NodeLib.Updaters
          /// <summary>
          ///  Torus euclidean metric with perimeter nbhd
          /// </summary>
-         //static Func<INodeGroup, INode[]> EuclidPerimeter(
+         //static Func<NodeGroup, Node[]> EuclidPerimeter(
          //     Torus3Nbrhd torusNbrhdOne,
          //     Torus3Nbrhd torusNbrhdTwo,
          //     float step,
@@ -753,13 +755,13 @@ namespace NodeLib.Updaters
 
          //        return new[]
          //           {
-         //               Node.Make
+         //               SNode.Make
          //                   (
          //                       value: (cOne + resOne).AsMf(),
          //                       groupIndex: torusNbrhdOne.CC
          //                   ),
 
-         //               Node.Make
+         //               SNode.Make
          //                   (
          //                       value: (cTwo + resTwo).AsMf(),
          //                       groupIndex: torusNbrhdTwo.CC
@@ -773,7 +775,7 @@ namespace NodeLib.Updaters
          /// <summary>
          ///  Torus euclidean metric with star nbhd
          /// </summary>
-         static Func<INodeGroup, INode[]> EuclidStar(
+         static Func<NodeGroup, Node[]> EuclidStar(
               Torus3NbrhdIndexer torusNbrhdOne,
               Torus3NbrhdIndexer torusNbrhdTwo,
               float step)
@@ -830,13 +832,13 @@ namespace NodeLib.Updaters
 
                  return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: (cTwo + resTwo).AsMf(),
                                 groupIndex: torusNbrhdTwo.CC
@@ -851,7 +853,7 @@ namespace NodeLib.Updaters
          /// <summary>
          ///  Torus euclidean metric with star nbhd
          /// </summary>
-         static Func<INodeGroup, INode[]> EuclidFuncRadius2Perimeter(
+         static Func<NodeGroup, Node[]> EuclidFuncRadius2Perimeter(
               Torus3NbrhdIndexer torusNbrhdOne,
               Torus3NbrhdIndexer torusNbrhdTwo,
               float step)
@@ -961,13 +963,13 @@ namespace NodeLib.Updaters
 
                  return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: (cTwo + resTwo).AsMf(),
                                 groupIndex: torusNbrhdTwo.CC
@@ -982,7 +984,7 @@ namespace NodeLib.Updaters
          /// <summary>
          ///  Torus euclidean metric with perimeter nbhd
          /// </summary>
-         static Func<INodeGroup, INode[]> EuclidFuncPerimeterTv(
+         static Func<NodeGroup, Node[]> EuclidFuncPerimeterTv(
               int squareSize,
               Torus3NbrhdIndexer torusNbrhdOne,
               Torus3NbrhdIndexer torusNbrhdTwo,
@@ -1047,13 +1049,13 @@ namespace NodeLib.Updaters
 
                  return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: (cTwo + resTwo).AsMf(),
                                 groupIndex: torusNbrhdTwo.CC
@@ -1068,7 +1070,7 @@ namespace NodeLib.Updaters
          /// <summary>
          ///  2-ring metric with perimeter nbhd
          /// </summary>
-         static Func<INodeGroup, INode[]> Ring2UsingPerimeterTv(
+         static Func<NodeGroup, Node[]> Ring2UsingPerimeterTv(
               int squareSize,
               Torus3NbrhdIndexer torusNbrhdOne,
               Torus3NbrhdIndexer torusNbrhdTwo,
@@ -1116,13 +1118,13 @@ namespace NodeLib.Updaters
 
                  return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: (cTwo + resTwo).AsMf(),
                                 groupIndex: torusNbrhdTwo.CC
@@ -1133,248 +1135,5 @@ namespace NodeLib.Updaters
          }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-         //public static INgUpdater Standard(
-         //   string name,
-         //   int squareSize,
-         //   int arrayOffset,
-         //   float stepSize,
-         //   NeighborhoodType neighborhoodType,
-         //   DualInteractionType dualInteractionType,
-         //   float noise
-         //)
-         //{
-         //    switch (neighborhoodType)
-         //    {
-         //        case NeighborhoodType.Sides:
-         //            return new NgUpdaterImpl
-         //            (
-         //                name: name,
-         //                updateFunctions: Enumerable.Range(arrayOffset, squareSize * squareSize)
-         //                        .Select(n2 =>
-         //                                SidesFunc
-         //                                    (
-         //                                        torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, arrayOffset),
-         //                                        step: stepSize,
-         //                                        noise: noise
-         //                                    )
-         //                            )
-         //                        .ToList()
-         //            );
-
-         //        case NeighborhoodType.Perimeter:
-         //            return new NgUpdaterImpl
-         //            (
-         //                name: name,
-         //                updateFunctions: Enumerable.Range(arrayOffset, squareSize * squareSize)
-         //                        .Select(n2 =>
-         //                                PerimeterFunc
-         //                                    (
-         //                                        torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, arrayOffset),
-         //                                        step: stepSize,
-         //                                        noise: noise
-         //                                    )
-         //                            )
-         //                        .ToList()
-         //            );
-
-         //        case NeighborhoodType.Star:
-         //            return new NgUpdaterImpl
-         //            (
-         //                name: name,
-         //                updateFunctions: Enumerable.Range(arrayOffset, squareSize * squareSize)
-         //                        .Select(n2 =>
-         //                                StarFunc
-         //                                    (
-         //                                        torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, arrayOffset),
-         //                                        step: stepSize,
-         //                                        noise: noise
-         //                                    )
-         //                            )
-         //                        .ToList()
-         //            );
-
-         //        case NeighborhoodType.DoublePerimeter:
-         //            return new NgUpdaterImpl
-         //            (
-         //                name: name,
-         //                updateFunctions: Enumerable.Range(arrayOffset, squareSize * squareSize)
-         //                        .Select(n2 =>
-         //                                DoubleRingFunc
-         //                                    (
-         //                                        torusNbrhd: n2.ToTorus3Nbrs(squareSize, squareSize, arrayOffset),
-         //                                        step: stepSize,
-         //                                        noise: noise
-         //                                    )
-         //                            )
-         //                        .ToList()
-         //            );
-
-         //        default:
-         //            throw new Exception("NeighborhoodType not handled");
-         //    }
-         //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // public static INgUpdater ForSquareTorus
-        //(
-        //    float gain,
-        //    float step,
-        //    float alpha,
-        //    float beta,
-        //    int squareSize,
-        //    bool use8Way
-        //)
-        // {
-        //     if (use8Way)
-        //     {
-        //         return null;
-        //     }
-        //     return new NgUpdaterImpl
-        //       (
-
-        //        name: "ForSquareTorus",
-        //        updateFunctions:  Enumerable.Range(0, squareSize * squareSize)
-        //                    .Select(n2 =>
-        //                        Ring2UsingPerimeterSaw
-        //                            (
-        //                                torusNbrhdOne: n2.ToTorus3Nbrs(squareSize, squareSize),
-        //                                torusNbrhdTwo: n2.ToTorus3Nbrs(squareSize, squareSize, squareSize * squareSize),
-        //                                step: step * 1.0f,
-        //                                saw: alpha / 10.0f,
-        //                                noise: 0.0f
-        //                            )
-        //                        )
-        //                    .ToList()
-        //        );
-
-             //return new NgUpdaterImpl
-             //   (
-             //       Enumerable.Range(0, squareSize * squareSize)
-             //                 .Select(n2 =>
-             //                     EuclidSides
-             //                         (
-             //                             torusNbrhdOne: n2.ToTorus3Nbrs(squareSize, squareSize),
-             //                             torusNbrhdTwo: n2.ToTorus3Nbrs(squareSize, squareSize, squareSize * squareSize),
-             //                             step: step * 20.0f,
-             //                             tent: alpha,
-             //                             saw:  beta / 10.0f
-             //                         )
-             //                     )
-             //                 .ToList()
-             //    );
-
-             //return new NgUpdaterImpl
-             //(
-             //    Enumerable.Range(0, squareSize * squareSize)
-             //              .Select(n2 =>
-             //                  Ring1UsingPerimeterWithRotationalBias
-             //                      (
-             //                          squareSize:squareSize,
-             //                          torusNbrhdOne: n2.ToTorus3Nbrs(squareSize, squareSize),
-             //                          alpha: alpha,
-             //                          step: step * 1.0f,
-             //                          beta: beta
-             //                      )
-             //                  )
-             //              .ToList()
-             // );
-
-
-             //return new NgUpdaterImpl
-             //(
-             //    Enumerable.Range(0, squareSize * squareSize)
-             //              .Select(n2 =>
-             //                  Ring2UsingPerimeterTv
-             //                      (
-             //                          squareSize:squareSize,
-             //                          alpha: alpha * 3.0f,
-             //                          torusNbrhdOne: n2.ToTorus3Nbrs(squareSize, squareSize),
-             //                          torusNbrhdTwo: n2.ToTorus3Nbrs(squareSize, squareSize, squareSize * squareSize),
-             //                          step: step * 1.0f
-             //                      )
-             //                  )
-             //              .ToList()
-             // );
-         //}
-
-
-         
-        //public static INgUpdater ForSquareTorus
-        //(
-        //    float gain,
-        //    float step,
-        //    float alpha,
-        //    float beta,
-        //    int squareSize,
-        //    bool use8Way
-        //)
-        //     {
-        //         if (use8Way)
-        //         {
-        //             return new NgUpdaterImpl
-        //             (
-        //                Enumerable.Range(0, squareSize * squareSize)
-        //                          .Select(n2 =>
-        //                              Ring3UsingPerimeterWithRotationalBiasFunc
-        //                                  (
-        //                                   torusNbrhdOne: n2.ToTorus3Nbrs(squareSize, squareSize),
-        //                                   torusNbrhdTwo: n2.ToTorus3Nbrs(squareSize, squareSize, squareSize * squareSize),
-        //                                   torusNbrhdThree: n2.ToTorus3Nbrs(squareSize, squareSize, 2 * squareSize * squareSize),
-        //                                   step: step,
-        //                                   alpha: alpha,
-        //                                   beta: beta
-        //                                  )
-        //                              )
-        //                          .ToList()
-        //             );
-        //         }
-
-        //         return new NgUpdaterImpl
-        //         (
-        //             Enumerable.Range(0, squareSize * squareSize)
-        //                       .Select(n2 =>
-        //                           Ring4UsingPerimeterWithRotationalBiasFunc
-        //                               (
-        //                                   torusNbrhdOne: n2.ToTorus3Nbrs(squareSize, squareSize),
-        //                                   torusNbrhdTwo: n2.ToTorus3Nbrs(squareSize, squareSize, squareSize * squareSize),
-        //                                   torusNbrhdThree: n2.ToTorus3Nbrs(squareSize, squareSize, 2 * squareSize * squareSize),
-        //                                   torusNbrhdFour: n2.ToTorus3Nbrs(squareSize, squareSize, 3 * squareSize * squareSize),
-        //                                   step: step,
-        //                                   alpha: alpha,
-        //                                   beta: beta
-        //                               )
-        //                           )
-        //                       .ToList()
-        //          );
-        //     }
 
 

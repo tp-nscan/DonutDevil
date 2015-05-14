@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using LibNode;
 using MathLib;
 using MathLib.NumericTypes;
+using NodeLib.Common;
 
-namespace NodeLib.Updaters
+namespace NodeLib.NgUpdaters
 {
     public static class NgUpdaterTwister
     {
@@ -46,7 +48,7 @@ namespace NodeLib.Updaters
         /// <summary>
         ///  2-ring metric with perimeter nbhd and rotational bias
         /// </summary>
-        static Func<INodeGroup, INode[]> Ring2UsingPerimeterWithRotationalBias(
+        static Func<NodeGroup, Node[]> Ring2UsingPerimeterWithRotationalBias(
                 Torus3NbrhdIndexer torusNbrhdOne,
                 Torus3NbrhdIndexer torusNbrhdTwo,
                 float stepX,
@@ -96,13 +98,13 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).AsMf(),
                                 groupIndex: torusNbrhdOne.CC
                             ),
 
-                        Node.Make
+                        new Node
                             (
                                 value: (cTwo + resTwo).AsMf(),
                                 groupIndex: torusNbrhdTwo.CC

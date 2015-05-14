@@ -8,7 +8,7 @@
 //    {
 //        public D2IndexerTorusOfIntervalR(
 //            string name,
-//            Func<INodeGroup, IEnumerable<D2Val<float>>> indexingFunc,
+//            Func<NodeGroup, IEnumerable<D2Val<float>>> indexingFunc,
 //            int stride) :
 //            base(name, indexingFunc, stride, f => f, f => f)
 //        {
@@ -19,7 +19,7 @@
 //    {
 //        public D2IndexerTorusOfIntervalZ(
 //            string name,
-//            Func<INodeGroup, IEnumerable<D2Val<float>>> indexingFunc,
+//            Func<NodeGroup, IEnumerable<D2Val<float>>> indexingFunc,
 //            int stride) :
 //            base(name, indexingFunc, stride, f => f / 2 + 0.5f, f => f * 2 - 1.0f)
 //        {
@@ -30,7 +30,7 @@
 //    {
 //        public D2IndexerTorusOfRing(
 //            string name,
-//            Func<INodeGroup, IEnumerable<D2Val<float>>> indexingFunc,
+//            Func<NodeGroup, IEnumerable<D2Val<float>>> indexingFunc,
 //            int stride) :
 //            base(name, indexingFunc, stride, f => f, f => f)
 //        {
@@ -41,7 +41,7 @@
 //    {
 //        public D2IndexerTorusOfTorus(
 //            string name,
-//            Func<INodeGroup, IEnumerable<D2Val<float>>> indexingFunc,
+//            Func<NodeGroup, IEnumerable<D2Val<float>>> indexingFunc,
 //            int stride,
 //            Func<float, float> valuesToUnitRange,
 //            Func<float, float> unitRangeToValues) :
@@ -55,7 +55,7 @@
 
 //        public D2IndexerTorusOfSpheres(
 //            string name,
-//            Func<INodeGroup, IEnumerable<D2Val<float>>> indexingFunc,
+//            Func<NodeGroup, IEnumerable<D2Val<float>>> indexingFunc,
 //            int stride,
 //            Func<float, float> valuesToUnitRange,
 //            Func<float, float> unitRangeToValues) :
@@ -80,7 +80,7 @@
 //    {
 //        public D2IndexerSquareMatrix(
 //            string name,
-//            Func<INodeGroup, IEnumerable<D2Val<float>>> indexingFunc,
+//            Func<NodeGroup, IEnumerable<D2Val<float>>> indexingFunc,
 //            int stride,
 //            Func<float, float> valuesToUnitRange,
 //            Func<float, float> unitRangeToValues) :

@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using DonutDevilControls.ViewModel.Params;
 using NodeLib;
-using NodeLib.NodeLib;
+using NodeLib.NetworkOld;
+using NodeLib.NetworkOld.NodeLib;
 
 namespace DonutDevilControls.ViewModel.Common
 {

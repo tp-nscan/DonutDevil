@@ -305,6 +305,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibNode\LibNode.fsproj">
+      <Project>{237db6bc-49f0-438f-9c79-5ba6eabc1189}</Project>
+      <Name>LibNode</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MathLib\MathLib.csproj">
       <Project>{94c035c1-dd49-4936-b9c4-f0f2aea561a3}</Project>
       <Name>MathLib</Name>

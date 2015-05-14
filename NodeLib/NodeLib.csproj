@@ -59,42 +59,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DualInteractionType.cs" />
+    <Compile Include="Common\DualInteractionType.cs" />
     <Compile Include="Indexers\D2ArrayShape.cs" />
     <Compile Include="Indexers\D2IndexerImpls.cs" />
     <Compile Include="Indexers\IndexerDataType.cs" />
     <Compile Include="Indexers\INgIndexer.cs" />
-    <Compile Include="NeighborhoodType.cs" />
-    <Compile Include="Network.cs" />
-    <Compile Include="NetworkBuilder.cs" />
-    <Compile Include="NgInitializer.cs" />
-    <Compile Include="Node.cs" />
-    <Compile Include="NodeGroup.cs" />
+    <Compile Include="Common\NeighborhoodType.cs" />
+    <Compile Include="NetworkOld\Network.cs" />
+    <Compile Include="NetworkOld\NetworkBuilder.cs" />
+    <Compile Include="NetworkOld\NgInitializer.cs" />
+    <Compile Include="Common\Node.cs" />
+    <Compile Include="Common\NodeGroupEx.cs" />
     <Compile Include="Indexers\D2Indexer.cs" />
     <Compile Include="Params\ParamInt.cs" />
-    <Compile Include="Updaters\NgCycler.cs" />
-    <Compile Include="Updaters\NgUpdater.cs" />
-    <Compile Include="Updaters\NgUpdaterBuilder.cs" />
-    <Compile Include="Updaters\NgUpdaterClique.cs" />
-    <Compile Include="Updaters\NgUpdaterDonut.cs" />
-    <Compile Include="Updaters\NgUpdaterLinear.cs" />
-    <Compile Include="Updaters\NgUpdaterRing.cs" />
-    <Compile Include="Updaters\NgUpdaterSphere.cs" />
-    <Compile Include="Updaters\NgUpdaterTorus.cs" />
+    <Compile Include="NgUpdaters\NgCycler.cs" />
+    <Compile Include="NgUpdaters\NgUpdater.cs" />
+    <Compile Include="NgUpdaters\NgUpdaterBuilder.cs" />
+    <Compile Include="NgUpdaters\NgUpdaterClique.cs" />
+    <Compile Include="NgUpdaters\NgUpdaterDonut.cs" />
+    <Compile Include="NgUpdaters\NgUpdaterLinear.cs" />
+    <Compile Include="NgUpdaters\NgUpdaterRing.cs" />
+    <Compile Include="NgUpdaters\NgUpdaterSphere.cs" />
+    <Compile Include="NgUpdaters\NgUpdaterTorus.cs" />
     <Compile Include="Params\IParameter.cs" />
     <Compile Include="Params\ParamBool.cs" />
     <Compile Include="Params\ParamEnum.cs" />
     <Compile Include="Params\ParamFloat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Updaters\NgUpdaterTwister.cs" />
-    <Compile Include="Updaters\UpdateUtils.cs" />
+    <Compile Include="NgUpdaters\NgUpdaterTwister.cs" />
+    <Compile Include="NgUpdaters\UpdateUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibNode\LibNode.fsproj">
+      <Project>{237db6bc-49f0-438f-9c79-5ba6eabc1189}</Project>
+      <Name>LibNode</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MathLib\MathLib.csproj">
       <Project>{94c035c1-dd49-4936-b9c4-f0f2aea561a3}</Project>
       <Name>MathLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

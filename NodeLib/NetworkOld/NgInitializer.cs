@@ -1,34 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MathLib.NumericTypes;
-using NodeLib.Params;
+using LibNode;
 using MathLib;
+using MathLib.NumericTypes;
+using NodeLib.Common;
+using NodeLib.Params;
 
-namespace NodeLib
+namespace NodeLib.NetworkOld
 {
     public class NgInitializer
     {
-        public static Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> KStrideSquaredUnitR(int k)
+        public static Func<IReadOnlyDictionary<string, IParameter>, NodeGroup> KStrideSquaredUnitR(int k)
         {
             return d =>
             {
                 var arrayStride = (int)d["ArrayStride"].Value;
-                return NodeGroup.RandomNodeGroupUnitR(k * arrayStride * arrayStride, (int)DateTime.Now.Ticks);
+                return NodeGroupEx.RandomNodeGroupUnitR(k * arrayStride * arrayStride, (int)DateTime.Now.Ticks);
 
             };
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> KStrideSquaredUnitZ(int k)
+        public static Func<IReadOnlyDictionary<string, IParameter>, NodeGroup> KStrideSquaredUnitZ(int k)
         {
             return d =>
             {
                 var arrayStride = (int)d["ArrayStride"].Value;
-                return NodeGroup.RandomNodeGroupUnitZ(k * arrayStride * arrayStride, (int)DateTime.Now.Ticks);
+                return NodeGroupEx.RandomNodeGroupUnitZ(k * arrayStride * arrayStride, (int)DateTime.Now.Ticks);
             };
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> KStrideSquaredSphereZ(int k)
+        public static Func<IReadOnlyDictionary<string, IParameter>, NodeGroup> KStrideSquaredSphereZ(int k)
         {
             return d =>
             {
@@ -37,26 +39,24 @@ namespace NodeLib
                 var randy = new Random((int)DateTime.Now.Ticks);
                 var sps = Enumerable.Range(0, arrayStride * arrayStride).Select(i => SpherePoint.Random(randy)).ToList();
 
-
-                return new NodeGroupImpl
-                    (
-                        nodes: Enumerable.Range(0, arraySize)
-                                  .Select(i => Node.Make(sps[i][0], groupIndex: i))
-                                  .Concat(
-                                      Enumerable.Range(0, arraySize)
-                                        .Select(i => Node.Make(sps[i][1], groupIndex: i + arraySize))
-                                  )
-                                  .Concat(
-                                      Enumerable.Range(0, arraySize)
-                                        .Select(i => Node.Make(sps[i][2], groupIndex: i + arraySize*2))
-                                  ),
-                        nodeCount: arraySize*3,
-                        generation: 0
+                var nodes = Enumerable.Range(0, arraySize)
+                    .Select(i => new Node(sps[i][0], groupIndex: i))
+                    .Concat(
+                        Enumerable.Range(0, arraySize)
+                            .Select(i => new Node(sps[i][1], groupIndex: i + arraySize))
+                    )
+                    .Concat(
+                        Enumerable.Range(0, arraySize)
+                            .Select(i => new Node(sps[i][2], groupIndex: i + arraySize * 2))
                     );
+
+                var ng = new NodeGroup(arraySize * 3);
+                ng.AddNodes(nodes);
+                return ng;
             };
         }
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> KStrideSquareCliqueUnitZ()
+        public static Func<IReadOnlyDictionary<string, IParameter>, NodeGroup> KStrideSquareCliqueUnitZ()
         {
             return d =>
             {
@@ -82,7 +82,7 @@ namespace NodeLib
                 return startingVals
                         .Concat(cnxnVals)
                         .Concat(smash)
-                        .ToNodeGroup(arraySize + arraySize.ToLowerTriangularArraySize() + arraySize*memCount, 0);
+                        .ToNodeGroup(arraySize + arraySize.ToLowerTriangularArraySize() + arraySize*memCount);
 
 
             };
@@ -90,7 +90,7 @@ namespace NodeLib
 
 
 
-        public static Func<IReadOnlyDictionary<string, IParameter>, INodeGroup> BasinCheck()
+        public static Func<IReadOnlyDictionary<string, IParameter>, NodeGroup> BasinCheck()
         {
             return d =>
             {
@@ -122,7 +122,7 @@ namespace NodeLib
                 return startingVals
                         .Concat(cnxnVals)
                         .Concat(smash)
-                        .ToNodeGroup(arraySize + arraySize.ToLowerTriangularArraySize() + arraySize * memCount, 0);
+                        .ToNodeGroup(arraySize + arraySize.ToLowerTriangularArraySize() + arraySize * memCount);
 
 
             };

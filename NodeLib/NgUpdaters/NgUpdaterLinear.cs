@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using LibNode;
 using MathLib;
 using MathLib.NumericTypes;
+using NodeLib.Common;
 
-namespace NodeLib.Updaters
+namespace NodeLib.NgUpdaters
 {
     public static class NgUpdaterLinear
     {
@@ -89,7 +91,7 @@ namespace NodeLib.Updaters
 
 
 
-        static Func<INodeGroup, INode[]> SidesFunc(
+        static Func<NodeGroup, Node[]> SidesFunc(
             Torus3NbrhdIndexer torusNbrhd,
             float step,
             float noise
@@ -108,7 +110,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).ToUnitZ(),
                                 groupIndex: torusNbrhd.CC
@@ -120,7 +122,7 @@ namespace NodeLib.Updaters
 
 
 
-        static Func<INodeGroup, INode[]> PerimeterFunc(
+        static Func<NodeGroup, Node[]> PerimeterFunc(
             Torus3NbrhdIndexer torusNbrhd,
             float step,
             float noise
@@ -143,7 +145,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).ToUnitZ(),
                                 groupIndex: torusNbrhd.CC
@@ -153,7 +155,7 @@ namespace NodeLib.Updaters
 
         }
 
-        static Func<INodeGroup, INode[]> StarFunc(
+        static Func<NodeGroup, Node[]> StarFunc(
     Torus3NbrhdIndexer torusNbrhd,
     float step,
     float noise
@@ -181,7 +183,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).ToUnitZ(),
                                 groupIndex: torusNbrhd.CC
@@ -192,7 +194,7 @@ namespace NodeLib.Updaters
         }
 
 
-        static Func<INodeGroup, INode[]> DoubleRingFunc(
+        static Func<NodeGroup, Node[]> DoubleRingFunc(
             Torus3NbrhdIndexer torusNbrhd,
             float step,
             float noise
@@ -228,7 +230,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: (cOne + resOne).ToUnitZ(),
                                 groupIndex: torusNbrhd.CC

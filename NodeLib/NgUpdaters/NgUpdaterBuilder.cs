@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using NodeLib.Common;
 using NodeLib.Params;
 
-namespace NodeLib.Updaters
+namespace NodeLib.NgUpdaters
 {
     public static class NgUpdaterBuilder
     {

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using LibNode;
 using MathLib;
 using MathLib.NumericTypes;
+using NodeLib.Common;
 
-namespace NodeLib.Updaters
+namespace NodeLib.NgUpdaters
 {
     public static class NgUpdaterClique
     {
@@ -39,7 +41,7 @@ namespace NodeLib.Updaters
             );
         }
 
-        static Func<INodeGroup, INode[]> CliqueFunc(
+        static Func<NodeGroup, Node[]> CliqueFunc(
             int groupIndex,
             int layerSize,
             float stepSize,
@@ -67,7 +69,7 @@ namespace NodeLib.Updaters
 
                 return new[]
                     {
-                        Node.Make
+                        new Node
                             (
                                 value: resOne.ToUnitZ(),
                                 groupIndex: groupIndex
@@ -77,41 +79,11 @@ namespace NodeLib.Updaters
 
         }
 
-        static Func<INodeGroup, INode[]> NodePassThroughFunc( int offset, int count)
+        static Func<NodeGroup, Node[]> NodePassThroughFunc( int offset, int count)
         {
             return (ng) => Enumerable.Range(offset, count)
-                .Select(i => Node.Make(ng.Values[i], i)).ToArray();
+                .Select(i => new Node(ng.Values[i], i)).ToArray();
         }
-
-
-        //static Func<INodeGroup, INode[]> CliqueFunc(
-        //    int groupIndex,
-        //    float stepSize,
-        //    float noise
-        //)
-        //{
-        //    return (ng) =>
-        //    {
-        //        var resOne = ng.Values[groupIndex] * (1 - stepSize);
-        //        resOne += (float)((SafeRandom.NextDouble() - 0.5f) * noise);
-                
-
-        //        return new[]
-        //            {
-        //                Node.Make
-        //                    (
-        //                        value: resOne.ToUnitZ(),
-        //                        groupIndex: groupIndex
-        //                    )
-        //            };
-        //    };
-
-        //}
-
-
-
-
-
 
     }
 }

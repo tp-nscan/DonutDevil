@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DonutDevilControls.ViewModel.D2Indexer;
-using NodeLib;
+using LibNode;
 using NodeLib.Indexers;
 
 namespace DonutDevilControls.ViewModel.Design.NgIndexer
@@ -18,7 +18,6 @@ namespace DonutDevilControls.ViewModel.Design.NgIndexer
         {
             get
             {
-
                 yield return NodeLib.Indexers.D2Indexer.MakeRingArray2D("Mem 1", 5);
                 yield return NodeLib.Indexers.D2Indexer.MakeRingArray2D("Mem 2", 5);
                 yield return NodeLib.Indexers.D2Indexer.MakeRingArray2D("Mem 3", 5);
@@ -35,15 +34,16 @@ namespace DonutDevilControls.ViewModel.Design.NgIndexer
         private const int NodesPerLayer = 25;
         private const int LayerCount = 6;
 
-        public static INodeGroup DesignNodeGroup = new NodeGroupImpl(
-                    nodes: Enumerable.Range(0, NodesPerLayer * LayerCount)
-                              .Select(i => Node.Make((2.0f * i) / (NodesPerLayer * LayerCount) - 1.0f, groupIndex: i)),
-                    nodeCount: NodesPerLayer * LayerCount,
-                    generation: 0
+        public static NodeGroup DesignNodeGroup()
+        {
+            var ng = new NodeGroup(NodesPerLayer * LayerCount);
 
-        );
-
-
+            ng.AddNodes(
+                Enumerable.Range(0, NodesPerLayer * LayerCount)
+                              .Select(i => new Node((2.0f * i) / (NodesPerLayer * LayerCount) - 1.0f, groupIndex: i))
+                );
+            return ng;
+        }
 
     }
 }

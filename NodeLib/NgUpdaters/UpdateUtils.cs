@@ -1,6 +1,6 @@
 ﻿using MathLib;
 
-namespace NodeLib.Updaters
+namespace NodeLib.NgUpdaters
 {
     public class UpdateUtils
     {

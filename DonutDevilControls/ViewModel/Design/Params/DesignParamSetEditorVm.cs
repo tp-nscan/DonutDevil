@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DonutDevilControls.ViewModel.Params;
 using NodeLib;
+using NodeLib.Common;
 using NodeLib.Params;
 
 namespace DonutDevilControls.ViewModel.Design.Params

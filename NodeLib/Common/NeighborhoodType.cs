@@ -1,4 +1,4 @@
-﻿namespace NodeLib
+﻿namespace NodeLib.Common
 {
     public enum NeighborhoodType
     {
