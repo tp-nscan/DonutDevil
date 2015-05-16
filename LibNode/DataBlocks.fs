@@ -127,9 +127,9 @@ module NodeGroupBuilders =
 
         match vs1D with        
         | UnsignedBit -> myNg1D true true unitFloat
-        | SignedBit -> myNg1D true true unitFloat
+        | SignedBit -> myNg1D true false unitFloat
         | UnitUnsigned -> myNg1D false true unitFloat
-        | UnitSigned -> myNg1D false true unitFloat
-        | UnSigned max -> myNg1D false true unitFloat
-        | Signed max -> myNg1D false true unitFloat
+        | UnitSigned -> myNg1D false false unitFloat
+        | UnSigned max -> myNg1D false true max
+        | Signed max -> myNg1D false false max
         | Ring -> myNg1D false true unitFloat
