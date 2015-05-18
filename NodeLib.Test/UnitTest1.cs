@@ -127,7 +127,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRandomDiscPointF32()
         {
-            var ubA = Generators.RandomDiscPointsF32(
+            var ubA = Generators.RandDiscPointsF32(
                 maxRadius:  (float)2.0).Take(100)
                         .Select(MathUtils.PointF32LengthSquared)
                         .ToArray();
@@ -139,8 +139,32 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRandomRingPointF32()
         {
-            var ubA = Generators.RandomRingPointsF32
+            var ubA = Generators.RandRingPointsF32
                         .Select(MathUtils.PointF32LengthSquared)
+                        .Take(100)
+                        .ToArray();
+
+            Assert.IsTrue(ubA.Length == 100);
+
+        }
+
+        [TestMethod]
+        public void TestRandomBallPointF32()
+        {
+            var ubA = Generators.RandBallPointsF32(
+                maxRadius: (float)1.0).Take(100)
+                        .Select(MathUtils.TripleF32LengthSquared)
+                        .ToArray();
+
+            Assert.IsTrue(ubA.Length == 100);
+
+        }
+
+        [TestMethod]
+        public void TestRandomSpherePointF32()
+        {
+            var ubA = Generators.RandSpherePointsF32
+                        .Select(MathUtils.TripleF32LengthSquared)
                         .Take(100)
                         .ToArray();
 

@@ -92,28 +92,28 @@ module Generators =
             Seq.initInfinite ( fun i -> { PointF32.x = Convert.ToSingle(rng.NextDouble()) * TwoF32 - OneF32; y = Convert.ToSingle(rng.NextDouble())* TwoF32 - OneF32 })
 
 
-    let RandomDiscPointsF32 (maxRadius:float32) =
+    let RandDiscPointsF32 (maxRadius:float32) =
             Seq.initInfinite ( fun i -> { PointF32.x = Convert.ToSingle(rng.NextDouble()); y = Convert.ToSingle(rng.NextDouble()) })
                                |> Seq.filter(fun p -> (p |> PointF32LengthSquared) < OneF32)
                                |> Seq.map(fun p -> { PointF32.x = p.x * maxRadius; y = p.y * maxRadius }
                              )
 
-    let RandomRingPointsF32 =
+    let RandRingPointsF32 =
         Seq.initInfinite ( fun i -> { PointF32.x = Convert.ToSingle(rng.NextDouble()); y = Convert.ToSingle(rng.NextDouble()) })
                             |> Seq.map(fun p -> (p , (p |> PointF32Length)))
                             |> Seq.filter(fun pd -> (snd pd) < OneF32  && (snd pd) > ZeroF32 )
                             |> Seq.map(fun pd -> { PointF32.x = (fst pd).x / (snd pd); y = (fst pd).y / (snd pd) }
                          )
 
-    let RandomBallPointsF32 (maxRadius:float32) =
+    let RandBallPointsF32 (maxRadius:float32) =
         Seq.initInfinite ( fun i -> { TripleF32.x = Convert.ToSingle(rng.NextDouble()); y = Convert.ToSingle(rng.NextDouble()); z = Convert.ToSingle(rng.NextDouble())  })
                             |> Seq.filter(fun p -> (p |> TripleF32LengthSquared) < OneF32)
-                            |> Seq.map(fun p -> { PointF32.x = p.x * maxRadius; y = p.y * maxRadius }
+                            |> Seq.map(fun p -> { TripleF32.x = p.x * maxRadius; y = p.y * maxRadius; z = p.z * maxRadius; }
                              )
 
-    let RandomSpherePointsF32 =
+    let RandSpherePointsF32 =
         Seq.initInfinite ( fun i -> { TripleF32.x = Convert.ToSingle(rng.NextDouble()); y = Convert.ToSingle(rng.NextDouble()); z = Convert.ToSingle(rng.NextDouble()) })
                             |> Seq.map(fun p -> (p , (p |> TripleF32Length)))
                             |> Seq.filter(fun pd -> (snd pd) < OneF32  && (snd pd) > ZeroF32 )
-                            |> Seq.map(fun pd -> { PointF32.x = (fst pd).x / (snd pd); y = (fst pd).y / (snd pd) }
+                            |> Seq.map(fun pd -> { TripleF32.x = (fst pd).x / (snd pd); y = (fst pd).y / (snd pd); z = (fst pd).z / (snd pd) }
                          )
