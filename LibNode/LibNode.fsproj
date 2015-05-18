@@ -51,6 +51,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MathUtils.fs" />
     <Compile Include="Generators.fs" />
     <Compile Include="DataBlocks.fs" />
     <None Include="Script.fsx" />

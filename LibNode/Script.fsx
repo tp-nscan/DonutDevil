@@ -35,7 +35,7 @@ open LibNode
 //let sample = rng.NextDouble()
 //let sampled = rng.NextDecimal()
 
-let ralph = LibNode.Generators.RandomUnsignedIntervalFloat32 (System.Convert.ToSingle(0.5)) 20 |> Seq.toArray
+let ralph = LibNode.Generators.RandomUnsignedIntervalF32 (System.Convert.ToSingle(0.5)) 20 |> Seq.toArray
 
 let linus = Ng1D ((Vs1D.UnSigned (System.Convert.ToSingle(0.5))), (GroupShape.Linear 20), ralph)
 

@@ -1,5 +1,7 @@
 ﻿namespace LibNode
 open System
+open MathUtils
+
 open LibNode.Generators
 
     exception ErrorStr of string
@@ -25,19 +27,6 @@ open LibNode.Generators
         member this.AddNodes(nodes: seq<Node>) =
             Seq.iter (fun node -> _array.[node.GroupIndex]<-node.Value) nodes
 
-
-    type IntPair = {x:int; y:int}
-    type fPoint32 = {x:float32; y:float32 }
-    type fTriple32 = {x:float32; y:float32; z:float32}
-
-    // Ms (network geometry)
-    type GroupShape =
-        | Linear of int
-        | Ring of int
-        | Rectangle of IntPair
-        | Torus of IntPair
-
-
     // The value options for when the data type for each node is one float
     type Vs1D =
         | UnsignedBit
@@ -51,7 +40,7 @@ open LibNode.Generators
     // The value options for when the data type for each node is two floats
     type Vs2D =
         | UnitTorus
-        | Complex of float32  // max arg length
+        | Complex of float32  // max vector length
         | ComplexNormal // arg length = 1.0
 
     // The value options for when the data type for each node is three floats
@@ -69,22 +58,27 @@ open LibNode.Generators
         | Colors of GroupShape * int[]
 
     type ConnectionSet =
-        | DenseUnsigned of GroupShape * GroupShape * float32[][]
-        | DenseSigned of GroupShape * GroupShape * float32[][]
-        | SparseUnsigned of GroupShape * GroupShape * int * int * float32[]
-        | SparseSigned of GroupShape * GroupShape * int * int * float32[]
+        | Dense of MatrixFormat * GroupShape * GroupShape * float32[,]
+        | DenseSymmetric of SymmetricFormat * GroupShape * float32[][]
+        | Sparse of GroupShape * GroupShape * CellF32[]
 
     type ConnectionSets = Named<ConnectionSet>[]
 
-    // for a named list of memories with uniform structure
-    type NodeSets =
-        | Binary of GroupShape * Named<bool[]>[]
+    // for a named list of memories with consistent structure
+    type NodeSets4 =
+        | Binary of GroupShape * Named<float32[]>[]
         | Colors of GroupShape * Named<int[]>[]
+
+
+    type NodeSets =
+        | Ng1D of Vs1D * GroupShape *  Named<float32[]>[]
+        | Ng2D of Vs2D * GroupShape * Named<PointF32[]>[]
+        | Ng3D of Vs3D * GroupShape * Named<TripleF32[]>[]
 
     type NodeSet =
         | Ng1D of Vs1D * GroupShape * float32[]
-        | Ng2D of Vs2D * GroupShape * fPoint32[]
-        | Ng3D of Vs3D * GroupShape * fTriple32[]
+        | Ng2D of Vs2D * GroupShape * PointF32[]
+        | Ng3D of Vs3D * GroupShape * TripleF32[]
 
     // for a named list of memories with uniform structure
     type KvpList =
@@ -121,8 +115,8 @@ module NodeGroupBuilders =
         let unitFloat = System.Convert.ToSingle 1
         let nodeCount = NodeCount groupShape
         let myNg1D (justBits:bool) (unsigned:bool) (max:float32) = 
-            let nodes = (RandomFloat32 justBits unsigned  max  nodeCount) |> Seq.toArray
-            Ng1D(vs1D, groupShape, nodes)
+            let nodes = (RandomFloat32 justBits unsigned  max  ) |> Seq.take nodeCount
+            Ng1D(vs1D, groupShape, nodes|> Seq.toArray)
 
 
         match vs1D with        
