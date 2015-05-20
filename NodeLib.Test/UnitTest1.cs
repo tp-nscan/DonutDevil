@@ -9,7 +9,7 @@ namespace NodeLib.Test
     public class UnitTest1
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TestMakeNode()
         {
             const int arraylength = 5;
             var foo = new NodeGroup(arraylength);
@@ -20,6 +20,25 @@ namespace NodeLib.Test
             Assert.AreEqual(arraylength, foo.ArrayLength);
 
             Assert.AreEqual(arraylength, foo.Values.Length);
+        }
+
+
+        [TestMethod]
+        public void TestRandomBools()
+        {
+            var ubA = MemoryBuilders.MakeRandomBinary(MathUtils.GroupShape.NewRing(5));
+
+            Assert.IsTrue(ubA.IsBinary);
+
+        }
+        
+        [TestMethod]
+        public void TestMakeRandomBinaryBlock()
+        {
+            var ubA = MemoryBuilders.MakeRandomBinaryDataBlock("setName", 5, MathUtils.GroupShape.NewRing(5));
+
+            Assert.IsTrue(ubA.IsMemory);
+
         }
 
         [TestMethod]
@@ -171,5 +190,32 @@ namespace NodeLib.Test
             Assert.IsTrue(ubA.Length == 100);
 
         }
+
+        [TestMethod]
+        public void TestArray2DRoundTrip()
+        {
+            const int rowCount = 5;
+            const int colCount = 3;
+            const int arrayCount = rowCount*colCount;
+
+            var over = Enumerable.Range(0, arrayCount).Select(i => (float)i).ToArray();
+
+            var rowMajorArray =
+                MathUtils.Array2DFromRowMajor(rowCount: rowCount, colCount: colCount, values: over);
+            var backRm = MathUtils.flattenRowMajor(rowMajorArray.Value).ToArray();
+            Assert.IsTrue(MathUtils.CompareFloat32Arrays(over, backRm));
+
+
+            var colMajorArray =
+                MathUtils.Array2DFromColumnMajor(rowCount: rowCount, colCount: colCount, values: over);
+            var backCm = MathUtils.flattenColumnMajor(colMajorArray.Value).ToArray();
+            Assert.IsTrue(MathUtils.CompareFloat32Arrays(over, backCm));
+
+
+            var transpArray = MathUtils.TransposeArray2D(colMajorArray.Value);
+            var backT = MathUtils.flattenRowMajor(transpArray).ToArray();
+            Assert.IsTrue(MathUtils.CompareFloat32Arrays(over, backT));
+        }
+
     }
 }

@@ -7,8 +7,11 @@ module MathUtils =
     open MathNet.Numerics.LinearAlgebra.Matrix
     open MathNet.Numerics.Random
 
-    let Hamming s1 s2 = Array.map2((=)) s1 s2 |> Seq.sumBy(fun b -> if b then 0 else 1)
 
+    let ZeroF32 = Convert.ToSingle 0.0
+    let OneF32 = Convert.ToSingle 1.0
+    let NOneF32 = Convert.ToSingle -1.0
+    let TwoF32 = Convert.ToSingle 2.0
     
     type IntPair = {x:int; y:int}
     type PointF32 = {x:float32; y:float32 }
@@ -22,10 +25,12 @@ module MathUtils =
         | Rectangle of IntPair
         | Torus of IntPair
 
+
     type SymmetricFormat =
         | UT
         | LT
         | Full
+
 
     type MatrixFormat =
         | RowMajor
@@ -37,6 +42,7 @@ module MathUtils =
         Math.Sqrt(vsq |> System.Convert.ToDouble)
                       |> System.Convert.ToSingle
 
+
     let PointF32LengthSquared (point:PointF32) = 
         point.x * point.x + point.y * point.y
 
@@ -45,6 +51,7 @@ module MathUtils =
         let vsq = point.x * point.x + point.y * point.y
         Math.Sqrt(vsq |> System.Convert.ToDouble)
                       |> System.Convert.ToSingle
+
 
     let TripleF32LengthSquared (point:TripleF32) = 
         point.x * point.x + point.y * point.y
@@ -56,3 +63,41 @@ module MathUtils =
                             |> System.Convert.ToDouble
                             |> Math.Sqrt
                             |> System.Convert.ToSingle
+
+
+    let Hamming s1 s2 = Array.map2((=)) s1 s2 |> Seq.sumBy(fun b -> if b then 0 else 1)
+
+
+    let CompareArrays<'a> comp (seqA:'a[]) (seqB:'a[]) =
+        Seq.fold (&&) true (Seq.zip seqA seqB |> Seq.map (fun (aa,bb) -> comp aa bb))
+
+
+    let CompareFloat32Arrays (seqA:float32[]) (seqB: float32[]) =
+        Seq.fold (&&) true (Seq.zip seqA seqB |> Seq.map (fun (aa,bb) -> aa = bb))
+
+
+    let TransposeArray2D (mtx : _ [,]) = 
+        Array2D.init (mtx.GetLength 1) (mtx.GetLength 0) (fun x y -> mtx.[y,x])
+
+
+    let Array2DFromRowMajor (rowCount:int) (colCount:int) (values:float32[]) =
+        if values.Length <> rowCount*colCount then
+            None
+        else
+            Some (Array2D.init rowCount colCount (fun x y -> values.[y+x*colCount]))
+
+ 
+    let Array2DFromColumnMajor (rowCount:int) (colCount:int) (values:float32[]) =
+        if values.Length <> rowCount*colCount then
+            None
+        else
+            Some (Array2D.init rowCount colCount (fun x y -> values.[x+y*rowCount]))
+
+
+    let flattenRowMajor (A:'a[,]) = A |> Seq.cast<'a>
+
+    let flattenColumnMajor (A:'a[,]) = A |> TransposeArray2D |> Seq.cast<'a>
+
+    let getColumn c (A:_[,]) = A.[*,c] |> Seq.toArray
+
+    let getRow r (A:_[,]) = A.[r,*] |> Seq.toArray
