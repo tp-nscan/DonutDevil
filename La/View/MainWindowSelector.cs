@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using DonutDevilMain.ViewModel;
+using La.ViewModel;
 
-namespace DonutDevilMain.View
+namespace La.View
 {
     public class MainWindowSelector : DataTemplateSelector
     {
@@ -30,7 +30,7 @@ namespace DonutDevilMain.View
                     case MainWindowType.Sandbox:
                         return SandboxTemplate;
                     default:
-                        throw new Exception($"MainWindowType {legendVm.MainWindowType} not handled in SelectTemplate");
+                        throw new Exception(String.Format("MainWindowType {0} not handled in SelectTemplate", legendVm.MainWindowType));
                 }
             }
 

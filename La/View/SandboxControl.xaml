@@ -1,31 +1,28 @@
-﻿<UserControl x:Class="DonutDevilMain.View.NetworkControl"
+﻿<UserControl x:Class="La.View.SandboxControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:params="clr-namespace:DonutDevilControls.View.Params;assembly=DonutDevilControls"
-             xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
              xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
-             xmlns:d2Indexer="clr-namespace:DonutDevilControls.View.D2Indexer;assembly=DonutDevilControls"
-             mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="800">
-
-    <!--d:DataContext="{d:DesignInstance {x:Type design:DesignNetworkVm}, IsDesignTimeCreatable=True}"-->
-
+             xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
+             mc:Ignorable="d" 
+            d:DesignHeight="600" d:DesignWidth="600">
+    
+    
     <Grid Background="Black">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        
+
         <DockPanel LastChildFill="True" Background="#F444">
-            
+
             <StackPanel Margin="5" DockPanel.Dock="Top" Orientation="Vertical" Background="#F222">
                 <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding UpdateNetworkCommand}" Content="Run" />
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding StopUpdateNetworkCommand}" Content="Stop" />
-                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetNetworkCommand}" Content="Reset" />
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding GoToMenuCommand}" Content="Reset" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -48,76 +45,56 @@
 
             </StackPanel>
 
-            <Border  DockPanel.Dock="Bottom" Margin="5" Background="#F222">
-                <ContentControl
-                            Content="{Binding LegendVm}" 
-                            ContentTemplateSelector="{DynamicResource LegendSelector}" />
-            </Border>
+            <StackPanel Orientation="Vertical">
             
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-
-                <ScrollViewer Grid.Row="0" Margin="5" Background="#F222"
-                    VerticalScrollBarVisibility="Visible" 
-                    HorizontalScrollBarVisibility="Visible"
-                    Template="{DynamicResource DonutDevilScrollViewerTemplate}">
-
-
-                    <params:ParamsEditorControl DataContext="{Binding ParamSetEditorVm}"/>
-
-                </ScrollViewer>
-
-
-                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="2" ResizeBehavior="PreviousAndNext"  
-                    ResizeDirection="Rows" Background="#4CE41818"/>
-
-
-                <ScrollViewer Grid.Row="2" Margin="5" Background="#F222"
-                    VerticalScrollBarVisibility="Visible" 
-                    HorizontalScrollBarVisibility="Visible"
-                    Template="{DynamicResource DonutDevilScrollViewerTemplate}">
-
-                    <d2Indexer:NgIndexerSetControl Margin="0,10,0,0" DataContext="{Binding NgIndexerSetVm}"/>
-
-
-                </ScrollViewer>
-
-
-                <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" Height="2" ResizeBehavior="PreviousAndNext"  
-                    ResizeDirection="Rows" Background="#4CE41818"/>
-
-
-                <Border Grid.Row="4" Margin="5" Background="#F222">
-                    <Viewbox >
-                    <ContentControl Content="{Binding HistogramVm}" 
-                                        ContentTemplateSelector="{DynamicResource HistogramSelector}" />
-
-
-                </Viewbox>
-
+                <Border  DockPanel.Dock="Bottom" Margin="5" Background="#F222">
+                    <ContentControl
+                                Content="{Binding LegendVm}" 
+                                ContentTemplateSelector="{DynamicResource LegendSelector}" />
                 </Border>
-            </Grid>
+            
+                <Border BorderBrush="Black" BorderThickness="2">
+                    <Border BorderBrush="#1FFF" BorderThickness="1">
+                        <common:SliderControl DataContext="{Binding RadiusSliderVm}"/>
+                    </Border>
+                </Border>
+                
+                <Border BorderBrush="Black" BorderThickness="2">
+                    <Border BorderBrush="#1FFF" BorderThickness="1">
+                        <common:SliderControl DataContext="{Binding FrequencySliderVm}"/>
+                    </Border>
+                </Border>
+                
+                <Border BorderBrush="Black" BorderThickness="2">
+                    <Border BorderBrush="#1FFF" BorderThickness="1">
+                        <common:SliderControl DataContext="{Binding DecaySliderVm}"/>
+                    </Border>
+                </Border>
+                
+                <Border BorderBrush="Black" BorderThickness="2">
+                    <Border BorderBrush="#1FFF" BorderThickness="1">
+                        <ContentControl Content="{Binding HistogramVm}" ContentTemplateSelector="{DynamicResource HistogramSelector}" />
+                    </Border>
+                </Border>
+
+            </StackPanel>
 
         </DockPanel>
-
-
-        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="2" ResizeBehavior="PreviousAndNext"  
+        
+        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="4" ResizeBehavior="PreviousAndNext"  
                     ResizeDirection="Columns" Background="#4CE41818"/>
 
         <Grid  Grid.Column="2" Background="#F333">
-            
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                <TextBlock Foreground="Wheat" FontSize="18" Margin="5" Text="{Binding Total, StringFormat=0.000}"/>
+                <TextBlock Foreground="Wheat" FontSize="18" Margin="5" Text="{Binding AbsTotal, StringFormat=0.000}"/>
+            </StackPanel>
 
             <Viewbox Stretch="Uniform">
                 <Border Background="#F222">
@@ -137,11 +114,11 @@
                 HorizontalScrollBarVisibility="Visible"
                 Template="{DynamicResource DonutDevilScrollViewerTemplate}">
 
-                <d2Indexer:LayerCorrelationControl Grid.Row="2" DataContext="{Binding LayerCorrelationVm}"/>
-                
+
             </ScrollViewer>
 
         </Grid>
-            
+
     </Grid>
+    
 </UserControl>

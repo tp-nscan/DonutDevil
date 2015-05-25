@@ -1,12 +1,11 @@
 ﻿namespace LibNode
 open System
 open MathUtils
-
 open LibNode.Generators
 
-    exception ErrorStr of string
-
     type Named<'a> = {name:string; value:'a}
+
+    type Namoed<'a> = {name:string; value:unit->'a}
 
     type NodeGroupIndex = int
 
@@ -161,12 +160,12 @@ module MemoryBuilders =
     let MakeRandomBinary (groupShape:GroupShape) =
         Memory.Binary (groupShape, (RandBools |> Seq.take (NodeCount groupShape) |> Seq.toArray))
 
-    let MakeRandomBinaryDataBlock(name:string) (count:int) (groupShape:GroupShape) =
+    let MakeRandomBinaryDataBlock (groupShape:GroupShape) (count:int) (name:string) =
         let namedBoolArrays = [|for i in 0..count-1 -> 
                                 {
-                                    name=sprintf "%s_%i" name i; 
+                                    Named.name=sprintf "%s_%i" name i; 
                                     value=(RandBools |> Seq.take (NodeCount groupShape) |> Seq.toArray)
                                 }
                               |]
-
-        DataBlock.KvpList({name=name; value=KvpList.Memories(Memories.Binary(groupShape, namedBoolArrays))})
+        {Named.name=name; value=KvpList.Memories(Memories.Binary(groupShape, namedBoolArrays))}
+       // DataBlock.KvpList({name=name; value=KvpList.Memories(Memories.Binary(groupShape, namedBoolArrays))})

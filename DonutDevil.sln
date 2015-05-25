@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonutDevilMain", "DonutDevilMain\DonutDevilMain.csproj", "{E40F443F-332C-46D5-AF05-17237F27B10D}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodeLib.Test", "NodeLib.Test\NodeLib.Test.csproj", "{F557912A-7B61-46D9-9B27-F41652F42B2A}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "LibNode", "LibNode\LibNode.fsproj", "{237DB6BC-49F0-438F-9C79-5BA6EABC1189}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "La", "La\La.csproj", "{647A65D7-6018-437C-A511-A63D2054505D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +91,14 @@ Global
 		{237DB6BC-49F0-438F-9C79-5BA6EABC1189}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{237DB6BC-49F0-438F-9C79-5BA6EABC1189}.Release|Any CPU.Build.0 = Release|Any CPU
 		{237DB6BC-49F0-438F-9C79-5BA6EABC1189}.Release|x64.ActiveCfg = Release|Any CPU
+		{647A65D7-6018-437C-A511-A63D2054505D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{647A65D7-6018-437C-A511-A63D2054505D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{647A65D7-6018-437C-A511-A63D2054505D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{647A65D7-6018-437C-A511-A63D2054505D}.Debug|x64.Build.0 = Debug|Any CPU
+		{647A65D7-6018-437C-A511-A63D2054505D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{647A65D7-6018-437C-A511-A63D2054505D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{647A65D7-6018-437C-A511-A63D2054505D}.Release|x64.ActiveCfg = Release|Any CPU
+		{647A65D7-6018-437C-A511-A63D2054505D}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

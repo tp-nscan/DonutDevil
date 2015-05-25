@@ -2,13 +2,14 @@
 
 module Generators =
 
+    open System
     open MathNet.Numerics
     open MathNet.Numerics.Distributions
     open MathNet.Numerics.LinearAlgebra
     open MathNet.Numerics.LinearAlgebra.Matrix
     open MathNet.Numerics.Random
-    open MathUtils
-    open System
+    open LibNode.Dict
+    open LibNode.MathUtils
     
     let rng = Random.mersenneTwisterShared
 
@@ -25,7 +26,6 @@ module Generators =
 
     let RandSignedIntervalF32 (max:float32) =
         Seq.initInfinite ( fun i -> RandUsFloat32 max )
-
 
     let RandBitsUF32  =
         Seq.initInfinite ( fun i -> Convert.ToSingle(rng.Next(2)))

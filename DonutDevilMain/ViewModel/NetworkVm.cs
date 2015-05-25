@@ -23,62 +23,46 @@ namespace DonutDevilMain.ViewModel
 {
     public class NetworkVm : NotifyPropertyChanged, IMainWindowVm
     {
-
         #region Navigation
 
-        public MainWindowType MainWindowType
-        {
-            get { return MainWindowType.Network; }
-        }
+        public MainWindowType MainWindowType => MainWindowType.Network;
 
         private readonly Subject<IMainWindowVm> _mainWindowTypehanged
             = new Subject<IMainWindowVm>();
-        public IObservable<IMainWindowVm> OnMainWindowTypeChanged
-        {
-            get { return _mainWindowTypehanged; }
-        }
-
+        public IObservable<IMainWindowVm> OnMainWindowTypeChanged => _mainWindowTypehanged;
 
         #endregion
 
         public NetworkVm(INetwork network)
         {
             Network = network;
-            _layerCorrelationVm = new LayerCorrelationVm(
+            LayerCorrelationVm = new LayerCorrelationVm(
                     name: "Memory Correlations",
                     master: (D2IndexerBase<float>) Network.NodeGroupIndexers[0],
                     slaves: Network.NodeGroupIndexers.Skip(1).Select(i => (D2IndexerBase<float>)i)
                 );
 
-            _mainGridVm = new WbUniformGridVm(1024, 1024);
+            MainGridVm = new WbUniformGridVm(1024, 1024);
 
-            _paramSetEditorVm = new ParamSetEditorVm(network.Parameters.Values.ToList(), false);
+            ParamSetEditorVm = new ParamSetEditorVm(network.Parameters.Values.ToList(), false);
 
-            _displayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
+            DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
 
             _legendVm = new LinearLegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
 
-            _ngIndexerSetVm = new NgIndexerSetVm(network.NodeGroupIndexers.ToNgIndexerVms());
-            _ngIndexerSetVm.OnNgDisplayStateChanged.Subscribe(UpdateUi);
-            _ngIndexerSetVm.Is1D = true;
+            NgIndexerSetVm = new NgIndexerSetVm(network.NodeGroupIndexers.ToNgIndexerVms());
+            NgIndexerSetVm.OnNgDisplayStateChanged.Subscribe(UpdateUi);
+            NgIndexerSetVm.Is1D = true;
 
             UpdateUi(NgIndexerSetVm.NgDisplayIndexing);
         }
 
-        private readonly ParamSetEditorVm _paramSetEditorVm;
-        public ParamSetEditorVm ParamSetEditorVm
-        {
-            get { return _paramSetEditorVm; }
-        }
+        public ParamSetEditorVm ParamSetEditorVm { get; }
 
         INetwork Network { get; set; }
 
-        private readonly LayerCorrelationVm _layerCorrelationVm;
-        public LayerCorrelationVm LayerCorrelationVm
-        {
-            get { return _layerCorrelationVm; }
-        }
+        public LayerCorrelationVm LayerCorrelationVm { get; }
 
         #region local vars
 
@@ -88,6 +72,7 @@ namespace DonutDevilMain.ViewModel
 
         #endregion
 
+        public WbUniformGridVm MainGridVm { get; }
 
         #region UpdateNetworkCommand
 
@@ -151,14 +136,6 @@ namespace DonutDevilMain.ViewModel
 
         #endregion // UpdateNetworkCommand
 
-
-        private readonly WbUniformGridVm _mainGridVm;
-        public WbUniformGridVm MainGridVm
-        {
-            get { return _mainGridVm; }
-        }
-
-
         #region StopUpdateNetworkCommand
 
         RelayCommand _stopUpdateNetworkCommand;
@@ -184,7 +161,6 @@ namespace DonutDevilMain.ViewModel
         }
 
         #endregion // StopUpdateNetworkCommand
-
 
         #region ResetNetworkCommand
 
@@ -253,30 +229,19 @@ namespace DonutDevilMain.ViewModel
             }
         }
 
-        public int Generation
-        {
-            get { return Network.Generation; }
-        }
+        public int Generation => Network.Generation;
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
-        public TimeSpan ElapsedTime
-        {
-            get { return _stopwatch.Elapsed; }
-        }
+        public string ElapsedTime => $"{_stopwatch.Elapsed.Hours.ToString("00")}:" +
+                                     $"{_stopwatch.Elapsed.Minutes.ToString("00")}:" +
+                                     $"{_stopwatch.Elapsed.Seconds.ToString("00")}:" +
+                                     $"{_stopwatch.Elapsed.Milliseconds.ToString("000")}";
 
-        private readonly SliderVm _displayFrequencySliderVm;
-        public SliderVm DisplayFrequencySliderVm
-        {
-            get { return _displayFrequencySliderVm; }
-        }
+        public SliderVm DisplayFrequencySliderVm { get; }
 
         #region NgIndexerSet
 
-        private readonly NgIndexerSetVm _ngIndexerSetVm;
-        public NgIndexerSetVm NgIndexerSetVm
-        {
-            get { return _ngIndexerSetVm; }
-        }
+        public NgIndexerSetVm NgIndexerSetVm { get; }
 
         void UpdateUi(INgDisplayIndexing ngDisplayIndexing)
         {
@@ -373,12 +338,7 @@ namespace DonutDevilMain.ViewModel
             set
             {
                 _legendVm = value;
-
-                if (_onLegendVmChangedSubscr != null)
-                {
-                    _onLegendVmChangedSubscr.Dispose();
-                }
-
+                _onLegendVmChangedSubscr?.Dispose();
                 _onLegendVmChangedSubscr = _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
                 OnPropertyChanged("LegendVm");
             }

@@ -324,7 +324,7 @@ namespace NodeLib.NetworkOld
                             new ParamEnum(typeof(NeighborhoodType), NeighborhoodType.Perimeter.ToString(), "NeighborhoodType", true),
                             new ParamFloat(0f, 1f, 0.5f, "StepSize_X", true),
                             new ParamFloat(0f, 1f, 0.5f, "StepSize_Y", true),
-                            new ParamFloat(0f, 1f, 0.5f, "Bias", true),
+                            new ParamFloat(0f, 1f, 0.5f, "TwistBias", true),
                             new ParamFloat(0f, 1f, 0.0f, "Noise", true),
                             new ParamFloat(0f, 1f, 0.5f, "Tent", true),
                             new ParamFloat(0f, 1f, 0.0f, "Saw", true)

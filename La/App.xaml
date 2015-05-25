@@ -1,8 +1,8 @@
-﻿<Application x:Class="DonutDevilMain.App"
+﻿<Application x:Class="La.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Startup="App_Startup">
-    
+
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -13,7 +13,6 @@
                 <ResourceDictionary Source="/DonutDevilControls;component/ControlStyles.xaml"/>
                 <ResourceDictionary Source="/DonutDevilControls;component/View/Common/ScrollViewerTemplate.xaml"/>
                 <ResourceDictionary Source="/DonutDevilControls;component/ButtonTemplates.xaml"/>
-
             </ResourceDictionary.MergedDictionaries>
 
             <!--wpf bug workaround see http://projekt202.com/blog/2010/xaml-organization/-->
@@ -21,5 +20,4 @@
 
         </ResourceDictionary>
     </Application.Resources>
-    
 </Application>

@@ -22,10 +22,7 @@ namespace DonutDevilControls.ViewModel.Params
         private readonly List<IParameter> _unEditedParameters;
 
         private readonly List<IParamEditorVm> _paramVms;
-        public IList<IParamEditorVm> ParamVms
-        {
-            get { return _paramVms; }
-        }
+        public IList<IParamEditorVm> ParamVms => _paramVms;
 
         public bool IsDirty
         {

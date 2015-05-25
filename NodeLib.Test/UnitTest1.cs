@@ -35,9 +35,9 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestMakeRandomBinaryBlock()
         {
-            var ubA = MemoryBuilders.MakeRandomBinaryDataBlock("setName", 5, MathUtils.GroupShape.NewRing(5));
+            var ubA = MemoryBuilders.MakeRandomBinaryDataBlock(MathUtils.GroupShape.NewRing(5), 5, "setName");
 
-            Assert.IsTrue(ubA.IsMemory);
+            Assert.IsTrue(ubA.name.Length > 1);
 
         }
 
