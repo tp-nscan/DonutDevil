@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using DonutDevilControls.ViewModel.Params;
-using NodeLib.Params;
+using DonutDevilControls.ViewModel.ParamsOld;
+using NodeLib.ParamsOld;
 
-namespace DonutDevilControls.View.Params
+namespace DonutDevilControls.View.ParamsOld
 {
     public class ParamEditorSelector : DataTemplateSelector
     {

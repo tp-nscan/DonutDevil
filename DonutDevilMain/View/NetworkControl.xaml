@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:params="clr-namespace:DonutDevilControls.View.Params;assembly=DonutDevilControls"
-             xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
              xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
+             xmlns:paramsOld="clr-namespace:DonutDevilControls.View.ParamsOld;assembly=DonutDevilControls"
              xmlns:d2Indexer="clr-namespace:DonutDevilControls.View.D2Indexer;assembly=DonutDevilControls"
+             xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="800">
 
@@ -70,7 +70,7 @@
                     Template="{DynamicResource DonutDevilScrollViewerTemplate}">
 
 
-                    <params:ParamsEditorControl DataContext="{Binding ParamSetEditorVm}"/>
+                    <paramsOld:ParamsEditorControl DataContext="{Binding ParamSetEditorVm}"/>
 
                 </ScrollViewer>
 

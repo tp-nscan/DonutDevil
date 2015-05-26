@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NodeLib.Params
+namespace NodeLib.ParamsOld
 {
     public enum ParamType
     {

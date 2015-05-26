@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:params="clr-namespace:DonutDevilControls.View.Params"
-                    xmlns:common="clr-namespace:DonutDevilControls.View.Common">
+                    xmlns:common="clr-namespace:DonutDevilControls.View.Common"
+                    xmlns:paramsOld="clr-namespace:DonutDevilControls.View.ParamsOld">
 
 
     <DataTemplate x:Key="DefaultTemplate">
@@ -46,7 +46,7 @@
         </Border>
     </DataTemplate>
 
-    <params:ParamEditorSelector x:Key ="ParamEditorSelector"
+    <paramsOld:ParamEditorSelector x:Key ="ParamEditorSelector"
         BoolTemplate="{StaticResource BoolTemplate}"
         FloatTemplate="{StaticResource FloatTemplate}"
         EnumTemplate="{StaticResource EnumTemplate}"

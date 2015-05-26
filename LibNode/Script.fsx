@@ -27,6 +27,16 @@ let nv = {Named.name="jo"; value=5}
 
 let nov = {Namoed.name="jo"; value= (fun ()->5)}
 
+let wob = new NamedData<int>("", 4)
+
+let nob = MemoryBuilders. (MathUtils.GroupShape.Rectangle({x=5;y=4})) 3 "ralph"
+
+let shrub (:KvpList) =
+    match  with
+    | NodeSets ns -> None
+    | ConnectionSets cs -> None
+    | Memories nm -> Some nm.Name
+
 //let samples = Random.doubles 1000
 //
 //// overwrite the whole array with new random values

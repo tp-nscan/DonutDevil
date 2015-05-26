@@ -1,10 +1,10 @@
 ﻿using System;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
-using NodeLib.Params;
+using NodeLib.ParamsOld;
 using WpfUtils;
 
-namespace DonutDevilControls.ViewModel.Params
+namespace DonutDevilControls.ViewModel.ParamsOld
 {
     public class ParamEditorFloatVm : NotifyPropertyChanged, IParamEditorVm
     {

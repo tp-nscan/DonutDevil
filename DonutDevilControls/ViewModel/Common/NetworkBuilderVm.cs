@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using DonutDevilControls.ViewModel.Params;
+using DonutDevilControls.ViewModel.ParamsOld;
 using NodeLib;
 using NodeLib.NetworkOld;
 using NodeLib.NetworkOld.NodeLib;

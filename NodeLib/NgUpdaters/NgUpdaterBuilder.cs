@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NodeLib.Common;
-using NodeLib.Params;
+using NodeLib.ParamsOld;
 
 namespace NodeLib.NgUpdaters
 {

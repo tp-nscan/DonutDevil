@@ -1,7 +1,7 @@
 ﻿using System;
-using NodeLib.Params;
+using NodeLib.ParamsOld;
 
-namespace DonutDevilControls.ViewModel.Params
+namespace DonutDevilControls.ViewModel.ParamsOld
 {
     public static class ParamEditorVmExt
     {
@@ -18,7 +18,7 @@ namespace DonutDevilControls.ViewModel.Params
                     case ParamType.Int:
                         return new ParamEditorIntVm((ParamInt) parameter);
                     default:
-                        throw new Exception(String.Format("ParamsType {0} not handled in ToParamEditorVm", parameter.ParamType));
+                        throw new Exception($"ParamsType {parameter.ParamType} not handled in ToParamEditorVm");
             }
         }
 

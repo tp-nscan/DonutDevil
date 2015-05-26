@@ -11,11 +11,11 @@
     </DataTemplate>
 
     <DataTemplate x:Key="NetworkTemplate">
-        <view:SandboxControl/>
+        <view:SbControl/>
     </DataTemplate>
 
     <DataTemplate x:Key="SandboxTemplate">
-        <view:SandboxControl/>
+        <view:SbControl/>
     </DataTemplate>
 
     <view:MainWindowSelector x:Key ="MainWindowSelector"

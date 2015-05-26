@@ -36,9 +36,7 @@ namespace NodeLib.Test
         public void TestMakeRandomBinaryBlock()
         {
             var ubA = MemoryBuilders.MakeRandomBinaryDataBlock(MathUtils.GroupShape.NewRing(5), 5, "setName");
-
-            Assert.IsTrue(ubA.name.Length > 1);
-
+            Assert.IsTrue(ubA.IsKvpList);
         }
 
         [TestMethod]

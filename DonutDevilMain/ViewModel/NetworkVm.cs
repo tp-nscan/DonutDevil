@@ -11,7 +11,7 @@ using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
 using DonutDevilControls.ViewModel.D2Indexer;
 using DonutDevilControls.ViewModel.Legend;
-using DonutDevilControls.ViewModel.Params;
+using DonutDevilControls.ViewModel.ParamsOld;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
 using NodeLib.Indexers;

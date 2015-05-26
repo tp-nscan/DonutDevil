@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
              xmlns:common="clr-namespace:DonutDevilControls.View.Common;assembly=DonutDevilControls"
-             xmlns:legend="clr-namespace:DonutDevilControls.View.Legend;assembly=DonutDevilControls"
              mc:Ignorable="d" 
             d:DesignHeight="600" d:DesignWidth="600">
     

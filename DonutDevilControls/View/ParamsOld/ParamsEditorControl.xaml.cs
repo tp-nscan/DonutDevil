@@ -1,5 +1,4 @@
-﻿
-namespace DonutDevilControls.View.Params
+﻿namespace DonutDevilControls.View.ParamsOld
 {
     /// <summary>
     /// Interaction logic for ParamsControl.xaml

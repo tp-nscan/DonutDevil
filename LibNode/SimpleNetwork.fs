@@ -11,6 +11,6 @@ module SimpleNetwork =
     open Generators
     open NodeGroupBuilders
 
-    let MakeSnow(count:int) (name:string) =
-        MemoryBuilders.MakeRandomBinaryDataBlock (GroupShape.Linear count) count name
+//    let MakeSnow(count:int) (name:string) =
+//        MemoryBuilders.MakeRandomBinaryDataBlock (GroupShape.Linear count) count name
 

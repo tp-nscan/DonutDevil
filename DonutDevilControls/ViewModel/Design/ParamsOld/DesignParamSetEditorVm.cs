@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-using DonutDevilControls.ViewModel.Params;
-using NodeLib;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DonutDevilControls.ViewModel.ParamsOld;
 using NodeLib.Common;
-using NodeLib.Params;
+using NodeLib.ParamsOld;
 
-namespace DonutDevilControls.ViewModel.Design.Params
+namespace DonutDevilControls.ViewModel.Design.ParamsOld
 {
     public class DesignParamSetEditorVm : ParamSetEditorVm
     {

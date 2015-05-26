@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using LibNode;
 using NodeLib.Indexers;
 using NodeLib.NgUpdaters;
-using NodeLib.Params;
+using NodeLib.ParamsOld;
 
 namespace NodeLib.NetworkOld
 {

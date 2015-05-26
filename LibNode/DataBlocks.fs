@@ -47,10 +47,10 @@ open LibNode.Generators
         | Open of float32 // max vector length
         | Normal
 
-    // for a named list of memories with uniform structure
+    // a list of memories with uniform structure
     type Memories =
-        | Binary of GroupShape * Named<bool[]>[]
-        | Colors of GroupShape * Named<int[]>[]
+        | Binary of GroupShape * INamed<bool[]>[]
+        | Colors of GroupShape * INamed<int[]>[]
 
     type Memory =
         | Binary of GroupShape * bool[]
@@ -63,10 +63,10 @@ open LibNode.Generators
 
     type ConnectionSets = Named<ConnectionSet>[]
 
-    type NodeSets =
-        | Ns1D of Vs1D * GroupShape * Named<float32[]>[]
-        | Ns2D of Vs2D * GroupShape * Named<PointF32[]>[]
-        | Ns3D of Vs3D * GroupShape * Named<TripleF32[]>[]
+   type NodeSets =
+        | Ns1D of Vs1D * GroupShape * INamed<float32[]>[]
+        | Ns2D of Vs2D * GroupShape * INamed<PointF32[]>[]
+        | Ns3D of Vs3D * GroupShape * INamed<TripleF32[]>[]
 
     type NodeSet =
         | Ng1D of Vs1D * GroupShape * float32[]
@@ -75,15 +75,15 @@ open LibNode.Generators
 
     // for a named list of memories with uniform structure
     type KvpList =
-        | NodeSets of NodeSets
-        | ConnectionSet of ConnectionSets
-        | Memories of Memories
+        | NodeSets of INamed<NodeSets>
+        | ConnectionSets of INamed<ConnectionSets>
+        | Memories of INamed<Memories>
 
     type DataBlock =
         | NodeSet of Named<NodeSet>
         | ConnectionSet of Named<ConnectionSet>
         | Memory of Named<Memory>
-        | KvpList of Named<KvpList>
+        | KvpList of KvpList
 
 
 module NodeGroupBuilders =
@@ -107,7 +107,6 @@ module NodeGroupBuilders =
         if wrap then GroupShape.Linear count
         else GroupShape.Ring count
 
-
     let NodeCount (groupShape:GroupShape) =
         match groupShape with
         | Linear length -> length
@@ -130,7 +129,6 @@ module NodeGroupBuilders =
         | UnSigned max -> myNg1D false true max
         | Signed max -> myNg1D false false max
         | Ring -> myNg1D false true OneF32
-
 
 
     let RandomNg2D (vs2D:Vs2D) (groupShape:GroupShape) =
@@ -160,12 +158,17 @@ module MemoryBuilders =
     let MakeRandomBinary (groupShape:GroupShape) =
         Memory.Binary (groupShape, (RandBools |> Seq.take (NodeCount groupShape) |> Seq.toArray))
 
+    let MakeRandomNamedMemories (groupShape:GroupShape) (count:int) (name:string) =
+            new NamedData<Memories>(
+                name,
+                Memories.Binary(groupShape,
+                    [|for i in 0..count-1 -> 
+                            new NamedData<bool[]>(sprintf "%s_%i" name i, (RandBools |> Seq.take (NodeCount groupShape) |> Seq.toArray))
+                            :> INamed<bool[]>
+                    |]
+                )
+            )
+
     let MakeRandomBinaryDataBlock (groupShape:GroupShape) (count:int) (name:string) =
-        let namedBoolArrays = [|for i in 0..count-1 -> 
-                                {
-                                    Named.name=sprintf "%s_%i" name i; 
-                                    value=(RandBools |> Seq.take (NodeCount groupShape) |> Seq.toArray)
-                                }
-                              |]
-        {Named.name=name; value=KvpList.Memories(Memories.Binary(groupShape, namedBoolArrays))}
-       // DataBlock.KvpList({name=name; value=KvpList.Memories(Memories.Binary(groupShape, namedBoolArrays))})
+        DataBlock.KvpList(
+            KvpList.Memories(MakeRandomNamedMemories groupShape count name))

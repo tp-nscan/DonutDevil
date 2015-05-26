@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NodeLib.Params;
+using NodeLib.ParamsOld;
 
-namespace DonutDevilControls.ViewModel.Params
+namespace DonutDevilControls.ViewModel.ParamsOld
 {
     public class ParamSetEditorVm
     {

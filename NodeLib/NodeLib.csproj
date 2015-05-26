@@ -71,7 +71,7 @@
     <Compile Include="Common\Node.cs" />
     <Compile Include="Common\NodeGroupEx.cs" />
     <Compile Include="Indexers\D2Indexer.cs" />
-    <Compile Include="Params\ParamInt.cs" />
+    <Compile Include="ParamsOld\ParamInt.cs" />
     <Compile Include="NgUpdaters\NgCycler.cs" />
     <Compile Include="NgUpdaters\NgUpdater.cs" />
     <Compile Include="NgUpdaters\NgUpdaterBuilder.cs" />
@@ -81,10 +81,10 @@
     <Compile Include="NgUpdaters\NgUpdaterRing.cs" />
     <Compile Include="NgUpdaters\NgUpdaterSphere.cs" />
     <Compile Include="NgUpdaters\NgUpdaterTorus.cs" />
-    <Compile Include="Params\IParameter.cs" />
-    <Compile Include="Params\ParamBool.cs" />
-    <Compile Include="Params\ParamEnum.cs" />
-    <Compile Include="Params\ParamFloat.cs" />
+    <Compile Include="ParamsOld\IParameter.cs" />
+    <Compile Include="ParamsOld\ParamBool.cs" />
+    <Compile Include="ParamsOld\ParamEnum.cs" />
+    <Compile Include="ParamsOld\ParamFloat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NgUpdaters\NgUpdaterTwister.cs" />
     <Compile Include="NgUpdaters\UpdateUtils.cs" />

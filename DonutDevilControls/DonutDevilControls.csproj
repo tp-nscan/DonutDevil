@@ -127,15 +127,15 @@
     <Compile Include="ViewModel\Legend\LinearLegendVm.cs" />
     <Compile Include="ViewModel\Legend\LegendMode.cs" />
     <Compile Include="ViewModel\D2Indexer\NgIndexerVmState.cs" />
-    <Compile Include="ViewModel\Design\Params\DesignParamSetEditorVm.cs" />
+    <Compile Include="ViewModel\Design\ParamsOld\DesignParamSetEditorVm.cs" />
     <Compile Include="ViewModel\D2Indexer\NgIndexerVm.cs" />
     <Compile Include="ViewModel\D2Indexer\NgIndexerSetVm.cs" />
-    <Compile Include="ViewModel\Params\IParamEditorVm.cs" />
-    <Compile Include="ViewModel\Params\ParamEditorEnumVm.cs" />
-    <Compile Include="ViewModel\Params\ParamEditorFloatVm.cs" />
-    <Compile Include="ViewModel\Params\ParamEditorIntVm.cs" />
-    <Compile Include="ViewModel\Params\ParamSetEditorVm.cs" />
-    <Compile Include="ViewModel\Params\ParamEditorBoolVm.cs" />
+    <Compile Include="ViewModel\ParamsOld\IParamEditorVm.cs" />
+    <Compile Include="ViewModel\ParamsOld\ParamEditorEnumVm.cs" />
+    <Compile Include="ViewModel\ParamsOld\ParamEditorFloatVm.cs" />
+    <Compile Include="ViewModel\ParamsOld\ParamEditorIntVm.cs" />
+    <Compile Include="ViewModel\ParamsOld\ParamSetEditorVm.cs" />
+    <Compile Include="ViewModel\ParamsOld\ParamEditorBoolVm.cs" />
     <Compile Include="View\Common\EnumEditorControl.xaml.cs">
       <DependentUpon>EnumEditorControl.xaml</DependentUpon>
     </Compile>
@@ -183,8 +183,8 @@
     <Compile Include="View\Common\SliderControl.xaml.cs">
       <DependentUpon>SliderControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Params\ParamEditorSelector.cs" />
-    <Compile Include="View\Params\ParamsEditorControl.xaml.cs">
+    <Compile Include="View\ParamsOld\ParamEditorSelector.cs" />
+    <Compile Include="View\ParamsOld\ParamsEditorControl.xaml.cs">
       <DependentUpon>ParamsEditorControl.xaml</DependentUpon>
     </Compile>
     <Page Include="ButtonTemplates.xaml">
@@ -275,11 +275,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Params\ParamEditorSelector.xaml">
+    <Page Include="View\ParamsOld\ParamEditorSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Params\ParamsEditorControl.xaml">
+    <Page Include="View\ParamsOld\ParamsEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

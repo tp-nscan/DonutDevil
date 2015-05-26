@@ -5,7 +5,7 @@ using LibNode;
 using MathLib;
 using MathLib.NumericTypes;
 using NodeLib.Common;
-using NodeLib.Params;
+using NodeLib.ParamsOld;
 
 namespace NodeLib.NgUpdaters
 {
