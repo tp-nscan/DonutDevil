@@ -136,7 +136,6 @@ namespace La.ViewModel
 
         #endregion // UpdateNetworkCommand
 
-
         #region StopUpdateNetworkCommand
 
         RelayCommand _stopUpdateNetworkCommand;
@@ -189,7 +188,6 @@ namespace La.ViewModel
 
         #endregion // GoToMenuCommand
 
-
         void UpdateUi()
         {
             var n = NeighborhoodExt.CircularGlauber(Radius, Frequency * Math.PI / Radius, Decay);
@@ -209,7 +207,6 @@ namespace La.ViewModel
             AbsTotal = valueList.Sum(v => Math.Abs(v));
             _histogramVm.MakeHistogram(valueList.Select(cc => (float)(cc / 2.0 + 0.5)));
         }
-
 
         private WbUniformGridVm _mainGridVm;
         public WbUniformGridVm MainGridVm

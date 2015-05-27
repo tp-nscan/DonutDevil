@@ -23,7 +23,10 @@
     </UserControl.Resources>
 
     <Grid>
-        <Button Command="{Binding GoToSandboxCommand}" Style="{DynamicResource AppPartButtonStyle}">Sandbox</Button>
+        <StackPanel VerticalAlignment="Center">
+            <Button Command="{Binding GoToNetworkCommand}" Style="{DynamicResource AppPartButtonStyle}">Network</Button>
+            <Button Command="{Binding GoToSandboxCommand}" Style="{DynamicResource AppPartButtonStyle}">Sandbox</Button>
+        </StackPanel>
     </Grid>
 
 

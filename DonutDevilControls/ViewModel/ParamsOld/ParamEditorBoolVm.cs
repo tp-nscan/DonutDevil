@@ -11,22 +11,11 @@ namespace DonutDevilControls.ViewModel.ParamsOld
             Value = (bool)_paramBool.Value;
         }
 
-        private bool _isDirty;
-        public bool IsDirty
-        {
-            get { return _isDirty; }
-            set { _isDirty = value; }
-        }
+        public bool IsDirty { get; set; }
 
-        public ParamType ParamType
-        {
-            get { return ParamType.Bool; }
-        }
+        public ParamType ParamType => ParamType.Bool;
 
-        public string Title
-        {
-            get { return _paramBool.Name; }
-        }
+        public string Title => _paramBool.Name;
 
         private readonly ParamBool _paramBool;
 
@@ -37,14 +26,11 @@ namespace DonutDevilControls.ViewModel.ParamsOld
             set
             {
                 _value = value;
-                _isDirty =  (bool)_paramBool.Value != _value; 
+                IsDirty =  (bool)_paramBool.Value != _value; 
                 OnPropertyChanged("Value");
             }
         }
 
-        public IParameter EditedValue
-        {
-            get { return new ParamBool(Value, _paramBool.Name, _paramBool.CanChangeAtRunTime); }
-        }
+        public IParameter EditedValue => new ParamBool(Value, _paramBool.Name, _paramBool.CanChangeAtRunTime);
     }
 }

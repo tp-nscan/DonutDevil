@@ -52,10 +52,9 @@ namespace DonutDevilMain.ViewModel
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
 
             NgIndexerSetVm = new NgIndexerSetVm(network.NodeGroupIndexers.ToNgIndexerVms());
-            NgIndexerSetVm.OnNgDisplayStateChanged.Subscribe(UpdateUi);
             NgIndexerSetVm.Is1D = true;
 
-            UpdateUi(NgIndexerSetVm.NgDisplayIndexing);
+            UpdateUi();
         }
 
         public ParamSetEditorVm ParamSetEditorVm { get; }
@@ -119,7 +118,7 @@ namespace DonutDevilMain.ViewModel
                     {
                         Application.Current.Dispatcher.Invoke
                             (
-                                () => UpdateUi(NgIndexerSetVm.NgDisplayIndexing),
+                                UpdateUi,
                                 DispatcherPriority.Background
                             );
                     }
@@ -243,9 +242,9 @@ namespace DonutDevilMain.ViewModel
 
         public NgIndexerSetVm NgIndexerSetVm { get; }
 
-        void UpdateUi(INgDisplayIndexing ngDisplayIndexing)
+        void UpdateUi()
         {
-            switch (ngDisplayIndexing.LegendMode)
+            switch (NgIndexerSetVm.NgDisplayIndexing.LegendMode)
             {
                 case LegendMode.OneLayer:
                     switch (NgIndexerSetVm.Indexer1D().IndexerDataType)

@@ -130,7 +130,7 @@ namespace NodeLib.NgUpdaters
                 Enum.TryParse((string)d["NeighborhoodType"].Value, out neighborhoodType);
                 var stepSizeX = (float)d["StepSize_X"].Value;
                 var stepSizeY = (float)d["StepSize_Y"].Value;
-                var bias = (float)d["Bias"].Value;
+                var bias = (float)d["TwistBias"].Value;
                 var noise = (float)d["Noise"].Value;
                 var tent = (float)d["Tent"].Value;
                 var saw = (float)d["Saw"].Value;

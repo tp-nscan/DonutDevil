@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reactive.Subjects;
 using System.Windows.Input;
 using DonutDevilControls.ViewModel.Common;
+using La.Model;
 using WpfUtils;
 
 namespace La.ViewModel
@@ -19,6 +20,7 @@ namespace La.ViewModel
         }
 
         #region Navigation
+
         public MainWindowType MainWindowType
         {
             get { return MainWindowType.Menu; }
@@ -49,14 +51,19 @@ namespace La.ViewModel
 
         private void DoGoToNetwork()
         {
-            //_mainWindowTypehanged.OnNext(
-            //    new NetworkVm( NetworkBuilderVm.BuildNetwork())
-            //    );
+            _mainWindowTypehanged.OnNext(
+                new NetworkVm(DesignNetwork)
+                );
         }
 
         bool CanGoToNetwork()
         {
-            return (NetworkBuilderVm != null);
+            return true; // (NetworkBuilderVm != null);
+        }
+
+        public static INetwork DesignNetwork
+        {
+            get { return null; }
         }
 
         #endregion // GoToNetworkCommand

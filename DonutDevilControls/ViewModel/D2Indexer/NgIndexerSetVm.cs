@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive.Subjects;
 using DonutDevilControls.ViewModel.Legend;
 using NodeLib.Indexers;
 using WpfUtils;
@@ -15,21 +14,21 @@ namespace DonutDevilControls.ViewModel.D2Indexer
         {
             var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerVmState.OneDSelected);
 
-            return (D2IndexerBase<float>)((ivm == null) ? null : ivm.Id2Indexer);
+            return (D2IndexerBase<float>)ivm?.Id2Indexer;
         }
 
         public static D2IndexerBase<float> Indexer2Dx(this NgIndexerSetVm ngIndexerSetVm)
         {
             var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerVmState.TwoDx);
 
-            return (D2IndexerBase<float>)((ivm == null) ? null : ivm.Id2Indexer);
+            return (D2IndexerBase<float>)ivm?.Id2Indexer;
         }
 
         public static D2IndexerBase<float> Indexer2Dy(this NgIndexerSetVm ngIndexerSetVm)
         {
             var ivm = ngIndexerSetVm.NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == NgIndexerVmState.TwoDy);
 
-            return (D2IndexerBase<float>)((ivm == null) ? null : ivm.Id2Indexer);
+            return (D2IndexerBase<float>)ivm?.Id2Indexer;
         }
     }
 
@@ -38,7 +37,7 @@ namespace DonutDevilControls.ViewModel.D2Indexer
     {
         public NgIndexerSetVm(IEnumerable<NgIndexerVm> ngIndexerVms)
         {
-            _ngIndexerVms = new ObservableCollection<NgIndexerVm>(ngIndexerVms);
+            NgIndexerVms = new ObservableCollection<NgIndexerVm>(ngIndexerVms);
             foreach (var ngIndexerVm in NgIndexerVms)
             {
                 ngIndexerVm.OnNgIndexerStateChanged.Subscribe(ListenToIndexerStateChanged);
@@ -49,16 +48,7 @@ namespace DonutDevilControls.ViewModel.D2Indexer
             _legendMode = LegendMode.OneLayer;
         }
 
-        private bool _reEntrant;
-
-        private bool ReEntrant
-        {
-            get { return _reEntrant; }
-            set
-            {
-                _reEntrant = value;
-            }
-        }
+        private bool ReEntrant { get; set; }
 
         void ListenToIndexerStateChanged(Tuple<NgIndexerVm, NgIndexerVmState> tuple)
         {
@@ -86,8 +76,6 @@ namespace DonutDevilControls.ViewModel.D2Indexer
                 default:
                     throw new Exception("NgIndexerState not handled");
             }
-
-            NotifyNgDisplayStateChanged();
         }
 
         void AdjustStates(NgIndexerVm vm, NgIndexerVmState stateFrom, NgIndexerVmState stateTo)
@@ -107,12 +95,7 @@ namespace DonutDevilControls.ViewModel.D2Indexer
 
         }
 
-        private ObservableCollection<NgIndexerVm> _ngIndexerVms;
-        public ObservableCollection<NgIndexerVm> NgIndexerVms
-        {
-            get { return _ngIndexerVms; }
-            set { _ngIndexerVms = value; }
-        }
+        public ObservableCollection<NgIndexerVm> NgIndexerVms { get; set; }
 
         private LegendMode _legendMode;
         public LegendMode LegendMode
@@ -133,7 +116,6 @@ namespace DonutDevilControls.ViewModel.D2Indexer
             {
                 LegendMode = (value) ? LegendMode.OneLayer : LegendMode.TwoLayers;
                 ResetLayerSelectorVms();
-                NotifyNgDisplayStateChanged();
             }
         }
 
@@ -155,7 +137,6 @@ namespace DonutDevilControls.ViewModel.D2Indexer
             {
                 LegendMode = (value) ? LegendMode.TwoLayers : LegendMode.OneLayer;
                 ResetLayerSelectorVms();
-                NotifyNgDisplayStateChanged();
             }
         }
 
@@ -187,14 +168,6 @@ namespace DonutDevilControls.ViewModel.D2Indexer
             ReEntrant = false;
         }
 
-        private void NotifyNgDisplayStateChanged()
-        {
-            _ngDisplayStateChanged.OnNext
-                (
-                    NgDisplayIndexing
-                );
-        }
-
         public INgDisplayIndexing NgDisplayIndexing
         {
             get
@@ -216,18 +189,7 @@ namespace DonutDevilControls.ViewModel.D2Indexer
         ID2Indexer NgIndexerFor(NgIndexerVmState ngIndexerState)
         {
             var indexerVm = NgIndexerVms.FirstOrDefault(vm => vm.NgIndexerState == ngIndexerState);
-            if (indexerVm != null)
-            {
-                return indexerVm.Id2Indexer;
-            }
-            return null;
-        }
-
-        private readonly Subject<INgDisplayIndexing> _ngDisplayStateChanged
-            = new Subject<INgDisplayIndexing>();
-        public IObservable<INgDisplayIndexing> OnNgDisplayStateChanged
-        {
-            get { return _ngDisplayStateChanged; }
+            return indexerVm?.Id2Indexer;
         }
     }
 }
