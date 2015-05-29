@@ -51,14 +51,16 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Rop.fs" />
     <Compile Include="MathUtils.fs" />
     <Compile Include="Generators.fs" />
     <Compile Include="Named.fs" />
     <Compile Include="DataBlocks.fs" />
-    <Compile Include="SimpleNetwork.fs" />
+    <Compile Include="SimpleNetworks.fs" />
     <Compile Include="Parameters.fs" />
     <Compile Include="Sim.fs" />
     <None Include="Script.fsx" />
+    <None Include="ScriptMathNet.fsx" />
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>

@@ -1,6 +1,8 @@
 ﻿namespace LibNode
 open System
+open System.Collections.Generic
 open MathUtils
+open Rop
 
     type BoolParam = {Value:bool;}
     type FloatParam = {Value:float32; Min:float32; Max:float32;}
@@ -29,7 +31,7 @@ open MathUtils
 
     type Param = {Name:string; Value: ParamValue; CanChangeAtRunTime: bool}
 
-module Parameters=
+module Parameters =
     let UpdateBoParam = {Param.Name="name"; Value=ParamValue.Bool{BoolParam.Value=true;}; CanChangeAtRunTime=true}
 
     let UpdateFrequencyParam = {Param.Name="UpdateFrequency"; Value=ParamValue.Int{Value=10; Min=1; Max=50}; CanChangeAtRunTime=true}
@@ -54,21 +56,22 @@ module Parameters=
             ArrayStrideParam;
             StepSizeParam;
             NoiseParam;
-        |] |> Array.map(fun p -> p.Name, p.Value)  |> Dict.ofArray
+        |] |> Array.map(fun p -> p.Name, p)  |> Dict.ofArray
 
     let RandomCliqueSet =
         [|
             ArrayStrideParam;
             StepSizeParam;
             NoiseParam;
-        |] |> Array.map(fun p -> p.Name, p.Value)  |> Dict.ofArray
+            EnsembleCountParam;
+        |] |> Array.map(fun p -> p.Name, p)  |> Dict.ofArray
 
     let RingSet =
         [|
             ArrayStrideParam;
             StepSizeParam;
             NoiseParam;
-        |] |> Array.map(fun p -> p.Name, p.Value)  |> Dict.ofArray
+        |] |> Array.map(fun p -> p.Name, p)  |> Dict.ofArray
 
     let TwisterSet =
         [|
@@ -76,7 +79,7 @@ module Parameters=
             StepSize_XParam;
             StepSize_YParam;
             TwistBiasParam;
-        |] |> Array.map(fun p -> p.Name, p.Value)  |> Dict.ofArray
+        |] |> Array.map(fun p -> p.Name, p)  |> Dict.ofArray
 
     let SpotSet =
         [|
@@ -84,7 +87,86 @@ module Parameters=
             StepSize_XParam;
             StepSize_YParam;
             TwistBiasParam;
-        |] |> Array.map(fun p -> p.Name, p.Value)  |> Dict.ofArray
+        |] |> Array.map(fun p -> p.Name, p)  |> Dict.ofArray
+
+
+    let GetParamByName (prams:IDictionary<string,Param>) (name:string) =
+        if prams.ContainsKey(name) then
+            Rop.succeed prams.[name]
+        else
+            Rop.fail (sprintf "Name: %s not found in dictionary" name)
+
+    let GetParamValueBool pram =
+        match pram.Value with
+        | Bool bp -> Rop.succeed bp.Value
+        | Enum _ -> Rop.fail (sprintf "Param: %s is Enum not bool" pram.Name)
+        | Float _ -> Rop.fail (sprintf "Param: %s is Float not bool" pram.Name)
+        | Int _ -> Rop.fail (sprintf "Param: %s is Int not bool" pram.Name)
+        | LocalCpls1D _ -> Rop.fail (sprintf "Param: %s is LocalCpls1D not bool" pram.Name)
+        | LocalCpls2D _ -> Rop.fail (sprintf "Param: %s is LocalCpls2D not bool" pram.Name)
+
+    let GetParamValueEnum pram =
+        match pram.Value with
+        | Bool _ -> Rop.fail (sprintf "Param: %s is bool not enum" pram.Name)
+        | Enum ep -> Rop.succeed ep.Value
+        | Float _ -> Rop.fail (sprintf "Param: %s is Float not enum" pram.Name)
+        | Int _ -> Rop.fail (sprintf "Param: %s is Int not enum" pram.Name)
+        | LocalCpls1D _ -> Rop.fail (sprintf "Param: %s is LocalCpls1D not enum" pram.Name)
+        | LocalCpls2D _ -> Rop.fail (sprintf "Param: %s is LocalCpls2D not enum" pram.Name)
+
+    let GetParamValueFloat32 pram =
+        match pram.Value with
+        | Bool _ -> Rop.fail (sprintf "Param: %s is bool not float" pram.Name)
+        | Enum _ -> Rop.fail (sprintf "Param: %s is Enum not float" pram.Name)
+        | Float fp -> Rop.succeed fp.Value
+        | Int _ -> Rop.fail (sprintf "Param: %s is Int not float" pram.Name)
+        | LocalCpls1D _ -> Rop.fail (sprintf "Param: %s is LocalCpls1D not float" pram.Name)
+        | LocalCpls2D _ -> Rop.fail (sprintf "Param: %s is LocalCpls2D not float" pram.Name)
+
+    let GetParamValueInt pram =
+        match pram.Value with
+        | Bool _ -> Rop.fail (sprintf "Param: %s is bool not int" pram.Name)
+        | Enum _ -> Rop.fail (sprintf "Param: %s is Enum not int" pram.Name)
+        | Float _ -> Rop.fail (sprintf "Param: %s is Float not int" pram.Name)
+        | Int ip -> Rop.succeed ip.Value
+        | LocalCpls1D _ -> Rop.fail (sprintf "Param: %s is LocalCpls1D not int" pram.Name)
+        | LocalCpls2D _ -> Rop.fail (sprintf "Param: %s is LocalCpls2D not int" pram.Name)
+
+    let GetParamValueLocalCpls1D pram =
+        match pram.Value with
+        | Bool _ -> Rop.fail (sprintf "Param: %s is bool not LocalCpls1D" pram.Name)
+        | Enum _ -> Rop.fail (sprintf "Param: %s is Enum not LocalCpls1D" pram.Name)
+        | Float _ -> Rop.fail (sprintf "Param: %s is Float not LocalCpls1D" pram.Name)
+        | Int _ -> Rop.fail (sprintf "Param: %s is Int not LocalCpls1D" pram.Name)
+        | LocalCpls1D ip -> Rop.succeed ip
+        | LocalCpls2D _ -> Rop.fail (sprintf "Param: %s is LocalCpls2D not LocalCpls1D" pram.Name)
+
+    let GetParamValueLocalCpls2D pram =
+        match pram.Value with
+        | Bool _ -> Rop.fail (sprintf "Param: %s is bool not LocalCpls2D" pram.Name)
+        | Enum _ -> Rop.fail (sprintf "Param: %s is Enum not LocalCpls2D" pram.Name)
+        | Float _ -> Rop.fail (sprintf "Param: %s is Float not LocalCpls2D" pram.Name)
+        | Int _ -> Rop.fail (sprintf "Param: %s is Int not LocalCpls2D" pram.Name)
+        | LocalCpls1D _ -> Rop.fail (sprintf "Param: %s is LocalCpls1D not LocalCpls2D" pram.Name)
+        | LocalCpls2D _ -> Rop.succeed pram.Value
+
+    let GetBoolParam (prams:IDictionary<string,Param>) (name:string) =
+        GetParamValueBool >>= (GetParamByName prams name)
+
+    let GetEnumParam (prams:IDictionary<string,Param>) (name:string) =
+        GetParamValueEnum >>= (GetParamByName prams name)
+
+    let GetFloat32Param (prams:IDictionary<string,Param>) (name:string) =
+        GetParamValueFloat32 >>= (GetParamByName prams name)
+
+    let GetIntParam (prams:IDictionary<string,Param>) (name:string) =
+        GetParamValueInt >>= (GetParamByName prams name)
+
+    let GetLocalCpls1DParam (prams:IDictionary<string,Param>) (name:string) =
+        GetParamValueLocalCpls1D >>= (GetParamByName prams name)
+
+    let GetLocalCpls2DParam (prams:IDictionary<string,Param>) (name:string) =
+        GetParamValueLocalCpls2D >>= (GetParamByName prams name)
 
     let MakeBoolParam (name:string) (value:bool) (canChangeAtRunTime:bool) =
         {Name=name; Value=ParamValue.Bool({BoolParam.Value = value}); CanChangeAtRunTime=canChangeAtRunTime}

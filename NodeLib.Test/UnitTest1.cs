@@ -14,7 +14,7 @@ namespace NodeLib.Test
             const int arraylength = 5;
             var foo = new NodeGroup(arraylength);
 
-            var nodes = new[] { new Node(1.2f, 3), new Node(1.7f, 4) };
+            var nodes = new[] {new Node(1.2f, 3), new Node(1.7f, 4)};
             foo.AddNodes(nodes);
 
             Assert.AreEqual(arraylength, foo.ArrayLength);
@@ -22,6 +22,15 @@ namespace NodeLib.Test
             Assert.AreEqual(arraylength, foo.Values.Length);
         }
 
+        [TestMethod]
+        public void TestParam()
+        {
+            var ubA = Parameters.RandomCliqueSet;
+
+            var wh = Parameters.GetFloat32Param(ubA, "ArrayStride");
+
+            Assert.IsTrue(wh.IsSuccess);
+        }
 
         [TestMethod]
         public void TestRandomBools()
@@ -29,9 +38,8 @@ namespace NodeLib.Test
             var ubA = MemoryBuilders.MakeRandomBinary(MathUtils.GroupShape.NewRing(5));
 
             Assert.IsTrue(ubA.IsBinary);
-
         }
-        
+
         [TestMethod]
         public void TestMakeRandomBinaryBlock()
         {
@@ -43,8 +51,8 @@ namespace NodeLib.Test
         public void TestRandUsFloat32()
         {
             var q = Enumerable.Range(0, 500)
-                              .Select(i => Generators.RandUsFloat32((float) 0.5))
-                              .ToList();
+                .Select(i => Generators.RandSignedFloat32((float) 0.5))
+                .ToList();
 
             var tot = q.Sum();
 
@@ -55,7 +63,7 @@ namespace NodeLib.Test
         public void TestPerturbInRange()
         {
             var q = Enumerable.Range(0, 500)
-                .Select(i => Generators.RandUsFloat32(
+                .Select(i => Generators.RandSignedFloat32(
                     max: (float) 0.2)).ToArray();
 
             var tot = q.Sum();
@@ -63,9 +71,9 @@ namespace NodeLib.Test
             Assert.IsTrue(Math.Abs(tot) < 35);
 
             var mode = Generators.PerturbInRangeF32A(
-                minVal:   (float) -0.3,
-                maxVal:   (float)  0.3,
-                maxDelta: (float)  0.2,
+                minVal: (float) -0.3,
+                maxVal: (float) 0.3,
+                maxDelta: (float) 0.2,
                 values: q
                 );
 
@@ -111,7 +119,7 @@ namespace NodeLib.Test
 
             Assert.IsTrue(Math.Abs(tot) < 85);
 
-            var flipped = Generators.FlipF32A((float)0.2, ubA);
+            var flipped = Generators.FlipF32A((float) 0.2, ubA);
 
 
             var tot2 = flipped.Sum();
@@ -145,9 +153,9 @@ namespace NodeLib.Test
         public void TestRandomDiscPointF32()
         {
             var ubA = Generators.RandDiscPointsF32(
-                maxRadius:  (float)2.0).Take(100)
-                        .Select(MathUtils.PointF32LengthSquared)
-                        .ToArray();
+                maxRadius: (float) 2.0).Take(100)
+                .Select(MathUtils.PointF32LengthSquared)
+                .ToArray();
 
             Assert.IsTrue(ubA.Length == 100);
 
@@ -157,9 +165,9 @@ namespace NodeLib.Test
         public void TestRandomRingPointF32()
         {
             var ubA = Generators.RandRingPointsF32
-                        .Select(MathUtils.PointF32LengthSquared)
-                        .Take(100)
-                        .ToArray();
+                .Select(MathUtils.PointF32LengthSquared)
+                .Take(100)
+                .ToArray();
 
             Assert.IsTrue(ubA.Length == 100);
 
@@ -169,9 +177,9 @@ namespace NodeLib.Test
         public void TestRandomBallPointF32()
         {
             var ubA = Generators.RandBallPointsF32(
-                maxRadius: (float)1.0).Take(100)
-                        .Select(MathUtils.TripleF32LengthSquared)
-                        .ToArray();
+                maxRadius: (float) 1.0).Take(100)
+                .Select(MathUtils.TripleF32LengthSquared)
+                .ToArray();
 
             Assert.IsTrue(ubA.Length == 100);
 
@@ -181,9 +189,9 @@ namespace NodeLib.Test
         public void TestRandomSpherePointF32()
         {
             var ubA = Generators.RandSpherePointsF32
-                        .Select(MathUtils.TripleF32LengthSquared)
-                        .Take(100)
-                        .ToArray();
+                .Select(MathUtils.TripleF32LengthSquared)
+                .Take(100)
+                .ToArray();
 
             Assert.IsTrue(ubA.Length == 100);
 
@@ -196,7 +204,7 @@ namespace NodeLib.Test
             const int colCount = 3;
             const int arrayCount = rowCount*colCount;
 
-            var over = Enumerable.Range(0, arrayCount).Select(i => (float)i).ToArray();
+            var over = Enumerable.Range(0, arrayCount).Select(i => (float) i).ToArray();
 
             var rowMajorArray =
                 MathUtils.Array2DFromRowMajor(rowCount: rowCount, colCount: colCount, values: over);
@@ -215,5 +223,12 @@ namespace NodeLib.Test
             Assert.IsTrue(MathUtils.CompareFloat32Arrays(over, backT));
         }
 
+        [TestMethod]
+        public void TestHopAlong()
+        {
+            var ha = LibNode.SimpleNetwork.CreateRandCesr2(3, 3);
+            var lst = ha.Connections;
+           ;
+        }
     }
 }

@@ -63,5 +63,18 @@ open MathUtils
             with get() = _data
 
 
+    type NamedDataPtr<'a>(name:string, data:unit->'a) =
+        let _name = name
+        let _data = data
 
+        interface INamed<'a> with
+            member this.Name =
+                _name
+            member this.Data() = 
+                _data()
 
+        member this.Name  
+            with get() = _name
+
+        member this.Data  
+            with get() = _data

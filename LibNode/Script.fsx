@@ -23,36 +23,65 @@ open LibNode
 #load "Generators.fs"
 #load "DataBlocks.fs"
 
-let nv = {Named.name="jo"; value=5}
+type LoggingBuilder() =
+    let log p = p * 100
 
-let nov = {Namoed.name="jo"; value= (fun ()->5)}
+    member this.Bind(x, f) = 
+        let x = log x
+        f x
 
-let wob = new NamedData<int>("", 4)
+    member this.Return(x) = 
+        x
 
-let nob = MemoryBuilders. (MathUtils.GroupShape.Rectangle({x=5;y=4})) 3 "ralph"
 
-let shrub (:KvpList) =
-    match  with
-    | NodeSets ns -> None
-    | ConnectionSets cs -> None
-    | Memories nm -> Some nm.Name
+let logger = new LoggingBuilder()
 
-//let samples = Random.doubles 1000
-//
-//// overwrite the whole array with new random values
-//Random.doubleFill samples
-//
-//// create an infinite sequence:
-//let sampleSeq = Random.doubleSeq ()
-//
-//// take a single random value
-//let rng = Random.mersenneTwisterShared
-//let sample = rng.NextDouble()
-//let sampled = rng.NextDecimal()
+let loggedWorkflow = 
+    logger
+        {
+        let! x = 42
+        let! y = 43
+        let! z = x + y
+        return z
+        }
 
-//let ralph = LibNode.Generators.RandUnsignedIntervalF32 (System.Convert.ToSingle(0.5)) 20 |> Seq.toArray
-//
-//let linus = Ng1D ((Vs1D.UnSigned (System.Convert.ToSingle(0.5))), (GroupShape.Linear 20), ralph)
-//
-//
-//let linus2 = Ng1D (Vs1D.Ring, (GroupShape.Linear 20), ralph)
+let strToInt str =
+ match (System.Int32.TryParse str) with
+ | (true, res) -> Some res
+ | (false, _) -> None
+ 
+type MaybeBuilder() =
+
+    member this.Bind(x, f) = 
+        match x with
+        | None -> None
+        | Some a -> f a
+
+    member this.Return(x) = 
+        Some x
+   
+let maybeu = new MaybeBuilder()
+
+
+let stringAddWorkflow x y z = 
+    maybeu 
+        {
+        let! a = strToInt x
+        let! b = strToInt y
+        let! c = strToInt z
+        return a + b + c
+        }    
+
+let strAdd str i =
+    match (strToInt str) with
+    | None -> None
+    | Some a -> Some (a + i)
+
+let (>>=) m f = 
+    match m with
+    | None -> None
+    | Some x -> f x
+
+let good = strToInt "1" >>= strAdd "2" >>= strAdd "3"
+
+let pD = Parameters.LinearLocalSet

@@ -5,8 +5,6 @@ using DonutDevilControls.ViewModel.Legend;
 
 namespace DonutDevilControls.View.Legend
 {
-
-
     public class HistogramSelector : DataTemplateSelector
     {
         public DataTemplate RingTemplate { get; set; }

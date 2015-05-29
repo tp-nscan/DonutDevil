@@ -3,10 +3,6 @@ open System
 open MathUtils
 open LibNode.Generators
 
-    type Named<'a> = {name:string; value:'a}
-
-    type Namoed<'a> = {name:string; value:unit->'a}
-
     type NodeGroupIndex = int
 
     type NodeValue = float32
@@ -25,6 +21,7 @@ open LibNode.Generators
                 
         member this.AddNodes(nodes: seq<Node>) =
             Seq.iter (fun node -> _array.[node.GroupIndex]<-node.Value) nodes
+
 
     // The value options for when the data type for each node is one float
     type Vs1D =
@@ -61,7 +58,7 @@ open LibNode.Generators
         | DenseSymmetric of SymmetricFormat * GroupShape * float32[][]
         | Sparse of GroupShape * GroupShape * CellF32[]
 
-    type ConnectionSets = Named<ConnectionSet>[]
+    type ConnectionSets = INamed<ConnectionSet>[]
 
    type NodeSets =
         | Ns1D of Vs1D * GroupShape * INamed<float32[]>[]
@@ -80,23 +77,35 @@ open LibNode.Generators
         | Memories of INamed<Memories>
 
     type DataBlock =
-        | NodeSet of Named<NodeSet>
-        | ConnectionSet of Named<ConnectionSet>
-        | Memory of Named<Memory>
+        | NodeSet of INamed<NodeSet>
+        | ConnectionSet of INamed<ConnectionSet>
+        | Memory of INamed<Memory>
         | KvpList of KvpList
+
+module DataBlockUtils =
+    let Name (dataBlock:DataBlock) =
+        match dataBlock with
+        | NodeSet ns -> ns.Name
+        | ConnectionSet cs -> cs.Name
+        | Memory mem -> mem.Name
+        | KvpList kvp -> match kvp with
+                         | NodeSets ns -> ns.Name
+                         | ConnectionSets cs -> cs.Name
+                         | Memories            mems -> mems.Name
+
 
 
 module NodeGroupBuilders =
 
-    let PerturbNg1D (vs1D:Vs1D) (devMag:float32) (values:float32[]) =
+    let PerturbNg1D (seed:int) (vs1D:Vs1D) (devMag:float32) (values:float32[]) =
         match vs1D with 
-        | UnsignedBit ->  (FlipUF32A devMag values)
-        | SignedBit ->  (FlipF32A devMag values)
-        | UnitUnsigned ->  (PerturbInRangeF32A ZeroF32 OneF32 devMag values)
-        | UnitSigned ->  (PerturbInRangeF32A NOneF32 OneF32 devMag values)
-        | UnSigned max ->  (PerturbInRangeF32A ZeroF32 max devMag values)
-        | Signed absMax ->  (PerturbInRangeF32A -absMax absMax devMag values)
-        | Ring ->  (PerturbInRangeF32A ZeroF32 OneF32 devMag values)
+        | UnsignedBit ->  (FlipUF32A seed devMag values)
+        | SignedBit ->  (FlipF32A seed devMag values)
+        | UnitUnsigned ->  (PerturbInRangeF32A seed ZeroF32 OneF32 devMag values)
+        | UnitSigned ->  (PerturbInRangeF32A seed NOneF32 OneF32 devMag values)
+        | UnSigned max ->  (PerturbInRangeF32A seed ZeroF32 max devMag values)
+        | Signed absMax ->  (PerturbInRangeF32A seed -absMax absMax devMag values)
+        | Ring ->  (PerturbInRangeF32A seed ZeroF32 OneF32 devMag values)
 
 
     let ToGroupShape1D wrap count =
@@ -115,10 +124,10 @@ module NodeGroupBuilders =
         | Torus ip -> ip.x * ip.y
 
 
-    let RandomNg1D (vs1D:Vs1D) (groupShape:GroupShape) =
+    let RandomNg1D (seed:int) (vs1D:Vs1D) (groupShape:GroupShape) =
         let nodeCount = NodeCount groupShape
         let myNg1D (justBits:bool) (unsigned:bool) (max:float32) = 
-            let nodes = (RandomFloat32 justBits unsigned max) |> Seq.take nodeCount
+            let nodes = (RandomFloat32 seed justBits unsigned max) |> Seq.take nodeCount
             Ng1D(vs1D, groupShape, nodes|> Seq.toArray)
 
         match vs1D with        
@@ -131,13 +140,13 @@ module NodeGroupBuilders =
         | Ring -> myNg1D false true OneF32
 
 
-    let RandomNg2D (vs2D:Vs2D) (groupShape:GroupShape) =
+    let RandomNg2D (seed:int) (vs2D:Vs2D) (groupShape:GroupShape) =
         let nodeCount = NodeCount groupShape
         let myNodes = 
             match vs2D with
-            | UnitTorus -> (RandomEuclideanPointsF32 false) |> Seq.take nodeCount |> Seq.toArray
-            | Complex max  -> RandDiscPointsF32 OneF32 |> Seq.take nodeCount |> Seq.toArray
-            | ComplexNormal -> RandRingPointsF32 |> Seq.take nodeCount |> Seq.toArray
+            | UnitTorus -> (RandomEuclideanPointsF32 seed false) |> Seq.take nodeCount |> Seq.toArray
+            | Complex max  -> RandDiscPointsF32 seed OneF32 |> Seq.take nodeCount |> Seq.toArray
+            | ComplexNormal -> RandRingPointsF32 seed |> Seq.take nodeCount |> Seq.toArray
 
         match vs2D with
         | UnitTorus -> Ng2D(vs2D, groupShape, myNodes)
@@ -148,27 +157,27 @@ module NodeGroupBuilders =
 module ConnectionSetBuilders =
     open NodeGroupBuilders
 
-    let MakeRandomDense (gsFrom:GroupShape) (gsTo:GroupShape) (absMax:float32) =
-        ConnectionSet.Dense (gsFrom, gsTo, (RandArray2DUF32 (NodeCount gsFrom) (NodeCount gsTo) absMax))
+    let MakeRandomDense (seed:int) (gsFrom:GroupShape) (gsTo:GroupShape) (absMax:float32) =
+        ConnectionSet.Dense (gsFrom, gsTo, (RandArray2DUF32 seed (NodeCount gsFrom) (NodeCount gsTo) absMax))
 
 
 module MemoryBuilders =
     open NodeGroupBuilders
 
-    let MakeRandomBinary (groupShape:GroupShape) =
-        Memory.Binary (groupShape, (RandBools |> Seq.take (NodeCount groupShape) |> Seq.toArray))
+    let MakeRandomBinary (seed:int) (groupShape:GroupShape) =
+        Memory.Binary (groupShape, (RandBools seed|> Seq.take (NodeCount groupShape) |> Seq.toArray))
 
-    let MakeRandomNamedMemories (groupShape:GroupShape) (count:int) (name:string) =
-            new NamedData<Memories>(
-                name,
-                Memories.Binary(groupShape,
-                    [|for i in 0..count-1 -> 
-                            new NamedData<bool[]>(sprintf "%s_%i" name i, (RandBools |> Seq.take (NodeCount groupShape) |> Seq.toArray))
-                            :> INamed<bool[]>
-                    |]
-                )
+    let MakeRandomNamedMemories (seed:int) (groupShape:GroupShape) (count:int) (name:string) =
+        new NamedData<Memories>(
+            name,
+            Memories.Binary(groupShape,
+                [|for i in 0..count-1 -> 
+                    new NamedData<bool[]>(sprintf "%s_%i" name i, (RandBools seed|> Seq.take (NodeCount groupShape) |> Seq.toArray))
+                    :> INamed<bool[]>
+                |]
             )
+        )
 
-    let MakeRandomBinaryDataBlock (groupShape:GroupShape) (count:int) (name:string) =
+    let MakeRandomBinaryDataBlock (seed:int) (groupShape:GroupShape) (count:int) (name:string) =
         DataBlock.KvpList(
-            KvpList.Memories(MakeRandomNamedMemories groupShape count name))
+            KvpList.Memories(MakeRandomNamedMemories seed groupShape count name))

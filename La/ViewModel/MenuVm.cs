@@ -5,6 +5,7 @@ using System.Reactive.Subjects;
 using System.Windows.Input;
 using DonutDevilControls.ViewModel.Common;
 using La.Model;
+using LibNode;
 using WpfUtils;
 
 namespace La.ViewModel
@@ -61,9 +62,12 @@ namespace La.ViewModel
             return true; // (NetworkBuilderVm != null);
         }
 
-        public static INetwork DesignNetwork
+        public static ISym DesignNetwork
         {
-            get { return null; }
+            get
+            {
+                return null;// Network.MakeLinearNetwork(memLength:256, memCount:25);
+            }
         }
 
         #endregion // GoToNetworkCommand

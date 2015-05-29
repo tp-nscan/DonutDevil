@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
 using La.Model;
+using LibNode;
 using MathLib.Intervals;
 using WpfUtils;
 
@@ -15,7 +16,7 @@ namespace La.ViewModel
 {
     public class NetworkVm : NotifyPropertyChanged, IMainWindowVm
     {
-        public NetworkVm(INetwork network)
+        public NetworkVm(ISym network)
         {
             Network = network;
             DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
@@ -24,7 +25,6 @@ namespace La.ViewModel
         #region IMainWindowVm
 
         public MainWindowType MainWindowType => MainWindowType.Network;
-
         private readonly Subject<IMainWindowVm> _mainWindowTypehanged = new Subject<IMainWindowVm>();
         public IObservable<IMainWindowVm> OnMainWindowTypeChanged => _mainWindowTypehanged;
 
@@ -32,7 +32,7 @@ namespace La.ViewModel
 
         #region NetworkVm base impl
 
-        INetwork Network { get; }
+        ISym Network { get; }
 
         public int Generation => Network?.Generation ?? 0;
 
@@ -167,7 +167,7 @@ namespace La.ViewModel
 
         void UpdateUi()
         {
-
+            this.OnPropertyChanged("ElapsedTime");
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using La.Model;
+using LibNode;
 
 namespace La.ViewModel.Design
 {
@@ -8,7 +9,7 @@ namespace La.ViewModel.Design
         {
         }
 
-        public static INetwork DesignNetwork
+        public static ISym DesignNetwork
         {
             get { return null; }
         }
