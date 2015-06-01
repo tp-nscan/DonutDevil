@@ -85,3 +85,16 @@ let (>>=) m f =
 let good = strToInt "1" >>= strAdd "2" >>= strAdd "3"
 
 let pD = Parameters.LinearLocalSet
+
+
+let fa a b =  a b
+
+let fb a = function x -> a x
+
+let fc x = fa(fb x)
+
+let SeqSrc = Seq.initInfinite(fun i-> i).GetEnumerator()
+
+let res1() = 
+    SeqSrc.MoveNext() |> ignore
+    SeqSrc.Current

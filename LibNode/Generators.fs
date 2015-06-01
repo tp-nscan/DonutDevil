@@ -1,8 +1,8 @@
 ﻿namespace LibNode
 
 module Generators =
-
     open System
+    open System.Collections.Generic
     open MathNet.Numerics
     open MathNet.Numerics.Distributions
     open MathNet.Numerics.LinearAlgebra
@@ -13,42 +13,68 @@ module Generators =
     
     let sharedRng = Random.mersenneTwisterShared
 
-    // selects a random float32 from (-max, max)
-    let RandUnsignedFloatsF32 (seed:int) (max:float32) =
+    let SeqPopper (s:seq<float32>) =
+        let iter = s.GetEnumerator()
+        function () ->
+                    iter.MoveNext() |> ignore
+                    iter.Current
+
+     // a random float32 from (-max, max)
+    let RandSignedFloat32 (rng:Random) (max:float32) =
+        Convert.ToSingle(rng.NextDouble() * 2.0) * max - max
+
+    // a sequence of random float32 from (0, max)
+    let RandF32s (seed:int) (max:float32) =
+        let rng = Random.MersenneTwister(seed)
+        Seq.initInfinite ( fun i -> RandSignedFloat32 rng max )
+
+    // a sequence of random float32 from (-max, max)
+    let RandUF32s (seed:int) (max:float32) =
         let rng = Random.MersenneTwister(seed)
         Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()) * max)
 
-    let RandSignedFloat32 (rng:Random) (max:float32) =
-        Convert.ToSingle(rng.NextDouble() * 2.0) * max - max
-        
     let RandBools (seed:int) =
         let rng = Random.MersenneTwister(seed)
         Seq.initInfinite ( fun i -> rng.Next(2)=1)
 
-    let RandSignedFloatsF32 (seed:int) (max:float32) =
-        let rng = Random.MersenneTwister(seed)
-        Seq.initInfinite ( fun i -> RandSignedFloat32 rng max )
-
-    let RandBitsUF32 (seed:int) =
+     // random draws from {0f, 1f}
+    let RandUF32Bits (seed:int) =
         let rng = Random.MersenneTwister(seed)
         Seq.initInfinite ( fun i -> Convert.ToSingle(rng.Next(2)))
 
-    let RandBitsF32 (seed:int) =
+     // random draws from {-1f, 1f}
+    let RandF32Bits (seed:int) =
         let rng = Random.MersenneTwister(seed)
         Seq.initInfinite ( fun i -> Convert.ToSingle(rng.Next(2)) * TwoF32 - OneF32)
 
-    let FlipUF32WithProb (rng:Random) (probability:float) (value:float32) =
-        if (rng.NextDouble() < probability) then
+    // 0f <=> 1f with probability p
+    let FlipUF32WithProb (rng:Random) (p:float) (value:float32) =
+        if (rng.NextDouble() < p) then
             OneF32 - value
         else
             value
 
+    // -1f <=> 1f with probability p
     let FlipF32WithProb (rng:Random) (probability:float) (value:float32) =
         if (rng.NextDouble() < probability) then
             value * NOneF32
         else
             value
+    
+    // applies FlipUF32WithProb to values:float32[] 
+    let FlipUF32A (seed:int) (p:float32) (values:float32[]) =
+        let rng = Random.MersenneTwister(seed)
+        let dblM = Convert.ToDouble p
+        values |> Array.map(fun v -> (FlipUF32WithProb rng dblM v ))
 
+    // applies FlipF32WithProb to values:float32[] 
+    let FlipF32A (seed:int) (p:float32) (values:float32[]) =
+        let rng = Random.MersenneTwister(seed)
+        let dblM = Convert.ToDouble p
+        values |> Array.map(fun v -> (FlipF32WithProb rng dblM v ))
+
+
+    // one step of random walk in [minVal, maxVal] with stepsize uniformly picked from (0, maxDelta)
     let PerturbInRangeF32 (rng:Random) (minVal:float32) (maxVal:float32) (maxDelta:float32) (value:float32) =
         let newVal = value + (RandSignedFloat32 rng maxDelta)
         if newVal < minVal then
@@ -58,35 +84,24 @@ module Generators =
         else
             newVal
 
+    // applies PerturbInRangeF32 to values:float32[] 
     let PerturbInRangeF32A (seed:int) (minVal:float32) (maxVal:float32) (maxDelta:float32) (values:float32[]) =
         let rng = Random.MersenneTwister(seed)
         values |> Array.map(fun v -> (PerturbInRangeF32 rng minVal maxVal maxDelta v))
 
 
-    let FlipUF32A (seed:int) (mutationRate:float32) (values:float32[]) =
-        let rng = Random.MersenneTwister(seed)
-        let dblM = Convert.ToDouble mutationRate
-        values |> Array.map(fun v -> (FlipUF32WithProb rng dblM v ))
-
-
-    let FlipF32A (seed:int) (mutationRate:float32) (values:float32[]) =
-        let rng = Random.MersenneTwister(seed)
-        let dblM = Convert.ToDouble mutationRate
-        values |> Array.map(fun v -> (FlipF32WithProb rng dblM v ))
-
-
     let RandFloatsF32 (seed:int) (unsigned:bool) (max:float32) =
         if unsigned then
-            RandUnsignedFloatsF32 seed max
+            RandUF32s seed max
         else
-            RandSignedFloatsF32 seed max
+            RandF32s seed max
 
 
     let RandomBitsF32 (seed:int) (unsigned:bool) =
         if unsigned then
-            RandBitsUF32 seed
+            RandUF32Bits seed
         else
-            RandBitsF32 seed
+            RandF32Bits seed
 
 
     let RandomFloat32 (seed:int) (justBits:bool) (unsigned:bool) (max:float32) =

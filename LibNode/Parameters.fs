@@ -41,6 +41,7 @@ module Parameters =
     let CnxnSeedParam = {Param.Name="CnxnSeed"; Value=ParamValue.Int{Value=123; Min=1; Max=32000}; CanChangeAtRunTime=false}
     let MemCountParam = {Param.Name="MemCount"; Value=ParamValue.Int{Value=10; Min=1; Max=1024}; CanChangeAtRunTime=false}
     let EnsembleCountParam = {Param.Name="EnsembleCount"; Value=ParamValue.Int{Value=50; Min=1; Max=1000}; CanChangeAtRunTime=false}
+    let NodeCountParam = {Param.Name="NodeCount"; Value=ParamValue.Int{Value=50; Min=1; Max=1000}; CanChangeAtRunTime=false}
 
 
     let StepSizeParam = {Param.Name="StepSize"; Value=ParamValue.Float{Value=0.1f; Min=0.01f; Max=1.0f}; CanChangeAtRunTime=true}
@@ -55,13 +56,15 @@ module Parameters =
         [|
             ArrayStrideParam;
             StepSizeParam;
+            StartSeedParam;
             NoiseParam;
         |] |> Array.map(fun p -> p.Name, p)  |> Dict.ofArray
 
     let RandomCliqueSet =
         [|
-            ArrayStrideParam;
+            NodeCountParam;
             StepSizeParam;
+            StartSeedParam;
             NoiseParam;
             EnsembleCountParam;
         |] |> Array.map(fun p -> p.Name, p)  |> Dict.ofArray

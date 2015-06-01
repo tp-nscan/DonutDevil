@@ -64,6 +64,21 @@ module MathUtils =
     type TripleF32 = {x:float32; y:float32; z:float32}
     type CellF32 = {x:int; y:int; value:float32}
 
+    let BoundUnitF32 value =
+        if value < ZeroF32 then
+            ZeroF32
+        else if value > OneF32 then
+            OneF32
+        else
+            value
+
+    let BoundUnitSF32 value =
+        if value < NOneF32 then
+            NOneF32
+        else if value > OneF32 then
+            OneF32
+        else
+            value
 
     type GroupShape =
         | Linear of int

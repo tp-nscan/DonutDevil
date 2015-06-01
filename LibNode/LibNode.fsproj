@@ -56,8 +56,8 @@
     <Compile Include="Generators.fs" />
     <Compile Include="Named.fs" />
     <Compile Include="DataBlocks.fs" />
-    <Compile Include="SimpleNetworks.fs" />
     <Compile Include="Parameters.fs" />
+    <Compile Include="SimpleNetworks.fs" />
     <Compile Include="Sim.fs" />
     <None Include="Script.fsx" />
     <None Include="ScriptMathNet.fsx" />

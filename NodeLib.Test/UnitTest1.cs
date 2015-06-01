@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using LibNode;
@@ -33,9 +34,29 @@ namespace NodeLib.Test
         }
 
         [TestMethod]
+        public void TestInitCesrDto()
+        {
+            var ubA = Parameters.RandomCliqueSet;
+
+            var wh = CesrDtoBuilder.InitCesrDto<string>(ubA);
+
+            var res = CesrDtoBuilder.MakeDto(ubA);
+
+            Assert.IsTrue(res.IsSuccess);
+        }
+
+        [TestMethod]
+        public void TestMakeSimpleNetwork()
+        {
+            var ubA = Parameters.RandomCliqueSet;
+            var res = CesrDtoBuilder.MakeSimpleNetwork(ubA);
+            Assert.IsTrue(res.IsSuccess);
+        }
+
+        [TestMethod]
         public void TestRandomBools()
         {
-            var ubA = MemoryBuilders.MakeRandomBinary(MathUtils.GroupShape.NewRing(5));
+            var ubA = MemoryBuilders.MakeRandomBinary(1235, MathUtils.GroupShape.NewRing(5));
 
             Assert.IsTrue(ubA.IsBinary);
         }
@@ -43,15 +64,15 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestMakeRandomBinaryBlock()
         {
-            var ubA = MemoryBuilders.MakeRandomBinaryDataBlock(MathUtils.GroupShape.NewRing(5), 5, "setName");
+            var ubA = MemoryBuilders.MakeRandomBinaryDataBlock(1235, MathUtils.GroupShape.NewRing(5), 5, "setName");
             Assert.IsTrue(ubA.IsKvpList);
         }
 
         [TestMethod]
         public void TestRandUsFloat32()
         {
-            var q = Enumerable.Range(0, 500)
-                .Select(i => Generators.RandSignedFloat32((float) 0.5))
+            var q = Generators.RandF32s(1235, 1.0f)
+                .Take(500)
                 .ToList();
 
             var tot = q.Sum();
@@ -62,15 +83,13 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestPerturbInRange()
         {
-            var q = Enumerable.Range(0, 500)
-                .Select(i => Generators.RandSignedFloat32(
-                    max: (float) 0.2)).ToArray();
-
+            var q = Generators.RandF32s(12235, 0.2f).Take(500).ToArray();
             var tot = q.Sum();
 
             Assert.IsTrue(Math.Abs(tot) < 35);
 
             var mode = Generators.PerturbInRangeF32A(
+                seed: 1235,
                 minVal: (float) -0.3,
                 maxVal: (float) 0.3,
                 maxDelta: (float) 0.2,
@@ -85,13 +104,13 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestFlipUF32()
         {
-            var ubA = Generators.RandBitsUF32.Take(1000).ToArray();
+            var ubA = Generators.RandUF32Bits(1235).Take(1000).ToArray();
 
             var tot = ubA.Sum();
 
             Assert.IsTrue(Math.Abs(tot) - 500 < 45);
 
-            var flipped = Generators.FlipUF32A((float) 0.2, ubA);
+            var flipped = Generators.FlipUF32A(1235, (float) 0.2, ubA);
 
 
             var tot2 = flipped.Sum();
@@ -113,13 +132,13 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestFlipU32()
         {
-            var ubA = Generators.RandBitsF32.Take(1000).ToArray();
+            var ubA = Generators.RandUF32Bits(1235).Take(1000).ToArray();
 
             var tot = ubA.Sum();
 
             Assert.IsTrue(Math.Abs(tot) < 85);
 
-            var flipped = Generators.FlipF32A((float) 0.2, ubA);
+            var flipped = Generators.FlipF32A(125, (float) 0.2, ubA);
 
 
             var tot2 = flipped.Sum();
@@ -141,7 +160,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRandomEuclideanPointF32()
         {
-            var ubA = Generators.RandomEuclideanPointsF32(unsigned: true)
+            var ubA = Generators.RandomEuclideanPointsF32(1235, unsigned: true)
                 .Take(100)
                 .ToArray();
 
@@ -153,6 +172,7 @@ namespace NodeLib.Test
         public void TestRandomDiscPointF32()
         {
             var ubA = Generators.RandDiscPointsF32(
+                seed: 1235,
                 maxRadius: (float) 2.0).Take(100)
                 .Select(MathUtils.PointF32LengthSquared)
                 .ToArray();
@@ -164,7 +184,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRandomRingPointF32()
         {
-            var ubA = Generators.RandRingPointsF32
+            var ubA = Generators.RandRingPointsF32(1235)
                 .Select(MathUtils.PointF32LengthSquared)
                 .Take(100)
                 .ToArray();
@@ -177,6 +197,7 @@ namespace NodeLib.Test
         public void TestRandomBallPointF32()
         {
             var ubA = Generators.RandBallPointsF32(
+                seed: 1235,
                 maxRadius: (float) 1.0).Take(100)
                 .Select(MathUtils.TripleF32LengthSquared)
                 .ToArray();
@@ -188,7 +209,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRandomSpherePointF32()
         {
-            var ubA = Generators.RandSpherePointsF32
+            var ubA = Generators.RandSpherePointsF32(1235)
                 .Select(MathUtils.TripleF32LengthSquared)
                 .Take(100)
                 .ToArray();
@@ -224,11 +245,26 @@ namespace NodeLib.Test
         }
 
         [TestMethod]
-        public void TestHopAlong()
+        public void TestSimpleNetwork()
         {
-            var ha = LibNode.SimpleNetwork.CreateRandCesr2(3, 3);
-            var lst = ha.Connections;
-           ;
+           var ha = SimpleNetwork.CreateRandCesr(1235, 5, 3);
+            var lst = SimpleNetwork.Step(cliqueEnsemble:ha, step:50.05f);
         }
+
+        [TestMethod]
+        public void TestSimpleNetworkWithNoise()
+        {
+            var ha = SimpleNetwork.CreateRandCesr(1235, 15, 100);
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            for (var i = 0; i < 100; i++)
+            {
+                ha = SimpleNetwork.StepWithNoise(seed: 135, noise: 0.2f, cliqueEnsemble: ha, step: 0.05f);
+            }
+            stopwatch.Stop();
+            var time = stopwatch.ElapsedMilliseconds;
+        }
+
     }
 }

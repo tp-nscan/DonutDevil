@@ -7,7 +7,8 @@ open System.Collections.Generic
 open Rop
 
 type ISym =
-    abstract member Update: IDictionary<string,Param> -> RopResult<ISym,string>
+    abstract member Update: IDictionary<string,Param> -> int -> RopResult<ISym,string>
+    abstract member UpdateParams: IDictionary<string,Param> -> RopResult<ISym,string>
     abstract member GetDataBlocks: unit -> RopResult<IDictionary<string,DataBlock>, string>
     abstract member Generation:int
 
@@ -20,9 +21,14 @@ type HopAlong (prams:IDictionary<string, Param>,
     let _generation = generation
 
     interface ISym with
-        member this.Update prams =
+        member this.Update prams seed =
             let ha = new HopAlong(_dParams,  _ensemble, 0)
             Rop.succeed (ha :> ISym)
+
+        member this.UpdateParams prams =
+            let ha = new HopAlong(_dParams,  _ensemble, 0)
+            Rop.succeed (ha :> ISym)
+
         member this.GetDataBlocks() = 
             this.DataBlocks
         member this.Generation = 
