@@ -6,6 +6,14 @@ open LibNode.Generators
 open System.Collections.Generic
 open Rop
 
+type ISym2 =
+    abstract member Update: unit -> RopResult<ISym2,string>
+    abstract member UpdateParams: IDictionary<string,Param> -> RopResult<ISym2,string>
+    abstract member GetDataBlocks: unit -> RopResult<IDictionary<string,DataBlock>, string>
+    abstract member Generation:int
+    abstract member Id:Guid
+    abstract member ParentId:Option<Guid>
+
 type ISym =
     abstract member Update: IDictionary<string,Param> -> int -> RopResult<ISym,string>
     abstract member UpdateParams: IDictionary<string,Param> -> RopResult<ISym,string>

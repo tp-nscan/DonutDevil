@@ -39,6 +39,13 @@ module SimpleNetwork =
         }
 
 
+type FullClique (states:Matrix<float32>, connections: Matrix<float32>, generation:int) =
+    let _states = states
+    let _connections = connections
+    let _generation = generation
+
+
+
 
 
 module CesrDtoBuilder =
