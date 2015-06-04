@@ -9,6 +9,7 @@ open Rop
     type IntParam = {Value:int; Min:int; Max:int;}
     type EnumParam = {Type:Type; Value:string;}
     type GaussParam = {Radius:int; Decay:float32;}
+    type GuidParam = {Value:Guid;}
     type SymmetricGlauberParam = {Radius:int; Decay:float32; Freq:float32;}
 
     type LocalCpls1D =
@@ -25,6 +26,7 @@ open Rop
         | Bool of BoolParam
         | Enum of EnumParam
         | Float of FloatParam
+        | Guid of GuidParam
         | Int of IntParam
         | LocalCpls1D of LocalCpls1D
         | LocalCpls2D of LocalCpls2D
@@ -32,6 +34,10 @@ open Rop
     type Param = {Name:string; Value: ParamValue; CanChangeAtRunTime: bool}
 
 module Parameters =
+
+    let IdParam = {Param.Name="Id"; Value=ParamValue.Guid{Value=Guid.NewGuid()}; CanChangeAtRunTime=false}
+    let ParentIdParam = {Param.Name="ParentId"; Value=ParamValue.Guid{Value=Guid.NewGuid()}; CanChangeAtRunTime=false}
+
     let UpdateBoParam = {Param.Name="name"; Value=ParamValue.Bool{BoolParam.Value=true;}; CanChangeAtRunTime=true}
 
     let UpdateFrequencyParam = {Param.Name="UpdateFrequency"; Value=ParamValue.Int{Value=10; Min=1; Max=50}; CanChangeAtRunTime=true}
@@ -40,7 +46,7 @@ module Parameters =
     let MemSeedParam = {Param.Name="MemSeed"; Value=ParamValue.Int{Value=123; Min=1; Max=32000}; CanChangeAtRunTime=false}
     let CnxnSeedParam = {Param.Name="CnxnSeed"; Value=ParamValue.Int{Value=123; Min=1; Max=32000}; CanChangeAtRunTime=false}
     let MemCountParam = {Param.Name="MemCount"; Value=ParamValue.Int{Value=10; Min=1; Max=1024}; CanChangeAtRunTime=false}
-    let EnsembleCountParam = {Param.Name="EnsembleCount"; Value=ParamValue.Int{Value=50; Min=1; Max=1000}; CanChangeAtRunTime=false}
+    let EnsembleCountParam = {Param.Name="EnsembleCount"; Value=ParamValue.Int{Value=150; Min=1; Max=1000}; CanChangeAtRunTime=false}
     let NodeCountParam = {Param.Name="NodeCount"; Value=ParamValue.Int{Value=50; Min=1; Max=1000}; CanChangeAtRunTime=false}
 
 
@@ -67,6 +73,7 @@ module Parameters =
             StartSeedParam;
             NoiseParam;
             EnsembleCountParam;
+            IdParam
         |] |> Array.map(fun p -> p.Name, p)  |> Dict.ofArray
 
     let RingSet =
@@ -105,6 +112,7 @@ module Parameters =
         | Enum _ -> Rop.fail (sprintf "Param: %s is Enum not bool" pram.Name)
         | Float _ -> Rop.fail (sprintf "Param: %s is Float not bool" pram.Name)
         | Int _ -> Rop.fail (sprintf "Param: %s is Int not bool" pram.Name)
+        | Guid _ -> Rop.fail (sprintf "Param: %s is Guid not bool" pram.Name)
         | LocalCpls1D _ -> Rop.fail (sprintf "Param: %s is LocalCpls1D not bool" pram.Name)
         | LocalCpls2D _ -> Rop.fail (sprintf "Param: %s is LocalCpls2D not bool" pram.Name)
 
@@ -114,6 +122,7 @@ module Parameters =
         | Enum ep -> Rop.succeed ep.Value
         | Float _ -> Rop.fail (sprintf "Param: %s is Float not enum" pram.Name)
         | Int _ -> Rop.fail (sprintf "Param: %s is Int not enum" pram.Name)
+        | Guid _ -> Rop.fail (sprintf "Param: %s is Guid not enum" pram.Name)
         | LocalCpls1D _ -> Rop.fail (sprintf "Param: %s is LocalCpls1D not enum" pram.Name)
         | LocalCpls2D _ -> Rop.fail (sprintf "Param: %s is LocalCpls2D not enum" pram.Name)
 
@@ -123,8 +132,19 @@ module Parameters =
         | Enum _ -> Rop.fail (sprintf "Param: %s is Enum not float" pram.Name)
         | Float fp -> Rop.succeed fp.Value
         | Int _ -> Rop.fail (sprintf "Param: %s is Int not float" pram.Name)
+        | Guid _ -> Rop.fail (sprintf "Param: %s is Guid not float" pram.Name)
         | LocalCpls1D _ -> Rop.fail (sprintf "Param: %s is LocalCpls1D not float" pram.Name)
         | LocalCpls2D _ -> Rop.fail (sprintf "Param: %s is LocalCpls2D not float" pram.Name)
+
+    let GetParamValueGuid pram =
+        match pram.Value with
+        | Bool _ -> Rop.fail (sprintf "Param: %s is bool not Guid" pram.Name)
+        | Enum _ -> Rop.fail (sprintf "Param: %s is Enum not Guid" pram.Name)
+        | Float _ -> Rop.fail (sprintf "Param: %s is Float not Guid" pram.Name)
+        | Guid ip -> Rop.succeed ip.Value
+        | Int ip -> Rop.fail (sprintf "Param: %s is Float not Guid" pram.Name)
+        | LocalCpls1D _ -> Rop.fail (sprintf "Param: %s is LocalCpls1D not Guid" pram.Name)
+        | LocalCpls2D _ -> Rop.fail (sprintf "Param: %s is LocalCpls2D not Guid" pram.Name)
 
     let GetParamValueInt pram =
         match pram.Value with
@@ -132,6 +152,7 @@ module Parameters =
         | Enum _ -> Rop.fail (sprintf "Param: %s is Enum not int" pram.Name)
         | Float _ -> Rop.fail (sprintf "Param: %s is Float not int" pram.Name)
         | Int ip -> Rop.succeed ip.Value
+        | Guid _ -> Rop.fail (sprintf "Param: %s is Guid not int" pram.Name)
         | LocalCpls1D _ -> Rop.fail (sprintf "Param: %s is LocalCpls1D not int" pram.Name)
         | LocalCpls2D _ -> Rop.fail (sprintf "Param: %s is LocalCpls2D not int" pram.Name)
 
@@ -141,6 +162,7 @@ module Parameters =
         | Enum _ -> Rop.fail (sprintf "Param: %s is Enum not LocalCpls1D" pram.Name)
         | Float _ -> Rop.fail (sprintf "Param: %s is Float not LocalCpls1D" pram.Name)
         | Int _ -> Rop.fail (sprintf "Param: %s is Int not LocalCpls1D" pram.Name)
+        | Guid _ -> Rop.fail (sprintf "Param: %s is Guid not LocalCpls1D" pram.Name)
         | LocalCpls1D ip -> Rop.succeed ip
         | LocalCpls2D _ -> Rop.fail (sprintf "Param: %s is LocalCpls2D not LocalCpls1D" pram.Name)
 
@@ -150,6 +172,7 @@ module Parameters =
         | Enum _ -> Rop.fail (sprintf "Param: %s is Enum not LocalCpls2D" pram.Name)
         | Float _ -> Rop.fail (sprintf "Param: %s is Float not LocalCpls2D" pram.Name)
         | Int _ -> Rop.fail (sprintf "Param: %s is Int not LocalCpls2D" pram.Name)
+        | Guid _ -> Rop.fail (sprintf "Param: %s is Guid not LocalCpls2D" pram.Name)
         | LocalCpls1D _ -> Rop.fail (sprintf "Param: %s is LocalCpls1D not LocalCpls2D" pram.Name)
         | LocalCpls2D _ -> Rop.succeed pram.Value
 
@@ -161,6 +184,9 @@ module Parameters =
 
     let GetFloat32Param (prams:IDictionary<string,Param>) (name:string) =
         GetParamValueFloat32 >>= (GetParamByName prams name)
+
+    let GetGuidParam (prams:IDictionary<string,Param>) (name:string) =
+        GetParamValueGuid >>= (GetParamByName prams name)
 
     let GetIntParam (prams:IDictionary<string,Param>) (name:string) =
         GetParamValueInt >>= (GetParamByName prams name)
