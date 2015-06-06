@@ -2,7 +2,7 @@
 #r @"C:\Users\tpnsc_000\Documents\GitHub\DonutDevil\packages\MathNet.Numerics.FSharp.3.7.0\lib\net40\MathNet.Numerics.FSharp.dll"
 #r @"C:\Users\tpnsc_000\Documents\GitHub\DonutDevil\LibNode\bin\Debug\LibNode.dll"
 
-
+open System
 open MathNet.Numerics
 open MathNet.Numerics.Distributions
 open MathNet.Numerics.LinearAlgebra
@@ -12,3 +12,7 @@ open MathNet.Numerics.Random
 // dense 3x4 matrix created from a sequence of sequence-columns
 let x = Seq.init 4 (fun c -> Seq.init 3 (fun r -> float (100*r + c)))
 let m5 = DenseMatrix.ofColumnSeq x
+
+let m7a = DenseMatrix.random<float32> 3 4 (ContinuousUniform(-2.0, 4.0))
+
+let a2d = m7a.ToArray()

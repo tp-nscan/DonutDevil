@@ -55,6 +55,7 @@
     <Compile Include="MathUtils.fs" />
     <Compile Include="Generators.fs" />
     <Compile Include="Named.fs" />
+    <Compile Include="CompositeData.fs" />
     <Compile Include="DataBlocks.fs" />
     <Compile Include="Parameters.fs" />
     <Compile Include="SimpleNetworks.fs" />

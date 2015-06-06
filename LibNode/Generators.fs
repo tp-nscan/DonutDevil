@@ -13,7 +13,7 @@ module Generators =
     
     let sharedRng = Random.mersenneTwisterShared
 
-    let SeqPopper (s:seq<float32>) =
+    let SeqIter (s:seq<float32>) =
         let iter = s.GetEnumerator()
         function () ->
                     iter.MoveNext() |> ignore
@@ -22,6 +22,14 @@ module Generators =
      // a random float32 from (-max, max)
     let RandSignedFloat32 (rng:Random) (max:float32) =
         Convert.ToSingle(rng.NextDouble() * 2.0) * max - max
+
+    // a sequence of random float32 from (-max, max)
+    let RandF32 (rng:Random) (max:float32) =
+        Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()) * max)
+
+    // a sequence of random float32 from (-max, max)
+    let RandSF32 (rng:Random) (max:float32) =
+        Seq.initInfinite ( fun i -> RandSignedFloat32 rng max )
 
     // a sequence of random float32 from (0, max)
     let RandF32s (seed:int) (max:float32) =

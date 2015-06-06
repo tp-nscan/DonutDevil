@@ -42,16 +42,16 @@ module Parameters =
 
     let UpdateFrequencyParam = {Param.Name="UpdateFrequency"; Value=ParamValue.Int{Value=10; Min=1; Max=50}; CanChangeAtRunTime=true}
     let ArrayStrideParam = {Param.Name="ArrayStride"; Value=ParamValue.Int{Value=128; Min=8; Max=1024}; CanChangeAtRunTime=false}
-    let StartSeedParam = {Param.Name="StartSeed"; Value=ParamValue.Int{Value=123; Min=1; Max=32000}; CanChangeAtRunTime=false}
+    let NoiseSeedParam = {Param.Name="NoiseSeed"; Value=ParamValue.Int{Value=123; Min=1; Max=32000}; CanChangeAtRunTime=false}
     let MemSeedParam = {Param.Name="MemSeed"; Value=ParamValue.Int{Value=123; Min=1; Max=32000}; CanChangeAtRunTime=false}
-    let CnxnSeedParam = {Param.Name="CnxnSeed"; Value=ParamValue.Int{Value=123; Min=1; Max=32000}; CanChangeAtRunTime=false}
+    let CnxnSeedParam = {Param.Name="CnxnSeed"; Value=ParamValue.Int{Value=1237; Min=1; Max=32000}; CanChangeAtRunTime=false}
     let MemCountParam = {Param.Name="MemCount"; Value=ParamValue.Int{Value=10; Min=1; Max=1024}; CanChangeAtRunTime=false}
     let EnsembleCountParam = {Param.Name="EnsembleCount"; Value=ParamValue.Int{Value=150; Min=1; Max=1000}; CanChangeAtRunTime=false}
     let NodeCountParam = {Param.Name="NodeCount"; Value=ParamValue.Int{Value=50; Min=1; Max=1000}; CanChangeAtRunTime=false}
 
 
     let StepSizeParam = {Param.Name="StepSize"; Value=ParamValue.Float{Value=0.1f; Min=0.01f; Max=1.0f}; CanChangeAtRunTime=true}
-    let NoiseParam = {Param.Name="Noise"; Value=ParamValue.Float{Value=0.1f; Min=0.01f; Max=1.0f}; CanChangeAtRunTime=true}
+    let NoiseLevelParam = {Param.Name="NoiseLevel"; Value=ParamValue.Float{Value=0.1f; Min=0.01f; Max=1.0f}; CanChangeAtRunTime=true}
     let StartMagParam = {Param.Name="StartMag"; Value=ParamValue.Float{Value=0.1f; Min=0.0f; Max=1.0f}; CanChangeAtRunTime=false}
     let CnxnMagParam = {Param.Name="CnxnMag"; Value=ParamValue.Float{Value=0.1f; Min=0.0f; Max=1.0f}; CanChangeAtRunTime=true}
     let StepSize_XParam = {Param.Name="StepSize_X"; Value=ParamValue.Float{Value=0.1f; Min=0.0f; Max=1.0f}; CanChangeAtRunTime=true}
@@ -62,25 +62,28 @@ module Parameters =
         [|
             ArrayStrideParam;
             StepSizeParam;
-            StartSeedParam;
-            NoiseParam;
+            NoiseSeedParam;
+            CnxnSeedParam;
+            NoiseLevelParam;
         |] |> Array.map(fun p -> p.Name, p)  |> Dict.ofArray
 
     let RandomCliqueSet =
         [|
+            IdParam;
             NodeCountParam;
-            StepSizeParam;
-            StartSeedParam;
-            NoiseParam;
             EnsembleCountParam;
-            IdParam
+            StepSizeParam;
+            NoiseSeedParam;
+            NoiseLevelParam;
+            CnxnSeedParam;
+
         |] |> Array.map(fun p -> p.Name, p)  |> Dict.ofArray
 
     let RingSet =
         [|
             ArrayStrideParam;
             StepSizeParam;
-            NoiseParam;
+            NoiseLevelParam;
         |] |> Array.map(fun p -> p.Name, p)  |> Dict.ofArray
 
     let TwisterSet =

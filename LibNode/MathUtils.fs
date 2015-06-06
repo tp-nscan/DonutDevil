@@ -72,6 +72,7 @@ module MathUtils =
         else
             value
 
+
     let BoundUnitSF32 value =
         if value < NOneF32 then
             NOneF32
@@ -80,7 +81,13 @@ module MathUtils =
         else
             value
 
+    let FlattenColumnMajor (a2d:float32[,]) =
+        let flats = Array.create<float32> (a2d.Length) NOneF32
+        a2d |> Array2D.iteri (fun i j e-> flats.[j*a2d.GetLength(0) + i] <- e)
+        flats
+
     type GroupShape =
+        | Bag of int
         | Linear of int
         | Ring of int
         | Rectangle of IntPair
@@ -93,7 +100,7 @@ module MathUtils =
         | Full
 
 
-    type MatrixFormat =
+    type CompFormat =
         | RowMajor
         | ColumnMajor
 

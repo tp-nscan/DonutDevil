@@ -28,3 +28,24 @@ module wank =
         createPersonalName
         <!> String10.create fn
         <*> String10.create ln
+
+    type IntPair = {x:int; y:int}
+
+    type GroupShape =
+        | Bag of int
+        | Linear of int
+        | Ring of int
+        | Rectangle of IntPair
+        | Torus of IntPair
+
+    type ConnectionSet =
+        | Dense of GroupShape * GroupShape * int[]
+        | Sparse of GroupShape * GroupShape *  float32[][]
+
+    let flub = GroupShape.Torus {x=1; y=2}
+
+    type Wank = | Bong of int*int
+    let pin = Wank.Bong (1,2)
+
+
+    let wub = ConnectionSet.Dense ( flub, flub, [|1; 2|])

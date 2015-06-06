@@ -38,9 +38,7 @@ namespace NodeLib.Test
         {
             var ubA = Parameters.RandomCliqueSet;
 
-            var wh = CesrDtoBuilder.CreateDtoFromPrarams(ubA);
-
-            var res = CesrDtoBuilder.CreateDtoFromPrarams(ubA);
+            var res = CesrDtoBuilder.CreateDtoFromRandomParams(ubA);
 
             Assert.IsTrue(res.IsSuccess);
         }
@@ -48,9 +46,12 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestMakeSimpleNetwork()
         {
-            //var ubA = Parameters.RandomCliqueSet;
-            //var res = CesrDtoBuilder.MakeSimpleNetwork(ubA);
-            //Assert.IsTrue(res.IsSuccess);
+            var ubA = Parameters.RandomCliqueSet;
+            var res = CesrDtoBuilder.MakeSimpleNetworkFromRandomParams(ubA);
+            var res2 = (ISymState)CesrDtoBuilder.ExtractResult(res).Value;
+            var res3 = CesrDtoBuilder.ExtractResult(res2.Update()).Value;
+
+            Assert.IsTrue(res3 != null);
         }
 
         [TestMethod]
@@ -245,26 +246,12 @@ namespace NodeLib.Test
         }
 
         [TestMethod]
-        public void TestSimpleNetwork()
+        public void TestMakeDbConnectionSet()
         {
-           var ha = SimpleNetwork.CreateRandCesr(1235, 5, 3);
-            var lst = SimpleNetwork.Step(ca: ha, step:50.05f);
+            var ndm = (LibNode.INamed<float[]>)NamedDataMaker.TryThis(Enumerable.Range(0, 100).Select(i => (float)i).ToArray());
+            var res = ndm.Data();
         }
 
-        [TestMethod]
-        public void TestSimpleNetworkWithNoise()
-        {
-            var ha = SimpleNetwork.CreateRandCesr(1235, 15, 100);
-
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            for (var i = 0; i < 100; i++)
-            {
-                ha = SimpleNetwork.StepWithNoise(seed: 135, noise: 0.2f, ca: ha, step: 0.05f);
-            }
-            stopwatch.Stop();
-            var time = stopwatch.ElapsedMilliseconds;
-        }
 
     }
 }

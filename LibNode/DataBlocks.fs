@@ -91,7 +91,7 @@ module DataBlockUtils =
         | KvpList kvp -> match kvp with
                          | NodeSets ns -> ns.Name
                          | ConnectionSets cs -> cs.Name
-                         | Memories            mems -> mems.Name
+                         | Memories mems -> mems.Name
 
 
 
@@ -118,6 +118,7 @@ module NodeGroupBuilders =
 
     let NodeCount (groupShape:GroupShape) =
         match groupShape with
+        | Bag length -> length
         | Linear length -> length
         | GroupShape.Ring length -> length
         | Rectangle ip -> ip.x * ip.y
@@ -181,3 +182,10 @@ module MemoryBuilders =
     let MakeRandomBinaryDataBlock (seed:int) (groupShape:GroupShape) (count:int) (name:string) =
         DataBlock.KvpList(
             KvpList.Memories(MakeRandomNamedMemories seed groupShape count name))
+
+
+module NamedDataMaker =
+
+    let TryThis (nums:float32[]) =
+//        new NamedDataPtr<ConnectionSet>("Ralph", fun () -> new ConnectionSet.Dense(GroupShape.Bag 5))
+        new NamedDataPtr<float32[]>("Ralph", fun () -> nums)

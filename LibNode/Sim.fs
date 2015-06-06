@@ -6,47 +6,46 @@ open LibNode.Generators
 open System.Collections.Generic
 open Rop
 
-type ISym2 =
-    abstract member Update: unit -> RopResult<ISym2,string>
-    abstract member UpdateParams: IDictionary<string,Param> -> RopResult<ISym2,string>
+type ISym =
+    abstract member Update: unit -> RopResult<ISym,string>
+    abstract member Params: IDictionary<string,Param>
     abstract member GetDataBlocks: unit -> RopResult<IDictionary<string,DataBlock>, string>
     abstract member Generation:int
     abstract member Id:Guid
+    abstract member Messages:string list
     abstract member ParentId:Option<Guid>
 
-type ISym =
-    abstract member Update: IDictionary<string,Param> -> int -> RopResult<ISym,string>
-    abstract member UpdateParams: IDictionary<string,Param> -> RopResult<ISym,string>
-    abstract member GetDataBlocks: unit -> RopResult<IDictionary<string,DataBlock>, string>
-    abstract member Generation:int
-
-type HopAlong (prams:IDictionary<string, Param>, 
-               ensemble: float32[,], 
-               generation:int) =
+type Sym (prams:IDictionary<string, Param>,
+          id:Guid,
+          parentId: Option<Guid>,
+          symState: ISymState,
+          messages: string list,
+          generation:int) =
 
     let _dParams = prams
-    let _ensemble = ensemble
+    let _symState = symState
     let _generation = generation
+    let _messages = messages
+    let _id = id
+    let _parentId = parentId
 
     interface ISym with
-        member this.Update prams seed =
-            let ha = new HopAlong(_dParams,  _ensemble, 0)
-            Rop.succeed (ha :> ISym)
-
-        member this.UpdateParams prams =
-            let ha = new HopAlong(_dParams,  _ensemble, 0)
-            Rop.succeed (ha :> ISym)
-
+        member this.Update() =
+            match _symState.Update() with
+            | Success (x,msgs) -> RopResult.Success(new Sym( _dParams, _id, _parentId, x, msgs, _generation + 1) :> ISym ,msgs)
+            | Failure errors -> Failure errors
+        member this.Params =
+            _dParams
         member this.GetDataBlocks() = 
-            this.DataBlocks
+            RopResult.Failure []
         member this.Generation = 
             _generation
-
-    member this.Params
-            with get() = _dParams
-
-    member this.DataBlocks  
-            with get() = Rop.fail "Not implemented"
+        member this.Id = 
+            _id
+        member this.Messages = 
+            _messages
+        member this.ParentId = 
+            _parentId
 
 
 module SymGen =

@@ -77,4 +77,6 @@ open MathUtils
             with get() = _name
 
         member this.Data  
-            with get() = _data
+            with get() = _data()
+
+
