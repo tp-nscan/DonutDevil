@@ -138,4 +138,7 @@ let failIfNoneR message = function
     | Some rop -> rop
     | None -> fail message 
 
-
+let ExtractResult result =
+    match result with
+            | Success (x, msgs) -> Some x
+            | Failure errors -> None

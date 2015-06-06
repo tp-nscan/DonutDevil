@@ -7,7 +7,7 @@ using LibNode;
 namespace NodeLib.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class TestGenerators
     {
         [TestMethod]
         public void TestMakeNode()
@@ -21,37 +21,6 @@ namespace NodeLib.Test
             Assert.AreEqual(arraylength, foo.ArrayLength);
 
             Assert.AreEqual(arraylength, foo.Values.Length);
-        }
-
-        [TestMethod]
-        public void TestParam()
-        {
-            var ubA = Parameters.RandomCliqueSet;
-
-            var wh = Parameters.GetFloat32Param(ubA, "ArrayStride");
-
-            Assert.IsTrue(wh.IsSuccess);
-        }
-
-        [TestMethod]
-        public void TestInitCesrDto()
-        {
-            var ubA = Parameters.RandomCliqueSet;
-
-            var res = CesrDtoBuilder.CreateDtoFromRandomParams(ubA);
-
-            Assert.IsTrue(res.IsSuccess);
-        }
-
-        [TestMethod]
-        public void TestMakeSimpleNetwork()
-        {
-            var ubA = Parameters.RandomCliqueSet;
-            var res = CesrDtoBuilder.MakeSimpleNetworkFromRandomParams(ubA);
-            var res2 = (ISymState)CesrDtoBuilder.ExtractResult(res).Value;
-            var res3 = CesrDtoBuilder.ExtractResult(res2.Update()).Value;
-
-            Assert.IsTrue(res3 != null);
         }
 
         [TestMethod]
@@ -218,40 +187,5 @@ namespace NodeLib.Test
             Assert.IsTrue(ubA.Length == 100);
 
         }
-
-        [TestMethod]
-        public void TestArray2DRoundTrip()
-        {
-            const int rowCount = 5;
-            const int colCount = 3;
-            const int arrayCount = rowCount*colCount;
-
-            var over = Enumerable.Range(0, arrayCount).Select(i => (float) i).ToArray();
-
-            var rowMajorArray =
-                MathUtils.Array2DFromRowMajor(rowCount: rowCount, colCount: colCount, values: over);
-            var backRm = MathUtils.flattenRowMajor(rowMajorArray.Value).ToArray();
-            Assert.IsTrue(MathUtils.CompareFloat32Arrays(over, backRm));
-
-
-            var colMajorArray =
-                MathUtils.Array2DFromColumnMajor(rowCount: rowCount, colCount: colCount, values: over);
-            var backCm = MathUtils.flattenColumnMajor(colMajorArray.Value).ToArray();
-            Assert.IsTrue(MathUtils.CompareFloat32Arrays(over, backCm));
-
-
-            var transpArray = MathUtils.TransposeArray2D(colMajorArray.Value);
-            var backT = MathUtils.flattenRowMajor(transpArray).ToArray();
-            Assert.IsTrue(MathUtils.CompareFloat32Arrays(over, backT));
-        }
-
-        [TestMethod]
-        public void TestMakeDbConnectionSet()
-        {
-            var ndm = (LibNode.INamed<float[]>)NamedDataMaker.TryThis(Enumerable.Range(0, 100).Select(i => (float)i).ToArray());
-            var res = ndm.Data();
-        }
-
-
     }
 }

@@ -25,8 +25,9 @@ type ISymState =
 
 type Ca = { States:Matrix<float32>; Connections:Matrix<float32> }
 
-type FullCliqueDto = {id:Guid; parentId:Option<Guid>; States:Matrix<float32>; 
-                Connections:Matrix<float32>; stepSize:float32; noiseSeed:int; noiseLevel:float32}
+type FullCliqueDto = {  id:Guid; parentId:Option<Guid>; States:Matrix<float32>; 
+                        Connections:Matrix<float32>; stepSize:float32; noiseSeed:int; 
+                        noiseLevel:float32 }
 
 
 type FullClique private (states: Matrix<float32>, connections: Matrix<float32>, stepsize:float32, seqNoise:seq<float32>) =
@@ -52,7 +53,7 @@ type FullClique private (states: Matrix<float32>, connections: Matrix<float32>, 
             |]
 
 
-module CesrDtoBuilder =
+module CesrBuilder =
 
     type RandomCesrDto = {id:Guid; noiseSeed:int; cnxnSeed:int; ensembleCount:int; nodeCount:int; 
                           stepSize:float32; noiseLevel:float32}
@@ -71,7 +72,7 @@ module CesrDtoBuilder =
     let CreateDtoFromRandomParams (prams:IDictionary<string, Param>) =
 
         let ConvertDto (dto:RandomCesrDto) = 
-            let randIter = Generators.SeqIter (Generators.RandF32s dto.cnxnSeed OneF32)
+            let randIter = Generators.SeqIter (Generators.RandF32s dto.cnxnSeed 1.0f)
 
             { FullCliqueDto.id = dto.id; 
               parentId = None;
@@ -102,7 +103,3 @@ module CesrDtoBuilder =
               | Success (x, msgs) -> RopResult.Success (FullClique(x), msgs)
               | Failure errors -> Failure errors
 
-    let ExtractResult result =
-        match result with
-              | Success (x, msgs) -> Some x
-              | Failure errors -> None

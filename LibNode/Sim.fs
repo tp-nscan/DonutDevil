@@ -50,7 +50,6 @@ type Sym (prams:IDictionary<string, Param>,
 
 module SymGen =
     let MakeHopAlong (prams:IDictionary<string, Param>) =
-        //(RandomNg1D (Vs1D.UnSigned OneF32))  >>= (GetIntParam prams)
         None
 
 
