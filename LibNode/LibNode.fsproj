@@ -58,6 +58,7 @@
     <Compile Include="CompositeData.fs" />
     <Compile Include="DataBlocks.fs" />
     <Compile Include="Parameters.fs" />
+    <Compile Include="Entity.fs" />
     <Compile Include="SimpleNetworks.fs" />
     <Compile Include="Sim.fs" />
     <None Include="Script.fsx" />

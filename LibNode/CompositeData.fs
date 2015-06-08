@@ -1,32 +1,29 @@
 ﻿namespace LibNode
     open System
     open System.Collections.Generic
+    open MathNet.Numerics
+    open MathNet.Numerics.Random
     open MathUtils
 
-    type OneFloat32 =
-        | Real
-        | UnitU
-        | UnitS
-        | Ring
+    type Float32Type =
+        | Unsigned of float32
+        | Signed of float32
 
-    type TwoFloat32 =
-        | Real
-        | Torus
-        | UnitU
-        | UnitS
-
-    type OneInt =
-        | UnitU
-        | UnitS
+    type IntType =
+        | Unbounded
+        | Bounded of int*int
+        | UnsignedBit
+        | SignedBit
 
 
-    type CompFloat32 =
-        | OneFloat32
-        | TwoFloat32
+    module NtGens =
+        let RandFloat32 (rng:Random) (float32Type:Float32Type) =
+            match float32Type with
+            | Unsigned max -> Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()) * max)
+            | Signed max -> Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()-0.5) * max * 2.0f)
 
-    type NumericShapeFloat = { Comp: CompFloat32; GroupShape: GroupShape }
-    type NumericShapeInt = { Comp: OneInt; GroupShape: GroupShape }
-
-//module CompositeData =
-
-
+        let RandFloat32Seed (seed:int) (float32Type:Float32Type) =
+            let rng = Random.MersenneTwister(seed)
+            match float32Type with
+            | Unsigned max -> Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()) * max)
+            | Signed max -> Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()-0.5) * max * 2.0f)

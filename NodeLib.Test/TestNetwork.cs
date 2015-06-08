@@ -28,5 +28,15 @@ namespace NodeLib.Test
 
             Assert.IsTrue(res3 != null);
         }
+
+
+        [TestMethod]
+        public void TestRmgBuilder()
+        {
+            var ubA = Parameters.RandomMatrixSet;
+            //var res = RmgBuilder.CreateRandMatrixFromParams(ubA);
+
+            //Assert.IsTrue(res.IsSuccess);
+        }
     }
 }

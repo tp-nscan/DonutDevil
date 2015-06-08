@@ -23,6 +23,21 @@ open LibNode
 #load "Generators.fs"
 #load "DataBlocks.fs"
 
+let kvps = [("one",1); ("two",2)] |> Dict.ofList
+
+let l = kvps |> Dict.toList
+
+
+
+
+
+
+
+
+
+
+
+
 type LoggingBuilder() =
     let log p = p * 100
 
