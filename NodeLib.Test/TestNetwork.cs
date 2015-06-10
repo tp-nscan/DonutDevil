@@ -9,34 +9,41 @@ namespace NodeLib.Test
     {
 
         [TestMethod]
-        public void TestInitCesrDto()
-        {
-            var ubA = Parameters.RandomCliqueSet;
-
-            var res = CesrBuilder.CreateDtoFromRandomParams(ubA);
-
-            Assert.IsTrue(res.IsSuccess);
-        }
-
-        [TestMethod]
-        public void TestMakeSimpleNetwork()
-        {
-            var ubA = Parameters.RandomCliqueSet;
-            var res = CesrBuilder.MakeSimpleNetworkFromRandomParams(ubA);
-            var res2 = (ISymState)Rop.ExtractResult(res).Value;
-            var res3 = Rop.ExtractResult(res2.Update()).Value;
-
-            Assert.IsTrue(res3 != null);
-        }
-
-
-        [TestMethod]
         public void TestRmgBuilder()
         {
-            var ubA = Parameters.RandomMatrixSet;
-            //var res = RmgBuilder.CreateRandMatrixFromParams(ubA);
+            var entityGuid = Guid.NewGuid();
+            var matrixGuid = Guid.NewGuid();
+            const int rowCount = 10;
+            const int colCount = 12;
+            const int seed = 1234;
+            const float maxValue = 0.3f;
+            var ubA = Parameters.RandomMatrixSet(entityId:entityGuid, matrixId:matrixGuid, rowCount:rowCount, colCount:colCount, seed:seed, maxValue:maxValue);
+            var res = RmgBuilder.CreateRandMatrixFromParams(ubA);
+            var res1 = Rop.ExtractResult(res).Value;
+            var res2 = (IEntityGen) res1;
+            var res3 = res2.GetGenResult(EpnConvert.FromString("Matrix"));
+            var res4 = Rop.ExtractResult(res3).Value;
 
-            //Assert.IsTrue(res.IsSuccess);
+            Assert.IsTrue(res2 != null);
+        }
+
+        [TestMethod]
+        public void TestRmgBuilder2()
+        {
+            var entityGuid = Guid.NewGuid();
+            var matrixGuid = Guid.NewGuid();
+            const int rowCount = 10;
+            const int colCount = 12;
+            const int seed = 1234;
+            const float maxValue = 0.3f;
+            var ubA = Parameters.RandomMatrixSet(entityGuid, matrixGuid, rowCount, colCount, seed, maxValue);
+            var res = RmgBuilder.CreateRandMatrixFromParams(ubA);
+            var res1 = Rop.ExtractResult(res).Value;
+            var res2 = (IEntityGen)res1;
+            var res3 = res2.GetGenResult(EpnConvert.FromString("Matrix"));
+            var res4 = Rop.ExtractResult(res3).Value;
+
+            Assert.IsTrue(res2 != null);
         }
     }
 }

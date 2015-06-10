@@ -11,7 +11,6 @@ open Generators
 open NodeGroupBuilders
 open Rop
 
-
 type StateCount = StateCount of int
 type EnsembleCount = EnsembleCount of int
 
@@ -70,62 +69,12 @@ module CesrBuilder =
         { id=id; noiseSeed=noiseSeed; cnxnSeed=cnxnSeed; ensembleCount=ensembleCount;
         nodeCount=nodeCount; stepSize=stepSize; noiseLevel=noiseLevel }
 
-    let CreateDtoFromRandomParams (prams:IDictionary<string, Param>) =
+    let CreateDtoFromRandomParams (prams:Param list) =
 
         let ConvertDto (dto:RandomCesrDto) = 
             let randIter = Generators.SeqIter (Generators.RandF32s dto.cnxnSeed 1.0f)
-
-            { FullCliqueDto.id = dto.id; 
-              parentId = None;
-              States = DenseMatrix.init dto.ensembleCount dto.nodeCount (fun i j -> randIter()); 
-              Connections = DenseMatrix.init dto.nodeCount dto.nodeCount (fun i j -> randIter()) ; 
-              stepSize = dto.stepSize;
-              noiseSeed = dto.noiseSeed;
-              noiseLevel = dto.noiseLevel
-            }
-
-
-        let dtoResult = CreateRandomDto   
-                            <!> (Parameters.GetGuidParam prams "Id")
-                            <*> (Parameters.GetIntParam prams "NodeCount")
-                            <*> (Parameters.GetIntParam prams "EnsembleCount")
-                            <*> (Parameters.GetFloat32Param prams "StepSize")
-                            <*> (Parameters.GetIntParam prams "NoiseSeed")
-                            <*> (Parameters.GetFloat32Param prams "NoiseLevel")
-                            <*> (Parameters.GetIntParam prams "CnxnSeed")
-
-        match dtoResult with
-              | Success (x, msgs) -> RopResult.Success ((ConvertDto x), msgs)
-              | Failure errors -> Failure errors
-
-    let MakeSimpleNetworkFromRandomParams (prams:IDictionary<string,Param>) =
-        match (CreateDtoFromRandomParams prams) with
-              | Success (x, msgs) -> RopResult.Success (FullClique(x), msgs)
-              | Failure errors -> Failure errors
-
- module RmgBuilder =
-
-
-    type RandomCesrDto = {id:Guid; noiseSeed:int; cnxnSeed:int; ensembleCount:int; nodeCount:int; 
-                          stepSize:float32; noiseLevel:float32}
-
-
-    let CreateRandomDto (id:Guid)
-                        (nodeCount:int)
-                        (ensembleCount:int)
-                        (stepSize:float32)
-                        (noiseSeed:int)
-                        (noiseLevel:float32) 
-                        (cnxnSeed:int)  =
-        { id=id; noiseSeed=noiseSeed; cnxnSeed=cnxnSeed; ensembleCount=ensembleCount;
-        nodeCount=nodeCount; stepSize=stepSize; noiseLevel=noiseLevel }
-
-    let CreateDtoFromRandomParams (prams:IDictionary<string, Param>) =
-
-        let ConvertDto (dto:RandomCesrDto) = 
-            let randIter = Generators.SeqIter (Generators.RandF32s dto.cnxnSeed 1.0f)
-
-            { FullCliqueDto.id = dto.id; 
+            { 
+              FullCliqueDto.id = dto.id; 
               parentId = None;
               States = DenseMatrix.init dto.ensembleCount dto.nodeCount (fun i j -> randIter()); 
               Connections = DenseMatrix.init dto.nodeCount dto.nodeCount (fun i j -> randIter()) ; 
@@ -147,58 +96,9 @@ module CesrBuilder =
               | Success (x, msgs) -> RopResult.Success ((ConvertDto x), msgs)
               | Failure errors -> Failure errors
 
-
-
-    let MakeSimpleNetworkFromRandomParams (prams:IDictionary<string,Param>) =
+    let MakeSimpleNetworkFromRandomParams (prams:Param list) =
         match (CreateDtoFromRandomParams prams) with
               | Success (x, msgs) -> RopResult.Success (FullClique(x), msgs)
               | Failure errors -> Failure errors
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    let CreateRandMatrixDto (id:Guid) (rowCount:int) (colCount:int) (seed:int)
-                            (unsigned:bool) (maxValue:float32) =
-        { id=id; rowCount=rowCount; colCount=colCount; seed=seed;
-            unsigned=unsigned; maxValue=maxValue; }
-
-
-    let CreateRandMatrixFromParams (prams:IDictionary<string, Param>) =
-
-        let res =
-            match (CreateDtoFromRandomParams prams) with
-              | Success (x, msgs) -> RopResult.Success (FullClique(x), msgs)
-              | Failure errors -> Failure errors
-
-        let dtoResult = CreateRandMatrixDto
-                    <!> (Parameters.GetGuidParam prams "Id")
-                    <*> (Parameters.GetIntParam prams "RowCount")
-                    <*> (Parameters.GetIntParam prams "ColCount")
-                    <*> (Parameters.GetIntParam prams "Seed")
-                    <*> (Parameters.GetBoolParam prams "Unsigned")
-                    <*> (Parameters.GetFloat32Param prams "MaxValue")
-
-        //let pp = prams|> Dict.toList
-
-        //        match dtoResult with
-        //              | Success (dto, msgs) -> new RandMatrixGenerator(prams|> Dict.toList, dto.rowCount, dto.colCount, dto.seed, 
-        //                                                               Float32Type.Unsigned(dto.maxValue)) |> Rop.succeed
-        //              | Failure errors -> Failure errors
-
-        None

@@ -142,3 +142,25 @@ let ExtractResult result =
     match result with
             | Success (x, msgs) -> Some x
             | Failure errors -> None
+
+let rec FilterFails<'a,'b> (vs:RopResult<'a,'b> list) (pp: 'b list) =
+    match vs with
+    | [] -> pp
+    | (Success (a, msgs)) :: tail -> FilterFails tail pp
+    | (Failure b) :: tail -> FilterFails tail b |> List.append pp
+
+let rec FilterSuccess<'a,'b> (vs:RopResult<'a,'b> list) (pp: ('a * ('b list)) list) =
+    match vs with
+    | [] -> pp
+    | (Success (a, msgs)) :: tail -> FilterSuccess tail ((a, msgs) :: pp)
+    | (Failure b) :: tail -> FilterSuccess tail pp
+
+
+let MergeResultList (vs:RopResult<'a,'b> list) =
+    let fails = FilterFails vs []
+    let successes = FilterSuccess vs []
+        
+    if (fails.Length > 0) then
+        Failure fails
+    else
+        Success(successes |> List.map(fun x->fst x), successes |> List.collect(fun x->snd x))

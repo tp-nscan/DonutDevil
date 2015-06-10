@@ -17,6 +17,12 @@
 
 
     module NtGens =
+     
+        let ToFloat32Type isUnsigned maxVal =
+            match isUnsigned with
+            | true -> Unsigned(maxVal)
+            | false -> Signed(maxVal)
+
         let RandFloat32 (rng:Random) (float32Type:Float32Type) =
             match float32Type with
             | Unsigned max -> Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()) * max)
