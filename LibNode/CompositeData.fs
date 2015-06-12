@@ -1,9 +1,7 @@
 ﻿namespace LibNode
     open System
-    open System.Collections.Generic
     open MathNet.Numerics
     open MathNet.Numerics.Random
-    open MathUtils
 
     type Float32Type =
         | Unsigned of float32

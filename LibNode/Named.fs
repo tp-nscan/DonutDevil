@@ -1,6 +1,4 @@
 ﻿namespace LibNode
-open System
-open MathUtils
 
 
     exception ErrorStr of string

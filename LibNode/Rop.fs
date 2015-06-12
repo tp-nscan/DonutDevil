@@ -163,4 +163,5 @@ let MergeResultList (vs:RopResult<'a,'b> list) =
     if (fails.Length > 0) then
         Failure fails
     else
-        Success(successes |> List.map(fun x->fst x), successes |> List.collect(fun x->snd x))
+        Success(successes |> List.map(fun x->fst x), 
+                successes |> List.collect(fun x->snd x))

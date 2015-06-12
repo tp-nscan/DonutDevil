@@ -1,14 +1,11 @@
 ﻿namespace LibNode
 open System
-open System.Collections.Generic
 open MathNet.Numerics
-open MathNet.Numerics.Distributions
 open MathNet.Numerics.LinearAlgebra
 open MathNet.Numerics.LinearAlgebra.Matrix
 open MathNet.Numerics.Random
 open MathUtils
-open Generators
-open NodeGroupBuilders
+
 open Rop
 
 type StateCount = StateCount of int
