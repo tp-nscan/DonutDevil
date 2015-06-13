@@ -77,18 +77,18 @@ type IIterativeEntityGen =
 type IEntityRepo =
     abstract member GetEntity: EntityId -> RopResult<Entity, string>
     abstract member GetData: DataId -> RopResult<DataRecord, string>
-    abstract member SetEntity: Entity -> RopResult<string, string>
-    abstract member SetData: GenResult -> RopResult<DataRecord, string>
+    abstract member SaveEntity: Entity -> RopResult<Entity, string>
+    abstract member SaveData: GenResult -> RopResult<DataRecord, string>
 
 module EntityOps =
 
-    let ExGuid wt =
-        match wt with
-        | GuidId g -> g
+    let EntityString eg =
+        match eg.EntityId with
+        | EntityId.GuidId g -> g.ToString()
 
-    let GetString wt =
-        match wt with
-        | GuidId g -> g.ToString()
+    let DataString dg =
+        match dg.DataId with
+        | DataId.GuidId g -> g.ToString()
 
     let ToDataRecord (genResult:GenResult) =
         {
@@ -98,66 +98,56 @@ module EntityOps =
             ArrayData = genResult.ArrayData;
         }
 
+    let ToEntityData (dataRecord:DataRecord) =
+        {
+            EntityData.DataId = dataRecord.DataId
+            EntityId = dataRecord.EntityId;
+            Epn = dataRecord.Epn;
+        }
+
     let MakeEntityData (entityGen:IEntityGen) =
         entityGen.GenResultStates 
             |> List.map(fun r -> entityGen.GetGenResult(snd r))
             |> MergeResultList
     
 
-    let PushGenResultsThroughRepoToEntityData (entityRepo:IEntityRepo) (genResults:GenResult list) =
+    let PushThroughRepo (entityRepo:IEntityRepo) (genResults:GenResult list) =
         try
-            genResults |> List.map(fun gr-> entityRepo.SetData) |> Rop.succeed
+            genResults |> List.map(fun gr-> entityRepo.SaveData gr)
+                       |> MergeResultList
         with
         | ex -> (sprintf "Error saving GenResults: %s" ex.Message) |> Rop.fail
                 
- 
-    let MakeEntity (entityRepo:IEntityRepo) (entityGen:IEntityGen) (resultData:EntityData list) =
-        try
 
-        entityRepo.SetEntity {
+    let SaveEntity (entityRepo:IEntityRepo) (entity:Entity) =
+        try
+            entityRepo.SaveEntity entity
+        with
+        | ex -> (sprintf "Error saving Entity: %s" (EntityString entity)) |> Rop.fail
+
+
+    let MakeResultData (entityRepo:IEntityRepo) (entityGen:IEntityGen) =
+        match MakeEntityData entityGen with
+              | Success (resultList, msgs) -> 
+                    (PushThroughRepo entityRepo resultList)
+              | Failure errors -> Failure errors
+      
+    let MakeEntityFromGen (entityRepo:IEntityRepo) (entityGen:IEntityGen) =
+        match (MakeResultData entityRepo entityGen) with
+        | Success (resultData, msgs) -> 
+                            {
                                 Entity.EntityId = entityGen.EntityId;
                                 GeneratorId = entityGen.GeneratorId;
                                 Params = entityGen.Params;
                                 Iteration = entityGen.Iteration;
                                 SourceData = entityGen.SourceData;
-                                ResultData = resultData; 
-                             } |> Rop.succeed
+                                ResultData = resultData
+                                    |> List.map(fun dr -> dr |> ToEntityData)
+                            } |> Rop.succeed
+        | Failure errors -> Failure errors
 
-        with
-        | ex -> (sprintf "Error saving Entity: %s" ex.Message) |> Rop.fail
-
-
-
-      
-    let SaveEntityGen<'a> (entityRepo:IEntityRepo) (entityGen:IEntityGen) (thing:'a) =
-        let makeEntityInRepo = MakeEntity entityRepo entityGen
-        let pushDataThrough = PushGenResultsThroughRepoToEntityData entityRepo
-        let genResultList = MakeEntityData entityGen
-        
-        match genResultList with
-              | Success (resultList, msgs) -> 
-                    resultList |> Rop.succeed
-              | Failure errors -> Failure errors
-
-       // Some thing
-
-
-
-//    let MakeEntity (entityGen:IEntityGen) (entityRepo:IEntityRepo) =
-//        let resultSets = entityGen.GenResultStates 
-//                            |> List.map(fun rs -> entityGen.GetGenResult(snd rs)) 
-//                            |> Rop.MergeResultList
-//
-//        match resultSets with
-//            | Success (x,_) ->  
-//            
-//                               {
-//                                    Entity.EntityId = entityGen.EntityId;
-//                                    GeneratorId = entityGen.GeneratorId;
-//                                    Params = entityGen.Params;
-//                                    Iteration = entityGen.Iteration;
-//                                    SourceData = entityGen.SourceData;
-//                                    ResultData = entityGen.SourceData; 
-//                                } |> Rop.succeed
-//
-//            | Failure errors -> errors |> Rop.fail
+    let SaveEntityFromGen (entityRepo:IEntityRepo) (entityGen:IEntityGen) =
+        match (MakeEntityFromGen entityRepo entityGen) with
+            | Success (resultEntity, msgs) -> 
+                               SaveEntity entityRepo resultEntity
+            | Failure errors -> Failure errors

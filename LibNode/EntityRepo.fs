@@ -33,17 +33,17 @@ type EntityRepoMem() =
             | ex -> (sprintf "GetData Id: %s  message: %s" (DataKey dataId) ex.Message) |> Rop.fail
                 
 
-        member this.SetData(genResult:GenResult) =
+        member this.SaveData(genResult:GenResult) =
             let dr = EntityOps.ToDataRecord genResult
             try
-                _dataDict.[dr.DataId] = dr |> ignore
+                _dataDict.Add(dr.DataId, dr) |> ignore
                 dr |> Rop.succeed
             with
-            | ex -> (sprintf "SetData Id: %s  message: %s" (DataKey dr.DataId) ex.Message) |> Rop.fail
+            | ex -> (sprintf "SaveData Id: %s  message: %s" (DataKey dr.DataId) ex.Message) |> Rop.fail
 
-        member this.SetEntity(entity:Entity) =
+        member this.SaveEntity(entity:Entity) =
             try
-                _entityDict.[entity.EntityId] = entity |> ignore
-                Rop.succeed "dasd"
+                _entityDict.Add(entity.EntityId, entity) |> ignore
+                entity |> Rop.succeed
             with
-            | ex -> (sprintf "SetEntity Id: %s  message: %s" (EntityKey entity.EntityId) ex.Message) |> Rop.fail
+            | ex -> (sprintf "SaveEntity Id: %s  message: %s" (EntityKey entity.EntityId) ex.Message) |> Rop.fail
