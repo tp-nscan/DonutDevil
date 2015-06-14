@@ -7,12 +7,10 @@ namespace NodeLib.Test
     [TestClass]
     public class TestNetwork
     {
-        IEntityGen MakeRmg()
+        IEntityGen MakeRmg(int rowCount, int colCount)
         {
             var entityGuid = Guid.NewGuid();
             var matrixGuid = Guid.NewGuid();
-            const int rowCount = 10;
-            const int colCount = 12;
             const int seed = 1234;
             const float maxValue = 0.3f;
             var ubA = Parameters.RandomMatrixSet(
@@ -22,14 +20,14 @@ namespace NodeLib.Test
                                     colCount: colCount, 
                                     seed: seed, 
                                     maxValue: maxValue);
-            var res = RmgBuilder.CreateRandMatrixFromParams(ubA);
+            var res = RmgBuilder.RandMatrixGenFromParams(ubA);
             return Rop.ExtractResult(res).Value;
         }
 
         [TestMethod]
         public void TestRmgGen()
         {
-            var gen = (IEntityGen)MakeRmg();
+            var gen = (IEntityGen)MakeRmg(rowCount: 10, colCount: 12);
             var matrixRes = gen.GetGenResult(EpnConvert.FromString("Matrix"));
             var matrix = Rop.ExtractResult(matrixRes).Value;
             Assert.IsTrue(matrixRes.IsSuccess);
@@ -39,9 +37,9 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRmgEntity()
         {
-            IEntityGen gen = MakeRmg();
+            IEntityGen gen = MakeRmg(rowCount:10, colCount:12);
             IEntityRepo repo = new EntityRepoMem();
-            var entRes = EntityOps.MakeEntityFromGen(repo, gen);
+            var entRes = EntityOps.MakeEntityFromGen(repo, gen, "Rmg");
             var ent = Rop.ExtractResult(entRes).Value;
             Assert.IsTrue(entRes.IsSuccess);
             Assert.IsTrue(ent != null);
@@ -50,9 +48,24 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRmgSaveEntity()
         {
-            var gen = MakeRmg();
+            var gen = MakeRmg(rowCount: 10, colCount: 12);
             IEntityRepo repo = new EntityRepoMem();
-            var entRes = EntityOps.SaveEntityFromGen(repo, gen);
+            var entRes = EntityOps.SaveEntityFromGen(repo, gen, "Rmg");
+            var ent = Rop.ExtractResult(entRes).Value;
+            var drR = EntityOps.GetResultDataRecord(repo, ent, EpnConvert.FromString("Matrix"));
+            var dr = Rop.ExtractResult(drR).Value;
+
+            Assert.IsTrue(entRes.IsSuccess);
+            Assert.IsTrue(ent != null);
+            Assert.IsTrue(drR.IsSuccess);
+        }
+
+        [TestMethod]
+        public void TestCliqueEnsemble()
+        {
+            var gen = MakeRmg(rowCount: 10, colCount: 12);
+            IEntityRepo repo = new EntityRepoMem();
+            var entRes = EntityOps.SaveEntityFromGen(repo, gen, "Rmg");
             var ent = Rop.ExtractResult(entRes).Value;
             Assert.IsTrue(entRes.IsSuccess);
             Assert.IsTrue(ent != null);

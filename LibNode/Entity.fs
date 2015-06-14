@@ -10,6 +10,9 @@ type DataId = GuidId of Guid
 ///EntityPartName
 type Epn = Epn of string
 
+///EntityPartName
+type EntityName = EntityName of string
+
  module EpnConvert =
     let FromString (name:string) =
         Epn(name)
@@ -20,12 +23,12 @@ type GeneratorId = { Name:string; Version:int }
 type IsFresh = IsFresh of bool
 
 type ArrayData = 
-    | BoolArray of bool[]
-    | IntArray of IntType * int[]
-    | Float32Array of Float32Type * float32[]
-    | ListOfBoolArray of (bool[] list)
-    | ListOfIntArray of IntType * (int[] list)
-    | ListOfFloat32Array of Float32Type * (float32[] list)
+    | BoolArray of ArrayShape * bool[]
+    | IntArray of ArrayShape * IntType * int[]
+    | Float32Array of ArrayShape * Float32Type * float32[]
+    | ListOfBoolArray of ArrayShape * (bool[] list)
+    | ListOfIntArray of ArrayShape * IntType * (int[] list)
+    | ListOfFloat32Array of ArrayShape * Float32Type * (float32[] list)
 
 type DataRecord = 
     {
@@ -51,6 +54,7 @@ type GenResult =
 
 type Entity =
     {
+        Name:EntityName;
         EntityId: EntityId;
         GeneratorId: GeneratorId;
         Params: Param list;
@@ -82,6 +86,10 @@ type IEntityRepo =
 
 module EntityOps =
 
+    let EpnString epn =
+        match epn with
+        | Epn s -> s
+
     let EntityString eg =
         match eg.EntityId with
         | EntityId.GuidId g -> g.ToString()
@@ -89,6 +97,109 @@ module EntityOps =
     let DataString dg =
         match dg.DataId with
         | DataId.GuidId g -> g.ToString()
+
+
+    let GetBoolArray (entityRepo:IEntityRepo) (dataId:DataId) =
+        match entityRepo.GetData dataId with
+        | Success (entityData, msgs) -> 
+            match entityData.ArrayData with 
+            | BoolArray (ars, ba) -> (ars, ba) |> Rop.succeed
+            | IntArray (ars, it, ia) -> "IntArray not BoolArray" |> Rop.fail
+            | Float32Array (ars, it, fa) -> "Float32Array not BoolArray" |> Rop.fail
+            | ListOfBoolArray (ars, lba) -> "ListOfBoolArray not BoolArray" |> Rop.fail
+            | ListOfIntArray (ars, it, lia) -> "ListOfIntArray not BoolArray" |> Rop.fail
+            | ListOfFloat32Array (ars, ft, lfa) -> "ListOfFloat32Array not BoolArray" |> Rop.fail
+        | Failure errors -> Failure errors
+
+
+    let GetIntArray (entityRepo:IEntityRepo) (dataId:DataId) =
+        match entityRepo.GetData dataId with
+        | Success (entityData, msgs) -> 
+            match entityData.ArrayData with 
+            | BoolArray (ars, ba) -> "BoolArray not ListOfIntArray" |> Rop.fail
+            | IntArray (ars, it, ia) -> (it, ia) |> Rop.succeed
+            | Float32Array (ars, it, fa) -> "Float32Array not IntArray" |> Rop.fail
+            | ListOfBoolArray (ars, lba) -> "ListOfBoolArray not IntArray" |> Rop.fail
+            | ListOfIntArray (ars, it, lia) -> "ListOfIntArray not IntArray" |> Rop.fail
+            | ListOfFloat32Array (ars, ft, lfa) -> "ListOfFloat32Array not IntArray" |> Rop.fail
+        | Failure errors -> Failure errors
+
+
+    let GetFloat32Array (entityRepo:IEntityRepo) (dataId:DataId) =
+        match entityRepo.GetData dataId with
+        | Success (entityData, msgs) -> 
+            match entityData.ArrayData with 
+            | BoolArray (ars, ba) -> "BoolArray not ListOfIntArray" |> Rop.fail
+            | IntArray (ars, it, ia) -> "IntArray not Float32Array" |> Rop.fail
+            | Float32Array (ars, it, fa) -> (it, fa) |> Rop.succeed
+            | ListOfBoolArray (ars, lba) -> "ListOfBoolArray not Float32Array" |> Rop.fail
+            | ListOfIntArray (ars, it, lia) -> "ListOfIntArray not Float32Array" |> Rop.fail
+            | ListOfFloat32Array (ars, ft, lfa) -> "ListOfFloat32Array not Float32Array" |> Rop.fail
+        | Failure errors -> Failure errors
+
+
+    let GetListOfBoolArray (entityRepo:IEntityRepo) (dataId:DataId) =
+        match entityRepo.GetData dataId with
+        | Success (entityData, msgs) -> 
+            match entityData.ArrayData with 
+            | BoolArray (ars, ba) -> "BoolArray not ListOfIntArray" |> Rop.fail
+            | IntArray (ars, it, ia) -> "IntArray not ListBoolArray" |> Rop.fail
+            | Float32Array (ars, it, fa) -> "Float32Array not ListBoolArray" |> Rop.fail
+            | ListOfBoolArray (ars, lba) -> lba |> Rop.succeed
+            | ListOfIntArray (ars, it, lia) -> "ListOfIntArray not ListBoolArray" |> Rop.fail
+            | ListOfFloat32Array (ars, ft, lfa) -> "ListOfFloat32Array not ListBoolArray" |> Rop.fail
+        | Failure errors -> Failure errors
+
+
+    let GetListOfIntArray (entityRepo:IEntityRepo) (dataId:DataId) =
+        match entityRepo.GetData dataId with
+        | Success (entityData, msgs) -> 
+            match entityData.ArrayData with 
+            | BoolArray (ars, ba) -> "BoolArray not ListOfIntArray" |> Rop.fail
+            | IntArray (ars, it, ia) -> "IntArray not ListOfIntArray" |> Rop.fail
+            | Float32Array (ars, it, fa) -> "Float32Array not ListOfIntArray" |> Rop.fail
+            | ListOfBoolArray (ars, lba) -> "ListOfBoolArray not ListOfIntArray" |> Rop.fail
+            | ListOfIntArray (ars, it, lia) -> (it, lia) |> Rop.succeed
+            | ListOfFloat32Array (ars, ft, lfa) -> "ListOfFloat32Array not ListOfIntArray" |> Rop.fail
+        | Failure errors -> Failure errors
+
+
+    let GetListOfFloat32Array (entityRepo:IEntityRepo) (dataId:DataId) =
+        match entityRepo.GetData dataId with
+        | Success (entityData, msgs) -> 
+            match entityData.ArrayData with 
+            | BoolArray (ars, ba) -> "BoolArray not ListOfFloat32Array"|> Rop.fail
+            | IntArray (ars, it, ia) -> "IntArray not ListOfFloat32Array" |> Rop.fail
+            | Float32Array (ars, it, fa) -> "Float32Array not ListOfFloat32Array" |> Rop.fail
+            | ListOfBoolArray (ars, lba) -> "ListOfBoolArray not ListOfFloat32Array" |> Rop.fail
+            | ListOfIntArray (ars, it, lia) -> "ListOfIntArray not ListOfFloat32Array" |> Rop.fail
+            | ListOfFloat32Array (ars, ft, lfa) -> (ft, lfa) |> Rop.succeed
+        | Failure errors -> Failure errors
+
+
+    let GetSourceEntityData (entity:Entity) (epn:Epn) =
+       try
+        entity.SourceData |> List.find(fun e-> e.Epn = epn) |> Rop.succeed
+       with
+        | ex -> (sprintf "Source data not found: %s" (EpnString epn)) |> Rop.fail
+
+    let GetResultEntityData (entity:Entity) (epn:Epn) =
+       try
+        entity.ResultData |> List.find(fun e-> e.Epn = epn) |> Rop.succeed
+       with
+        | ex -> (sprintf "Source data not found: %s" (EpnString epn)) |> Rop.fail
+
+    let GetSourceDataRecord (entityRepo:IEntityRepo) (entity:Entity) (epn:Epn) =
+        match GetSourceEntityData entity epn with
+        | Success (entityData, msgs) -> 
+            entityRepo.GetData entityData.DataId
+        | Failure errors -> Failure errors
+
+    let GetResultDataRecord (entityRepo:IEntityRepo) (entity:Entity) (epn:Epn) =
+        match GetResultEntityData entity epn with
+        | Success (entityData, msgs) -> 
+            entityRepo.GetData entityData.DataId
+        | Failure errors -> Failure errors
 
     let ToDataRecord (genResult:GenResult) =
         {
@@ -128,14 +239,15 @@ module EntityOps =
 
     let MakeResultData (entityRepo:IEntityRepo) (entityGen:IEntityGen) =
         match MakeEntityData entityGen with
-              | Success (resultList, msgs) -> 
-                    (PushThroughRepo entityRepo resultList)
-              | Failure errors -> Failure errors
+        | Success (resultList, msgs) -> 
+            (PushThroughRepo entityRepo resultList)
+        | Failure errors -> Failure errors
       
-    let MakeEntityFromGen (entityRepo:IEntityRepo) (entityGen:IEntityGen) =
+    let MakeEntityFromGen (entityRepo:IEntityRepo) (entityGen:IEntityGen) (name:string) =
         match (MakeResultData entityRepo entityGen) with
         | Success (resultData, msgs) -> 
                             {
+                                Entity.Name = EntityName(name);
                                 Entity.EntityId = entityGen.EntityId;
                                 GeneratorId = entityGen.GeneratorId;
                                 Params = entityGen.Params;
@@ -146,8 +258,8 @@ module EntityOps =
                             } |> Rop.succeed
         | Failure errors -> Failure errors
 
-    let SaveEntityFromGen (entityRepo:IEntityRepo) (entityGen:IEntityGen) =
-        match (MakeEntityFromGen entityRepo entityGen) with
-            | Success (resultEntity, msgs) -> 
-                               SaveEntity entityRepo resultEntity
-            | Failure errors -> Failure errors
+    let SaveEntityFromGen (entityRepo:IEntityRepo) (entityGen:IEntityGen) (name:string) =
+        match (MakeEntityFromGen entityRepo entityGen name) with
+        | Success (resultEntity, msgs) -> 
+                            SaveEntity entityRepo resultEntity 
+        | Failure errors -> Failure errors

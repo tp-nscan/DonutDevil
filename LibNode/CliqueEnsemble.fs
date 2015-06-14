@@ -1,49 +1,58 @@
 ﻿namespace LibNode
 
 open System
+open MathNet.Numerics
+open MathNet.Numerics.Distributions
+open MathNet.Numerics.LinearAlgebra
+open MathNet.Numerics.LinearAlgebra.Matrix
+open MathNet.Numerics.Random
 open Rop
 
-type CliqueEnsemble(prams:Param list, entityId:EntityId, rowCount:int, 
-                    colCount:int, seed:int, iteration:int,
-                    float32Type:Float32Type) =
-    let _sourceData = []
+type CliqueEnsembleDto = { id:Guid; 
+                           unsigned:bool;
+                           stepSize:float32;
+                           noiseSeed:int;
+                           noiseLevel:float32 
+                           ensemble: Float32Type * float32[];
+                           connections: Float32Type * float32[];
+                           }
+
+type CliqueEnsembleGenCpu(prams:Param list, sourceData:EntityData list, 
+                          ensemble:Matrix<float32>, connections:Matrix<float32>,
+                          iteration:int, stepSize:float32, noiseVals:seq<float32>) =
     let _params = prams
-    let _entityId = entityId
-    let _seed = seed
+    let _sourceData = sourceData
+    let _ensemble = ensemble
+    let _connections = connections
     let _iteration = iteration
-    let _rowCount = rowCount
-    let _colCount = colCount
-    let _float32Type = float32Type
-
-    interface IEntityGen with
-        member this.EntityId = _entityId
-        member this.GeneratorId =
-            {Name="RandMatrixGenerator"; Version=1}
-        member this.Iteration = 
-            _iteration
-        member this.SourceData =
-            _sourceData
-        member this.Params = 
-            _params
-        member this.GenResultStates = 
-            [(IsFresh(true), Epn("Matrix"))]
-        member this.GetGenResult(epn:Epn) = 
-            match epn with
-            | Epn("Matrix") -> 
-                {
-                    GenResult.EntityId = _entityId;
-                    GenResult.Epn=Epn("Matrix"); 
-                    GenResult.ArrayData = 
-                        Float32Array( _float32Type, 
-                                    (NtGens.RandFloat32Seed _seed float32Type) 
-                                    |> Seq.take(_rowCount*_colCount) 
-                        |> Seq.toArray);
-                    } |> Rop.succeed
-            
-            | Epn(s) -> sprintf "DataChunkName %s not found" s |> Rop.fail
+    let _stepSize = stepSize
+    let _noiseVals = noiseVals
 
 
-module CliqueEnsembleBuilder =
+ module CliqueEnsembleBuilder =
 
-   let CreateCliqueEnsemble (prams:Param list) = 
+    let CreateCliqueEnsembleDto
+                        (id:Guid)
+                        (unsigned:bool)
+                        (stepSize:float32)
+                        (noiseSeed:int)
+                        (noiseLevel:float32) 
+                        (ensemble: Float32Type * float32[])
+                        (connections: Float32Type * float32[]) =
+        
+
+        { id=id; unsigned=unsigned; stepSize=stepSize; noiseSeed=noiseSeed;
+          noiseLevel=noiseLevel; ensemble=ensemble; connections=connections }
+
+    let CreateCliqueEnsembleFromParams (entityRepo:IEntityRepo) (ensembleId:DataId) 
+                                       (connectionsId:DataId) (prams:Param list) =
+
+        let cliqueEnsembleDto = CreateCliqueEnsembleDto
+                                <!> (Parameters.GetGuidParam prams "EntityId")
+                                <*> (Parameters.GetBoolParam prams "Unsigned")
+                                <*> (Parameters.GetFloat32Param prams "StepSize")
+                                <*> (Parameters.GetIntParam prams "NoiseSeed")
+                                <*> (Parameters.GetFloat32Param prams "NoiseLevel")
+                                <*> (EntityOps.GetFloat32Array entityRepo ensembleId)
+                                <*> (EntityOps.GetFloat32Array entityRepo connectionsId)
         None

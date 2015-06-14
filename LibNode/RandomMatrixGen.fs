@@ -4,18 +4,19 @@ open System
 open Rop
 
 type RandMatrixDto = { id:Guid; rowCount:int; colCount:int; 
-                        seed:int; unsigned:bool; maxValue:float32 }
+                       seed:int; unsigned:bool; maxValue:float32 }
 
-type RandMatrixGen(prams:Param list, entityId:EntityId, rowCount:int, 
-                   colCount:int, seed:int, iteration:int, 
+type RandMatrixGen(prams:Param list, 
+                   entityId:EntityId, 
+                   arrayShape:ArrayShape, 
+                   seed:int,
                    float32Type:Float32Type) =
+
     let _sourceData = []
     let _params = prams
     let _entityId = entityId
+    let _arrayShape = arrayShape
     let _seed = seed
-    let _iteration = iteration
-    let _rowCount = rowCount
-    let _colCount = colCount
     let _float32Type = float32Type
 
     interface IEntityGen with
@@ -23,7 +24,7 @@ type RandMatrixGen(prams:Param list, entityId:EntityId, rowCount:int,
         member this.GeneratorId =
             { Name="RandMatrixGenerator"; Version=1 }
         member this.Iteration = 
-            _iteration
+            0
         member this.SourceData =
             _sourceData
         member this.Params = 
@@ -37,9 +38,10 @@ type RandMatrixGen(prams:Param list, entityId:EntityId, rowCount:int,
                     GenResult.EntityId = _entityId;
                     GenResult.Epn=Epn("Matrix"); 
                     GenResult.ArrayData = 
-                        Float32Array( _float32Type, 
+                        Float32Array( _arrayShape,
+                                      _float32Type, 
                                     (NtGens.RandFloat32Seed _seed float32Type) 
-                                    |> Seq.take(_rowCount*_colCount) 
+                                    |> Seq.take(NtGens.FullArrayCount _arrayShape) 
                         |> Seq.toArray);
                 } |> Rop.succeed
 
@@ -69,7 +71,7 @@ type RandMatrixGen(prams:Param list, entityId:EntityId, rowCount:int,
             unsigned=unsigned; maxValue=maxValue; }
 
 
-    let CreateRandMatrixFromParams (prams:Param list) =
+    let RandMatrixGenFromParams (prams:Param list) =
 
         let dtoResult = CreateRandMatrixDto
                     <!> (Parameters.GetGuidParam prams "EntityId")
@@ -81,12 +83,11 @@ type RandMatrixGen(prams:Param list, entityId:EntityId, rowCount:int,
 
         match dtoResult with
             | Success (dto, msgs) -> 
-                    new RandMatrixGen(prams=prams, 
-                                      entityId=EntityId.GuidId(dto.id), 
-                                      rowCount=dto.rowCount, 
-                                      colCount=dto.colCount, 
-                                      seed=dto.seed, 
-                                      iteration=0,
-                                      float32Type=(NtGens.ToFloat32Type dto.unsigned dto.maxValue)) 
-                                     |> Rop.succeed
+                    new RandMatrixGen(
+                        prams=prams, 
+                        entityId=EntityId.GuidId(dto.id),
+                        arrayShape= (NtGens.FullArrayShape2d dto.rowCount dto.colCount),
+                        seed=dto.seed,
+                        float32Type=(NtGens.ToFloat32Type dto.unsigned dto.maxValue)) 
+                        |> Rop.succeed
             | Failure errors -> Failure errors

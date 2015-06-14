@@ -61,6 +61,7 @@
     <Compile Include="Entity.fs" />
     <Compile Include="EntityRepo.fs" />
     <Compile Include="RandomMatrixGen.fs" />
+    <Compile Include="CliqueEnsemble0.fs" />
     <Compile Include="CliqueEnsemble.fs" />
     <Compile Include="SimpleNetworks.fs" />
     <None Include="Script.fsx" />
