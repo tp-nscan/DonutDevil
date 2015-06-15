@@ -14,11 +14,9 @@ namespace NodeLib.Test
             const int seed = 1234;
             const float maxValue = 0.3f;
             var ubA = Parameters.RandomMatrixSet(
-                                    entityId: entityGuid, 
-                                    matrixId: matrixGuid, 
-                                    rowCount: rowCount, 
-                                    colCount: colCount, 
-                                    seed: seed, 
+                                    rowCount: rowCount,
+                                    colCount: colCount,
+                                    seed: seed,
                                     maxValue: maxValue);
             var res = RmgBuilder.RandMatrixGenFromParams(ubA);
             return Rop.ExtractResult(res).Value;
@@ -35,14 +33,11 @@ namespace NodeLib.Test
         }
 
         [TestMethod]
-        public void TestRmgEntity()
+        public void TestMakeRmgEntity()
         {
             IEntityGen gen = MakeRmg(rowCount:10, colCount:12);
-            IEntityRepo repo = new EntityRepoMem();
-            var entRes = EntityOps.MakeEntityFromGen(repo, gen, "Rmg");
-            var ent = Rop.ExtractResult(entRes).Value;
-            Assert.IsTrue(entRes.IsSuccess);
-            Assert.IsTrue(ent != null);
+            var entRes = EntityOps.MakeEntity(gen, "Rmg");
+            Assert.IsTrue(entRes != null);
         }
 
         [TestMethod]
@@ -50,7 +45,7 @@ namespace NodeLib.Test
         {
             var gen = MakeRmg(rowCount: 10, colCount: 12);
             IEntityRepo repo = new EntityRepoMem();
-            var entRes = EntityOps.SaveEntityFromGen(repo, gen, "Rmg");
+            var entRes = EntityOps.SaveEntityGen(repo, gen, "Rmg");
             var ent = Rop.ExtractResult(entRes).Value;
             var drR = EntityOps.GetResultDataRecord(repo, ent, EpnConvert.FromString("Matrix"));
             var dr = Rop.ExtractResult(drR).Value;
@@ -65,7 +60,7 @@ namespace NodeLib.Test
         {
             var gen = MakeRmg(rowCount: 10, colCount: 12);
             IEntityRepo repo = new EntityRepoMem();
-            var entRes = EntityOps.SaveEntityFromGen(repo, gen, "Rmg");
+            var entRes = EntityOps.SaveEntityGen(repo, gen, "Rmg");
             var ent = Rop.ExtractResult(entRes).Value;
             Assert.IsTrue(entRes.IsSuccess);
             Assert.IsTrue(ent != null);

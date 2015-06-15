@@ -65,10 +65,8 @@ module Parameters =
 //    let StepSize_YParam = {Param.Name="StepSize_Y"; Value=ParamValue.Float{Value=0.1f; Min=0.0f; Max=1.0f}; CanChangeAtRunTime=true}
 //    let TwistBiasParam = {Param.Name="TwistBias"; Value=ParamValue.Float{Value=0.1f; Min=0.0f; Max=1.0f}; CanChangeAtRunTime=true}
 
-    let RandomMatrixSet entityId matrixId rowCount colCount seed maxValue =
+    let RandomMatrixSet rowCount colCount seed maxValue =
         [
-            GuidParam "EntityId" entityId;
-            GuidParam "MatrixId" matrixId;
             IntParam "RowCount" rowCount false;
             IntParam "ColCount" colCount false;
             IntParam "Seed" seed false;
@@ -87,7 +85,6 @@ module Parameters =
 
     let RandomCliqueSet entityId synapseMatrixId ensembleMatrixId stepSize noiseSeed noiseLevel =
         [
-            GuidParam "EntityId" entityId;
             GuidParam "SynapseMatrixId" synapseMatrixId;
             GuidParam "EnsembleMatrixId" ensembleMatrixId;
             FloatParam "StepSize" stepSize true;
