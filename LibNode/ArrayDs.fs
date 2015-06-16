@@ -1,7 +1,9 @@
 ﻿namespace LibNode
 open System
 open MathNet.Numerics
-open MathNet.Numerics.Random
+open MathNet.Numerics.Random    
+open MathNet.Numerics.LinearAlgebra
+open MathNet.Numerics.LinearAlgebra.Matrix
 
 type Float32Type =
     | Unsigned of float32
@@ -37,6 +39,11 @@ type ArrayData =
 
 module ArrayDataGen =
      
+    let GetTuple3of3 tup =
+        match tup with
+        | (a,b,c) -> c |> Rop.succeed
+        | _ -> "Not a 3-tuple" |> Rop.fail
+
     let ToFloat32Type isUnsigned maxVal =
         match isUnsigned with
         | true -> Unsigned(maxVal)
@@ -65,10 +72,30 @@ module ArrayDataGen =
                         | Full ars -> ars.cols * ars.rows
                         | Sparse (ars,l) -> ars.cols * ars.rows
 
+    let MakeDenseMatrix ((arrayShape:ArrayShape),(float32Type:Float32Type),(vals:float32[])) =
+        match arrayShape with
+        | OneD _ -> "wrong arrayShape for DenseMatrix" |> Rop.fail
+        | TwoD tds -> match tds with
+                      | UT ars -> "wrong arrayShape for DenseMatrix" |> Rop.fail
+                      | LT ars -> "wrong arrayShape for DenseMatrix" |> Rop.fail
+                      | Full ars -> DenseMatrix.init ars.rows ars.cols (fun x y -> vals.[x+y*ars.rows]) |> Rop.succeed
+                      | Sparse (ars,l) -> "wrong arrayShape for DenseMatrix" |> Rop.fail
+
+
+
 
 module ArrayDataExtr =
 
-  let GetBoolArray (arrayData:ArrayData) =
+  let GetArrayShape (arrayData:ArrayData) =
+    match arrayData with 
+    | BoolArray (ars, ba) -> (ars) |> Rop.succeed
+    | IntArray (ars, it, ia) -> (ars) |> Rop.succeed
+    | Float32Array (ars, it, fa) -> (ars) |> Rop.succeed
+    | ListOfBoolArray (ars, lba) -> (ars) |> Rop.succeed
+    | ListOfIntArray (ars, it, lia) -> (ars) |> Rop.succeed
+    | ListOfFloat32Array (ars, ft, lfa) -> (ars) |> Rop.succeed
+
+  let GetBoolArrayData (arrayData:ArrayData) =
     match arrayData with 
     | BoolArray (ars, ba) -> (ars, ba) |> Rop.succeed
     | IntArray (ars, it, ia) -> "IntArray not BoolArray" |> Rop.fail
@@ -78,52 +105,52 @@ module ArrayDataExtr =
     | ListOfFloat32Array (ars, ft, lfa) -> "ListOfFloat32Array not BoolArray" |> Rop.fail
 
 
-  let GetIntArray (arrayData:ArrayData) =
+  let GetIntArrayData (arrayData:ArrayData) =
     match arrayData with 
     | BoolArray (ars, ba) -> "BoolArray not ListOfIntArray" |> Rop.fail
-    | IntArray (ars, it, ia) -> (it, ia) |> Rop.succeed
+    | IntArray (ars, it, ia) -> (ars, it, ia) |> Rop.succeed
     | Float32Array (ars, it, fa) -> "Float32Array not IntArray" |> Rop.fail
     | ListOfBoolArray (ars, lba) -> "ListOfBoolArray not IntArray" |> Rop.fail
     | ListOfIntArray (ars, it, lia) -> "ListOfIntArray not IntArray" |> Rop.fail
     | ListOfFloat32Array (ars, ft, lfa) -> "ListOfFloat32Array not IntArray" |> Rop.fail
 
 
-  let GetFloat32Array (arrayData:ArrayData) =
+  let GetFloat32ArrayData (arrayData:ArrayData) =
     match arrayData with 
     | BoolArray (ars, ba) -> "BoolArray not ListOfIntArray" |> Rop.fail
     | IntArray (ars, it, ia) -> "IntArray not Float32Array" |> Rop.fail
-    | Float32Array (ars, it, fa) -> (it, fa) |> Rop.succeed
+    | Float32Array (ars, it, fa) -> (ars, it, fa) |> Rop.succeed
     | ListOfBoolArray (ars, lba) -> "ListOfBoolArray not Float32Array" |> Rop.fail
     | ListOfIntArray (ars, it, lia) -> "ListOfIntArray not Float32Array" |> Rop.fail
     | ListOfFloat32Array (ars, ft, lfa) -> "ListOfFloat32Array not Float32Array" |> Rop.fail
 
 
-  let GetListOfBoolArray (arrayData:ArrayData) =
+  let GetListOfBoolArrayData (arrayData:ArrayData) =
     match arrayData with 
     | BoolArray (ars, ba) -> "BoolArray not ListOfIntArray" |> Rop.fail
     | IntArray (ars, it, ia) -> "IntArray not ListBoolArray" |> Rop.fail
     | Float32Array (ars, it, fa) -> "Float32Array not ListBoolArray" |> Rop.fail
-    | ListOfBoolArray (ars, lba) -> lba |> Rop.succeed
+    | ListOfBoolArray (ars, lba) -> (ars, lba) |> Rop.succeed
     | ListOfIntArray (ars, it, lia) -> "ListOfIntArray not ListBoolArray" |> Rop.fail
     | ListOfFloat32Array (ars, ft, lfa) -> "ListOfFloat32Array not ListBoolArray" |> Rop.fail
 
 
-  let GetListOfIntArray (arrayData:ArrayData) =
+  let GetListOfIntArrayData (arrayData:ArrayData) =
     match arrayData with 
     | BoolArray (ars, ba) -> "BoolArray not ListOfIntArray" |> Rop.fail
     | IntArray (ars, it, ia) -> "IntArray not ListOfIntArray" |> Rop.fail
     | Float32Array (ars, it, fa) -> "Float32Array not ListOfIntArray" |> Rop.fail
     | ListOfBoolArray (ars, lba) -> "ListOfBoolArray not ListOfIntArray" |> Rop.fail
-    | ListOfIntArray (ars, it, lia) -> (it, lia) |> Rop.succeed
+    | ListOfIntArray (ars, it, lia) -> (ars, it, lia) |> Rop.succeed
     | ListOfFloat32Array (ars, ft, lfa) -> "ListOfFloat32Array not ListOfIntArray" |> Rop.fail
 
 
-  let GetListOfFloat32Array (arrayData:ArrayData) =
+  let GetListOfFloat32ArrayData (arrayData:ArrayData) =
     match arrayData with 
     | BoolArray (ars, ba) -> "BoolArray not ListOfFloat32Array"|> Rop.fail
     | IntArray (ars, it, ia) -> "IntArray not ListOfFloat32Array" |> Rop.fail
     | Float32Array (ars, it, fa) -> "Float32Array not ListOfFloat32Array" |> Rop.fail
     | ListOfBoolArray (ars, lba) -> "ListOfBoolArray not ListOfFloat32Array" |> Rop.fail
     | ListOfIntArray (ars, it, lia) -> "ListOfIntArray not ListOfFloat32Array" |> Rop.fail
-    | ListOfFloat32Array (ars, ft, lfa) -> (ft, lfa) |> Rop.succeed
+    | ListOfFloat32Array (ars, ft, lfa) -> (ars, ft, lfa) |> Rop.succeed
 

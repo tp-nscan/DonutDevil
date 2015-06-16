@@ -38,32 +38,9 @@ module Parameters =
     let GuidParam name guid = {Param.Name=name; Value=ParamValue.Guid{Value=guid}; CanChangeAtRunTime=false}
     let BoolParam name value canChange = {Param.Name=name; Value=ParamValue.Bool{BoolParam.Value=value;}; CanChangeAtRunTime=canChange}
     let IntParam name value canChange = {Param.Name=name; Value=ParamValue.Int{Value=value; Min=1; Max=1000}; CanChangeAtRunTime=canChange}
-    let FloatParam name value canChange = {Param.Name="MaxValue"; Value=ParamValue.Float{Value=value; Min=0.01f; Max=1.0f}; CanChangeAtRunTime=canChange}
-
-
+    let FloatParam name value canChange = {Param.Name=name; Value=ParamValue.Float{Value=value; Min=0.01f; Max=1.0f}; CanChangeAtRunTime=canChange}
     let ParentIdParam = {Param.Name="ParentId"; Value=ParamValue.Guid{Value=Guid.NewGuid()}; CanChangeAtRunTime=false}
 
-
-//    let UpdateFrequencyParam = {Param.Name="UpdateFrequency"; Value=ParamValue.Int{Value=10; Min=1; Max=50}; CanChangeAtRunTime=true}
-//    let ArrayStrideParam = {Param.Name="ArrayStride"; Value=ParamValue.Int{Value=128; Min=8; Max=1024}; CanChangeAtRunTime=false}
-//    let NoiseSeedParam = {Param.Name="NoiseSeed"; Value=ParamValue.Int{Value=123; Min=1; Max=32000}; CanChangeAtRunTime=false}
-//    let MemSeedParam = {Param.Name="MemSeed"; Value=ParamValue.Int{Value=123; Min=1; Max=32000}; CanChangeAtRunTime=false}
-//    let CnxnSeedParam = {Param.Name="CnxnSeed"; Value=ParamValue.Int{Value=1237; Min=1; Max=32000}; CanChangeAtRunTime=false}
-//    let SeedParam = {Param.Name="Seed"; Value=ParamValue.Int{Value=1267; Min=1; Max=32000}; CanChangeAtRunTime=false}
-//    let MemCountParam = {Param.Name="MemCount"; Value=ParamValue.Int{Value=10; Min=1; Max=1024}; CanChangeAtRunTime=false}
-//    let EnsembleCountParam = {Param.Name="EnsembleCount"; Value=ParamValue.Int{Value=150; Min=1; Max=1000}; CanChangeAtRunTime=false}
-//    let NodeCountParam = {Param.Name="NodeCount"; Value=ParamValue.Int{Value=50; Min=1; Max=1000}; CanChangeAtRunTime=false}
-//    let RowCountParam = {Param.Name="RowCount"; Value=ParamValue.Int{Value=50; Min=1; Max=1000}; CanChangeAtRunTime=false}
-//    let ColCountParam = {Param.Name="ColCount"; Value=ParamValue.Int{Value=50; Min=1; Max=1000}; CanChangeAtRunTime=false}
-//
-//    let StepSizeParam = {Param.Name="StepSize"; Value=ParamValue.Float{Value=0.1f; Min=0.01f; Max=1.0f}; CanChangeAtRunTime=true}
-//    let NoiseLevelParam = {Param.Name="NoiseLevel"; Value=ParamValue.Float{Value=0.1f; Min=0.01f; Max=1.0f}; CanChangeAtRunTime=true}
-//    let MaxValueParam = {Param.Name="MaxValue"; Value=ParamValue.Float{Value=0.3f; Min=0.01f; Max=1.0f}; CanChangeAtRunTime=true}
-//    let StartMagParam = {Param.Name="StartMag"; Value=ParamValue.Float{Value=0.1f; Min=0.0f; Max=1.0f}; CanChangeAtRunTime=false}
-//    let CnxnMagParam = {Param.Name="CnxnMag"; Value=ParamValue.Float{Value=0.1f; Min=0.0f; Max=1.0f}; CanChangeAtRunTime=true}
-//    let StepSize_XParam = {Param.Name="StepSize_X"; Value=ParamValue.Float{Value=0.1f; Min=0.0f; Max=1.0f}; CanChangeAtRunTime=true}
-//    let StepSize_YParam = {Param.Name="StepSize_Y"; Value=ParamValue.Float{Value=0.1f; Min=0.0f; Max=1.0f}; CanChangeAtRunTime=true}
-//    let TwistBiasParam = {Param.Name="TwistBias"; Value=ParamValue.Float{Value=0.1f; Min=0.0f; Max=1.0f}; CanChangeAtRunTime=true}
 
     let RandomMatrixSet rowCount colCount seed maxValue =
         [
@@ -74,46 +51,15 @@ module Parameters =
             FloatParam "MaxValue" maxValue false;
         ]
 
-    let LinearLocalSet =
-        [
-//            ArrayStrideParam;
-//            StepSizeParam;
-//            NoiseSeedParam;
-//            CnxnSeedParam;
-//            NoiseLevelParam;
-        ]
 
-    let RandomCliqueSet entityId synapseMatrixId ensembleMatrixId stepSize noiseSeed noiseLevel =
+    let CliqueSet unsigned stepSize noiseSeed noiseLevel =
         [
-            GuidParam "SynapseMatrixId" synapseMatrixId;
-            GuidParam "EnsembleMatrixId" ensembleMatrixId;
+            BoolParam "Unsigned" unsigned false;
             FloatParam "StepSize" stepSize true;
             IntParam "NoiseSeed" noiseSeed false;
             FloatParam "NoiseLevel" noiseLevel true;
         ]
 
-    let RingSet =
-        [
-//            ArrayStrideParam;
-//            StepSizeParam;
-//            NoiseLevelParam;
-        ]
-
-    let TwisterSet =
-        [
-//            ArrayStrideParam;
-//            StepSize_XParam;
-//            StepSize_YParam;
-//            TwistBiasParam;
-        ]
-
-    let SpotSet =
-        [
-//            ArrayStrideParam;
-//            StepSize_XParam;
-//            StepSize_YParam;
-//            TwistBiasParam;
-        ]
 
     let GetParamByName (prams:Param list) (name:string) =
         try

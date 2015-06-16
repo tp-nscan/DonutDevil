@@ -57,9 +57,17 @@ module EntityOps =
                 ArrayData = genResult.ArrayData;
             } |> Rop.succeed
         | Failure errors -> Failure errors
-              
+    
 
-    let ToEntityData (entityId:EntityId) (epn:Epn) =
+    let ToEntityData (dataRecord:DataRecord) =
+        {
+            EntityData.DataId = dataRecord.DataId;
+            EntityId = dataRecord.EntityId;
+            Epn = dataRecord.Epn;
+        }
+
+
+    let MakeEntityData (entityId:EntityId) (epn:Epn) =
         {
             EntityData.DataId = DataId.GuidId(Guid.NewGuid());
             EntityId = entityId;
@@ -94,40 +102,6 @@ module EntityOps =
         with
         | ex -> (sprintf "Error saving Entity: %s" (EntityString entity)) |> Rop.fail
 
-        
-//    let SaveGenResults (entityRepo:IEntityRepo) (entityId:EntityId) (entityGen:IEntityGen) =
-//        try
-//            genResults |> List.map(fun gr-> entityRepo.SaveData entityId gr)
-//                       |> MergeResultList
-//        with
-//        | ex -> (sprintf "Error saving GenResults: %s" ex.Message) |> Rop.fail
-//            
-//    let MakeResultData (entityRepo:IEntityRepo) (entityGen:IEntityGen) =
-//        match GetAllGenResults entityGen with
-//        | Success (resultList, msgs) -> 
-//            (SaveGenResults entityRepo resultList)
-//        | Failure errors -> Failure errors
-//      
-//    let MakeEntity (entityRepo:IEntityRepo) (entityGen:IEntityGen) (name:string) (entityId:EntityId) =
-//        match (MakeResultData entityRepo entityGen) with
-//        | Success (resultData, msgs) ->
-//                            {
-//                                Entity.Name = EntityName(name);
-//                                Entity.EntityId = entityId;
-//                                GeneratorId = entityGen.GeneratorId;
-//                                Params = entityGen.Params;
-//                                Iteration = entityGen.Iteration;
-//                                SourceData = entityGen.SourceData;
-//                                ResultData = resultData
-//                                    |> List.map(fun dr -> dr |> ToEntityData)
-//                            } |> Rop.succeed
-//        | Failure errors -> Failure errors
-//    let SaveEntityGen (entityRepo:IEntityRepo) (entityGen:IEntityGen) (name:string) =
-//        let entityId = EntityId.GuidId(Guid.NewGuid())
-//        match (MakeEntity entityRepo entityGen name entityId) with
-//        | Success (resultEntity, msgs) -> 
-//                            SaveEntity entityRepo resultEntity 
-//        | Failure errors -> Failure errors
 
     let MakeEntity (entityGen:IEntityGen) (name:string)  =        
         let entityId = EntityId.GuidId(Guid.NewGuid())
@@ -139,7 +113,7 @@ module EntityOps =
             Iteration = entityGen.Iteration;
             SourceData = entityGen.SourceData;
             ResultData = entityGen.GenResultStates
-                            |> List.map(fun grs-> (snd grs) |> ToEntityData entityId); 
+                            |> List.map(fun grs-> (snd grs) |> MakeEntityData entityId); 
         }
 
     let SaveEntityGen (entityRepo:IEntityRepo) (entityGen:IEntityGen) (name:string) =
@@ -152,3 +126,6 @@ module EntityOps =
 
         with
         | ex -> (sprintf "Error saving Entity: %s" (EntityString entity)) |> Rop.fail
+
+    let GetArrayDataFromGenResult (genResult:GenResult) =
+        genResult.ArrayData |> Rop.succeed 

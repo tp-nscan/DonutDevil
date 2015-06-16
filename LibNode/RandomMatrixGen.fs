@@ -68,6 +68,6 @@ type RandMatrixGen(prams:Param list,
                         prams=prams, 
                         arrayShape = (ArrayDataGen.FullArrayShape2d dto.rowCount dto.colCount),
                         seed=dto.seed,
-                        float32Type = (ArrayDataGen.ToFloat32Type dto.unsigned dto.maxValue)) 
+                        float32Type = (ArrayDataGen.ToFloat32Type dto.unsigned 1.0f)) 
                         |> Rop.succeed
             | Failure errors -> Failure errors

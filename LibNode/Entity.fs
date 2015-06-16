@@ -14,10 +14,15 @@ type Epn = Epn of string
 type EntityName = EntityName of string
 
 
- module EpnConvert =
-    let FromString (name:string) =
+ module Entvert =
+    let ToEpn (name:string) =
         Epn(name)
-//EntityGenerator name
+
+    let ToEntityId (id:Guid) =
+        EntityId.GuidId id
+
+    let ToDataId (id:Guid) =
+        DataId.GuidId id
 
 
 type GeneratorId = { Name:string; Version:int }
@@ -73,7 +78,7 @@ type IEntityGen =
 
 type IIterativeEntityGen =
     inherit IEntityGen
-    abstract member Update: unit -> RopResult<string,string>
+    abstract member Update: unit -> RopResult<IIterativeEntityGen,string>
 
 
 type IEntityRepo =
