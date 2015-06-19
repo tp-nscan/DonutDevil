@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LibNode;
+﻿using LibNode;
 
 namespace La.ViewModel
 {
@@ -18,6 +13,6 @@ namespace La.ViewModel
 
         public string Epn => Entvert.EpnToString(EntityData.Epn);
 
-        public string Description;
+        public string Description => EntityOps.ArrayDescrString(EntityData.ArrayDescr);
     }
 }

@@ -6,9 +6,7 @@ type EntityId = GuidId of Guid
 type DataId = GuidId of Guid
 type IsFresh = IsFresh of bool
 type Epn = Epn of string
-
 type EntityName = EntityName of string
-
 type GeneratorId = { Name:string; Version:int }
 
  module Entvert =
@@ -44,30 +42,27 @@ type GeneratorId = { Name:string; Version:int }
         sprintf "%s_%i" generatorId.Name generatorId.Version
 
 
-
 type DataRecord = 
     {
         DataId: DataId;
         EntityId: EntityId;
+        DrData: ArrayData;
         Epn: Epn;
-        ArrayData: ArrayData;
     }
-
 
 type EntityData = 
     {
+        ArrayDescr: ArrayDescr;
         DataId: DataId;
         EntityId: EntityId;
         Epn: Epn;
     }
-
 
 type GenResult = 
     {
         Epn: Epn;
         ArrayData: ArrayData;
     }
-
 
 type Entity =
     {
@@ -79,7 +74,6 @@ type Entity =
         SourceData: EntityData list;
         ResultData: EntityData list; 
     }
-
 
 type IEntityGen =
     abstract member GeneratorId: GeneratorId

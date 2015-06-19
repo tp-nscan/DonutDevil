@@ -97,6 +97,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\App.cs" />
+    <Compile Include="ViewModel\Design\DesignEntityDataVm.cs" />
     <Compile Include="ViewModel\Design\DesignEntityVm.cs" />
     <Compile Include="ViewModel\Design\DesignNetworkVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignIntParamIntVm.cs" />
@@ -115,6 +116,9 @@
     </Compile>
     <Compile Include="View\EntityControl.xaml.cs">
       <DependentUpon>EntityControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\EntityDataControl.xaml.cs">
+      <DependentUpon>EntityDataControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainWindowSelector.cs" />
     <Compile Include="View\MenuControl.xaml.cs">
@@ -140,6 +144,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\EntityControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EntityDataControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

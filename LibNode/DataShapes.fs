@@ -59,8 +59,8 @@ module DataShapeProcs =
     
     let CopyToFloatArray (dataShape:DataShape, dataType:DataType, data:byte[]) =
         match  (dataType, data) with
-        | (DataType.Bool, d) -> "wroing datatype: Bool" |> Rop.fail
-        | (DataType.Int nt, d) -> "wroing datatype: Bool" |> Rop.fail
+        | (DataType.Bool, d) -> "wrong datatype: Bool" |> Rop.fail
+        | (DataType.Int nt, d) -> "wrong datatype: Bool" |> Rop.fail
         | (DataType.Float32 ft, d) -> 
 
                 let result = Array.create 6 0.0f

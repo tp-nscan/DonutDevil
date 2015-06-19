@@ -55,12 +55,14 @@ type CliqueEnsembleGenCpu(prams:Param list,
             | Epn("Ensemble") -> 
                 {
                     GenResult.Epn=Epn("Ensemble"); 
-                    GenResult.ArrayData = ArrayData.Float32Array
-                        (
-                            _arrayShape, 
-                            Float32Type.SF 1.0f,
-                            _ensemble.ToArray() |> FlattenColumnMajor
-                        )
+                    GenResult.ArrayData = 
+                        ArrayData.Float32Array
+                            (
+                                _arrayShape, 
+                                Float32Type.SF 1.0f,
+                                _ensemble.ToArray() |> FlattenColumnMajor,
+                                Array.empty<int>
+                            )
                  } |> Rop.succeed
             
             | Epn(s) -> sprintf "Epn %s not found" s |> Rop.fail
@@ -134,5 +136,5 @@ type CliqueEnsembleGenCpu(prams:Param list,
         cliqueEnsembleGenCpu.GetGenResult(Epn("Ensemble")) 
             |> bindR GetArrayDataFromGenResult
             |> bindR GetFloat32ArrayData
-            |> bindR GetTuple3of3
+            |> bindR GetTuple3of4
             |> ExtractResult

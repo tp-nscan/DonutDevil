@@ -32,11 +32,15 @@ type RandMatrixGen(prams:Param list,
                 {
                     GenResult.Epn=Epn("Matrix"); 
                     GenResult.ArrayData = 
-                        Float32Array( _arrayShape,
-                                      _float32Type, 
-                                    (ArrayDataGen.RandFloat32Seed _seed float32Type) 
-                                    |> Seq.take(ArrayDataGen.FullArrayCount _arrayShape) 
-                        |> Seq.toArray);
+                        Float32Array
+                            ( 
+                                _arrayShape,
+                                _float32Type, 
+                                (ArrayDataGen.RandFloat32Seed _seed float32Type) 
+                                |> Seq.take(ArrayDataGen.FullArrayCount _arrayShape) 
+                                |> Seq.toArray,
+                                Array.empty<int>
+                            );
                 } |> Rop.succeed
 
             | Epn(s) -> sprintf "DataChunkName %s not found" s |> Rop.fail

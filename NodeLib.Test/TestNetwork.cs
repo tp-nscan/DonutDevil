@@ -27,7 +27,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRmgGen()
         {
-            var gen = (IEntityGen)MakeRmg(rowCount: 10, colCount: 12);
+            var gen = MakeRmg(rowCount: 10, colCount: 12);
             var matrixRes = gen.GetGenResult(Entvert.ToEpn("Matrix"));
             var matrix = Rop.ExtractResult(matrixRes).Value;
             Assert.IsTrue(matrixRes.IsSuccess);
@@ -37,9 +37,9 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestMakeRmgEntity()
         {
-            IEntityGen gen = MakeRmg(rowCount:10, colCount:12);
-            var entRes = EntityOps.MakeEntity(gen, "Rmg");
-            Assert.IsTrue(entRes != null);
+            //IEntityGen gen = MakeRmg(rowCount:10, colCount:12);
+            //var entRes = EntityOps.MakeEntity(gen);
+            //Assert.IsTrue(entRes != null);
         }
 
         [TestMethod]
@@ -93,7 +93,11 @@ namespace NodeLib.Test
                     entityRepo: repo,
                     ensembleId: drE.DataId,
                     connectionsId: drC.DataId,
-                    entityData: new [] { drE, drC }.Select(EntityOps.ToEntityData).ToArray(),
+                    entityData: new[]
+                    {
+                        EntityOps.ToEntityData(drE),
+                        EntityOps.ToEntityData(drC)
+                    },
                     prams: ubA
                 );
 
@@ -134,7 +138,11 @@ namespace NodeLib.Test
                     entityRepo: repo,
                     ensembleId: drE.DataId,
                     connectionsId: drC.DataId,
-                    entityData: new[] { drE, drC }.Select(EntityOps.ToEntityData).ToArray(),
+                    entityData: new[]
+                    {
+                        EntityOps.ToEntityData(drE),
+                        EntityOps.ToEntityData(drC)
+                    },
                     prams: ubA
                 );
 
