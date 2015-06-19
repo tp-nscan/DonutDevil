@@ -24,21 +24,6 @@ namespace NodeLib.Test
         }
 
         [TestMethod]
-        public void TestRandomBools()
-        {
-            var ubA = MemoryBuilders.MakeRandomBinary(1235, MathUtils.GroupShape.NewRing(5));
-
-            Assert.IsTrue(ubA.IsBinary);
-        }
-
-        [TestMethod]
-        public void TestMakeRandomBinaryBlock()
-        {
-            var ubA = MemoryBuilders.MakeRandomBinaryDataBlock(1235, MathUtils.GroupShape.NewRing(5), 5, "setName");
-            Assert.IsTrue(ubA.IsKvpList);
-        }
-
-        [TestMethod]
         public void TestRandUsFloat32()
         {
             var q = Generators.RandF32s(1235, 1.0f)

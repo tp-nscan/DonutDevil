@@ -61,9 +61,32 @@ namespace MathLib.Test.NumericTypes
                 }
                 Debug.WriteLine("");
             }
-
         }
 
+
+        [TestMethod]
+        public void TestBaINtConv()
+        {
+            int[] ints = { 1, 2, 3, 4, 5, 6 };
+            byte[] result = new byte[ints.Length * sizeof(int)];
+            Buffer.BlockCopy(ints, 0, result, 0, result.Length);
+
+            var andBack = new int[6];
+
+            Buffer.BlockCopy(result, 0, andBack, 0, result.Length);
+        }
+
+        [TestMethod]
+        public void TestBaFloatConv()
+        {
+            float[] floats = { 1, 2, 3, 4, 5, 6 };
+            byte[] result = new byte[floats.Length * sizeof(int)];
+            Buffer.BlockCopy(floats, 0, result, 0, result.Length);
+
+            var andBack = new float[6];
+
+            Buffer.BlockCopy(result, 0, andBack, 8, result.Length -8);
+        }
 
     }
 }

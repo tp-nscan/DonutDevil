@@ -34,7 +34,7 @@ namespace La.ViewModel
 
         ISym Network { get; }
 
-        public int Generation => Network?.Generation ?? 0;
+        public int Generation => Network?.Iteration ?? 0;
 
         public double DisplayFrequency => DisplayFrequencySliderVm.Value;
 

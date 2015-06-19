@@ -55,21 +55,20 @@
     <Compile Include="MathUtils.fs" />
     <Compile Include="Generators.fs" />
     <Compile Include="Named.fs" />
+    <Compile Include="DataShapes.fs" />
     <Compile Include="ArrayDs.fs" />
-    <Compile Include="DataBlocks.fs" />
     <Compile Include="Parameters.fs" />
     <Compile Include="Entity.fs" />
     <Compile Include="EntityOps.fs" />
     <Compile Include="EntityRepo.fs" />
     <Compile Include="RandomMatrixGen.fs" />
     <Compile Include="CliqueEnsemble.fs" />
-    <Compile Include="SimpleNetworks.fs" />
+    <Compile Include="Sim.fs" />
     <None Include="Script.fsx" />
     <None Include="ScriptMathNet.fsx" />
     <None Include="packages.config" />
     <None Include="ScriptRop.fsx" />
     <Compile Include="LegacyNode.fs" />
-    <Compile Include="Sim.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

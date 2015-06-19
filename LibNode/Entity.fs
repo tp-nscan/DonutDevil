@@ -1,22 +1,17 @@
 ﻿namespace LibNode
-
 open System
 open Rop
 
 type EntityId = GuidId of Guid
 type DataId = GuidId of Guid
-
-
-///EntityPartName
+type IsFresh = IsFresh of bool
 type Epn = Epn of string
 
-///EntityPartName
 type EntityName = EntityName of string
 
+type GeneratorId = { Name:string; Version:int }
 
  module Entvert =
-    let ToEpn (name:string) =
-        Epn(name)
 
     let ToEntityId (id:Guid) =
         EntityId.GuidId id
@@ -24,11 +19,30 @@ type EntityName = EntityName of string
     let ToDataId (id:Guid) =
         DataId.GuidId id
 
+    let ToEntityName (name:string) =
+        EntityName(name)
 
-type GeneratorId = { Name:string; Version:int }
+    let EntityNameToString (entityName:EntityName) =
+        match entityName with
+        | EntityName nm -> nm
 
+    let ToEpn (name:string) =
+        Epn(name)
 
-type IsFresh = IsFresh of bool
+    let EpnToString (epn:Epn) =
+        match epn with
+        | Epn nm -> nm
+
+    let ParseGeneratorId (generatorId:string) =
+        try
+            let pcs = generatorId.Split [|'_'|]
+            {Name=pcs.[0]; Version=System.Int32.Parse pcs.[1]} |> Rop.succeed
+        with
+        | ex -> (sprintf "Error: %s" ex.Message) |> Rop.fail
+
+    let GeneratorIdToString (generatorId:GeneratorId) =
+        sprintf "%s_%i" generatorId.Name generatorId.Version
+
 
 
 type DataRecord = 
@@ -76,9 +90,9 @@ type IEntityGen =
     abstract member GetGenResult: Epn -> RopResult<GenResult, string>
 
 
-type IIterativeEntityGen =
+type ISym =
     inherit IEntityGen
-    abstract member Update: unit -> RopResult<IIterativeEntityGen,string>
+    abstract member Update: unit -> RopResult<ISym,string>
 
 
 type IEntityRepo =

@@ -2,8 +2,49 @@
 
 open System
 open Rop
+open ArrayDataGen
 
 module EntityOps =
+
+    let ArrayDataDescr (arrayData:ArrayData) =
+        match arrayData with
+        | BoolArray (ars, ba) -> 
+            match ars with
+            | OneD l -> sprintf "bool[%i]" l
+            | TwoD tds -> match tds with
+                        | UT ars -> sprintf "Upper Tr bool[%i][%i]" ars.rows ars.cols
+                        | LT ars -> sprintf "Lower Tr bool[%i][%i]" ars.rows ars.cols
+                        | Full ars -> sprintf "bool[%i][%i]" ars.rows ars.cols
+                        | TwoDShape.Sparse (ars, l) -> sprintf "Sparse bool[%i][%i]" ars.rows ars.cols
+
+        | IntArray (ars, it, ia) -> 
+            match ars with
+            | OneD l -> sprintf "int[%i]" l
+            | TwoD tds -> match tds with
+                        | UT ars -> sprintf "Upper Tr %s[%i][%i]" (it |>IntTypeDescr) ars.rows ars.cols
+                        | LT ars -> sprintf "Lower Tr %s[%i][%i]" (it |>IntTypeDescr) ars.rows ars.cols
+                        | Full ars -> sprintf "%s[%i][%i]" (it |>IntTypeDescr) ars.rows ars.cols
+                        | TwoDShape.Sparse (ars, l) -> sprintf "Sparse %s[%i][%i]" (it |>IntTypeDescr) ars.rows ars.cols
+
+        | Float32Array (ars, ft, fa) -> 
+            match ars with
+            | OneD l -> sprintf "float[%i]" l
+            | TwoD tds -> match tds with
+                        | UT ars -> sprintf "Upper Tr %s[%i][%i]" (ft |>Float32TypeDescr) ars.rows ars.cols
+                        | LT ars -> sprintf "Lower Tr %s[%i][%i]" (ft |>Float32TypeDescr) ars.rows ars.cols
+                        | Full ars -> sprintf "%s[%i][%i]" (ft |>Float32TypeDescr) ars.rows ars.cols
+                        | TwoDShape.Sparse (ars, l) -> sprintf "Sparse %s[%i][%i]" (ft |>Float32TypeDescr) ars.rows ars.cols
+
+
+        | ListOfBoolArray (ars, lba) -> match ars with
+                                     | OneD l -> sprintf ""
+                                     | TwoD tds -> sprintf ""
+        | ListOfIntArray (ars, it, lia) -> match ars with
+                                     | OneD l -> sprintf ""
+                                     | TwoD tds -> sprintf ""
+        | ListOfFloat32Array (ars, ft, lfa) -> match ars with
+                                     | OneD l -> sprintf ""
+                                     | TwoD tds -> sprintf ""
 
     let EpnString epn =
         match epn with

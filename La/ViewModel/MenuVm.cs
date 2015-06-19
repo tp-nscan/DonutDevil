@@ -22,17 +22,12 @@ namespace La.ViewModel
 
         #region Navigation
 
-        public MainWindowType MainWindowType
-        {
-            get { return MainWindowType.Menu; }
-        }
+        public MainWindowType MainWindowType => MainWindowType.Menu;
 
         private readonly Subject<IMainWindowVm> _mainWindowTypehanged
             = new Subject<IMainWindowVm>();
-        public IObservable<IMainWindowVm> OnMainWindowTypeChanged
-        {
-            get { return _mainWindowTypehanged; }
-        }
+
+        public IObservable<IMainWindowVm> OnMainWindowTypeChanged => _mainWindowTypehanged;
 
         #endregion // Navigation
 
@@ -101,10 +96,7 @@ namespace La.ViewModel
 
 
         private readonly List<NetworkBuilderVm> _networkBuilderVms;
-        public IList NetworkBuilderVms
-        {
-            get { return _networkBuilderVms; }
-        }
+        public IList NetworkBuilderVms => _networkBuilderVms;
 
         private NetworkBuilderVm _networkBuilderVm;
         public NetworkBuilderVm NetworkBuilderVm

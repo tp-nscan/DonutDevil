@@ -66,8 +66,11 @@ namespace MathLib.NumericTypes
                 }
             }
         }
+
+        public static string ToCsvString(this IEnumerable<float> floats, string format)
+        {
+            return floats.Aggregate("", (s, f) => s + "\t" + f.ToString(format));
+        }
     }
-
-
 
 }

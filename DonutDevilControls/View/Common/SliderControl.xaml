@@ -21,8 +21,7 @@
                 TextAlignment="Center" 
                 Text="{Binding Title}" 
                 HorizontalAlignment="Center"
-                Foreground="Yellow"
-                Margin="0,0,0,0"/>
+                Foreground="Yellow"/>
 
             <Slider
                 Delay="50"

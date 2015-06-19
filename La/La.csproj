@@ -66,19 +66,55 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.4\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=2.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.4\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=2.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.4\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=2.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.4\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=2.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.4\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=2.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.4\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\Network.cs" />
+    <Compile Include="Model\App.cs" />
+    <Compile Include="ViewModel\Design\DesignEntityVm.cs" />
     <Compile Include="ViewModel\Design\DesignNetworkVm.cs" />
+    <Compile Include="ViewModel\Design\Param\DesignIntParamIntVm.cs" />
+    <Compile Include="ViewModel\Design\Param\DesignParamBoolVm.cs" />
+    <Compile Include="ViewModel\Design\Param\DesignParamDoubleVm.cs" />
+    <Compile Include="ViewModel\EntityDataVm.cs" />
+    <Compile Include="ViewModel\EntityVm.cs" />
     <Compile Include="ViewModel\IMainWindowVm.cs" />
     <Compile Include="ViewModel\MainWindowVm.cs" />
     <Compile Include="ViewModel\NetworkVm.cs" />
+    <Compile Include="ViewModel\ParamBoolVm.cs" />
+    <Compile Include="ViewModel\ParamDoubleVm.cs" />
+    <Compile Include="ViewModel\ParamIntVm.cs" />
     <Compile Include="View\DatablockControl.xaml.cs">
       <DependentUpon>DatablockControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\EntityControl.xaml.cs">
+      <DependentUpon>EntityControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainWindowSelector.cs" />
     <Compile Include="View\MenuControl.xaml.cs">
@@ -87,10 +123,23 @@
     <Compile Include="View\NetworkControl.xaml.cs">
       <DependentUpon>NetworkControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ParamBoolControl.xaml.cs">
+      <DependentUpon>ParamBoolControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ParamDoubleControl.xaml.cs">
+      <DependentUpon>ParamDoubleControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ParamIntControl.xaml.cs">
+      <DependentUpon>ParamIntControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SbControl.xaml.cs">
       <DependentUpon>SbControl.xaml</DependentUpon>
     </Compile>
     <Page Include="View\DatablockControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EntityControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -117,6 +166,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\NetworkControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ParamBoolControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ParamDoubleControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ParamIntControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

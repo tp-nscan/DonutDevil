@@ -39,7 +39,7 @@ type CliqueEnsembleGenCpu(prams:Param list,
     let _stepSize = stepSize
     let _seqNoise = seqNoise
 
-    interface IIterativeEntityGen with
+    interface ISym with
         member this.GeneratorId =
             {Name="RandMatrixGenerator"; Version=1}
         member this.Iteration = 
@@ -58,7 +58,7 @@ type CliqueEnsembleGenCpu(prams:Param list,
                     GenResult.ArrayData = ArrayData.Float32Array
                         (
                             _arrayShape, 
-                            Float32Type.Signed 1.0f,
+                            Float32Type.SF 1.0f,
                             _ensemble.ToArray() |> FlattenColumnMajor
                         )
                  } |> Rop.succeed
@@ -80,7 +80,7 @@ type CliqueEnsembleGenCpu(prams:Param list,
                           stepSize = _stepSize, 
                           seqNoise = _seqNoise) 
                           
-                          :> IIterativeEntityGen
+                          :> ISym
                           |> Rop.succeed
            with
             | ex -> (sprintf "Error updating CliqueEnsembleGenCpu: %s" ex.Message) |> Rop.fail
@@ -110,9 +110,10 @@ type CliqueEnsembleGenCpu(prams:Param list,
                         <*> (Parameters.GetFloat32Param prams "StepSize")
                         <*> (Parameters.GetIntParam prams "NoiseSeed")
                         <*> (Parameters.GetFloat32Param prams "NoiseLevel")
-                        <*> (GetArrayShape >>= (GetArrayData entityRepo ensembleId))
-                        <*> (MakeDenseMatrix >>= (GetFloat32ArrayData >>= (GetArrayData entityRepo ensembleId)))
-                        <*> (MakeDenseMatrix >>= (GetFloat32ArrayData >>= (GetArrayData entityRepo connectionsId)))
+                        <*> ((GetArrayData entityRepo ensembleId) |> bindR GetArrayShape)
+                        <*> ((GetArrayData entityRepo ensembleId) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
+                        <*> ((GetArrayData entityRepo connectionsId) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
+
 
         match dtoResult with
             | Success (dto, msgs) ->
@@ -129,8 +130,9 @@ type CliqueEnsembleGenCpu(prams:Param list,
 
             | Failure errors -> Failure errors
 
-    let ExtractEnsemble (cliqueEnsembleGenCpu:IIterativeEntityGen) =
+    let ExtractEnsemble (cliqueEnsembleGenCpu:ISym) =
         cliqueEnsembleGenCpu.GetGenResult(Epn("Ensemble")) 
             |> bindR GetArrayDataFromGenResult
             |> bindR GetFloat32ArrayData
             |> bindR GetTuple3of3
+            |> ExtractResult

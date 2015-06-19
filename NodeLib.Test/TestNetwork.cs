@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using LibNode;
+using MathLib.NumericTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NodeLib.Test
@@ -74,7 +75,6 @@ namespace NodeLib.Test
             const int ensembleCount = 10;
             const int nodeCount = 5;
             const int nodeSeed = 145;
-            const int iterationCount = 145;
             const float noiseLevel = 0.15f;
             const float stepSize = 0.05f;
             IEntityRepo repo = new EntityRepoMem();
@@ -98,17 +98,57 @@ namespace NodeLib.Test
                 );
 
             var gen = Rop.ExtractResult(genRes).Value;
-            var dr = CliqueEnsembleBuilder.ExtractEnsemble(gen);
-            var fa = Rop.ExtractResult(dr);
+            System.Diagnostics.Debug.WriteLine(CliqueEnsembleBuilder.ExtractEnsemble(gen).Value.Take(20).ToCsvString("0.000"));
 
-            var nextGenRes = ((IIterativeEntityGen) gen).Update();
-
+            var nextGenRes = ((ISym) gen).Update();
             var nextGen = Rop.ExtractResult(nextGenRes).Value;
+            System.Diagnostics.Debug.WriteLine(CliqueEnsembleBuilder.ExtractEnsemble(nextGen).Value.Take(20).ToCsvString("0.00"));
 
-            var nextDr = CliqueEnsembleBuilder.ExtractEnsemble(nextGen);
+            Assert.IsTrue(nextGen != null);
 
-            var nextFaa = Rop.ExtractResult(nextDr);
-            Assert.IsTrue(fa != null);
+        }
+
+
+        [TestMethod]
+        public void TestCliqueEnsembleIterations()
+        {
+            const int ensembleCount = 2;
+            const int nodeCount = 25;
+            const int nodeSeed = 145;
+            const int iterationCount = 500;
+            const float noiseLevel = 0.05f;
+            const float stepSize = 0.05f;
+            IEntityRepo repo = new EntityRepoMem();
+
+            var drE = RmgDataRecord(repo, rowCount: ensembleCount, colCount: nodeCount, entityName: "ensemble");
+            var drC = RmgDataRecord(repo, rowCount: nodeCount, colCount: nodeCount, entityName: "connections");
+
+            var ubA = Parameters.CliqueSet(
+                         unsigned: false,
+                         stepSize: stepSize,
+                         noiseSeed: nodeSeed,
+                         noiseLevel: noiseLevel);
+
+            var genRes = CliqueEnsembleBuilder.CreateCliqueEnsembleFromParams
+                (
+                    entityRepo: repo,
+                    ensembleId: drE.DataId,
+                    connectionsId: drC.DataId,
+                    entityData: new[] { drE, drC }.Select(EntityOps.ToEntityData).ToArray(),
+                    prams: ubA
+                );
+
+            ISym gen = Rop.ExtractResult(genRes).Value;
+            System.Diagnostics.Debug.WriteLine(CliqueEnsembleBuilder.ExtractEnsemble(gen).Value.Take(50).ToCsvString("0.000"));
+
+
+            for (var i = 0; i < iterationCount; i++)
+            {
+                var nextGenRes = gen.Update();
+                var nextGen = Rop.ExtractResult(nextGenRes).Value;
+                System.Diagnostics.Debug.WriteLine(CliqueEnsembleBuilder.ExtractEnsemble(nextGen).Value.Take(50).ToCsvString("0.000"));
+                gen = nextGen;
+            }
 
         }
 
