@@ -47,14 +47,12 @@ type DataRecord =
         DataId: DataId;
         EntityId: EntityId;
         DrData: ArrayData;
-        Epn: Epn;
     }
 
 type EntityData = 
     {
         ArrayDescr: ArrayDescr;
         DataId: DataId;
-        EntityId: EntityId;
         Epn: Epn;
     }
 

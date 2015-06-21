@@ -73,6 +73,12 @@ module EntityOps =
             dr.DrData |> Rop.succeed
         | Failure errors -> Failure errors
 
+    let GetDataIdForEpn (entityData:seq<EntityData>) (epn:Epn) =
+       try
+          entityData |> Seq.find(fun e-> e.Epn = epn) |> (fun t->t.DataId) |> Rop.succeed
+       with
+        | ex -> (sprintf "Source data not found: %s" (EpnString epn)) |> Rop.fail
+
 
     let GetSourceEntityData (entity:Entity) (epn:Epn) =
        try
@@ -102,20 +108,11 @@ module EntityOps =
         | Failure errors -> Failure errors
 
 
-    let ToEntityData (dataRecord:DataRecord) =
+    let ToEntityData ((dataRecord:DataRecord), (epn:Epn)) =
         {
             EntityData.ArrayDescr = dataRecord |> DataRecordToArrayDescr;
             EntityData.DataId = dataRecord.DataId;
-            EntityId = dataRecord.EntityId;
-            EntityData.Epn = dataRecord.Epn
-        }
-
-    let MakeEntityData (entityId:EntityId) (arrayDescr:ArrayDescr) (epn:Epn)  =
-        {
-            EntityData.ArrayDescr = arrayDescr;
-            EntityData.DataId = DataId.GuidId(Guid.NewGuid());
-            EntityId = entityId;
-            Epn = epn;
+            EntityData.Epn = epn
         }
 
     let MakeAllGenResults (entityGen:IEntityGen) =
@@ -129,12 +126,11 @@ module EntityOps =
             | Success (genResults, msgs) -> 
                   genResults 
                   |>  List.map(fun gr -> 
-                        {
+                        ({
                             DataRecord.DataId=DataId.GuidId(Guid.NewGuid());
                             EntityId = entityId;
                             DrData = gr.ArrayData;
-                            Epn=gr.Epn
-                        }) |> Rop.succeed
+                        }, gr.Epn) ) |> Rop.succeed
             | Failure errors -> Failure errors
 
 
@@ -148,9 +144,9 @@ module EntityOps =
 
     let SaveEntityInRepo (entityRepo:IEntityRepo) (entityId:EntityId) 
                          (name:string) (entityGen:IEntityGen) 
-                         (dataRecords:DataRecord list) =
+                         (dataRecords:(DataRecord*Epn) list) =
         try
-            match (SaveDataRecords entityRepo dataRecords) with
+            match (SaveDataRecords entityRepo (dataRecords |> List.map fst)) with
                 | Success (drs, msgs) -> 
                     entityRepo.SaveEntity     
                         {

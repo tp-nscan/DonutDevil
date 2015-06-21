@@ -92,10 +92,10 @@ namespace NodeLib.Test
             const float stepSize = 0.05f;
             IEntityRepo repo = new EntityRepoMem();
 
-            var drERes = MakeRandomDenseMatrixDataRecord(repo, rowCount: ensembleCount, colCount: nodeCount, entityName:"ensemble", seed:123, maxVal:0.3f);
+            var drERes = MakeRandomDenseMatrixDataRecord(repo, rowCount: ensembleCount, colCount: nodeCount, entityName: "Ensemble", seed:123, maxVal:0.3f);
             var drE = Rop.ExtractResult(drERes).Value;
 
-            var drCRes = MakeRandomDenseMatrixDataRecord(repo, rowCount: nodeCount, colCount: nodeCount, entityName: "connections", seed: 1243, maxVal: 0.3f);
+            var drCRes = MakeRandomDenseMatrixDataRecord(repo, rowCount: nodeCount, colCount: nodeCount, entityName: "Connections", seed: 1243, maxVal: 0.3f);
             var drC = Rop.ExtractResult(drCRes).Value;
 
             var ubA = Parameters.CliqueSet(
@@ -107,12 +107,10 @@ namespace NodeLib.Test
             var genRes = CliqueEnsembleBuilder.CreateCliqueEnsembleFromParams
                 (
                     entityRepo: repo,
-                    ensembleId: drE.DataId,
-                    connectionsId: drC.DataId,
                     entityData: new[]
                     {
-                        EntityOps.ToEntityData(drE),
-                        EntityOps.ToEntityData(drC)
+                        EntityOps.ToEntityData(drE, Entvert.ToEpn("Ensemble")),
+                        EntityOps.ToEntityData(drC, Entvert.ToEpn("Connections"))
                     },
                     prams: ubA
                 );
@@ -156,12 +154,10 @@ namespace NodeLib.Test
             var genRes = CliqueEnsembleBuilder.CreateCliqueEnsembleFromParams
                 (
                     entityRepo: repo,
-                    ensembleId: drE.DataId,
-                    connectionsId: drC.DataId,
                     entityData: new[]
                     {
-                        EntityOps.ToEntityData(drE),
-                        EntityOps.ToEntityData(drC)
+                        EntityOps.ToEntityData(drE,  Entvert.ToEpn("Ensemble")),
+                        EntityOps.ToEntityData(drC,  Entvert.ToEpn("Connections"))
                     },
                     prams: ubA
                 );

@@ -21,7 +21,6 @@ fsi.AddPrinter(fun (vector:Vector<complex32>) -> vector.ToString())
 open LibNode
 
 #load "Generators.fs"
-#load "DataBlocks.fs"
 
 let kvps = [("one",1); ("two",2)] |> Dict.ofList
 
@@ -30,9 +29,11 @@ let l = kvps |> Dict.toList
 
 
 
+type RR = {a:int; b:string}
 
+let d = [ { a=3; b="3"}; { a=4; b="4"}; { a=5; b="5"}; { a=6; b="6"} ]
 
-
+let v = d |> Seq.find(function x -> x.b = "5")
 
 
 
@@ -99,7 +100,6 @@ let (>>=) m f =
 
 let good = strToInt "1" >>= strAdd "2" >>= strAdd "3"
 
-let pD = Parameters.LinearLocalSet
 
 
 let fa a b =  a b

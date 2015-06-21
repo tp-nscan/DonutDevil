@@ -103,18 +103,26 @@ type CliqueEnsembleGenCpu(prams:Param list,
           noiseLevel=noiseLevel; arrayShape=arrayShape;
           ensemble=ensemble; connections=connections }
 
-    let CreateCliqueEnsembleFromParams (entityRepo:IEntityRepo) (ensembleId:DataId) 
-                                       (connectionsId:DataId) (entityData:EntityData[]) 
+    let CreateCliqueEnsembleFromParams (entityRepo:IEntityRepo) (entityData:EntityData[]) 
                                        (prams:Param list) =
+
+//        let dtoResult = CreateCliqueEnsembleDto
+//                        <!> (Parameters.GetBoolParam prams "Unsigned")
+//                        <*> (Parameters.GetFloat32Param prams "StepSize")
+//                        <*> (Parameters.GetIntParam prams "NoiseSeed")
+//                        <*> (Parameters.GetFloat32Param prams "NoiseLevel")
+//                        <*> ((GetArrayData entityRepo ensembleId) |> bindR GetArrayShape)
+//                        <*> ((GetArrayData entityRepo ensembleId) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
+//                        <*> ((GetArrayData entityRepo connectionsId) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
 
         let dtoResult = CreateCliqueEnsembleDto
                         <!> (Parameters.GetBoolParam prams "Unsigned")
                         <*> (Parameters.GetFloat32Param prams "StepSize")
                         <*> (Parameters.GetIntParam prams "NoiseSeed")
                         <*> (Parameters.GetFloat32Param prams "NoiseLevel")
-                        <*> ((GetArrayData entityRepo ensembleId) |> bindR GetArrayShape)
-                        <*> ((GetArrayData entityRepo ensembleId) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
-                        <*> ((GetArrayData entityRepo connectionsId) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
+                        <*> ((GetDataIdForEpn entityData (Epn("Ensemble"))) |> bindR (GetArrayData entityRepo) |> bindR GetArrayShape)
+                        <*> ((GetDataIdForEpn entityData (Epn("Ensemble"))) |> bindR (GetArrayData entityRepo) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
+                        <*> ((GetDataIdForEpn entityData (Epn("Connections"))) |> bindR (GetArrayData entityRepo) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
 
 
         match dtoResult with

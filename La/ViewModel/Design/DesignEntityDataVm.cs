@@ -21,7 +21,7 @@ namespace La.ViewModel.Design
 
                 var drE = RmgDataRecord(repo, rowCount: ensembleCount, colCount: nodeCount, entityName: "ensemble");
 
-                return EntityOps.ToEntityData(drE);
+                return EntityOps.ToEntityData(drE, Entvert.ToEpn("Matrix"));
             }
         }
 
@@ -49,12 +49,10 @@ namespace La.ViewModel.Design
                 var genRes = CliqueEnsembleBuilder.CreateCliqueEnsembleFromParams
                     (
                         entityRepo: repo,
-                        ensembleId: drE.DataId,
-                        connectionsId: drC.DataId,
                         entityData: new[]
                         {
-                        EntityOps.ToEntityData(drE),
-                        EntityOps.ToEntityData(drC)
+                        EntityOps.ToEntityData(drE, Entvert.ToEpn("Matrix")),
+                        EntityOps.ToEntityData(drC, Entvert.ToEpn("Matrix"))
                         },
                         prams: ubA
                     );
