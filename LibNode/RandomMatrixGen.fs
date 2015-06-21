@@ -52,9 +52,9 @@ type RandMatrixGen(prams:Param list,
                        seed:int; unsigned:bool; maxValue:float32 }
 
     let CreateRandMatrixDto (rowCount:int) (colCount:int) (seed:int)
-                            (unsigned:bool) (maxValue:float32) =
+                            (unsigned:bool) (maxVal:float32) =
         { rowCount=rowCount; colCount=colCount; seed=seed;
-            unsigned=unsigned; maxValue=maxValue; }
+            unsigned=unsigned; maxValue=maxVal; }
 
 
     let RandMatrixGenFromParams (prams:Param list) =
@@ -75,3 +75,24 @@ type RandMatrixGen(prams:Param list,
                         float32Type = (ArrayDataGen.ToFloat32Type dto.unsigned 1.0f)) 
                         |> Rop.succeed
             | Failure errors -> Failure errors
+
+
+
+  module RmgUtil =
+
+    let MakeGenForRandomDenseMatrix (rowCount:int) (colCount:int) (seed:int) (maxVal:float32) =
+        RmgBuilder.RandMatrixGenFromParams (Parameters.RandomMatrixSet rowCount colCount seed maxVal)
+
+    let MakeRandomDenseMatrixEntity (repo:IEntityRepo) (rowCount:int) (colCount:int) 
+                                        (seed:int) (maxVal:float32) (entityName:string) =
+        match (MakeGenForRandomDenseMatrix rowCount colCount seed maxVal) with
+        | Success (gen, msgs) -> EntityOps.SaveEntityGen repo gen entityName
+        | Failure errors -> Failure errors
+
+    let MakeRandomDenseMatrixDataRecord (repo:IEntityRepo) (rowCount:int) (colCount:int) 
+                                        (seed:int) (maxVal:float32) (entityName:string) =
+        match (MakeRandomDenseMatrixEntity repo rowCount colCount seed maxVal entityName) with
+        | Success (entity, msgs) ->
+                        let epn = Entvert.ToEpn("Matrix")
+                        EntityOps.GetResultDataRecord repo entity epn
+        | Failure errors -> Failure errors

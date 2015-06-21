@@ -37,18 +37,20 @@ module EntityOps =
             | Float32Array (ars, ft, fa, ia) -> ArrayDescrString (ArrayDescr.Float32Descr (ars, ft))
 
 
+    let ArrayDataToArrayDescr (arrayData:ArrayData) =
+        match arrayData with
+            | BoolArray (ars, ba, ii) -> ArrayDescr.BoolDescr ars
+            | IntArray (ars, it, ia, ii) -> ArrayDescr.IntDescr (ars, it)
+            | Float32Array (ars, ft, fa, ia) -> ArrayDescr.Float32Descr (ars, ft)
+
+
     let DataRecordToArrayDescr (dataRecord:DataRecord) =
-        match dataRecord.DrData with
-        | BoolArray (ars, ba, ii) -> ArrayDescr.BoolDescr ars
-        | IntArray (ars, it, ia, ii) -> ArrayDescr.BoolDescr ars
-        | Float32Array (ars, ft, fa, ii) -> ArrayDescr.BoolDescr ars
+        ArrayDataToArrayDescr dataRecord.DrData
 
 
     let GenResultToArrayDescr (genResult:GenResult) =
-        match genResult.ArrayData with
-        | BoolArray (ars, ba, ii) -> ArrayDescr.BoolDescr ars
-        | IntArray (ars, it, ia, ii) -> ArrayDescr.BoolDescr ars
-        | Float32Array (ars, ft, fa, ii) -> ArrayDescr.BoolDescr ars
+        ArrayDataToArrayDescr genResult.ArrayData
+
 
     let EpnString epn =
         match epn with

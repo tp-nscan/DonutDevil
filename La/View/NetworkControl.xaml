@@ -42,7 +42,7 @@
         </StackPanel>
         
         <Grid Margin="0,5,0,0" >
-            <view:DatablockControl/>
+
         </Grid>
 
     </DockPanel>

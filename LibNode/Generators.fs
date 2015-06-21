@@ -14,6 +14,11 @@ module Generators =
                     iter.MoveNext() |> ignore
                     iter.Current
 
+    let RandomName (prefix:string) = 
+        let rng = Random.MersenneTwister()
+        let suffix = rng.Next()
+        sprintf "%s_%i" prefix suffix
+
      // a random float32 from (-max, max)
     let RandSignedFloat32 (rng:Random) (max:float32) =
         Convert.ToSingle(rng.NextDouble() * 2.0) * max - max

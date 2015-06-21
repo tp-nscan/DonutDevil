@@ -9,65 +9,78 @@ namespace NodeLib.Test
     [TestClass]
     public class TestNetwork
     {
-        IEntityGen MakeRmg(int rowCount, int colCount)
+        Rop.RopResult<RandMatrixGen, string> MakeGenForRandomDenseMatrix(int rowCount, int colCount, int seed, float maxVal)
         {
-            var entityGuid = Guid.NewGuid();
-            var matrixGuid = Guid.NewGuid();
-            const int seed = 1234;
-            const float maxValue = 0.3f;
-            var ubA = Parameters.RandomMatrixSet(
+            return RmgUtil.MakeGenForRandomDenseMatrix(
                                     rowCount: rowCount,
                                     colCount: colCount,
                                     seed: seed,
-                                    maxValue: maxValue);
-            var res = RmgBuilder.RandMatrixGenFromParams(ubA);
-            return Rop.ExtractResult(res).Value;
+                                    maxVal: maxVal);
+        }
+
+
+        Rop.RopResult<Entity, string> MakeGenForRandomDenseMatrixEntity(
+            IEntityRepo repo, int rowCount, 
+            int colCount, int seed,
+            float maxVal, string entityName)
+        {
+            return RmgUtil.MakeRandomDenseMatrixEntity(
+                                    repo: repo,
+                                    rowCount: rowCount,
+                                    colCount: colCount,
+                                    seed: seed,
+                                    maxVal: maxVal,
+                                    entityName: entityName);
+        }
+
+        Rop.RopResult<DataRecord, string> MakeRandomDenseMatrixDataRecord(
+                IEntityRepo repo, int rowCount,
+                int colCount, int seed,
+                float maxVal, string entityName)
+        {
+            return RmgUtil.MakeRandomDenseMatrixDataRecord(
+                            repo: repo,
+                            rowCount: rowCount,
+                            colCount: colCount,
+                            seed: seed,
+                            maxVal: maxVal,
+                            entityName: entityName);
         }
 
         [TestMethod]
         public void TestRmgGen()
         {
-            var gen = MakeRmg(rowCount: 10, colCount: 12);
-            var matrixRes = gen.GetGenResult(Entvert.ToEpn("Matrix"));
-            var matrix = Rop.ExtractResult(matrixRes).Value;
+            var genRes = MakeGenForRandomDenseMatrix(rowCount: 10, colCount: 12, seed: 1234, maxVal: 0.3f);
+            Assert.IsTrue(genRes.IsSuccess);
+            var genMatrix = (IEntityGen)Rop.ExtractResult(genRes).Value;
+
+            var matrixRes = genMatrix.GetGenResult(Entvert.ToEpn("Matrix"));
             Assert.IsTrue(matrixRes.IsSuccess);
-            Assert.IsTrue(matrixRes != null);
+
+            var matrix = Rop.ExtractResult(matrixRes).Value;
+            Assert.IsTrue(matrix.ArrayData.IsFloat32Array);
         }
+
 
         [TestMethod]
         public void TestMakeRmgEntity()
         {
-            //IEntityGen gen = MakeRmg(rowCount:10, colCount:12);
-            //var entRes = EntityOps.MakeEntity(gen);
-            //Assert.IsTrue(entRes != null);
+            IEntityRepo repo = new EntityRepoMem();
+            var ent = MakeGenForRandomDenseMatrixEntity(
+                repo: repo, rowCount: 10, colCount: 12, seed: 1234, maxVal: 0.3f, entityName: "Ralph");
+            Assert.IsTrue(ent.IsSuccess);
         }
 
         [TestMethod]
         public void TestRmgSaveEntity()
         {
-            var gen = MakeRmg(rowCount: 10, colCount: 12);
             IEntityRepo repo = new EntityRepoMem();
-            var entRes = EntityOps.SaveEntityGen(repo, gen, "Rmg");
-            var ent = Rop.ExtractResult(entRes).Value;
-            var drR = EntityOps.GetResultDataRecord(repo, ent, Entvert.ToEpn("Matrix"));
-            var dr = Rop.ExtractResult(drR).Value;
+            var gen = MakeRandomDenseMatrixDataRecord(
+                repo: repo, rowCount: 10, colCount: 12, seed: 1234, maxVal: 0.3f, entityName: "Ralph");
+            Assert.IsTrue(gen.IsSuccess);
 
-            Assert.IsTrue(entRes.IsSuccess);
-            Assert.IsTrue(ent != null);
-            Assert.IsTrue(drR.IsSuccess);
+            var ent = Rop.ExtractResult(gen).Value;
         }
-
-
-        private DataRecord RmgDataRecord(IEntityRepo repo, int rowCount, int colCount, string entityName)
-        {
-            var gen = MakeRmg(rowCount: rowCount, colCount: colCount);
-            var entRes = EntityOps.SaveEntityGen(repo, gen, entityName);
-            var ent = Rop.ExtractResult(entRes).Value;
-            var drR = EntityOps.GetResultDataRecord(repo, ent, Entvert.ToEpn("Matrix"));
-            var dr = Rop.ExtractResult(drR).Value;
-            return dr;
-        }
-
 
         [TestMethod]
         public void TestCliqueEnsemble()
@@ -79,8 +92,11 @@ namespace NodeLib.Test
             const float stepSize = 0.05f;
             IEntityRepo repo = new EntityRepoMem();
 
-            var drE = RmgDataRecord(repo, rowCount: ensembleCount, colCount: nodeCount, entityName:"ensemble");
-            var drC = RmgDataRecord(repo, rowCount: nodeCount, colCount: nodeCount, entityName: "connections");
+            var drERes = MakeRandomDenseMatrixDataRecord(repo, rowCount: ensembleCount, colCount: nodeCount, entityName:"ensemble", seed:123, maxVal:0.3f);
+            var drE = Rop.ExtractResult(drERes).Value;
+
+            var drCRes = MakeRandomDenseMatrixDataRecord(repo, rowCount: nodeCount, colCount: nodeCount, entityName: "connections", seed: 1243, maxVal: 0.3f);
+            var drC = Rop.ExtractResult(drCRes).Value;
 
             var ubA = Parameters.CliqueSet(
                          unsigned: false,
@@ -119,13 +135,17 @@ namespace NodeLib.Test
             const int ensembleCount = 2;
             const int nodeCount = 25;
             const int nodeSeed = 145;
+            const int nodeSeed2 = 1456;
             const int iterationCount = 500;
             const float noiseLevel = 0.05f;
             const float stepSize = 0.05f;
             IEntityRepo repo = new EntityRepoMem();
 
-            var drE = RmgDataRecord(repo, rowCount: ensembleCount, colCount: nodeCount, entityName: "ensemble");
-            var drC = RmgDataRecord(repo, rowCount: nodeCount, colCount: nodeCount, entityName: "connections");
+            var drERes = MakeRandomDenseMatrixDataRecord(repo, rowCount: ensembleCount, colCount: nodeCount, entityName: "ensemble", seed: 123, maxVal: 0.3f);
+            var drE = Rop.ExtractResult(drERes).Value;
+
+            var drCRes = MakeRandomDenseMatrixDataRecord(repo, rowCount: nodeCount, colCount: nodeCount, entityName: "connections", seed: 1243, maxVal: 0.3f);
+            var drC = Rop.ExtractResult(drCRes).Value;
 
             var ubA = Parameters.CliqueSet(
                          unsigned: false,
@@ -148,7 +168,6 @@ namespace NodeLib.Test
 
             ISym gen = Rop.ExtractResult(genRes).Value;
             System.Diagnostics.Debug.WriteLine(CliqueEnsembleBuilder.ExtractEnsemble(gen).Value.Take(50).ToCsvString("0.000"));
-
 
             for (var i = 0; i < iterationCount; i++)
             {

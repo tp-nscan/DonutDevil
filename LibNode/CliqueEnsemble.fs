@@ -138,3 +138,22 @@ type CliqueEnsembleGenCpu(prams:Param list,
             |> bindR GetFloat32ArrayData
             |> bindR GetTuple3of4
             |> ExtractResult
+
+
+ module CliqueEnsemble =
+
+    let MakeGenForRandomCliqueEnsemble (repo:IEntityRepo) (ensembleCount:int) (nodeCount:int) 
+                (seed:int) (maxVal:float32) (noiseLevel:float32) (stepSize:float32) =
+
+        let rng = Random.MersenneTwister(seed)
+        let ensembleSeed = rng.Next()
+        let connectionSeed = rng.Next()
+        let noiseSeed = rng.Next()
+
+        let ensembleRecord = RmgUtil.MakeRandomDenseMatrixDataRecord repo ensembleCount
+                                nodeCount ensembleSeed maxVal "Ensemble"
+
+        let ensembleRecord = RmgUtil.MakeRandomDenseMatrixDataRecord repo nodeCount
+                                nodeCount connectionSeed maxVal "Connections"
+
+        None
