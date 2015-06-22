@@ -19,6 +19,14 @@ let succeedWithMsg x msg =
 let fail msg =
     Failure [msg]
 
+let IsSuccess = function
+    | Success (x,msgs) -> true
+    | Failure errors -> false
+
+let IsFailure = function
+    | Success (x,msgs) -> true
+    | Failure errors -> false
+
 /// A function that applies either fSuccess or fFailure 
 /// depending on the case.
 let either fSuccess fFailure = function

@@ -83,11 +83,13 @@ type RandMatrixGen(prams:Param list,
     let MakeGenForRandomDenseMatrix (rowCount:int) (colCount:int) (seed:int) (maxVal:float32) =
         RmgBuilder.RandMatrixGenFromParams (Parameters.RandomMatrixSet rowCount colCount seed maxVal)
 
+
     let MakeRandomDenseMatrixEntity (repo:IEntityRepo) (rowCount:int) (colCount:int) 
                                         (seed:int) (maxVal:float32) (entityName:string) =
         match (MakeGenForRandomDenseMatrix rowCount colCount seed maxVal) with
         | Success (gen, msgs) -> EntityOps.SaveEntityGen repo gen entityName
         | Failure errors -> Failure errors
+
 
     let MakeRandomDenseMatrixDataRecord (repo:IEntityRepo) (rowCount:int) (colCount:int) 
                                         (seed:int) (maxVal:float32) (entityName:string) =

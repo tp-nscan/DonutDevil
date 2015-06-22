@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace NodeLib.Test
 {
     [TestClass]
-    public class TestMathUtils
+    public class MathUtilsFixture
     {
         [TestMethod]
         public void TestArray2DRoundTrip()

@@ -7,7 +7,7 @@ using LibNode;
 namespace NodeLib.Test
 {
     [TestClass]
-    public class TestGenerators
+    public class GeneratorsFixture
     {
         [TestMethod]
         public void TestMakeNode()

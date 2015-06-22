@@ -103,33 +103,29 @@ type CliqueEnsembleGenCpu(prams:Param list,
           noiseLevel=noiseLevel; arrayShape=arrayShape;
           ensemble=ensemble; connections=connections }
 
-    let CreateCliqueEnsembleFromParams (entityRepo:IEntityRepo) (entityData:EntityData[]) 
-                                       (prams:Param list) =
 
-//        let dtoResult = CreateCliqueEnsembleDto
-//                        <!> (Parameters.GetBoolParam prams "Unsigned")
-//                        <*> (Parameters.GetFloat32Param prams "StepSize")
-//                        <*> (Parameters.GetIntParam prams "NoiseSeed")
-//                        <*> (Parameters.GetFloat32Param prams "NoiseLevel")
-//                        <*> ((GetArrayData entityRepo ensembleId) |> bindR GetArrayShape)
-//                        <*> ((GetArrayData entityRepo ensembleId) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
-//                        <*> ((GetArrayData entityRepo connectionsId) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
+
+    let CreateCliqueEnsembleFromParams (entityRepo:IEntityRepo) (entityData:seq<EntityData>) 
+                                       (prams:Param list) =
 
         let dtoResult = CreateCliqueEnsembleDto
                         <!> (Parameters.GetBoolParam prams "Unsigned")
                         <*> (Parameters.GetFloat32Param prams "StepSize")
                         <*> (Parameters.GetIntParam prams "NoiseSeed")
                         <*> (Parameters.GetFloat32Param prams "NoiseLevel")
-                        <*> ((GetDataIdForEpn entityData (Epn("Ensemble"))) |> bindR (GetArrayData entityRepo) |> bindR GetArrayShape)
-                        <*> ((GetDataIdForEpn entityData (Epn("Ensemble"))) |> bindR (GetArrayData entityRepo) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
-                        <*> ((GetDataIdForEpn entityData (Epn("Connections"))) |> bindR (GetArrayData entityRepo) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
+                        <*> ((GetDataIdForEpn entityData (Epn("Ensemble"))) 
+                            |> bindR (GetArrayData entityRepo) |> bindR GetArrayShape)
+                        <*> ((GetDataIdForEpn entityData (Epn("Ensemble"))) 
+                            |> bindR (GetArrayData entityRepo) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
+                        <*> ((GetDataIdForEpn entityData (Epn("Connections"))) 
+                            |> bindR (GetArrayData entityRepo) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
 
 
         match dtoResult with
             | Success (dto, msgs) ->
                 new CliqueEnsembleGenCpu(
                         prams = prams, 
-                        sourceData = (entityData |> Array.toList),
+                        sourceData = (entityData |> Seq.toList),
                         arrayShape = dto.arrayShape,
                         ensemble = dto.ensemble,
                         connections = dto.connections,
@@ -151,17 +147,23 @@ type CliqueEnsembleGenCpu(prams:Param list,
  module CliqueEnsemble =
 
     let MakeGenForRandomCliqueEnsemble (repo:IEntityRepo) (ensembleCount:int) (nodeCount:int) 
-                (seed:int) (maxVal:float32) (noiseLevel:float32) (stepSize:float32) =
+                (seed:int) (maxVal:float32) (noiseLevel:float32) (stepSize:float32) (name:string)=
 
         let rng = Random.MersenneTwister(seed)
         let ensembleSeed = rng.Next()
         let connectionSeed = rng.Next()
         let noiseSeed = rng.Next()
 
-        let ensembleRecord = RmgUtil.MakeRandomDenseMatrixDataRecord repo ensembleCount
-                                nodeCount ensembleSeed maxVal "Ensemble"
+        let prams = Parameters.CliqueSet false stepSize noiseSeed noiseLevel
 
-        let ensembleRecord = RmgUtil.MakeRandomDenseMatrixDataRecord repo nodeCount
-                                nodeCount connectionSeed maxVal "Connections"
+        let ensembleResult = RmgUtil.MakeRandomDenseMatrixDataRecord repo ensembleCount
+                                nodeCount ensembleSeed maxVal (sprintf "%s_%s" name "Ensemble")
+                             |> liftR (EntityOps.ToEntityData (Entvert.ToEpn("Ensemble")))
 
-        None
+        let connectionsResult = RmgUtil.MakeRandomDenseMatrixDataRecord repo nodeCount
+                                  nodeCount connectionSeed maxVal (sprintf "%s_%s" name "Connections")
+                             |> liftR (EntityOps.ToEntityData (Entvert.ToEpn("Connections")))
+
+        match (MergeResultList [ensembleResult; connectionsResult]) with
+                | Success (x, msgs) -> (CliqueEnsembleBuilder.CreateCliqueEnsembleFromParams repo x prams)
+                | Failure errors -> Failure errors

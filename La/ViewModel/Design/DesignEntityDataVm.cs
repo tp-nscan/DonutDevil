@@ -21,7 +21,7 @@ namespace La.ViewModel.Design
 
                 var drE = RmgDataRecord(repo, rowCount: ensembleCount, colCount: nodeCount, entityName: "ensemble");
 
-                return EntityOps.ToEntityData(drE, Entvert.ToEpn("Matrix"));
+                return EntityOps.ToEntityData(Entvert.ToEpn("Matrix"), drE);
             }
         }
 
@@ -51,8 +51,8 @@ namespace La.ViewModel.Design
                         entityRepo: repo,
                         entityData: new[]
                         {
-                        EntityOps.ToEntityData(drE, Entvert.ToEpn("Matrix")),
-                        EntityOps.ToEntityData(drC, Entvert.ToEpn("Matrix"))
+                            EntityOps.ToEntityData(Entvert.ToEpn("Matrix"), drE),
+                            EntityOps.ToEntityData(Entvert.ToEpn("Matrix"), drC)
                         },
                         prams: ubA
                     );

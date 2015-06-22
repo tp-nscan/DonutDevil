@@ -77,11 +77,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TestGenerators.cs" />
+    <Compile Include="GeneratorsFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestNetwork.cs" />
-    <Compile Include="TestMathUtils.cs" />
-    <Compile Include="TestCliqueEnsemble.cs" />
+    <Compile Include="NetworkFixture.cs" />
+    <Compile Include="MathUtilsFixture.cs" />
+    <Compile Include="CliqueEnsembleFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibNode\LibNode.fsproj">
