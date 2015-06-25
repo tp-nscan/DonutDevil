@@ -1,6 +1,5 @@
 ﻿namespace LibNode
 open System
-open System.Collections.Generic
 open MathUtils
 open Rop
 
@@ -60,6 +59,10 @@ module Parameters =
             FloatParam "NoiseLevel" noiseLevel true;
         ]
 
+    let Correlator trimScale =
+        [
+            FloatParam "TrimScale" trimScale true;
+        ]
 
     let GetParamByName (prams:Param list) (name:string) =
         try

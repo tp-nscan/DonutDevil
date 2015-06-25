@@ -61,13 +61,13 @@ namespace NodeLib.Test
 
             Assert.IsTrue(ces.IsSuccess);
             ISym gen = Rop.ExtractResult(ces).Value;
-            System.Diagnostics.Debug.WriteLine(CliqueEnsembleBuilder.ExtractEnsemble(gen).Value.Take(50).ToCsvString("0.000"));
+            System.Diagnostics.Debug.WriteLine(CegBuilder.ExtractEnsemble(gen).Value.Take(50).ToCsvString("0.000"));
 
             for (var i = 0; i < iterationCount; i++)
             {
                 var nextGenRes = gen.Update();
                 var nextGen = Rop.ExtractResult(nextGenRes).Value;
-                System.Diagnostics.Debug.WriteLine(CliqueEnsembleBuilder.ExtractEnsemble(nextGen).Value.Take(50).ToCsvString("0.000"));
+                System.Diagnostics.Debug.WriteLine(CegBuilder.ExtractEnsemble(nextGen).Value.Take(50).ToCsvString("0.000"));
                 gen = nextGen;
             }
         }

@@ -63,6 +63,7 @@
     <Compile Include="EntityRepo.fs" />
     <Compile Include="RandomMatrixGen.fs" />
     <Compile Include="CliqueEnsemble.fs" />
+    <Compile Include="Correltor.fs" />
     <Compile Include="Sim.fs" />
     <None Include="Script.fsx" />
     <None Include="ScriptMathNet.fsx" />

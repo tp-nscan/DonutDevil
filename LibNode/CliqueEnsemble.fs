@@ -1,16 +1,14 @@
 ﻿namespace LibNode
-
 open System
 open MathNet.Numerics
-open MathNet.Numerics.Distributions
 open MathNet.Numerics.LinearAlgebra
 open MathNet.Numerics.LinearAlgebra.Matrix
 open MathNet.Numerics.Random
 open Rop
+open MathUtils
 open ArrayDataGen
 open ArrayDataExtr
 open EntityOps
-open MathUtils
 
 type CliqueEnsembleDto = { 
                            unsigned:bool;
@@ -25,10 +23,10 @@ type CliqueEnsembleDto = {
 type CliqueEnsembleGenCpu(prams:Param list,
                           sourceData: EntityData list,
                           arrayShape:ArrayShape,
-                          ensemble:Matrix<float32>, 
+                          ensemble:Matrix<float32>,
                           connections:Matrix<float32>,
-                          iteration:int, 
-                          stepSize:float32, 
+                          iteration:int,
+                          stepSize:float32,
                           seqNoise:seq<float32>) =
     let _sourceData = sourceData
     let _arrayShape = arrayShape
@@ -41,7 +39,7 @@ type CliqueEnsembleGenCpu(prams:Param list,
 
     interface ISym with
         member this.GeneratorId =
-            {Name="RandMatrixGenerator"; Version=1}
+            {Name="CliqueEnsembleGenCpu"; Version=1}
         member this.Iteration = 
             _iteration
         member this.SourceData =
@@ -60,7 +58,7 @@ type CliqueEnsembleGenCpu(prams:Param list,
                             (
                                 _arrayShape, 
                                 Float32Type.SF 1.0f,
-                                _ensemble.ToArray() |> FlattenColumnMajor,
+                                _ensemble.ToArray() |> flattenColumnMajor |> Seq.toArray,
                                 Array.empty<int>
                             )
                  } |> Rop.succeed
@@ -80,15 +78,14 @@ type CliqueEnsembleGenCpu(prams:Param list,
                           connections = _connections,
                           iteration = _iteration + 1,
                           stepSize = _stepSize, 
-                          seqNoise = _seqNoise) 
-                          
+                          seqNoise = _seqNoise)
                           :> ISym
                           |> Rop.succeed
            with
             | ex -> (sprintf "Error updating CliqueEnsembleGenCpu: %s" ex.Message) |> Rop.fail
 
 
- module CliqueEnsembleBuilder =
+ module CegBuilder =
 
     let CreateCliqueEnsembleDto
                         (unsigned:bool)
@@ -102,7 +99,6 @@ type CliqueEnsembleGenCpu(prams:Param list,
         { unsigned=unsigned; stepSize=stepSize; noiseSeed=noiseSeed;
           noiseLevel=noiseLevel; arrayShape=arrayShape;
           ensemble=ensemble; connections=connections }
-
 
 
     let CreateCliqueEnsembleFromParams (entityRepo:IEntityRepo) (entityData:seq<EntityData>) 
@@ -120,7 +116,6 @@ type CliqueEnsembleGenCpu(prams:Param list,
                         <*> ((GetDataIdForEpn entityData (Epn("Connections"))) 
                             |> bindR (GetArrayData entityRepo) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
 
-
         match dtoResult with
             | Success (dto, msgs) ->
                 new CliqueEnsembleGenCpu(
@@ -135,6 +130,7 @@ type CliqueEnsembleGenCpu(prams:Param list,
                     ) |> Rop.succeed
 
             | Failure errors -> Failure errors
+
 
     let ExtractEnsemble (cliqueEnsembleGenCpu:ISym) =
         cliqueEnsembleGenCpu.GetGenResult(Epn("Ensemble")) 
@@ -156,14 +152,15 @@ type CliqueEnsembleGenCpu(prams:Param list,
 
         let prams = Parameters.CliqueSet false stepSize noiseSeed noiseLevel
 
-        let ensembleResult = RmgUtil.MakeRandomDenseMatrixDataRecord repo ensembleCount
+        let ensembleResult = RmgUtil.MakeRdmDataRecord repo ensembleCount
                                 nodeCount ensembleSeed maxVal (sprintf "%s_%s" name "Ensemble")
                              |> liftR (EntityOps.ToEntityData (Entvert.ToEpn("Ensemble")))
 
-        let connectionsResult = RmgUtil.MakeRandomDenseMatrixDataRecord repo nodeCount
+        let connectionsResult = RmgUtil.MakeRdmDataRecord repo nodeCount
                                   nodeCount connectionSeed maxVal (sprintf "%s_%s" name "Connections")
                              |> liftR (EntityOps.ToEntityData (Entvert.ToEpn("Connections")))
 
         match (MergeResultList [ensembleResult; connectionsResult]) with
-                | Success (x, msgs) -> (CliqueEnsembleBuilder.CreateCliqueEnsembleFromParams repo x prams)
+                | Success (entityDataSeq, msgs) -> 
+                    (CegBuilder.CreateCliqueEnsembleFromParams repo entityDataSeq prams)
                 | Failure errors -> Failure errors

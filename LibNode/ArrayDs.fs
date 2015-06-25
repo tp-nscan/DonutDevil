@@ -79,7 +79,6 @@ module ArrayDataGen =
             | UT ars -> ars.cols * ars.rows
             | Sparse sas -> sas.cols * sas.rows
 
-
     let MakeDenseMatrix ((arrayShape:ArrayShape),(float32Type:Float32Type),(vals:float32[]),(indexes:int[])) =
         match arrayShape with
             | Linear len -> "wrong arrayShape for DenseMatrix" |> Rop.fail

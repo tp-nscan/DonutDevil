@@ -46,7 +46,7 @@ namespace La.ViewModel.Design
                              noiseSeed: nodeSeed,
                              noiseLevel: noiseLevel);
 
-                var genRes = CliqueEnsembleBuilder.CreateCliqueEnsembleFromParams
+                var genRes = CegBuilder.CreateCliqueEnsembleFromParams
                     (
                         entityRepo: repo,
                         entityData: new[]
@@ -58,14 +58,14 @@ namespace La.ViewModel.Design
                     );
 
                 ISym gen = Rop.ExtractResult(genRes).Value;
-                System.Diagnostics.Debug.WriteLine(CliqueEnsembleBuilder.ExtractEnsemble(gen).Value.Take(50).ToCsvString("0.000"));
+                System.Diagnostics.Debug.WriteLine(CegBuilder.ExtractEnsemble(gen).Value.Take(50).ToCsvString("0.000"));
 
 
                 for (var i = 0; i < iterationCount; i++)
                 {
                     var nextGenRes = gen.Update();
                     var nextGen = Rop.ExtractResult(nextGenRes).Value;
-                    System.Diagnostics.Debug.WriteLine(CliqueEnsembleBuilder.ExtractEnsemble(nextGen).Value.Take(50).ToCsvString("0.000"));
+                    System.Diagnostics.Debug.WriteLine(CegBuilder.ExtractEnsemble(nextGen).Value.Take(50).ToCsvString("0.000"));
                     gen = nextGen;
                 }
 

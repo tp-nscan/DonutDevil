@@ -1,5 +1,5 @@
 ﻿namespace LibNode
-
+open System
 // see also 
 // http://stackoverflow.com/questions/4949941/convert-string-to-system-datetime-in-f
 
@@ -48,19 +48,16 @@ module Dict =
   let ofArray (a:('k * 'v) []) = new Dictionary<'k,'v>(a |> Map.ofArray) :> IDictionary<'k,'v>
 
 module MathUtils =
-    open System
-    open MathNet.Numerics
-    open MathNet.Numerics.Distributions
-    open MathNet.Numerics.LinearAlgebra
-    open MathNet.Numerics.LinearAlgebra.Matrix
-    open MathNet.Numerics.Random
-
     type IntPair = {x:int; y:int}
     type PointF32 = {x:float32; y:float32 }
     type TripleF32 = {x:float32; y:float32; z:float32}
     type CellF32 = {x:int; y:int; value:float32}
+    
+    let AbsF32 (v:float32) =
+        if v<0.0f then -v
+        else v
 
-    let BoundUnitF32 value =
+    let BoundUnitUF32 value =
         if value < 0.0f then 0.0f
         else if value > 1.0f then 1.0f
         else value
@@ -70,10 +67,18 @@ module MathUtils =
         else if value > 1.0f then 1.0f
         else value
 
-    let FlattenColumnMajor (a2d:float32[,]) =
-        let flats = Array.create<float32> (a2d.Length) -1.0f
-        a2d |> Array2D.iteri (fun i j e-> flats.[j*a2d.GetLength(0) + i] <- e)
-        flats
+
+    let TrimToScale (a:float32[]) (b:float32) =
+        let sa = a |> Array.sortBy(fun x-> Math.Abs(x))
+        a |> Array.map(fun x-> (x/b)|>BoundUnitSF32)
+
+
+    let TrimByFraction (b:float32) (a:float32[]) =
+        let bub = Convert.ToInt32(Convert.ToSingle(a.Length - 1) * BoundUnitUF32(b))
+        let sa = a |> Array.sortBy(fun x-> Math.Abs(x))
+        if bub = a.Length then a
+        else TrimToScale a (AbsF32(sa.[bub]))
+
 
     type GroupShape =
         | Bag of int
@@ -82,14 +87,17 @@ module MathUtils =
         | Rectangle of IntPair
         | Torus of IntPair
 
+
     type SymmetricFormat =
         | UT
         | LT
         | Full
 
+
     type CompFormat =
         | RowMajor
         | ColumnMajor
+
 
     let PointF32Length (point:PointF32) = 
         let vsq = point.x * point.x + point.y * point.y
@@ -140,3 +148,6 @@ module MathUtils =
     let getColumn c (A:_[,]) = A.[*,c] |> Seq.toArray
 
     let getRow r (A:_[,]) = A.[r,*] |> Seq.toArray
+
+    let ZeroTheDiagonalF32 (mtx : float32[,]) = 
+        Array2D.init (mtx.GetLength 0) (mtx.GetLength 1) (fun x y -> if(x=y) then 0.0f  else mtx.[x,y])

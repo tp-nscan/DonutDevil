@@ -1,5 +1,4 @@
 ﻿namespace LibNode
-
 open System
 open Rop
 
@@ -80,20 +79,29 @@ type RandMatrixGen(prams:Param list,
 
   module RmgUtil =
 
-    let MakeGenForRandomDenseMatrix (rowCount:int) (colCount:int) (seed:int) (maxVal:float32) =
+    let MakeGenForRdm (rowCount:int) (colCount:int) (seed:int) (maxVal:float32) =
         RmgBuilder.RandMatrixGenFromParams (Parameters.RandomMatrixSet rowCount colCount seed maxVal)
 
 
-    let MakeRandomDenseMatrixEntity (repo:IEntityRepo) (rowCount:int) (colCount:int) 
-                                        (seed:int) (maxVal:float32) (entityName:string) =
-        match (MakeGenForRandomDenseMatrix rowCount colCount seed maxVal) with
+    let MakeRdmEntity (repo:IEntityRepo) (rowCount:int) (colCount:int) 
+                      (seed:int) (maxVal:float32) (entityName:string) =
+        match (MakeGenForRdm rowCount colCount seed maxVal) with
         | Success (gen, msgs) -> EntityOps.SaveEntityGen repo gen entityName
         | Failure errors -> Failure errors
 
 
-    let MakeRandomDenseMatrixDataRecord (repo:IEntityRepo) (rowCount:int) (colCount:int) 
-                                        (seed:int) (maxVal:float32) (entityName:string) =
-        match (MakeRandomDenseMatrixEntity repo rowCount colCount seed maxVal entityName) with
+    let MakeRdmEntityData (repo:IEntityRepo) (rowCount:int) (colCount:int) 
+                          (seed:int) (maxVal:float32) (entityName:string) =
+        match (MakeRdmEntity repo rowCount colCount seed maxVal entityName) with
+        | Success (entity, msgs) ->
+                        let epn = Entvert.ToEpn("Matrix")
+                        EntityOps.GetResultEntityData entity epn
+        | Failure errors -> Failure errors
+
+
+    let MakeRdmDataRecord (repo:IEntityRepo) (rowCount:int) (colCount:int) 
+                          (seed:int) (maxVal:float32) (entityName:string) =
+        match (MakeRdmEntity repo rowCount colCount seed maxVal entityName) with
         | Success (entity, msgs) ->
                         let epn = Entvert.ToEpn("Matrix")
                         EntityOps.GetResultDataRecord repo entity epn
