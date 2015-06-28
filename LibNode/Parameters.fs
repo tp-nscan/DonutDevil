@@ -64,6 +64,15 @@ module Parameters =
             FloatParam "TrimScale" trimScale true;
         ]
 
+    let Peturber seed mutationRate replicationRate unsigned maxValue =
+        [
+            IntParam "Seed" seed false;
+            FloatParam "MutationRate" mutationRate false;
+            IntParam "ReplicationRate" replicationRate false;
+            BoolParam "Unsigned" unsigned false;
+            FloatParam "MaxValue" maxValue false;
+        ]
+
     let GetParamByName (prams:Param list) (name:string) =
         try
             prams |> List.find(fun p -> p.Name = name) |> Rop.succeed

@@ -54,8 +54,24 @@ module MathUtils =
     type CellF32 = {x:int; y:int; value:float32}
     
     let AbsF32 (v:float32) =
-        if v<0.0f then -v
+        if v < 0.0f then -v
         else v
+
+    let inline AddInRange min max a b =
+        let res = a + b
+        if res < min then min
+        else if res > max then max
+        else res
+
+    let inline FlipWhen a b flipProb draw current =
+        match (flipProb < draw) with
+        | true -> if a=current then b else a
+        | false -> current
+
+    let inline ZipMap f a b = Seq.zip a b |> Seq.map (fun (x,y) -> f x y)
+
+    let PerturbInRange min max baseSeq offsets =
+        Seq.map2 (AddInRange min max) baseSeq offsets
 
     let BoundUnitUF32 value =
         if value < 0.0f then 0.0f
@@ -67,6 +83,9 @@ module MathUtils =
         else if value > 1.0f then 1.0f
         else value
 
+    let inline AorB a b thresh value =
+        if value < thresh then a
+        else b
 
     let TrimToScale (a:float32[]) (b:float32) =
         let sa = a |> Array.sortBy(fun x-> Math.Abs(x))

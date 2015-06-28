@@ -29,7 +29,8 @@ module ArrayDataGen =
         match float32Type with
         | UF m -> sprintf "(0, %f) float" m
         | SF m -> sprintf "(-%f, %f) float" m m
-
+        | UB -> "[0.0, 1.0]"
+        | SB -> "[-1.0, 1.0]"
 
     let IntTypeDescr (intType:IntType) =
         match intType with
@@ -49,27 +50,20 @@ module ArrayDataGen =
         | _ -> "Not a 3-tuple or higher" |> Rop.fail
 
 
-    let ToFloat32Type isUnsigned maxVal =
-        match isUnsigned with
-        | true -> UF(maxVal)
-        | false -> SF(maxVal)
+    let ToFloat32Type (floatRange:FloatRange) (floatCover:FloatCover) maxVal =
+        match (floatRange, floatCover) with
+        | (Unsigned, Continuous) -> UF(maxVal)
+        | (Signed, Discrete) -> SB
+        | (Signed, Continuous) -> SF(maxVal)
+        | (Unsigned, Discrete) -> UB
 
 
-    let RandFloat32 (rng:Random) (float32Type:Float32Type) =
+    let RandFloat32 (float32Type:Float32Type) (pOfOne:float32) (rng:Random) =
         match float32Type with
-        | UF max -> Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()) * max)
-        | SF max -> Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble() - 0.5) * max * 2.0f)
-
-
-    let RandFloat32Seed (seed:int) (float32Type:Float32Type) =
-        let rng = Random.MersenneTwister(seed)
-        match float32Type with
-        | UF max -> Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()) * max)
-        | SF max -> Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble() - 0.5) * max * 2.0f)
-
-
-    let FullArrayShape2d (rowCount:int) (colCount:int) = 
-        ArrayShape.Block {rows=rowCount; cols=colCount}
+        | UF max -> Generators.SeqOfRandUF32 max rng
+        | SF max -> Generators.SeqOfRandSF32 max rng
+        | UB -> Generators.SeqOfRandUF32Bits (System.Convert.ToDouble(pOfOne)) rng
+        | SB -> Generators.SeqOfRandSF32Bits (System.Convert.ToDouble(pOfOne)) rng
 
 
     let FullArrayCount (arrayShape:ArrayShape) =

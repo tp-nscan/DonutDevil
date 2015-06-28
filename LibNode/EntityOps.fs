@@ -24,10 +24,10 @@ module EntityOps =
 
         | Float32Descr (ars, ft)-> 
             match (ars, ft) with
-                | (Linear l, it) -> sprintf "%sint[%i]" (ft |> Float32TypeDescr) l
-                | (Block ars, it)  -> sprintf "%s[%i][%i]" (ft |> Float32TypeDescr) ars.rows ars.cols
-                | (UT ars, it) -> sprintf "Upper Tr %s[%i][%i]" (ft |> Float32TypeDescr) ars.rows ars.cols
-                | (Sparse srs, it)  -> sprintf "Sparse %s[%i][%i]" (ft |> Float32TypeDescr) srs.rows srs.cols
+                | (Linear l, t) -> sprintf "%sint[%i]" (t |> Float32TypeDescr) l
+                | (Block ars, t)  -> sprintf "%s[%i][%i]" (t |> Float32TypeDescr) ars.rows ars.cols
+                | (UT ars, t) -> sprintf "Upper Tr %s[%i][%i]" (t |> Float32TypeDescr) ars.rows ars.cols
+                | (Sparse srs, t)  -> sprintf "Sparse %s[%i][%i]" (t |> Float32TypeDescr) srs.rows srs.cols
 
     
     let ArrayDataString (arrayData:ArrayData) =
@@ -107,15 +107,6 @@ module EntityOps =
         | Success (entityData, msgs) -> 
             entityRepo.GetData entityData.DataId
         | Failure errors -> Failure errors
-
-//
-//    let ToEntityData ((epn:Epn), (dataRecord:DataRecord)) =
-//        {
-//            EntityData.ArrayDescr = dataRecord |> DataRecordToArrayDescr;
-//            EntityData.DataId = dataRecord.DataId;
-//            EntityData.Epn = epn
-//        }
-
 
     let ToEntityData (epn:Epn) (dataRecord:DataRecord) =
         {

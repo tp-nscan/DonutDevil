@@ -10,11 +10,6 @@ open ArrayDataGen
 open ArrayDataExtr
 open EntityOps
 
-type CorrelatorDto = { 
-                        trimScale:float32;
-                        states:Matrix<float32>;
-                     }
-
 type CorrelatorGen(prams:Param list,
                    sourceData: EntityData list,
                    states:Matrix<float32>,
@@ -24,7 +19,6 @@ type CorrelatorGen(prams:Param list,
     let _params = prams
     let _trimScale = trimScale
     let _states = states
-    let _arrayShape = ArrayShape.Block {rows=_states.ColumnCount;cols=_states.ColumnCount}
     let _connections = _states.Transpose().Multiply(_states).ToArray() 
                         |> ZeroTheDiagonalF32
                         |> flattenColumnMajor 
@@ -50,7 +44,7 @@ type CorrelatorGen(prams:Param list,
                     GenResult.ArrayData = 
                         Float32Array
                             ( 
-                                _arrayShape,
+                                ArrayShape.Block {rows=_states.ColumnCount;cols=_states.ColumnCount},
                                 Float32Type.SF 1.0f, 
                                 _connections,
                                 Array.empty<int>
@@ -62,10 +56,15 @@ type CorrelatorGen(prams:Param list,
 
  module CgBuilder =
 
+    type CorrelatorDto = { 
+                            trimScale:float32;
+                            states:Matrix<float32>;
+                         }
+
     let CreateCorrelatorDto (trimScale:float32) (states:Matrix<float32>) =
         { trimScale=trimScale; states=states; }
 
-    let CreateCorrelatorFromParams (entityRepo:IEntityRepo) (statesData:EntityData) 
+    let CreateCorrelatorGenFromParams (entityRepo:IEntityRepo) (statesData:EntityData) 
                                    (prams:Param list) =
 
         let dtoResult = CreateCorrelatorDto
@@ -91,7 +90,7 @@ type CorrelatorGen(prams:Param list,
 
         let prams = Parameters.Correlator trimScale
 
-        match (CreateCorrelatorFromParams repo statesData prams) with
+        match (CreateCorrelatorGenFromParams repo statesData prams) with
         | Success (gen, msgs) -> EntityOps.SaveEntityGen repo gen entityName
         | Failure errors -> Failure errors
 

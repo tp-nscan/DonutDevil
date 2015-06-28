@@ -10,16 +10,6 @@ open ArrayDataGen
 open ArrayDataExtr
 open EntityOps
 
-type CliqueEnsembleDto = { 
-                           unsigned:bool;
-                           stepSize:float32;
-                           noiseSeed:int;
-                           noiseLevel:float32;
-                           arrayShape:ArrayShape;
-                           ensemble:Matrix<float32>;
-                           connections: Matrix<float32>;
-                         }
-
 type CliqueEnsembleGenCpu(prams:Param list,
                           sourceData: EntityData list,
                           arrayShape:ArrayShape,
@@ -28,6 +18,7 @@ type CliqueEnsembleGenCpu(prams:Param list,
                           iteration:int,
                           stepSize:float32,
                           seqNoise:seq<float32>) =
+
     let _sourceData = sourceData
     let _arrayShape = arrayShape
     let _params = prams
@@ -87,8 +78,16 @@ type CliqueEnsembleGenCpu(prams:Param list,
 
  module CegBuilder =
 
+    type CliqueEnsembleDto = { 
+                               stepSize:float32;
+                               noiseSeed:int;
+                               noiseLevel:float32;
+                               arrayShape:ArrayShape;
+                               ensemble:Matrix<float32>;
+                               connections: Matrix<float32>;
+                             }
+
     let CreateCliqueEnsembleDto
-                        (unsigned:bool)
                         (stepSize:float32)
                         (noiseSeed:int)
                         (noiseLevel:float32)
@@ -96,7 +95,7 @@ type CliqueEnsembleGenCpu(prams:Param list,
                         (ensemble: Matrix<float32>)
                         (connections: Matrix<float32>) =
 
-        { unsigned=unsigned; stepSize=stepSize; noiseSeed=noiseSeed;
+        { stepSize=stepSize; noiseSeed=noiseSeed;
           noiseLevel=noiseLevel; arrayShape=arrayShape;
           ensemble=ensemble; connections=connections }
 
@@ -105,8 +104,7 @@ type CliqueEnsembleGenCpu(prams:Param list,
                                        (prams:Param list) =
 
         let dtoResult = CreateCliqueEnsembleDto
-                        <!> (Parameters.GetBoolParam prams "Unsigned")
-                        <*> (Parameters.GetFloat32Param prams "StepSize")
+                        <!> (Parameters.GetFloat32Param prams "StepSize")
                         <*> (Parameters.GetIntParam prams "NoiseSeed")
                         <*> (Parameters.GetFloat32Param prams "NoiseLevel")
                         <*> ((GetDataIdForEpn entityData (Epn("Ensemble"))) 
@@ -126,7 +124,10 @@ type CliqueEnsembleGenCpu(prams:Param list,
                         connections = dto.connections,
                         iteration = 0,
                         stepSize = dto.stepSize,
-                        seqNoise = Generators.RandFloatsF32 dto.noiseSeed dto.unsigned dto.noiseLevel 
+                        seqNoise = ArrayDataGen.RandFloat32 
+                                        (Float32Type.SF(dto.noiseLevel)) 
+                                        0.5f 
+                                        (Random.MersenneTwister(dto.noiseSeed))
                     ) |> Rop.succeed
 
             | Failure errors -> Failure errors

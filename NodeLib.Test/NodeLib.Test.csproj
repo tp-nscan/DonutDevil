@@ -83,6 +83,7 @@
     <Compile Include="RandMatrixGenFixture.cs" />
     <Compile Include="MathUtilsFixture.cs" />
     <Compile Include="CliqueEnsembleFixture.cs" />
+    <Compile Include="PerturbFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibNode\LibNode.fsproj">

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using MathNet.Numerics.Random;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using LibNode;
@@ -26,7 +26,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRandUsFloat32()
         {
-            var q = Generators.RandF32s(1235, 1.0f)
+            var q = Generators.SeqOfRandSF32(1.0f, new MersenneTwister(1234))
                 .Take(500)
                 .ToList();
 
@@ -38,12 +38,12 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestPerturbInRange()
         {
-            var q = Generators.RandF32s(12235, 0.2f).Take(500).ToArray();
+            var q = Generators.SeqOfRandSF32(0.2f, new MersenneTwister(1234)).Take(500).ToArray();
             var tot = q.Sum();
 
             Assert.IsTrue(Math.Abs(tot) < 35);
 
-            var mode = Generators.PerturbInRangeF32A(
+            var mode = Generators.PerturbInRangeF32ASeed(
                 seed: 1235,
                 minVal: (float) -0.3,
                 maxVal: (float) 0.3,
@@ -59,7 +59,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestFlipUF32()
         {
-            var ubA = Generators.RandUF32Bits(1235).Take(1000).ToArray();
+            var ubA = Generators.SeqOfRandUF32Bits(0.5f, new MersenneTwister(1234)).Take(1000).ToArray();
 
             var tot = ubA.Sum();
 
@@ -87,7 +87,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestFlipU32()
         {
-            var ubA = Generators.RandUF32Bits(1235).Take(1000).ToArray();
+            var ubA = Generators.SeqOfRandUF32Bits(0.5f, new MersenneTwister(1234)).Take(1000).ToArray();
 
             var tot = ubA.Sum();
 

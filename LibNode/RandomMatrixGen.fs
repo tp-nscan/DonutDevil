@@ -1,5 +1,7 @@
 ﻿namespace LibNode
 open System
+open MathNet.Numerics
+open MathNet.Numerics.Random 
 open Rop
 
 
@@ -35,9 +37,9 @@ type RandMatrixGen(prams:Param list,
                             ( 
                                 _arrayShape,
                                 _float32Type, 
-                                (ArrayDataGen.RandFloat32Seed _seed float32Type) 
-                                |> Seq.take(ArrayDataGen.FullArrayCount _arrayShape) 
-                                |> Seq.toArray,
+                                (ArrayDataGen.RandFloat32 float32Type 0.5f (Random.MersenneTwister(_seed))) 
+                                    |> Seq.take<float32>(ArrayDataGen.FullArrayCount _arrayShape ) 
+                                    |> Seq.toArray,
                                 Array.empty<int>
                             );
                 } |> Rop.succeed
@@ -48,12 +50,14 @@ type RandMatrixGen(prams:Param list,
  module RmgBuilder =
 
     type RandMatrixDto = { rowCount:int; colCount:int; 
-                       seed:int; unsigned:bool; maxValue:float32 }
+                           seed:int; unsigned:bool; 
+                           discrete:bool; maxValue:float32 }
 
     let CreateRandMatrixDto (rowCount:int) (colCount:int) (seed:int)
-                            (unsigned:bool) (maxVal:float32) =
+                            (unsigned:bool) (discrete:bool)
+                            (maxVal:float32) =
         { rowCount=rowCount; colCount=colCount; seed=seed;
-            unsigned=unsigned; maxValue=maxVal; }
+            unsigned=unsigned; discrete=discrete; maxValue=maxVal; }
 
 
     let RandMatrixGenFromParams (prams:Param list) =
@@ -63,18 +67,21 @@ type RandMatrixGen(prams:Param list,
                     <*> (Parameters.GetIntParam prams "ColCount")
                     <*> (Parameters.GetIntParam prams "Seed")
                     <*> (Parameters.GetBoolParam prams "Unsigned")
+                    <*> (Parameters.GetBoolParam prams "Discrete")
                     <*> (Parameters.GetFloat32Param prams "MaxValue")
 
         match dtoResult with
             | Success (dto, msgs) -> 
                     new RandMatrixGen(
-                        prams=prams, 
-                        arrayShape = (ArrayDataGen.FullArrayShape2d dto.rowCount dto.colCount),
+                        prams=prams,
+                        arrayShape = ArrayShape.Block {rows=dto.rowCount; cols=dto.colCount},
                         seed=dto.seed,
-                        float32Type = (ArrayDataGen.ToFloat32Type dto.unsigned 1.0f)) 
-                        |> Rop.succeed
+                        float32Type = (ArrayDataGen.ToFloat32Type 
+                                        (dto.unsigned |> DataShapeProcs.UnsignedToFloatRange) 
+                                        (dto.discrete |> DataShapeProcs.DiscreteToFloatCover)
+                                        dto.maxValue)
+                        ) |> Rop.succeed
             | Failure errors -> Failure errors
-
 
 
   module RmgUtil =

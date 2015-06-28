@@ -3,10 +3,20 @@ open System
 open Rop
 
 
+type FloatCover =
+     | Continuous
+     | Discrete
+
+type FloatRange =
+     | Signed
+     | Unsigned
+
+/// UF: [0, v], SF: [-v, v], UB: [0.0f, 1.0f], SB: [-1.0f, 1.0f]
 type Float32Type =
     | UF of float32
     | SF of float32
-
+    | UB
+    | SB
 
 type IntType =
     | UI of int
@@ -41,6 +51,24 @@ type DataBlock =
 
 
 module DataShapeProcs =
+
+//    let MutateSequence (float32Type:Float32Type) (mutationRate:float32) (vals:seq<float32>) =
+//       
+//        match float32Type with
+//        | UF max -> 
+//        | SF max
+//        | UB
+//        | SB
+    
+    let UnsignedToFloatRange (u:bool) =
+        match u with
+        | true -> FloatRange.Unsigned
+        | false -> FloatRange.Signed
+
+    let DiscreteToFloatCover (u:bool) =
+        match u with
+        | true -> FloatCover.Discrete
+        | false -> FloatCover.Continuous
 
     let GetDataTypeLength (dataType:DataType) = 
         match  (dataType) with
