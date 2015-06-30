@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using LibNode;
-using Microsoft.FSharp.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NodeLib.Test
@@ -21,17 +18,17 @@ namespace NodeLib.Test
 
             var rowMajorArray =
                 MathUtils.Array2DFromRowMajor(rowCount: rowCount, colCount: colCount, values: over);
-            var backRm = MathUtils.flattenRowMajor(rowMajorArray.Value).ToArray();
+            var backRm = MathUtils.flattenRowMajor(Rop.ExtractResult(rowMajorArray).Value).ToArray();
             Assert.IsTrue(MathUtils.CompareFloat32Arrays(over, backRm));
 
 
             var colMajorArray =
                 MathUtils.Array2DFromColumnMajor(rowCount: rowCount, colCount: colCount, values: over);
-            var backCm = MathUtils.flattenColumnMajor(colMajorArray.Value).ToArray();
+            var backCm = MathUtils.flattenColumnMajor(Rop.ExtractResult(colMajorArray).Value).ToArray();
             Assert.IsTrue(MathUtils.CompareFloat32Arrays(over, backCm));
 
 
-            var transpArray = MathUtils.TransposeArray2D(colMajorArray.Value);
+            var transpArray = MathUtils.TransposeArray2D(Rop.ExtractResult(colMajorArray).Value);
             var backT = MathUtils.flattenRowMajor(transpArray).ToArray();
             Assert.IsTrue(MathUtils.CompareFloat32Arrays(over, backT));
         }

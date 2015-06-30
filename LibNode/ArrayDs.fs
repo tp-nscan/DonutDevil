@@ -4,7 +4,7 @@ open MathNet.Numerics
 open MathNet.Numerics.Random    
 open MathNet.Numerics.LinearAlgebra
 open MathNet.Numerics.LinearAlgebra.Matrix
-
+open Rop
 
 type ArrayShape =
     | Linear of int
@@ -31,6 +31,7 @@ module ArrayDataGen =
         | SF m -> sprintf "(-%f, %f) float" m m
         | UB -> "[0.0, 1.0]"
         | SB -> "[-1.0, 1.0]"
+
 
     let IntTypeDescr (intType:IntType) =
         match intType with
@@ -73,10 +74,21 @@ module ArrayDataGen =
             | UT ars -> ars.cols * ars.rows
             | Sparse sas -> sas.cols * sas.rows
 
-    let MakeDenseMatrix ((arrayShape:ArrayShape),(float32Type:Float32Type),(vals:float32[]),(indexes:int[])) =
+    let MakeDenseMatrix ((arrayShape:ArrayShape),(float32Type:Float32Type),
+                            (vals:float32[]),(indexes:int[])) =
         match arrayShape with
             | Linear len -> "wrong arrayShape for DenseMatrix" |> Rop.fail
-            | Block ars -> DenseMatrix.init ars.rows ars.cols (fun x y -> vals.[x+y*ars.rows]) |> Rop.succeed
+            | Block ars -> DenseMatrix.init ars.rows ars.cols 
+                            (fun x y -> vals.[x+y*ars.rows]) |> Rop.succeed
+            | UT ars -> "wrong arrayShape for DenseMatrix" |> Rop.fail
+            | Sparse sas -> "wrong arrayShape for DenseMatrix" |> Rop.fail
+
+    let MakeNestedArrays ((arrayShape:ArrayShape),(float32Type:Float32Type),
+                            (vals:float32[]),(indexes:int[])) =
+        match arrayShape with
+            | Linear len -> "wrong arrayShape for DenseMatrix" |> Rop.fail
+            | Block ars -> vals |> (MathUtils.Array2DFromRowMajor ars.rows ars.cols)
+                                
             | UT ars -> "wrong arrayShape for DenseMatrix" |> Rop.fail
             | Sparse sas -> "wrong arrayShape for DenseMatrix" |> Rop.fail
 
@@ -106,4 +118,3 @@ module ArrayDataExtr =
     | BoolArray (ars, ba, ii) -> "BoolArray not ListOfIntArray" |> Rop.fail
     | IntArray (ars, it, ia, ii) -> "IntArray not Float32Array" |> Rop.fail
     | Float32Array (ars, it, fa, ii) -> (ars, it, fa, ii) |> Rop.succeed
-

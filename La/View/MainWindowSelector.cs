@@ -17,20 +17,20 @@ namespace La.View
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            var legendVm = item as IMainWindowVm;
+            var legendVm = item as IMainContentVm;
 
             if (legendVm != null)
             {
-                switch (legendVm.MainWindowType)
+                switch (legendVm.MainContentType)
                 {
-                    case MainWindowType.Menu:
+                    case MainContentType.Menu:
                         return MenuTemplate;
-                    case MainWindowType.Network:
+                    case MainContentType.Network:
                         return NetworkTemplate;
-                    case MainWindowType.Sandbox:
+                    case MainContentType.Sandbox:
                         return SandboxTemplate;
                     default:
-                        throw new Exception(String.Format("MainWindowType {0} not handled in SelectTemplate", legendVm.MainWindowType));
+                        throw new Exception(String.Format("MainContentType {0} not handled in SelectTemplate", legendVm.MainContentType));
                 }
             }
 

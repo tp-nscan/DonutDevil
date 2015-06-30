@@ -1,8 +1,8 @@
 ﻿using System;
-using MathNet.Numerics.Random;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using LibNode;
+using MathNet.Numerics.Random;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NodeLib.Test
 {
@@ -43,12 +43,7 @@ namespace NodeLib.Test
 
             Assert.IsTrue(Math.Abs(tot) < 35);
 
-            var mode = Generators.PerturbInRangeF32ASeed(
-                seed: 1235,
-                minVal: (float) -0.3,
-                maxVal: (float) 0.3,
-                maxDelta: (float) 0.2,
-                values: q
+            var mode = Generators.PerturbInRangeF32A(-0.3f, 0.3f, 0.2f, new MersenneTwister(1234), q
                 );
 
             var tot2 = mode.Sum();
@@ -56,18 +51,56 @@ namespace NodeLib.Test
             Assert.IsTrue(Math.Abs(tot2) < 35);
         }
 
+
+        //[TestMethod]
+        //public void TestMutateSeq()
+        //{
+        //    var q = Generators.SeqOfRandSF32(0.2f, new MersenneTwister(1234))
+        //                .Take(5).ToArray();
+        //    var tot = q.Sum();
+
+        //    Assert.IsTrue(Math.Abs(tot) < 35);
+
+        //    var res = Generators.MesForArraySF32(
+        //            noiseLevel: 0.02f,
+        //            rng: new MersenneTwister(1234),
+        //            count: 2,
+        //            array: q
+        //        );
+
+
+
+        //    Assert.IsTrue(true);
+        //}
+
+
+        [TestMethod]
+        public void TestMutateSeq2()
+        {
+            var dblSeq = new []
+            {
+                new[] {.01f, .02f, .03f },
+                new[] {-.01f, -.02f, -.03f }
+            };
+
+            var res = Generators.MesForArraySF32(0.02f, new MersenneTwister(1234), 4, dblSeq
+                );
+
+            Assert.IsTrue(true);
+        }
+
+
+
+
         [TestMethod]
         public void TestFlipUF32()
         {
             var ubA = Generators.SeqOfRandUF32Bits(0.5f, new MersenneTwister(1234)).Take(1000).ToArray();
-
             var tot = ubA.Sum();
 
             Assert.IsTrue(Math.Abs(tot) - 500 < 45);
 
-            var flipped = Generators.FlipUF32A(1235, (float) 0.2, ubA);
-
-
+            var flipped = Generators.FlipUF32A(0.2f, new MersenneTwister(1234), ubA);
             var tot2 = flipped.Sum();
 
             var d = MathUtils.Euclidean32(ubA, flipped);
@@ -93,7 +126,7 @@ namespace NodeLib.Test
 
             Assert.IsTrue(Math.Abs(tot) < 85);
 
-            var flipped = Generators.FlipF32A(125, (float) 0.2, ubA);
+            var flipped = Generators.FlipF32A(0.2f, new MersenneTwister(1234), ubA);
 
 
             var tot2 = flipped.Sum();
@@ -115,7 +148,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRandomEuclideanPointF32()
         {
-            var ubA = Generators.RandomEuclideanPointsF32(1235, unsigned: true)
+            var ubA = Generators.RandomEuclideanPointsF32(true, new MersenneTwister(1234))
                 .Take(100)
                 .ToArray();
 
@@ -127,7 +160,7 @@ namespace NodeLib.Test
         public void TestRandomDiscPointF32()
         {
             var ubA = Generators.RandDiscPointsF32(
-                seed: 1235,
+                rng: new MersenneTwister(1234),
                 maxRadius: (float) 2.0).Take(100)
                 .Select(MathUtils.PointF32LengthSquared)
                 .ToArray();
@@ -139,7 +172,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRandomRingPointF32()
         {
-            var ubA = Generators.RandRingPointsF32(1235)
+            var ubA = Generators.RandRingPointsF32(new MersenneTwister(1234))
                 .Select(MathUtils.PointF32LengthSquared)
                 .Take(100)
                 .ToArray();
@@ -151,9 +184,8 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRandomBallPointF32()
         {
-            var ubA = Generators.RandBallPointsF32(
-                seed: 1235,
-                maxRadius: (float) 1.0).Take(100)
+            var ubA = Generators.RandBallPointsF32((float) 1.0, new MersenneTwister(1234)
+                ).Take(100)
                 .Select(MathUtils.TripleF32LengthSquared)
                 .ToArray();
 
@@ -164,7 +196,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestRandomSpherePointF32()
         {
-            var ubA = Generators.RandSpherePointsF32(1235)
+            var ubA = Generators.RandSpherePointsF32(new MersenneTwister(1234))
                 .Select(MathUtils.TripleF32LengthSquared)
                 .Take(100)
                 .ToArray();

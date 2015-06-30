@@ -78,21 +78,24 @@ module EntityOps =
        try
           entityData |> Seq.find(fun e-> e.Epn = epn) |> (fun t->t.DataId) |> Rop.succeed
        with
-        | ex -> (sprintf "Source data not found: %s" (EpnString epn)) |> Rop.fail
+        | ex -> (sprintf "GetDataIdForEpn epn: %s  message: %s"
+                    (EpnString epn) ex.Message) |> Rop.fail
 
 
     let GetSourceEntityData (entity:Entity) (epn:Epn) =
        try
         entity.SourceData |> List.find(fun e-> e.Epn = epn) |> Rop.succeed
        with
-        | ex -> (sprintf "Source data not found: %s" (EpnString epn)) |> Rop.fail
+        | ex -> (sprintf "GetSourceEntityData epn: %s  message: %s"
+                    (EpnString epn) ex.Message) |> Rop.fail
 
 
     let GetResultEntityData (entity:Entity) (epn:Epn) =
        try
         entity.ResultData |> List.find(fun e-> e.Epn = epn) |> Rop.succeed
        with
-        | ex -> (sprintf "Source data not found: %s" (EpnString epn)) |> Rop.fail
+        | ex -> (sprintf "GetResultEntityData epn: %s  message: %s"
+                    (EpnString epn) ex.Message) |> Rop.fail
 
 
     let GetSourceDataRecord (entityRepo:IEntityRepo) (entity:Entity) (epn:Epn) =

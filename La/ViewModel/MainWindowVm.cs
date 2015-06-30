@@ -10,9 +10,9 @@ namespace La.ViewModel
             ContentVm = new MenuVm();
         }
 
-        private IMainWindowVm _contentVm;
+        private IMainContentVm _contentVm;
 
-        public IMainWindowVm ContentVm
+        public IMainContentVm ContentVm
         {
             get { return _contentVm; }
             set

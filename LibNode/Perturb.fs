@@ -12,7 +12,8 @@ open EntityOps
 
 type PerturbGen(prams:Param list, 
                 sourceData: EntityData list,
-                states:Matrix<float32>,
+                states:float32[,],
+                mutationRate:float32,
                 seed:int,
                 replicationRate:int,
                 float32Type:Float32Type) =
@@ -20,13 +21,15 @@ type PerturbGen(prams:Param list,
     let _params = prams
     let _sourceData = []
     let _states = states
+    let _mutationRate = mutationRate
     let _seed = seed
     let _replicationRate = replicationRate
-    let _arrayShape = ArrayShape.Block {rows=_states.RowCount*replicationRate; cols=_states.ColumnCount}
+    let _arrayShape = ArrayShape.Block {rows=_states.GetLength(1)*replicationRate; 
+                                        cols=_states.GetLength(0)}
     let _float32Type = float32Type
-    let _perturbed = _states.ToArray()
-                        |> flattenColumnMajor 
-                        |> Seq.toArray
+    let _perturbed = (Generators.MesForArraySF32 _mutationRate (Random.MersenneTwister(_seed))  
+                            _replicationRate (GetRowsForArray2D _states))
+                        |> Array.concat
 
     interface IEntityGen with
         member this.GeneratorId =
@@ -43,11 +46,11 @@ type PerturbGen(prams:Param list,
             match epn with
             | Epn("Perturbed") -> 
                 {
-                    GenResult.Epn=Epn("Connections"); 
+                    GenResult.Epn=Epn("Perturbed"); 
                     GenResult.ArrayData = 
                         Float32Array
                             ( 
-                                ArrayShape.Block {rows=_states.ColumnCount;cols=_states.ColumnCount},
+                                _arrayShape,
                                 _float32Type, 
                                 _perturbed,
                                 Array.empty<int>
@@ -62,18 +65,17 @@ module PerturbBuilder =
     type PerturbDto = { 
                     seed:int;
                     mutationRate:float32;
-                    unsigned:bool; 
-                    maxValue:float32
+                    unsigned:bool;
                     replicationRate:int;
-                    states:Matrix<float32>;
+                    states:float32[,];
                   }
 
     let CreatePerturbDto (seed:int) (mutationRate:float32) 
                          (replicationRate:int) 
-                         (unsigned:bool) (maxVal:float32)
-                         (states:Matrix<float32>) =
+                         (unsigned:bool) 
+                         (states:float32[,]) =
         { seed=seed; mutationRate=mutationRate; replicationRate=replicationRate; 
-            unsigned=unsigned; maxValue=maxVal; states=states }
+            unsigned=unsigned; states=states }
 
     let CreatePerturbGenFromParams (entityRepo:IEntityRepo) (statesData:EntityData) 
                                    (prams:Param list) =
@@ -83,9 +85,8 @@ module PerturbBuilder =
                     <*> (Parameters.GetFloat32Param prams "MutationRate")
                     <*> (Parameters.GetIntParam prams "ReplicationRate")
                     <*> (Parameters.GetBoolParam prams "Unsigned")
-                    <*> (Parameters.GetFloat32Param prams "MaxValue")
                     <*> ((GetArrayData entityRepo statesData.DataId) 
-                                |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
+                                |> bindR GetFloat32ArrayData |> bindR MakeNestedArrays)
 
         match dtoResult with
             | Success (dto, msgs) ->
@@ -93,12 +94,13 @@ module PerturbBuilder =
                         prams = prams, 
                         sourceData = [statesData],
                         states = dto.states,
+                        mutationRate  = dto.mutationRate,
                         seed = dto.seed,
                         replicationRate = dto.replicationRate,
                         float32Type = (ArrayDataGen.ToFloat32Type 
                                         (dto.unsigned |> DataShapeProcs.UnsignedToFloatRange)
                                         FloatCover.Continuous 
-                                        dto.maxValue)
+                                        1.0f)
                     ) |> Rop.succeed
 
             | Failure errors -> Failure errors
@@ -106,9 +108,9 @@ module PerturbBuilder =
 
     let MakePerturberEntity(repo:IEntityRepo) (statesData:EntityData)
                            (seed:int) (mutationRate:float32) (replicationRate:int) 
-                           (unsigned:bool) (maxVal:float32) (entityName:string) =
+                           (unsigned:bool) (entityName:string) =
 
-        let prams = Parameters.Peturber seed mutationRate replicationRate unsigned maxVal
+        let prams = Parameters.Peturber seed mutationRate replicationRate unsigned
 
         match (CreatePerturbGenFromParams repo statesData prams) with
         | Success (gen, msgs) -> EntityOps.SaveEntityGen repo gen entityName
@@ -116,10 +118,10 @@ module PerturbBuilder =
 
 
     let MakePerturberEntityData(repo:IEntityRepo) (statesData:EntityData)
-                                   (seed:int) (mutationRate:float32) (replicationRate:int) 
-                                   (unsigned:bool) (maxVal:float32) (entityName:string) =
+                                (seed:int) (mutationRate:float32) (replicationRate:int) 
+                                (unsigned:bool) (entityName:string) =
 
-        match (MakePerturberEntity repo statesData seed mutationRate replicationRate unsigned maxVal entityName) with
+        match (MakePerturberEntity repo statesData seed mutationRate replicationRate unsigned entityName) with
         | Success (entity, msgs) ->
                         let epn = Entvert.ToEpn("Perturbed")
                         EntityOps.GetResultEntityData entity epn
@@ -128,9 +130,9 @@ module PerturbBuilder =
 
     let MakePerturberEntityDataRecord(repo:IEntityRepo) (statesData:EntityData)
                                        (seed:int) (mutationRate:float32) (replicationRate:int) 
-                                       (unsigned:bool) (maxVal:float32) (entityName:string) =
+                                       (unsigned:bool) (entityName:string) =
 
-        match (MakePerturberEntity repo statesData seed mutationRate replicationRate unsigned maxVal entityName) with
+        match (MakePerturberEntity repo statesData seed mutationRate replicationRate unsigned entityName) with
         | Success (entity, msgs) ->
                         let epn = Entvert.ToEpn("Perturbed")
                         EntityOps.GetResultDataRecord repo entity epn

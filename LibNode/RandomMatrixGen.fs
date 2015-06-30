@@ -87,7 +87,8 @@ type RandMatrixGen(prams:Param list,
   module RmgUtil =
 
     let MakeGenForRdm (rowCount:int) (colCount:int) (seed:int) (maxVal:float32) =
-        RmgBuilder.RandMatrixGenFromParams (Parameters.RandomMatrixSet rowCount colCount seed maxVal)
+        RmgBuilder.RandMatrixGenFromParams 
+            (Parameters.RandomMatrixSet rowCount colCount seed false false maxVal)
 
 
     let MakeRdmEntity (repo:IEntityRepo) (rowCount:int) (colCount:int) 

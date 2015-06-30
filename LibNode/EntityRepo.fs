@@ -19,9 +19,14 @@ type EntityRepoMem() =
 
     interface IEntityRepo with
 
+        member this.GetEntities() =
+            try
+                _entityDict |> Dict.toSeqValues |> Seq.toList |> Rop.succeed
+            with
+            | ex -> (sprintf "Error getting entities: %s" ex.Message) |> Rop.fail
+
         member this.GetEntity(entityId:EntityId) =
             try
-               // sprintf "fsdf %s" "fdsadf" |> Rop.fail
                 _entityDict.[entityId] |> Rop.succeed
             with
             | ex -> (sprintf "GetEntity Id: %s  message: %s" (EntityKey entityId) ex.Message) |> Rop.fail
@@ -31,7 +36,6 @@ type EntityRepoMem() =
                 _dataDict.Item(dataId) |> Rop.succeed
             with
             | ex -> (sprintf "GetData Id: %s  message: %s" (DataKey dataId) ex.Message) |> Rop.fail
-                
 
         member this.SaveData (dataRecord:DataRecord) =
             try

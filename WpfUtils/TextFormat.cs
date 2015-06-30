@@ -1,4 +1,6 @@
-﻿using MathLib.Intervals;
+﻿using System.Collections.Generic;
+using System.Text;
+using MathLib.Intervals;
 
 namespace WpfUtils
 {
@@ -27,6 +29,20 @@ namespace WpfUtils
             }
 
             return "0.0";
+        }
+
+        public static string ToReport(this IEnumerable<string> strings, string sep)
+        {
+            //
+            // Concatenate all the elements into a StringBuilder.
+            //
+            StringBuilder builder = new StringBuilder();
+            foreach (string value in strings)
+            {
+                builder.Append(value);
+                builder.Append(sep);
+            }
+            return builder.ToString();
         }
 
     }

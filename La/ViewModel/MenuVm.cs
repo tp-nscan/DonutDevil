@@ -10,7 +10,7 @@ using WpfUtils;
 
 namespace La.ViewModel
 {
-    public class MenuVm : NotifyPropertyChanged, IMainWindowVm
+    public class MenuVm : NotifyPropertyChanged, IMainContentVm
     {
         public MenuVm()
         {
@@ -22,12 +22,17 @@ namespace La.ViewModel
 
         #region Navigation
 
-        public MainWindowType MainWindowType => MainWindowType.Menu;
+        public IEntityRepo EntityRepo
+        {
+            get { return _entityRepo; }
+        }
 
-        private readonly Subject<IMainWindowVm> _mainWindowTypehanged
-            = new Subject<IMainWindowVm>();
+        public MainContentType MainContentType => MainContentType.Menu;
 
-        public IObservable<IMainWindowVm> OnMainWindowTypeChanged => _mainWindowTypehanged;
+        private readonly Subject<IMainContentVm> _mainWindowTypehanged
+            = new Subject<IMainContentVm>();
+
+        public IObservable<IMainContentVm> OnMainWindowTypeChanged => _mainWindowTypehanged;
 
         #endregion // Navigation
 
@@ -99,6 +104,8 @@ namespace La.ViewModel
         public IList NetworkBuilderVms => _networkBuilderVms;
 
         private NetworkBuilderVm _networkBuilderVm;
+        private IEntityRepo _entityRepo;
+
         public NetworkBuilderVm NetworkBuilderVm
         {
             get { return _networkBuilderVm; }

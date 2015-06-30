@@ -151,6 +151,11 @@ let ExtractResult result =
             | Success (x, msgs) -> Some x
             | Failure errors -> None
 
+let ExtractErrorMessage result =
+    match result with
+            | Success (x, msgs) -> None
+            | Failure errors -> Some errors
+
 let rec FilterFails<'a,'b> (vs:RopResult<'a,'b> list) (pp: 'b list) =
     match vs with
     | [] -> pp

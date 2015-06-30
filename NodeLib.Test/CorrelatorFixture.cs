@@ -26,18 +26,23 @@ namespace NodeLib.Test
                     seed: seed,
                     maxVal: maxVal,
                     entityName: "States"
-                 );
+                );
 
             var dr = Rop.ExtractResult(ces).Value;
 
             var corr = CgBuilder.MakeCorrelatorDataRecord(
-                    repo: repo,
-                    statesData: dr,
-                    trimScale: trimScale,
-                    entityName: "Correlato"
+                repo: repo,
+                statesData: dr,
+                trimScale: trimScale,
+                entityName: "Correlato"
                 );
 
             Assert.IsTrue(true);
+        }
+
+        [TestMethod]
+        public void TestMutator()
+        {
         }
     }
 }

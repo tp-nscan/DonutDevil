@@ -14,7 +14,7 @@ using WpfUtils;
 
 namespace La.ViewModel
 {
-    public class NetworkVm : NotifyPropertyChanged, IMainWindowVm
+    public class NetworkVm : NotifyPropertyChanged, IMainContentVm
     {
         public NetworkVm(ISym network)
         {
@@ -24,9 +24,14 @@ namespace La.ViewModel
 
         #region IMainWindowVm
 
-        public MainWindowType MainWindowType => MainWindowType.Network;
-        private readonly Subject<IMainWindowVm> _mainWindowTypehanged = new Subject<IMainWindowVm>();
-        public IObservable<IMainWindowVm> OnMainWindowTypeChanged => _mainWindowTypehanged;
+        public IEntityRepo EntityRepo
+        {
+            get { return _entityRepo; }
+        }
+
+        public MainContentType MainContentType => MainContentType.Network;
+        private readonly Subject<IMainContentVm> _mainWindowTypehanged = new Subject<IMainContentVm>();
+        public IObservable<IMainContentVm> OnMainWindowTypeChanged => _mainWindowTypehanged;
 
         #endregion
 
@@ -141,6 +146,8 @@ namespace La.ViewModel
         #region GoToMenuCommand
 
         RelayCommand _goToMenuCommand;
+        private IEntityRepo _entityRepo;
+
         public ICommand GoToMenuCommand
         {
             get

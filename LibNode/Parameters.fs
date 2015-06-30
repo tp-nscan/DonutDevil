@@ -41,22 +41,24 @@ module Parameters =
     let ParentIdParam = {Param.Name="ParentId"; Value=ParamValue.Guid{Value=Guid.NewGuid()}; CanChangeAtRunTime=false}
 
 
-    let RandomMatrixSet rowCount colCount seed maxValue =
+    let RandomMatrixSet rowCount colCount seed unsigned discrete maxValue =
         [
             IntParam "RowCount" rowCount false;
             IntParam "ColCount" colCount false;
             IntParam "Seed" seed false;
-            BoolParam "Unsigned" false false;
+            BoolParam "Unsigned" unsigned false;
+            BoolParam "Discrete" discrete false;
             FloatParam "MaxValue" maxValue false;
         ]
 
 
-    let CliqueSet unsigned stepSize noiseSeed noiseLevel =
+    let CliqueSet unsigned stepSize noiseSeed noiseLevel useGpu =
         [
             BoolParam "Unsigned" unsigned false;
             FloatParam "StepSize" stepSize true;
             IntParam "NoiseSeed" noiseSeed false;
             FloatParam "NoiseLevel" noiseLevel true;
+            BoolParam "UseGpu" useGpu false;
         ]
 
     let Correlator trimScale =
@@ -64,13 +66,12 @@ module Parameters =
             FloatParam "TrimScale" trimScale true;
         ]
 
-    let Peturber seed mutationRate replicationRate unsigned maxValue =
+    let Peturber seed mutationRate replicationRate unsigned =
         [
             IntParam "Seed" seed false;
             FloatParam "MutationRate" mutationRate false;
             IntParam "ReplicationRate" replicationRate false;
             BoolParam "Unsigned" unsigned false;
-            FloatParam "MaxValue" maxValue false;
         ]
 
     let GetParamByName (prams:Param list) (name:string) =

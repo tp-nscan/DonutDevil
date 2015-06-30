@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
 using DonutDevilControls.ViewModel.Design.Legend;
 using DonutDevilControls.ViewModel.Legend;
+using LibNode;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
 using WpfUtils;
@@ -18,7 +19,7 @@ using WpfUtils.ViewModels.Graphics;
 
 namespace La.ViewModel
 {
-    public class SandboxVm : NotifyPropertyChanged, IMainWindowVm
+    public class SandboxVm : NotifyPropertyChanged, IMainContentVm
     {
         public SandboxVm()
         {
@@ -43,10 +44,15 @@ namespace La.ViewModel
 
         #region Navigation
 
-        public MainWindowType MainWindowType => MainWindowType.Sandbox;
+        public IEntityRepo EntityRepo
+        {
+            get { return _entityRepo; }
+        }
 
-        private readonly Subject<IMainWindowVm> _mainWindowTypehanged = new Subject<IMainWindowVm>();
-        public IObservable<IMainWindowVm> OnMainWindowTypeChanged => _mainWindowTypehanged;
+        public MainContentType MainContentType => MainContentType.Sandbox;
+
+        private readonly Subject<IMainContentVm> _mainWindowTypehanged = new Subject<IMainContentVm>();
+        public IObservable<IMainContentVm> OnMainWindowTypeChanged => _mainWindowTypehanged;
 
         #endregion
 
@@ -284,6 +290,8 @@ namespace La.ViewModel
         }
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
+        private IEntityRepo _entityRepo;
+
         public string ElapsedTime => 
             $"{_stopwatch.Elapsed.Hours.ToString("00")}:" +
             $"{_stopwatch.Elapsed.Minutes.ToString("00")}:" +

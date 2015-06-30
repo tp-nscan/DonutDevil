@@ -1,8 +1,8 @@
 ﻿namespace LibNode
 open System
+
 // see also 
 // http://stackoverflow.com/questions/4949941/convert-string-to-system-datetime-in-f
-
 module TryParser =
     // convenient, functional TryParse wrappers returning option<'a>
     let tryParseWith tryParseFunc = tryParseFunc >> function
@@ -39,6 +39,7 @@ module TryParser =
 module Dict =
   open System.Collections.Generic
   let toSeq d = d |> Seq.map (fun (KeyValue(k,v)) -> (k,v))
+  let toSeqValues d = d |> Seq.map (fun (KeyValue(k,v)) -> v)
   let toArray (d:IDictionary<_,_>) = d |> toSeq |> Seq.toArray
   let toListT (d:IDictionary<_,_>) = d |> toSeq |> Seq.toList
   let toList d = d |> Seq.map (fun (KeyValue(k,v)) -> v) |> Seq.toList
@@ -70,8 +71,38 @@ module MathUtils =
 
     let inline ZipMap f a b = Seq.zip a b |> Seq.map (fun (x,y) -> f x y)
 
-    let PerturbInRange min max baseSeq offsets =
+    let SeqAddInRange min max offsets baseSeq =
         Seq.map2 (AddInRange min max) baseSeq offsets
+    
+    let MesForItem initElement count mutator =
+       Array.init count (fun index ->
+         match index with
+         | 0 -> initElement
+         | _ -> mutator initElement)
+                                        
+    let MesForArray (initArray:'a[][]) copies mutator =
+       let initLen = initArray.GetLength(0)
+       Array.init (copies*initLen) (fun index ->
+         match (index % copies) with
+         | 0 -> initArray.[index/copies]
+         | _ -> mutator initArray.[index/copies])
+
+    let GetRowsForArray2D (array:'a[,]) =
+      let rowC = array.GetLength(0)
+      let colC = array.GetLength(1)
+      Array.init rowC (fun i ->
+        Array.init colC (fun j -> array.[i,j]))
+
+    let TestArray = 
+        Array2D.init 3 5 (fun i j -> System.Convert.ToSingle(i+j) )
+
+    let MesForArray2D (array2d:'a[,]) copies mutator =
+       let nstArray = GetRowsForArray2D array2d
+       let initLen = nstArray.GetLength(0)
+       Array.init (copies*initLen) (fun index ->
+         match (index % copies) with
+         | 0 -> nstArray.[index/copies]
+         | _ -> mutator nstArray.[index/copies])
 
     let BoundUnitUF32 value =
         if value < 0.0f then 0.0f
@@ -91,13 +122,11 @@ module MathUtils =
         let sa = a |> Array.sortBy(fun x-> Math.Abs(x))
         a |> Array.map(fun x-> (x/b)|>BoundUnitSF32)
 
-
     let TrimByFraction (b:float32) (a:float32[]) =
         let bub = Convert.ToInt32(Convert.ToSingle(a.Length - 1) * BoundUnitUF32(b))
         let sa = a |> Array.sortBy(fun x-> Math.Abs(x))
         if bub = a.Length then a
         else TrimToScale a (AbsF32(sa.[bub]))
-
 
     type GroupShape =
         | Bag of int
@@ -106,17 +135,14 @@ module MathUtils =
         | Rectangle of IntPair
         | Torus of IntPair
 
-
     type SymmetricFormat =
         | UT
         | LT
         | Full
 
-
     type CompFormat =
         | RowMajor
         | ColumnMajor
-
 
     let PointF32Length (point:PointF32) = 
         let vsq = point.x * point.x + point.y * point.y
@@ -153,12 +179,25 @@ module MathUtils =
         Array2D.init (mtx.GetLength 1) (mtx.GetLength 0) (fun x y -> mtx.[y,x])
 
     let Array2DFromRowMajor (rowCount:int) (colCount:int) (values:float32[]) =
-        if values.Length <> rowCount*colCount then None
-        else Some (Array2D.init rowCount colCount (fun x y -> values.[y+x*colCount]))
+       try
+        if values.Length <> rowCount*colCount then 
+            "Wrong array length in Array2DFromColumnMajor"  |> Rop.fail
+        else (Array2D.init rowCount colCount 
+                (fun x y -> values.[y+x*colCount])) |> Rop.succeed
+       with
+        | ex -> (sprintf "Array2DFromRowMajor message: %s"
+                    ex.Message) |> Rop.fail
 
     let Array2DFromColumnMajor (rowCount:int) (colCount:int) (values:float32[]) =
-        if values.Length <> rowCount*colCount then None
-        else Some (Array2D.init rowCount colCount (fun x y -> values.[x+y*rowCount]))
+       try
+        if values.Length <> rowCount*colCount then 
+            "Wrong array length in Array2DFromColumnMajor"  |> Rop.fail
+        else (Array2D.init rowCount colCount 
+                (fun x y -> values.[x+y*rowCount])) |> Rop.succeed
+       with
+        | ex -> (sprintf "Array2DFromColumnMajor message: %s"
+                    ex.Message) |> Rop.fail
+
 
     let flattenRowMajor (A:'a[,]) = A |> Seq.cast<'a>
 

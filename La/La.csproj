@@ -98,14 +98,16 @@
     </ApplicationDefinition>
     <Compile Include="Model\App.cs" />
     <Compile Include="ViewModel\Design\DesignEntityDataVm.cs" />
+    <Compile Include="ViewModel\Design\DesignEntityRepoVm.cs" />
     <Compile Include="ViewModel\Design\DesignEntityVm.cs" />
     <Compile Include="ViewModel\Design\DesignNetworkVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignIntParamIntVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignParamBoolVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignParamDoubleVm.cs" />
     <Compile Include="ViewModel\EntityDataVm.cs" />
+    <Compile Include="ViewModel\EntityRepoVm.cs" />
     <Compile Include="ViewModel\EntityVm.cs" />
-    <Compile Include="ViewModel\IMainWindowVm.cs" />
+    <Compile Include="ViewModel\IMainContentVm.cs" />
     <Compile Include="ViewModel\MainWindowVm.cs" />
     <Compile Include="ViewModel\NetworkVm.cs" />
     <Compile Include="ViewModel\ParamBoolVm.cs" />

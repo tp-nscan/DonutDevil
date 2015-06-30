@@ -85,6 +85,7 @@ type CliqueEnsembleGenCpu(prams:Param list,
                                arrayShape:ArrayShape;
                                ensemble:Matrix<float32>;
                                connections: Matrix<float32>;
+                               useGpu:bool
                              }
 
     let CreateCliqueEnsembleDto
@@ -93,11 +94,13 @@ type CliqueEnsembleGenCpu(prams:Param list,
                         (noiseLevel:float32)
                         (arrayShape:ArrayShape)
                         (ensemble: Matrix<float32>)
-                        (connections: Matrix<float32>) =
+                        (connections: Matrix<float32>)
+                        (useGpu: bool) =
 
         { stepSize=stepSize; noiseSeed=noiseSeed;
           noiseLevel=noiseLevel; arrayShape=arrayShape;
-          ensemble=ensemble; connections=connections }
+          ensemble=ensemble; connections=connections;
+          useGpu=useGpu }
 
 
     let CreateCliqueEnsembleFromParams (entityRepo:IEntityRepo) (entityData:seq<EntityData>) 
@@ -113,6 +116,7 @@ type CliqueEnsembleGenCpu(prams:Param list,
                             |> bindR (GetArrayData entityRepo) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
                         <*> ((GetDataIdForEpn entityData (Epn("Connections"))) 
                             |> bindR (GetArrayData entityRepo) |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
+                        <*> (Parameters.GetBoolParam  prams "UseGpu")
 
         match dtoResult with
             | Success (dto, msgs) ->
@@ -144,14 +148,14 @@ type CliqueEnsembleGenCpu(prams:Param list,
  module CliqueEnsemble =
 
     let MakeGenForRandomCliqueEnsemble (repo:IEntityRepo) (ensembleCount:int) (nodeCount:int) 
-                (seed:int) (maxVal:float32) (noiseLevel:float32) (stepSize:float32) (name:string)=
+                (seed:int) (maxVal:float32) (noiseLevel:float32) (stepSize:float32) (useGpu:bool) (name:string)=
 
         let rng = Random.MersenneTwister(seed)
         let ensembleSeed = rng.Next()
         let connectionSeed = rng.Next()
         let noiseSeed = rng.Next()
 
-        let prams = Parameters.CliqueSet false stepSize noiseSeed noiseLevel
+        let prams = Parameters.CliqueSet false stepSize noiseSeed noiseLevel false
 
         let ensembleResult = RmgUtil.MakeRdmDataRecord repo ensembleCount
                                 nodeCount ensembleSeed maxVal (sprintf "%s_%s" name "Ensemble")

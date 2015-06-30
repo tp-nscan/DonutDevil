@@ -88,6 +88,7 @@ type ISym =
 
 
 type IEntityRepo =
+    abstract member GetEntities: Unit -> RopResult<Entity list, string>
     abstract member GetEntity: EntityId -> RopResult<Entity, string>
     abstract member GetData: DataId -> RopResult<DataRecord, string>
     abstract member SaveEntity: Entity -> RopResult<Entity, string>

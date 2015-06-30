@@ -29,6 +29,7 @@ namespace NodeLib.Test
                     maxVal: maxVal,
                     noiseLevel: noiseLevel,
                     stepSize: stepSize,
+                    useGpu: false,
                     name: "Tom"
                 );
 
@@ -56,6 +57,7 @@ namespace NodeLib.Test
                     maxVal: maxVal,
                     noiseLevel: noiseLevel,
                     stepSize: stepSize,
+                    useGpu: false,
                     name: "Tom"
                 );
 

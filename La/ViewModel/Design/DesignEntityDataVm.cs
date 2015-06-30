@@ -44,7 +44,9 @@ namespace La.ViewModel.Design
                              unsigned: false,
                              stepSize: stepSize,
                              noiseSeed: nodeSeed,
-                             noiseLevel: noiseLevel);
+                             noiseLevel: noiseLevel,
+                             useGpu: false
+                             );
 
                 var genRes = CegBuilder.CreateCliqueEnsembleFromParams
                     (
@@ -94,6 +96,8 @@ namespace La.ViewModel.Design
                                     rowCount: rowCount,
                                     colCount: colCount,
                                     seed: seed,
+                                    unsigned: false,
+                                    discrete: false,
                                     maxValue: maxValue);
             var res = RmgBuilder.RandMatrixGenFromParams(ubA);
             return Rop.ExtractResult(res).Value;
