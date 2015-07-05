@@ -146,13 +146,11 @@ let failIfNoneR message = function
     | Some rop -> rop
     | None -> fail message 
 
-let ExtractResult result =
-    match result with
+let ExtractResult = function
             | Success (x, msgs) -> Some x
             | Failure errors -> None
 
-let ExtractErrorMessage result =
-    match result with
+let ExtractErrorMessage = function
             | Success (x, msgs) -> None
             | Failure errors -> Some errors
 

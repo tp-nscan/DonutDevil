@@ -57,7 +57,7 @@ type RandMatrixGen(prams:Param list,
                             (unsigned:bool) (discrete:bool)
                             (maxVal:float32) =
         { rowCount=rowCount; colCount=colCount; seed=seed;
-            unsigned=unsigned; discrete=discrete; maxValue=maxVal; }
+          unsigned=unsigned; discrete=discrete; maxValue=maxVal; }
 
 
     let RandMatrixGenFromParams (prams:Param list) =
@@ -76,10 +76,10 @@ type RandMatrixGen(prams:Param list,
                         prams=prams,
                         arrayShape = ArrayShape.Block {rows=dto.rowCount; cols=dto.colCount},
                         seed=dto.seed,
-                        float32Type = (ArrayDataGen.ToFloat32Type 
+                        float32Type = ArrayDataGen.ToFloat32Type 
                                         (dto.unsigned |> DataShapeProcs.UnsignedToFloatRange) 
                                         (dto.discrete |> DataShapeProcs.DiscreteToFloatCover)
-                                        dto.maxValue)
+                                        dto.maxValue
                         ) |> Rop.succeed
             | Failure errors -> Failure errors
 

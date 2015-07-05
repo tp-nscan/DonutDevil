@@ -3,6 +3,7 @@
 open System
 open Rop
 open ArrayDataGen
+open DataShapeProcs
 
 module EntityOps =
 
@@ -12,21 +13,21 @@ module EntityOps =
             match ars with
                 | Linear l -> sprintf "bool[%i]" l
                 | Block ars -> sprintf "bool[%i][%i]" ars.rows ars.cols
-                | UT ars -> sprintf "Upper Tr bool[%i][%i]" ars.rows ars.cols
+                | UT sqs -> sprintf "Upper Tr bool[%i][%i]" (SquareSizeToInt sqs) (SquareSizeToInt sqs)
                 | Sparse srs -> sprintf "Sparse bool[%i][%i]" srs.rows srs.cols
 
         | IntDescr (ars, it) -> 
             match (ars, it) with
                 | (Linear l, it) -> sprintf "%sint[%i]" (it |> IntTypeDescr) l
                 | (Block ars, it)  -> sprintf "%s[%i][%i]" (it |> IntTypeDescr) ars.rows ars.cols
-                | (UT ars, it) -> sprintf "Upper Tr %s[%i][%i]" (it |> IntTypeDescr) ars.rows ars.cols
+                | (UT sqs, it) -> sprintf "Upper Tr %s[%i][%i]" (it |> IntTypeDescr) (SquareSizeToInt sqs) (SquareSizeToInt sqs)
                 | (Sparse srs, it)  -> sprintf "Sparse %s[%i][%i]" (it |> IntTypeDescr) srs.rows srs.cols
 
         | Float32Descr (ars, ft)-> 
             match (ars, ft) with
                 | (Linear l, t) -> sprintf "%sint[%i]" (t |> Float32TypeDescr) l
                 | (Block ars, t)  -> sprintf "%s[%i][%i]" (t |> Float32TypeDescr) ars.rows ars.cols
-                | (UT ars, t) -> sprintf "Upper Tr %s[%i][%i]" (t |> Float32TypeDescr) ars.rows ars.cols
+                | (UT sqs, t) -> sprintf "Upper Tr %s[%i][%i]" (t |> Float32TypeDescr) (SquareSizeToInt sqs) (SquareSizeToInt sqs)
                 | (Sparse srs, t)  -> sprintf "Sparse %s[%i][%i]" (t |> Float32TypeDescr) srs.rows srs.cols
 
     

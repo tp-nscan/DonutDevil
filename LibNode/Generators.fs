@@ -2,6 +2,7 @@
 open System
 open MathNet.Numerics
 open MathNet.Numerics.Random
+open MathNet.Numerics.Distributions
 open LibNode.MathUtils
 
 module Generators =
@@ -13,6 +14,10 @@ module Generators =
                     iter.MoveNext() |> ignore
                     iter.Current
 
+    let NormalSF32 rnd stddev = 
+        Normal.Samples(rnd=rnd, mean=0.0, stddev=stddev)
+            |> Seq.map(fun v->(FloatToSF32 v))
+
     let RandomName (prefix:string) = 
         let rng = Random.MersenneTwister()
         let suffix = rng.Next()
@@ -23,12 +28,14 @@ module Generators =
         Convert.ToSingle(rng.NextDouble() * 2.0) * max - max
 
     // a sequence of random float32 from (0, max)
-    let SeqOfRandUF32 (max:float32) (rng:Random) =
-        Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()) * max)
+    let SeqOfRandUF32 (max:float) (rng:Random) =
+        let max32 = System.Convert.ToSingle max
+        Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()) * max32)
 
     // a sequence of random float32 from (-max, max)
-    let SeqOfRandSF32 (max:float32) (rng:Random) =
-        Seq.initInfinite ( fun i -> RandSF32 max rng)
+    let SeqOfRandSF32 (max:float) (rng:Random) =
+        let max32 = System.Convert.ToSingle max
+        Seq.initInfinite ( fun i -> RandSF32 max32 rng)
 
     let SeqOfRandBools (rng:Random) (trueProb:float) =
         Seq.initInfinite ( fun i -> rng.NextDouble() < trueProb )

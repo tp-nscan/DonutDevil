@@ -61,9 +61,9 @@ module Parameters =
             BoolParam "UseGpu" useGpu false;
         ]
 
-    let Correlator trimScale =
+    let Correlator clipFrac =
         [
-            FloatParam "TrimScale" trimScale true;
+            FloatParam "ClipFrac" clipFrac true;
         ]
 
     let Peturber seed mutationRate replicationRate unsigned =

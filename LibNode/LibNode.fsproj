@@ -55,21 +55,25 @@
     <Compile Include="MathUtils.fs" />
     <Compile Include="Generators.fs" />
     <Compile Include="Named.fs" />
+    <Compile Include="MathNetUtils.fs" />
     <Compile Include="DataShapes.fs" />
     <Compile Include="ArrayDs.fs" />
     <Compile Include="Parameters.fs" />
     <Compile Include="Entity.fs" />
     <Compile Include="EntityOps.fs" />
+    <Compile Include="Glauber.fs" />
     <Compile Include="EntityRepo.fs" />
     <Compile Include="RandomMatrixGen.fs" />
     <Compile Include="CliqueEnsemble.fs" />
     <Compile Include="Correltor.fs" />
     <Compile Include="Perturb.fs" />
     <Compile Include="Sim.fs" />
+    <Compile Include="Spots1d.fs" />
+    <Compile Include="What.fs" />
     <None Include="Script.fsx" />
     <None Include="ScriptMathNet.fsx" />
-    <None Include="packages.config" />
     <None Include="ScriptRop.fsx" />
+    <None Include="packages.config" />
     <Compile Include="LegacyNode.fs" />
   </ItemGroup>
   <PropertyGroup>

@@ -97,10 +97,10 @@ module PerturbBuilder =
                         mutationRate  = dto.mutationRate,
                         seed = dto.seed,
                         replicationRate = dto.replicationRate,
-                        float32Type = (ArrayDataGen.ToFloat32Type 
+                        float32Type = ArrayDataGen.ToFloat32Type 
                                         (dto.unsigned |> DataShapeProcs.UnsignedToFloatRange)
                                         FloatCover.Continuous 
-                                        1.0f)
+                                        1.0f
                     ) |> Rop.succeed
 
             | Failure errors -> Failure errors

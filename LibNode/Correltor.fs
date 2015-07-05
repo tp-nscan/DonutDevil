@@ -13,17 +13,17 @@ open EntityOps
 type CorrelatorGen(prams:Param list,
                    sourceData: EntityData list,
                    states:Matrix<float32>,
-                   trimScale:float32) =
+                   clipFrac:float32) =
 
     let _sourceData = sourceData
     let _params = prams
-    let _trimScale = trimScale
+    let _clipFrac = clipFrac
     let _states = states
     let _connections = _states.Transpose().Multiply(_states).ToArray() 
                         |> ZeroTheDiagonalF32
                         |> flattenColumnMajor 
                         |> Seq.toArray
-                        |> TrimByFraction _trimScale
+                        |> ClipFractionSF32 _clipFrac
 
     interface IEntityGen with
         member this.GeneratorId =
@@ -57,18 +57,18 @@ type CorrelatorGen(prams:Param list,
  module CgBuilder =
 
     type CorrelatorDto = { 
-                            trimScale:float32;
+                            clipFrac:float32;
                             states:Matrix<float32>;
                          }
 
-    let CreateCorrelatorDto (trimScale:float32) (states:Matrix<float32>) =
-        { trimScale=trimScale; states=states; }
+    let CreateCorrelatorDto (clipFrac:float32) (states:Matrix<float32>) =
+        { clipFrac=clipFrac; states=states; }
 
     let CreateCorrelatorGenFromParams (entityRepo:IEntityRepo) (statesData:EntityData) 
                                    (prams:Param list) =
 
         let dtoResult = CreateCorrelatorDto
-                        <!> (Parameters.GetFloat32Param prams "TrimScale")
+                        <!> (Parameters.GetFloat32Param prams "ClipFrac")
                         <*> ((GetArrayData entityRepo statesData.DataId) 
                                 |> bindR GetFloat32ArrayData |> bindR MakeDenseMatrix)
 
@@ -78,7 +78,7 @@ type CorrelatorGen(prams:Param list,
                         prams = prams, 
                         sourceData = [statesData],
                         states = dto.states,
-                        trimScale = dto.trimScale
+                        clipFrac = dto.clipFrac
                     ) |> Rop.succeed
 
             | Failure errors -> Failure errors
@@ -86,9 +86,9 @@ type CorrelatorGen(prams:Param list,
 
 
     let MakeCorrelatorEntity(repo:IEntityRepo) (statesData:EntityData)
-                            (trimScale:float32) (entityName:string) =
+                            (clipFrac:float32) (entityName:string) =
 
-        let prams = Parameters.Correlator trimScale
+        let prams = Parameters.Correlator clipFrac
 
         match (CreateCorrelatorGenFromParams repo statesData prams) with
         | Success (gen, msgs) -> EntityOps.SaveEntityGen repo gen entityName
@@ -96,9 +96,9 @@ type CorrelatorGen(prams:Param list,
 
 
     let MakeCorrelatorEntityData(repo:IEntityRepo) (statesData:EntityData)
-                            (trimScale:float32) (entityName:string) =
+                            (clipFrac:float32) (entityName:string) =
 
-        match (MakeCorrelatorEntity repo statesData trimScale entityName) with
+        match (MakeCorrelatorEntity repo statesData clipFrac entityName) with
         | Success (entity, msgs) ->
                         let epn = Entvert.ToEpn("Connections")
                         EntityOps.GetResultEntityData entity epn
@@ -106,9 +106,9 @@ type CorrelatorGen(prams:Param list,
 
 
     let MakeCorrelatorDataRecord(repo:IEntityRepo) (statesData:EntityData)
-                            (trimScale:float32) (entityName:string) =
+                            (clipFrac:float32) (entityName:string) =
 
-        match (MakeCorrelatorEntity repo statesData trimScale entityName) with
+        match (MakeCorrelatorEntity repo statesData clipFrac entityName) with
         | Success (entity, msgs) ->
                         let epn = Entvert.ToEpn("Connections")
                         EntityOps.GetResultDataRecord repo entity epn

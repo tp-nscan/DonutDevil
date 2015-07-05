@@ -93,9 +93,6 @@ module MathUtils =
       Array.init rowC (fun i ->
         Array.init colC (fun j -> array.[i,j]))
 
-    let TestArray = 
-        Array2D.init 3 5 (fun i j -> System.Convert.ToSingle(i+j) )
-
     let MesForArray2D (array2d:'a[,]) copies mutator =
        let nstArray = GetRowsForArray2D array2d
        let initLen = nstArray.GetLength(0)
@@ -104,29 +101,37 @@ module MathUtils =
          | 0 -> nstArray.[index/copies]
          | _ -> mutator nstArray.[index/copies])
 
-    let BoundUnitUF32 value =
+    let F32ToUF32 value =
         if value < 0.0f then 0.0f
         else if value > 1.0f then 1.0f
         else value
 
-    let BoundUnitSF32 value =
+    let F32ToSF32 value =
         if value < -1.0f then -1.0f
         else if value > 1.0f then 1.0f
         else value
+
+    let FloatToUF32 value =
+        if value < 0.0 then 0.0f
+        else if value > 1.0 then 1.0f
+        else System.Convert.ToSingle value
+
+    let FloatToSF32 value =
+        if value < -1.0 then -1.0f
+        else if value > 1.0 then 1.0f
+        else System.Convert.ToSingle value
 
     let inline AorB a b thresh value =
         if value < thresh then a
         else b
 
-    let TrimToScale (a:float32[]) (b:float32) =
-        let sa = a |> Array.sortBy(fun x-> Math.Abs(x))
-        a |> Array.map(fun x-> (x/b)|>BoundUnitSF32)
+    let ScaleToSF32 (scale:float32) (a:float32[]) =
+        a |> Array.map(fun x-> (x/scale)|>F32ToSF32)
 
-    let TrimByFraction (b:float32) (a:float32[]) =
-        let bub = Convert.ToInt32(Convert.ToSingle(a.Length - 1) * BoundUnitUF32(b))
-        let sa = a |> Array.sortBy(fun x-> Math.Abs(x))
-        if bub = a.Length then a
-        else TrimToScale a (AbsF32(sa.[bub]))
+    let ClipFractionSF32 (b:float32) (values:float32[]) =
+        let bubble = Convert.ToInt32(Convert.ToSingle(values.Length - 1) * F32ToUF32(b))
+        let sa = values |> Array.sortBy(fun x-> Math.Abs(x))
+        values |> ScaleToSF32  (AbsF32(sa.[bubble]))
 
     type GroupShape =
         | Bag of int

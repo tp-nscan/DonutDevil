@@ -27,16 +27,11 @@ let kvps = [("one",1); ("two",2)] |> Dict.ofList
 let l = kvps |> Dict.toList
 
 
-
-
 type RR = {a:int; b:string}
 
 let d = [ { a=3; b="3"}; { a=4; b="4"}; { a=5; b="5"}; { a=6; b="6"} ]
 
 let v = d |> Seq.find(function x -> x.b = "5")
-
-
-
 
 
 type LoggingBuilder() =
@@ -60,6 +55,7 @@ let loggedWorkflow =
         let! z = x + y
         return z
         }
+
 
 let strToInt str =
  match (System.Int32.TryParse str) with
@@ -113,3 +109,24 @@ let SeqSrc = Seq.initInfinite(fun i-> i).GetEnumerator()
 let res1() = 
     SeqSrc.MoveNext() |> ignore
     SeqSrc.Current
+
+
+let IntToString  = function
+    | 1 -> Some "One"
+    | _ -> None
+
+let StrToInt  = function
+    | "One" -> Some 1
+    | _ -> None
+
+let IntToFloat = function
+    | 1 -> Some 1.0
+    | _ -> None
+
+let fog1 = 1 |> IntToString
+
+let jam a b =
+     a + b
+
+let fogB = (Some 1) |> Option.bind IntToString |> Option.map (jam "number ")
+

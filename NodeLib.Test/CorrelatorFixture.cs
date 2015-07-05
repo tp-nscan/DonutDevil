@@ -14,7 +14,7 @@ namespace NodeLib.Test
             const int nodeCount = 15;
             const int seed = 145;
             const float maxVal = 0.3f;
-            const float trimScale = 0.8f;
+            const float clipFrac = 0.8f;
 
             IEntityRepo repo = new EntityRepoMem();
 
@@ -33,7 +33,7 @@ namespace NodeLib.Test
             var corr = CgBuilder.MakeCorrelatorDataRecord(
                 repo: repo,
                 statesData: dr,
-                trimScale: trimScale,
+                clipFrac: clipFrac,
                 entityName: "Correlato"
                 );
 

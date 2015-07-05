@@ -24,6 +24,7 @@ type IntType =
 
 
 type BlockSize = {rows:int; cols:int}
+type SquareSize = SquareSize of int
 type Array2DIndex = {row:int; col:int}
 type SparseArrayShape = {rows:int; cols:int; nonZeroCount:int}
 
@@ -31,7 +32,7 @@ type SparseArrayShape = {rows:int; cols:int; nonZeroCount:int}
 type DataShape =
     | Linear of int
     | Block of BlockSize
-    | UT of BlockSize
+    | UT of SquareSize
     | Sparse of SparseArrayShape
 
 
@@ -51,6 +52,9 @@ type DataBlock =
 
 
 module DataShapeProcs =
+    let SquareSizeToInt sqs =
+        match sqs with
+        | SquareSize v -> v
 
 //    let MutateSequence (float32Type:Float32Type) (mutationRate:float32) (vals:seq<float32>) =
 //       
@@ -59,7 +63,7 @@ module DataShapeProcs =
 //        | SF max
 //        | UB
 //        | SB
-    
+
     let UnsignedToFloatRange (u:bool) =
         match u with
         | true -> FloatRange.Unsigned
@@ -81,7 +85,7 @@ module DataShapeProcs =
         match (dataShape, dataType) with
         | (DataShape.Linear l, dt) -> l * (GetDataTypeLength dt)
         | (DataShape.Block bs, dt) ->  bs.rows * bs.cols * (GetDataTypeLength dt)
-        | (DataShape.UT bs, dt) -> (bs.rows * (bs.rows + 1) * (GetDataTypeLength dt) ) / 2
+        | (DataShape.UT sqs, dt) -> ((SquareSizeToInt sqs) * ((SquareSizeToInt sqs) + 1) * (GetDataTypeLength dt) ) / 2
         | (DataShape.Sparse sas, dt) -> sas.nonZeroCount * ((GetDataTypeLength dt) + 8)
 
     
@@ -98,5 +102,5 @@ module DataShapeProcs =
         match dataBlock with
         | {dataShape= DataShape.Linear l; dataType=dt; data=data } -> l * (GetDataTypeLength dt)
         | {dataShape= DataShape.Block bs; dataType=dt; data=data } ->  bs.rows * bs.cols * (GetDataTypeLength dt)
-        | {dataShape= DataShape.UT bs; dataType=dt; data=data } -> (bs.rows * (bs.rows + 1) * (GetDataTypeLength dt) ) / 2
+        | {dataShape= DataShape.UT sqs; dataType=dt; data=data } -> ((SquareSizeToInt sqs) * ((SquareSizeToInt sqs)+ 1) * (GetDataTypeLength dt) ) / 2
         | {dataShape= DataShape.Sparse sas; dataType=dt; data=data } -> sas.nonZeroCount * ((GetDataTypeLength dt) + 8)

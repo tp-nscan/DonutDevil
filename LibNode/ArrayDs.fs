@@ -5,11 +5,12 @@ open MathNet.Numerics.Random
 open MathNet.Numerics.LinearAlgebra
 open MathNet.Numerics.LinearAlgebra.Matrix
 open Rop
+open DataShapeProcs
 
 type ArrayShape =
     | Linear of int
     | Block of BlockSize
-    | UT of BlockSize
+    | UT of SquareSize
     | Sparse of SparseArrayShape
 
 type ArrayData = 
@@ -39,16 +40,9 @@ module ArrayDataGen =
         | SI m -> sprintf "(-%i, %i) int" m m
 
 
-    let GetTuple3of3 tup =
-        match tup with
-        | (a,b,c) -> c |> Rop.succeed
-        | _ -> "Not a 3-tuple or higher" |> Rop.fail
+    let Tup3of3 (a,b,c) = c |> Rop.succeed
 
-
-    let GetTuple3of4 tup =
-        match tup with
-        | (a,b,c,d) -> c |> Rop.succeed
-        | _ -> "Not a 3-tuple or higher" |> Rop.fail
+    let Tup3of4 (a,b,c,d) = c |> Rop.succeed
 
 
     let ToFloat32Type (floatRange:FloatRange) (floatCover:FloatCover) maxVal =
@@ -61,8 +55,8 @@ module ArrayDataGen =
 
     let RandFloat32 (float32Type:Float32Type) (pOfOne:float32) (rng:Random) =
         match float32Type with
-        | UF max -> Generators.SeqOfRandUF32 max rng
-        | SF max -> Generators.SeqOfRandSF32 max rng
+        | UF max -> Generators.SeqOfRandUF32 (System.Convert.ToDouble(max)) rng
+        | SF max -> Generators.SeqOfRandSF32 (System.Convert.ToDouble(max)) rng
         | UB -> Generators.SeqOfRandUF32Bits (System.Convert.ToDouble(pOfOne)) rng
         | SB -> Generators.SeqOfRandSF32Bits (System.Convert.ToDouble(pOfOne)) rng
 
@@ -71,7 +65,7 @@ module ArrayDataGen =
        match arrayShape with
             | Linear len -> len
             | Block ars -> ars.cols * ars.rows
-            | UT ars -> ars.cols * ars.rows
+            | UT sqs -> (SquareSizeToInt sqs) * (SquareSizeToInt sqs)
             | Sparse sas -> sas.cols * sas.rows
 
     let MakeDenseMatrix ((arrayShape:ArrayShape),(float32Type:Float32Type),
