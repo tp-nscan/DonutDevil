@@ -94,8 +94,33 @@ type Wng(
             nS = _nS
         )
 
- module WngBuilder =
+        member this.Learn(learnRate:float32) =
 
+            let delAtoA = _aM.Transpose().Multiply(_aM)
+            let delBToA = _aM.Transpose().Multiply(_bM)
+            let delBToB = _bM.Transpose().Multiply(_bM)
+
+            new Wng(
+                iteration = _iteration,
+                aaM = _aaM,
+                abM = _abM,
+                baM = _baM,
+                bbM = _bbM,
+                aM = _aM,
+                bM = _bM,
+                sM = _sM,
+                rM = _rM,
+                ssM = _ssM,
+                cPp = _cPp,
+                cSs = _cSs,
+                cRp = _cRp,
+                cPs = _cPs,
+                nP = _nP,
+                nS = _nS
+            )
+
+ module WngBuilder =
+    
 
     let CreateRandom((seed:int), ngSize, ppSig, pSig, sSig, 
                       pNoise, sNoise, cPp, cSs, cRp, cPs,
@@ -203,6 +228,8 @@ type WhatNodesGpu(cp:Matrix<float32>,
         )
 
     member this.Learn(learnRate:float32) =
+
+
         new WhatNodesGpu(
             cp = _cp,
             cs = _cs,
