@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using LibNode;
+using MathNet.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NodeLib.Test
@@ -34,12 +36,13 @@ namespace NodeLib.Test
         }
 
         [TestMethod]
-        public void TestMappz()
+        public void TestSymGen()
         {
-            var sa = Enumerable.Range(0, 10).Select(i => i + 7);
-            var sb = Enumerable.Range(0, 10).Select(i => i * 7);
 
+            var rng = new MathNet.Numerics.Random.MersenneTwister(123);
+            var m = MathNetUtils.RandNormalSqSymDenseSF32(3, rng, 0.7);
 
+            Assert.IsTrue(m != null);
         }
     }
 }

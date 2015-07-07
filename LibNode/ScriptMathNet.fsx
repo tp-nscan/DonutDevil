@@ -12,6 +12,11 @@ open LibNode.MathUtils
 open LibNode.MathNetUtils
 open LibNode.Glauber
 
+
+let rng = Random.MersenneTwister(123)
+
+let mS = RandNormalSqSymDenseSF32 5 rng 0.8
+
 let vs = GlauberRadius5
 
 let m = GlauberDenseMatrix 15 GlauberRadius5
@@ -23,13 +28,12 @@ let msm = ms.Multiply m
 let mms = m.Multiply ms
 
 
-let mz = m |> DenseMatrixFloat32ZeroDiagional
+let mz = m |> MatrixF32ZeroD
 
 let chkGlauberBalance r f d =
     let gvs = (GlauberVals r f d) 
     (gvs , (gvs |> Array.sum))
 
-let rng = Random.MersenneTwister(123)
 let tm = LibNode.Generators.NormalSF32 rng 0.28
          |> Seq.take 100 |> Seq.toArray
 

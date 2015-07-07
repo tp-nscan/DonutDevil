@@ -11,42 +11,43 @@ open ArrayDataExtr
 open EntityOps
 open Glauber
 
-type Spots1dGpu(cp:Matrix<float32>,
-                  cs:Matrix<float32>,
+type Spots1dGpu(  ppM:Matrix<float32>,
+                  ssM:Matrix<float32>,
                   a:Matrix<float32>,
-                  r:Vector<float32>,                          
+                  s:Matrix<float32>,
+                  r:Matrix<float32>,                          
                   iteration:int,
                   stepC:float32,
                   stepS:float32,
                   stepR:float32,
-                  seqNoise:seq<float32>) =
+                  seqNoise:seq<float32>
+                ) =
 
-    let _cp = cp
-    let _cs = cs
+    let _ppM = ppM
+    let _ssM = ssM
     let _a = a
+    let _s = s
     let _r = r
     let _iteration = iteration
     let _stepC = stepC
     let _stepS = stepS
     let _stepR = stepR
     let _seqNoise = seqNoise
-    
-    let _wm = _cp.Map2((fun x y -> MathUtils.F32ToSF32(x + y * stepC )), _cs)
 
     member this.Update() =
        try
         let randIter = Generators.SeqIter _seqNoise
-        let updated = _a.Multiply cs
-        let newStates = 
-            _a.Map2(
-                (fun x y -> MathUtils.F32ToSF32(x + y * stepC + randIter())), 
-                            updated)
-
+        let ssInc = _s.Multiply _ssM
+        let sInc =
+            _r.Map2((fun x y -> F32ToSF32(x + y * stepS + randIter())), 
+                            ssInc)
+        let newS = _s.Map2((fun x y -> F32ToSF32(x + y)), sInc)
 
         Some (new Spots1dGpu(
-                    cp = _cp,
-                    cs = _cs,
+                    ppM = _ppM,
+                    ssM = _ssM,
                     a = _a,
+                    s = newS,
                     r = _r,                          
                     iteration = _iteration + 1,
                     stepC = _stepC,
@@ -60,9 +61,10 @@ type Spots1dGpu(cp:Matrix<float32>,
 
     member this.Learn(learnRate:float32) =
         new Spots1dGpu(
-            cp = _cp,
-            cs = _cs,
+            ppM = _ppM,
+            ssM = _ssM,
             a = _a,
+            s = _s,
             r = _r,                          
             iteration = _iteration + 1,
             stepC = _stepC,
@@ -89,18 +91,23 @@ type Spots1dGpu(cp:Matrix<float32>,
         
         let avals = Generators.NormalSF32 rng cSig
                     |> Seq.take(ngSize) |> Seq.toArray
-
         let aMatrix = DenseMatrix.init 1 ngSize (fun x y -> avals.[y])
 
-        let rVec = Vector.Build.DenseOfEnumerable
-                    (Generators.SeqOfRandSF32Bits 0.5 rng
-                      |> Seq.take(ngSize) )
+
+        let svals = Generators.NormalSF32 rng cSig
+                    |> Seq.take(ngSize) |> Seq.toArray
+        let sMatrix = DenseMatrix.init 1 ngSize (fun x y -> svals.[y])
+
+        let stepR32 = System.Convert.ToSingle(stepR)
+        let rvals = (Generators.SeqOfRandSF32Bits 0.5 rng
+                      |> Seq.take(ngSize)) |> Seq.toArray
+        let rMatrix = DenseMatrix.init 1 ngSize (fun x y -> rvals.[y] * stepR32)
 
         let seqNoise = Generators.SeqOfRandSF32 noiseLevel rng
 
 
         match GlauberNeutralDense ngSize glauberRadius with
-        | Some csMatrix ->
+        | Some ssMatrix ->
             let sC = System.Convert.ToSingle(stepC)
             let sS = System.Convert.ToSingle(stepS)
             let sR = System.Convert.ToSingle(stepR)
@@ -108,16 +115,12 @@ type Spots1dGpu(cp:Matrix<float32>,
             let sCr = sC / nCount
             let sSr = sS / nCount
 
-            let compMatrix = 
-                cpm.Map2(
-                    (fun x y -> MathUtils.F32ToSF32(x * sCr + y * sSr)), 
-                                csMatrix)
-
-            Some (new Spots1dGpu(
-                            cp=cpm,
-                            cs=csMatrix,
+            Some (  new Spots1dGpu(
+                            ppM=cpm,
+                            ssM=ssMatrix,
                             a=aMatrix,
-                            r=rVec,                          
+                            s=sMatrix,
+                            r=rMatrix,                          
                             iteration=0,
                             stepC=sC,
                             stepS=sS,

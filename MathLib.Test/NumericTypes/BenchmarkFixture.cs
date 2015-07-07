@@ -61,8 +61,8 @@ namespace MathLib.Test.NumericTypes
                 //var res2 = ((i+512) & 511);
                 //Assert.AreEqual(res, res2);
             }
-            sw.Stop();
 
+            sw.Stop();
             var time = sw.ElapsedMilliseconds;
         }
 
