@@ -12,6 +12,46 @@ open EntityOps
 open MathNetUtils
 open Glauber
 
+module WhatUtils = 
+
+    let FpFrTpTr (fp:float32) fr tp tr = 
+        if (fp*fr < 0.0f) then 0.0f else
+        (fr*tr - fp*tp)
+
+    let AAadj si sj =
+        match si, sj with
+        | si, sj when (si< 0.0f) && (sj< 0.0f) -> 0.0f
+        | si, sj when (si< 0.0f) && (sj>=0.0f) -> 0.0f
+        | si, sj when (si>=0.0f) && (sj< 0.0f) -> 0.0f
+        | si, sj when (si>=0.0f) && (sj>=0.0f) -> si*sj
+        | _, _     -> failwith  "cant happen"
+
+    let ABadj si sj =
+        match si, sj with
+        | si, sj when (si< 0.0f) && (sj< 0.0f) -> 0.0f
+        | si, sj when (si< 0.0f) && (sj>=0.0f) -> 0.0f
+        | si, sj when (si>=0.0f) && (sj< 0.0f) -> si*sj
+        | si, sj when (si>=0.0f) && (sj>=0.0f) -> 0.0f
+        | _, _     -> failwith  "cant happen"
+
+    let BAadj si sj =
+        match si, sj with
+        | si, sj when (si< 0.0f) && (sj< 0.0f) -> 0.0f
+        | si, sj when (si< 0.0f) && (sj>=0.0f) -> si*sj
+        | si, sj when (si>=0.0f) && (sj< 0.0f) -> 0.0f
+        | si, sj when (si>=0.0f) && (sj>=0.0f) -> 0.0f
+        | _, _     -> failwith  "cant happen"
+
+    let BBadj si sj =
+        match si, sj with
+        | si, sj when (si< 0.0f) && (sj< 0.0f) -> si*sj
+        | si, sj when (si< 0.0f) && (sj>=0.0f) -> 0.0f
+        | si, sj when (si>=0.0f) && (sj< 0.0f) -> 0.0f
+        | si, sj when (si>=0.0f) && (sj>=0.0f) -> 0.0f
+        | _, _     -> failwith  "cant happen"
+
+open WhatUtils
+
 type Wng(
             iteration:int,
             aaM:Matrix<float32>,
@@ -30,97 +70,267 @@ type Wng(
             nP:seq<float32>,
             nS:seq<float32>
         ) =
-
-    let _iteration = iteration
-    let _aaM = aaM
-    let _abM = abM
-    let _baM = baM
-    let _bbM = bbM
-    let _aM = aM
-    let _bM = bM
-    let _sM = sM
-    let _rM = rM
-    let _ssM = ssM
-    let _cPp = cPp
-    let _cSs = cSs
-    let _cRp = cRp
-    let _cPs = cPs
-    let _nP = nP
-    let _nS = nS
-
-
-    // I make a change right here
+        
+    member this.Iteration = iteration
+    member this.mAa = aaM
+    member this.mAb = abM
+    member this.mBa = baM
+    member this.mBb = bbM
+    member this.mA = aM
+    member this.mB = bM
+    member this.mS = sM
+    member this.mR = rM
+    member this.mSs = ssM
+    member this.cPp = cPp
+    member this.cSs = cSs
+    member this.cRp = cRp
+    member this.cPs = cPs
+    member this.pNoise = nP
+    member this.sNoise = nS
 
     member this.Update() =
-
-        let dPdR = _rM.Map2((fun x y -> x * y * _cRp), _sM)
-        let dAdA = _aM.Multiply(_aaM)
-        let dAdB = _bM.Multiply(_baM)
-        let dBdA = _aM.Multiply(_abM)
-        let dBdB = _bM.Multiply(_bbM)
-        let dSdS = _sM.Multiply(_ssM)
-        let sNoise = _nS |> Seq.take _sM.ColumnCount |> Seq.toArray
-        let aNoise = _nS |> Seq.take _sM.ColumnCount |> Seq.toArray
-        let bNoise = _nS |> Seq.take _sM.ColumnCount |> Seq.toArray
+        let dPdR = this.mR.Map2((fun x y -> x * y * this.cRp), this.mS)
+        let dAdA = this.mA.Multiply(this.mAa)
+        let dAdB = this.mB.Multiply(this.mBa)
+        let dBdA = this.mA.Multiply(this.mAb)
+        let dBdB = this.mB.Multiply(this.mBb)
+        let dSdS = this.mS.Multiply(this.mSs)
+        let sNoise = this.sNoise |> Seq.take this.mS.ColumnCount |> Seq.toArray
+        let aNoise = this.pNoise |> Seq.take this.mS.ColumnCount |> Seq.toArray
+        let bNoise = this.pNoise |> Seq.take this.mS.ColumnCount |> Seq.toArray
         
         let newA = aNoise |> Array.mapi(fun i n -> 
-            F32ToSF32(n + _aM.[0,i] + _cPp*(dAdA.[0,i] + dAdB.[0,i]) 
+            F32ToSF32(n + this.mA.[0,i] + this.cPp * (dAdA.[0,i] + dAdB.[0,i]) 
                       + dPdR.[0,i] ))
 
         let newB = bNoise |> Array.mapi(fun i n -> 
-            F32ToSF32(n + _bM.[0,i] + _cPp*(dBdB.[0,i] + dBdA.[0,i]) 
+            F32ToSF32(n + this.mB.[0,i] + this.cPp * (dBdB.[0,i] + dBdA.[0,i]) 
                       - dPdR.[0,i] ))
 
         let newS = sNoise |> Array.mapi(fun i n -> 
-            F32ToSF32(n + _sM.[0,i] + _cSs*dSdS.[0,i] + 
-                      _cPs * _rM.[0,i]  * (_aM.[0,i] - _bM.[0,i]) ))
+            F32ToSF32(n + this.mS.[0,i] + this.cSs * dSdS.[0,i] + 
+                      this.cPs * this.mR.[0,i]  * (this.mA .[0,i] 
+                      - this.mB.[0,i]) ))
 
         new Wng(
-            iteration = _iteration,
-            aaM = _aaM,
-            abM = _abM,
-            baM = _baM,
-            bbM = _bbM,
-            aM = DenseMatrix.init 1 _sM.ColumnCount  
-                    (fun x y -> newA.[x *_aM.ColumnCount + y]),
-            bM = DenseMatrix.init 1 _sM.ColumnCount  
-                    (fun x y -> newB.[x *_bM.ColumnCount + y]),
-            sM = DenseMatrix.init 1 _sM.ColumnCount  
-                    (fun x y -> newS.[x *_sM.ColumnCount + y]),
-            rM = _rM,
-            ssM = _ssM,
-            cPp = _cPp,
-            cSs = _cSs,
-            cRp = _cRp,
-            cPs = _cPs,
-            nP = _nP,
-            nS = _nS
+            iteration = this.Iteration,
+            aaM = this.mAa,
+            abM = this.mAb,
+            baM = this.mBa,
+            bbM = this.mBb,
+            aM = DenseMatrix.init 1 this.mS.ColumnCount  
+                    (fun x y -> newA.[x * this.mA.ColumnCount + y]),
+            bM = DenseMatrix.init 1 this.mS.ColumnCount  
+                    (fun x y -> newB.[x * this.mB.ColumnCount + y]),
+            sM = DenseMatrix.init 1 this.mS.ColumnCount  
+                    (fun x y -> newS.[x * this.mS.ColumnCount + y]),
+            rM = this.mR ,
+            ssM = this.mSs,
+            cPp = this.cPp,
+            cSs = this.cSs,
+            cRp = this.cRp,
+            cPs = this.cPs,
+            nP = this.pNoise,
+            nS = this.sNoise
         )
 
-        member this.Learn(learnRate:float32) =
 
-            let delAtoA = _aM.Transpose().Multiply(_aM)
-            let delBToA = _aM.Transpose().Multiply(_bM)
-            let delBToB = _bM.Transpose().Multiply(_bM)
+    member this.Update2() =
+        let dPdR = this.mR.Map2((fun x y -> x * y * this.cRp), this.mS)
+        let dAdA = this.mA.Multiply(this.mAa)
+        let dAdB = this.mB.Multiply(this.mBa)
+        let dBdA = this.mA.Multiply(this.mAb)
+        let dBdB = this.mB.Multiply(this.mBb)
+        let dSdS = this.mS.Multiply(this.mSs)
+        let sNoise = this.sNoise |> Seq.take this.mS.ColumnCount |> Seq.toArray
+        let aNoise = this.pNoise |> Seq.take this.mS.ColumnCount |> Seq.toArray
+        let bNoise = this.pNoise |> Seq.take this.mS.ColumnCount |> Seq.toArray
+        
+        let newA = aNoise |> Array.mapi(fun i n -> 
+            F32ToSF32(n + this.mA.[0,i] + this.cPp * (dAdA.[0,i] + dAdB.[0,i]) 
+                      + dPdR.[0,i] ))
 
-            new Wng(
-                iteration = _iteration,
-                aaM = _aaM,
-                abM = _abM,
-                baM = _baM,
-                bbM = _bbM,
-                aM = _aM,
-                bM = _bM,
-                sM = _sM,
-                rM = _rM,
-                ssM = _ssM,
-                cPp = _cPp,
-                cSs = _cSs,
-                cRp = _cRp,
-                cPs = _cPs,
-                nP = _nP,
-                nS = _nS
-            )
+        let newB = bNoise |> Array.mapi(fun i n -> 
+            F32ToSF32(n + this.mB.[0,i] + this.cPp * (dBdB.[0,i] + dBdA.[0,i]) 
+                      - dPdR.[0,i] ))
+
+        let newS = sNoise |> Array.mapi(fun i n -> 
+            F32ToSF32(n + this.mS.[0,i] + this.cSs * dSdS.[0,i] + 
+                      this.cPs * this.mR.[0,i]  * (this.mA .[0,i] 
+                      - this.mB.[0,i]) ))
+
+        new Wng(
+            iteration = this.Iteration,
+            aaM = this.mAa,
+            abM = this.mAb,
+            baM = this.mBa,
+            bbM = this.mBb,
+            aM = DenseMatrix.init 1 this.mS.ColumnCount  
+                    (fun x y -> newA.[x * this.mA.ColumnCount + y]),
+            bM = DenseMatrix.init 1 this.mS.ColumnCount  
+                    (fun x y -> newB.[x * this.mB.ColumnCount + y]),
+            sM = DenseMatrix.init 1 this.mS.ColumnCount  
+                    (fun x y -> newS.[x * this.mS.ColumnCount + y]),
+            rM = this.mR,
+            ssM = this.mSs,
+            cPp = this.cPp,
+            cSs = this.cSs,
+            cRp = this.cRp,
+            cPs = this.cPs,
+            nP = this.pNoise,
+            nS = this.sNoise
+        )
+
+
+    member this.Learn(learnRate:float32) =
+        
+        let aamNew = 
+            DenseMatrix.init 
+                this.mAa.RowCount this.mAa.ColumnCount
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        (F32ToSF32
+                            aaM.[i,j] +          
+                            (AAadj this.mS.[0,i] this.mS.[0,j]) *
+                            learnRate *
+                            (FpFrTpTr this.mA.[0,i] this.mR.[0,i] this.mA.[0,j] this.mR.[0,j])
+                        )
+                )
+
+        let abmNew = 
+            DenseMatrix.init 
+                this.mAb.RowCount this.mAb.ColumnCount
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        (F32ToSF32
+                            this.mAb.[i,j] +          
+                            (ABadj this.mS.[0,i] this.mS.[0,j]) *
+                            learnRate *
+                            (FpFrTpTr this.mAa.[0,i] this.mR.[0,i] this.mAa.[0,j] this.mR.[0,j])
+                        )
+                )
+        
+        let bamNew = 
+            DenseMatrix.init 
+                this.mBa.RowCount this.mBa.ColumnCount
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        (F32ToSF32
+                            this.mBa.[i,j] +          
+                            (BAadj this.mS.[0,i] this.mS.[0,j]) *
+                            learnRate *
+                            (FpFrTpTr this.mAa.[0,i] this.mR.[0,i] this.mAa.[0,j] this.mR.[0,j])
+                        )
+                )
+
+        let bbmNew = 
+            DenseMatrix.init 
+                this.mBb.RowCount this.mBb.ColumnCount
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        (F32ToSF32
+                            this.mBb.[i,j] +          
+                            (BBadj this.mS.[0,i] this.mS.[0,j]) *
+                            learnRate *
+                            (FpFrTpTr this.mB.[0,i] this.mR.[0,i] this.mB.[0,j] this.mR.[0,j])
+                        )
+                )
+
+        new Wng(
+            iteration = this.Iteration,
+            aaM = aamNew,
+            abM = abmNew,
+            baM = bamNew,
+            bbM = bbmNew,
+            aM = this.mA,
+            bM = this.mB,
+            sM = this.mS,
+            rM = this.mR,
+            ssM = this.mSs,
+            cPp = this.cPp,
+            cSs = this.cSs,
+            cRp = this.cRp,
+            cPs = this.cPs,
+            nP = this.pNoise,
+            nS = this.sNoise
+        )
+
+    member this.Learn2(learnRate:float32) =
+        
+        let aamNew = 
+            DenseMatrix.init 
+                this.mAa.RowCount this.mAa.ColumnCount
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        (F32ToSF32
+                            aaM.[i,j] +          
+                            (AAadj this.mS.[0,i] this.mS.[0,j]) *
+                            learnRate *
+                            (FpFrTpTr this.mAa.[0,i] this.mR.[0,i] this.mAa.[0,j] this.mR.[0,j])
+                        )
+                )
+
+        let abmNew = 
+            DenseMatrix.init 
+                this.mAb.RowCount this.mAb.ColumnCount
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        (F32ToSF32
+                            this.mAb.[i,j] +          
+                            (ABadj this.mS.[0,i] this.mS.[0,j]) *
+                            learnRate *
+                            this.mAa.[0,i] * this.mB.[0,j]
+                        )
+                )
+        
+        let bamNew = 
+            DenseMatrix.init 
+                this.mBa.RowCount this.mBa.ColumnCount
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        (F32ToSF32
+                            this.mBa.[i,j] +          
+                            (BAadj this.mS.[0,i] this.mS.[0,j]) *
+                            learnRate *
+                            this.mB.[0,i] * this.mAa.[0,j]
+                        )
+                )
+
+        let bbmNew = 
+            DenseMatrix.init 
+                this.mBb.RowCount this.mBb.ColumnCount
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        (F32ToSF32
+                            this.mBb.[i,j] +          
+                            (BBadj this.mS.[0,i] this.mS.[0,j]) *
+                            learnRate *
+                            this.mB.[0,i] * this.mB.[0,j]
+                        )
+                )
+
+        new Wng(
+            iteration = this.Iteration,
+            aaM = aamNew,
+            abM = abmNew,
+            baM = bamNew,
+            bbM = bbmNew,
+            aM = this.mA,
+            bM = this.mB,
+            sM = this.mS,
+            rM = this.mR,
+            ssM = this.mSs,
+            cPp = this.cPp,
+            cSs = this.cSs,
+            cRp = this.cRp,
+            cPs = this.cPs,
+            nP = this.pNoise,
+            nS = this.sNoise
+        )
+
+
+
+
 
  module WngBuilder =
     
@@ -186,114 +396,4 @@ type Wng(
                             nP = pNoise,
                             nS = sNoise
                     ))
-        | None -> None
-
-type WhatNodesGpu(cp:Matrix<float32>,
-                  cs:Matrix<float32>,
-                  a:Vector<float32>,
-                  b:Vector<float32>,
-                  s:Vector<float32>,
-                  r:Vector<float32>,                          
-                  iteration:int,
-                  stepC:float32,
-                  stepS:float32,
-                  stepR:float32,
-                  pOs:float32,
-                  seqNoise:seq<float32>) =
-
-    let _cp = cp
-    let _cs = cs
-    let _a = a
-    let _b = b
-    let _s = s
-    let _r = r
-    let _pOs = pOs
-    let _iteration = iteration
-    let _stepC = stepC
-    let _stepS = stepS
-    let _stepR = stepR
-    let _seqNoise = seqNoise
-
-    member this.Update() =
-        new WhatNodesGpu(
-            cp = _cp,
-            cs = _cs,
-            a = _a,
-            b = _b,
-            s = _s,
-            r = _r,                          
-            iteration = _iteration + 1,
-            stepC = _stepC,
-            stepS = _stepS,
-            stepR = _stepR,
-            pOs = _pOs,
-            seqNoise = _seqNoise
-        )
-
-    member this.Learn(learnRate:float32) =
-
-
-        new WhatNodesGpu(
-            cp = _cp,
-            cs = _cs,
-            a = _a,
-            b = _b,
-            s = _s,
-            r = _r,                          
-            iteration = _iteration + 1,
-            stepC = _stepC,
-            stepS = _stepS,
-            stepR = _stepR,
-            pOs = _pOs,
-            seqNoise = _seqNoise
-        )
-
-
- module WhatNodeBuilder =
-
-    let CreateRandom((seed:int), ngSize, cSig, pSig, sSig, 
-                      noiseLevel, stepC, stepS, stepR, pOs,
-                      glauberRadius) =
-
-        let rng = Random.MersenneTwister(seed)
-
-        let cpvs = Generators.NormalSF32 rng cSig
-                    |> Seq.take(ngSize*ngSize) |> Seq.toArray
-        let cpm = (DenseMatrix.init ngSize ngSize 
-                    (fun x y -> if (x=y) then 0.0f 
-                                         else cpvs.[x + y*ngSize]))
-        
-        let aVec = MathNet.Numerics.LinearAlgebra.Vector.Build.DenseOfEnumerable
-                    (Generators.NormalSF32 rng pSig
-                      |> Seq.take(ngSize) )
-
-        let bVec = MathNet.Numerics.LinearAlgebra.Vector.Build.DenseOfEnumerable
-                    (Generators.NormalSF32 rng pSig
-                      |> Seq.take(ngSize) )
-
-        let sVec = MathNet.Numerics.LinearAlgebra.Vector.Build.DenseOfEnumerable
-                    (Generators.NormalSF32 rng sSig
-                      |> Seq.take(ngSize) )
-
-        let rVec = MathNet.Numerics.LinearAlgebra.Vector.Build.DenseOfEnumerable
-                    (Generators.SeqOfRandSF32Bits 0.5 rng
-                      |> Seq.take(ngSize) )
-
-        let seqNoise = Generators.SeqOfRandSF32 noiseLevel rng
-
-        match GlauberNeutralDense ngSize glauberRadius with
-        | Some csMatrix -> Some (new WhatNodesGpu(
-                                  cp=cpm,
-                                  cs=csMatrix,
-                                  a=aVec,
-                                  b=bVec,
-                                  s=sVec,
-                                  r=rVec,                          
-                                  iteration=0,
-                                  stepC=stepC,
-                                  stepS=stepS,
-                                  stepR=stepR,
-                                  pOs=pOs,
-                                  seqNoise=seqNoise
-                            ))
         | None -> None
