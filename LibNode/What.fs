@@ -136,7 +136,10 @@ type Wng(
 
 
     member this.Update2() =
-        let dPdR = this.mR.Map2((fun x y -> x * y * this.cRp), this.mS)
+        let dAdR = this.mR.Map2((fun x y -> x * (1.0f+y*y) * this.cRp), this.mS)
+        let dBdR = this.mR.Map2((fun x y -> x * (1.0f-y*y) * this.cRp), this.mS)
+//        let mSc  = DenseMatrix.init this.mS.ColumnCount this.mS.ColumnCount  
+//                    (fun x y -> newA.[x * this.mA.ColumnCount + y])
         let dAdA = this.mA.Multiply(this.mAa)
         let dAdB = this.mB.Multiply(this.mBa)
         let dBdA = this.mA.Multiply(this.mAb)
@@ -148,11 +151,11 @@ type Wng(
         
         let newA = aNoise |> Array.mapi(fun i n -> 
             F32ToSF32(n + this.mA.[0,i] + this.cPp * (dAdA.[0,i] + dAdB.[0,i]) 
-                      + dPdR.[0,i] ))
+                      + dAdR.[0,i] ))
 
         let newB = bNoise |> Array.mapi(fun i n -> 
             F32ToSF32(n + this.mB.[0,i] + this.cPp * (dBdB.[0,i] + dBdA.[0,i]) 
-                      - dPdR.[0,i] ))
+                      + dBdR.[0,i] ))
 
         let newS = sNoise |> Array.mapi(fun i n -> 
             F32ToSF32(n + this.mS.[0,i] + this.cSs * dSdS.[0,i] + 
