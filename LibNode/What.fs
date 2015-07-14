@@ -88,7 +88,8 @@ type Wng(
     member this.pNoise = nP
     member this.sNoise = nS
 
-    member this.Update() =
+    member this.UpdateOld() =
+
         let dPdR = this.mR.Map2((fun x y -> x * y * this.cRp), this.mS)
         let dAdA = this.mA.Multiply(this.mAa)
         let dAdB = this.mB.Multiply(this.mBa)
@@ -135,28 +136,52 @@ type Wng(
         )
 
 
-    member this.Update2() =
-        let dAdR = this.mR.Map2((fun x y -> x * (1.0f+y*y) * this.cRp), this.mS)
-        let dBdR = this.mR.Map2((fun x y -> x * (1.0f-y*y) * this.cRp), this.mS)
-//        let mSc  = DenseMatrix.init this.mS.ColumnCount this.mS.ColumnCount  
-//                    (fun x y -> newA.[x * this.mA.ColumnCount + y])
-        let dAdA = this.mA.Multiply(this.mAa)
-        let dAdB = this.mB.Multiply(this.mBa)
-        let dBdA = this.mA.Multiply(this.mAb)
-        let dBdB = this.mB.Multiply(this.mBb)
-        let dSdS = this.mS.Multiply(this.mSs)
+    member this.Update() =
+        let stride = this.mS.ColumnCount 
         let sNoise = this.sNoise |> Seq.take this.mS.ColumnCount |> Seq.toArray
         let aNoise = this.pNoise |> Seq.take this.mS.ColumnCount |> Seq.toArray
         let bNoise = this.pNoise |> Seq.take this.mS.ColumnCount |> Seq.toArray
-        
+
+        let dAdR = this.mR.Map2((fun x y -> x * (1.0f+y) * (1.0f+y) * this.cRp), this.mS)
+        let dBdR = this.mR.Map2((fun x y -> x * (1.0f-y) * (1.0f-y) * this.cRp), this.mS)
+
+        let fcM = DenseMatrix.init 
+                   stride stride  
+                   (UpperTriangulateZd 
+                     stride ( fun x y -> let sqr = (1.0f + this.mS.[0,x] * this.mS.[0,y])
+                                         sqr*sqr ))
+
+        let faM = DenseMatrix.init 
+                   stride stride  
+                   (UpperTriangulateZd 
+                     stride ( fun x y -> let sqr = (1.0f - this.mS.[0,x] * this.mS.[0,y])
+                                         sqr*sqr ))
+
+        let mAas = this.mAa.Map2 ((fun a b -> a*b), fcM)
+
+        let mBas = this.mBa.Map2 ((fun a b -> a*b), faM)
+
+        let mAbs = this.mAb.Map2 ((fun a b -> a*b), faM)
+
+        let mBbs = this.mBb.Map2 ((fun a b -> a*b), fcM)
+
+
+        let dAdA = this.mA.Multiply(mAas)
+        let dAdB = this.mB.Multiply(mBas)
+        let dBdA = this.mA.Multiply(mAbs)
+        let dBdB = this.mB.Multiply(mBbs)
+
+
         let newA = aNoise |> Array.mapi(fun i n -> 
             F32ToSF32(n + this.mA.[0,i] + this.cPp * (dAdA.[0,i] + dAdB.[0,i]) 
                       + dAdR.[0,i] ))
 
-        let newB = bNoise |> Array.mapi(fun i n -> 
+        let newB = aNoise |> Array.mapi(fun i n -> 
             F32ToSF32(n + this.mB.[0,i] + this.cPp * (dBdB.[0,i] + dBdA.[0,i]) 
                       + dBdR.[0,i] ))
 
+
+        let dSdS = this.mS.Multiply(this.mSs)
         let newS = sNoise |> Array.mapi(fun i n -> 
             F32ToSF32(n + this.mS.[0,i] + this.cSs * dSdS.[0,i] + 
                       this.cPs * this.mR.[0,i]  * (this.mA .[0,i] 
@@ -174,7 +199,7 @@ type Wng(
                     (fun x y -> newB.[x * this.mB.ColumnCount + y]),
             sM = DenseMatrix.init 1 this.mS.ColumnCount  
                     (fun x y -> newS.[x * this.mS.ColumnCount + y]),
-            rM = this.mR,
+            rM = this.mR ,
             ssM = this.mSs,
             cPp = this.cPp,
             cSs = this.cSs,
@@ -183,6 +208,7 @@ type Wng(
             nP = this.pNoise,
             nS = this.sNoise
         )
+
 
 
     member this.Learn(learnRate:float32) =

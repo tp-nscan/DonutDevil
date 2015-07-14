@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using LibNode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -44,7 +45,7 @@ namespace NodeLib.Test
 
             var what = WngBuilder.CreateRandom(
                 seed: 123,
-                ngSize: 50,
+                ngSize: 100,
                 ppSig: 0.75f,
                 pSig: 0.75f,
                 sSig: 0.75f,
@@ -60,9 +61,13 @@ namespace NodeLib.Test
             sw.Start();
 
             var whatsNext = what.Update();
-            for (var i = 0; i < 500; i++)
+            for (var i = 0; i < 100; i++)
             {
-                whatsNext = whatsNext.Update();
+                for (var j = 0; j < 50; j++)
+                {
+                    whatsNext = whatsNext.Update();
+                }
+                whatsNext = whatsNext.Learn(0.05f);
             }
 
             sw.Stop();
@@ -71,6 +76,13 @@ namespace NodeLib.Test
             Assert.IsNotNull(what);
         }
 
+        [TestMethod]
+        public void TestUtCoords()
+        {
+            var rng = new MathNet.Numerics.Random.MersenneTwister(123);
+            var res = MathNetUtils.RandNormalSqSymDenseSF32(3, rng, 0.7);
 
+
+        }
     }
 }
