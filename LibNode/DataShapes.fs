@@ -56,13 +56,6 @@ module DataShapeProcs =
         match sqs with
         | SquareSize v -> v
 
-//    let MutateSequence (float32Type:Float32Type) (mutationRate:float32) (vals:seq<float32>) =
-//       
-//        match float32Type with
-//        | UF max -> 
-//        | SF max
-//        | UB
-//        | SB
 
     let UnsignedToFloatRange (u:bool) =
         match u with

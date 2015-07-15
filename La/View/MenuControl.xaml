@@ -25,6 +25,7 @@
         <StackPanel VerticalAlignment="Center">
             <Button Command="{Binding GoToNetworkCommand}" Style="{DynamicResource AppPartButtonStyle}">Network</Button>
             <Button Command="{Binding GoToSandboxCommand}" Style="{DynamicResource AppPartButtonStyle}">Sandbox</Button>
+            <Button Command="{Binding GoToWhatCommand}" Style="{DynamicResource AppPartButtonStyle}">What</Button>
         </StackPanel>
     </Grid>
 

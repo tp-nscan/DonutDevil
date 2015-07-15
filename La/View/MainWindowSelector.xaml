@@ -14,6 +14,10 @@
         <view:NetworkControl/>
     </DataTemplate>
 
+    <DataTemplate x:Key="WhatTemplate">
+        <view:WhatControl/>
+    </DataTemplate>
+    
     <DataTemplate x:Key="SandboxTemplate">
         <view:SbControl/>
     </DataTemplate>
@@ -22,6 +26,7 @@
         MenuTemplate="{StaticResource MenuTemplate}"
         SandboxTemplate="{StaticResource SandboxTemplate}"
         NetworkTemplate="{StaticResource NetworkTemplate}"
+        WhatTemplate="{StaticResource WhatTemplate}"
         DefaultTemplate="{StaticResource DefaultMainWindowTemplate}"            
     />
 

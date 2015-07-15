@@ -113,6 +113,7 @@
     <Compile Include="ViewModel\ParamBoolVm.cs" />
     <Compile Include="ViewModel\ParamDoubleVm.cs" />
     <Compile Include="ViewModel\ParamIntVm.cs" />
+    <Compile Include="ViewModel\WhatVm.cs" />
     <Compile Include="View\GenResultControl.xaml.cs">
       <DependentUpon>GenResultControl.xaml</DependentUpon>
     </Compile>
@@ -140,6 +141,9 @@
     </Compile>
     <Compile Include="View\SbControl.xaml.cs">
       <DependentUpon>SbControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WhatControl.xaml.cs">
+      <DependentUpon>WhatControl.xaml</DependentUpon>
     </Compile>
     <Page Include="View\GenResultControl.xaml">
       <SubType>Designer</SubType>
@@ -192,6 +196,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SbControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WhatControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

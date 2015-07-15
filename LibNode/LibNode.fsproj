@@ -57,6 +57,7 @@
     <Compile Include="Named.fs" />
     <Compile Include="MathNetUtils.fs" />
     <Compile Include="DataShapes.fs" />
+    <Compile Include="ArrayHistory.fs" />
     <Compile Include="ArrayDs.fs" />
     <Compile Include="Parameters.fs" />
     <Compile Include="Entity.fs" />

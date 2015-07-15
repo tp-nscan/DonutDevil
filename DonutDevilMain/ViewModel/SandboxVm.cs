@@ -6,6 +6,7 @@ using System.Windows.Media;
 using DonutDevilControls.ViewModel.Common;
 using DonutDevilControls.ViewModel.Design.Legend;
 using DonutDevilControls.ViewModel.Legend;
+using LibNode;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
 using WpfUtils;
@@ -17,15 +18,15 @@ namespace DonutDevilMain.ViewModel
     {
         public SandboxVm()
         {
-            _radiusSliderVm = new SliderVm(RealInterval.Make(1, 40), 1, "0") { Title = "Radius", Value = 10 };
-            _frequencySliderVm = new SliderVm(RealInterval.Make(0.0, 3), 0.015, "0.000") { Title = "Frequency * Pi / Radius", Value = 0.5 };
-            _decaySliderVm = new SliderVm(RealInterval.Make(0, 1), 0.005, "0.000") { Title = "Decay", Value = 0.5 };
+            RadiusSliderVm = new SliderVm(RealInterval.Make(1, 40), 1, "0") { Title = "Radius", Value = 10 };
+            FrequencySliderVm = new SliderVm(RealInterval.Make(0.0, 3), 0.015, "0.000") { Title = "Frequency * Pi / Radius", Value = 0.5 };
+            DecaySliderVm = new SliderVm(RealInterval.Make(0, 1), 0.005, "0.000") { Title = "Decay", Value = 0.5 };
 
-            _radiusSliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
-            _frequencySliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
-            _decaySliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
+            RadiusSliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
+            FrequencySliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
+            DecaySliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
 
-            _mainGridVm = new WbUniformGridVm(1024, 1024);
+            _mainGridVm = new WbUniformGridVm2(1024, 1024);
             _histogramVm = new DesignLinearHistogramVm();
             _legendVm = new LinearLegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
@@ -33,39 +34,21 @@ namespace DonutDevilMain.ViewModel
 
         #region Navigation
 
-        public int GridStride
-        {
-            get { return (int) (_radiusSliderVm.Value * 2 + 1); }
-        }
+        public int GridStride => (int) (RadiusSliderVm.Value * 2 + 1);
 
-        public MainWindowType MainWindowType
-        {
-            get { return MainWindowType.Sandbox; }
-        }
+        public MainWindowType MainWindowType => MainWindowType.Sandbox;
 
         private readonly Subject<IMainWindowVm> _mainWindowTypehanged
             = new Subject<IMainWindowVm>();
-        public IObservable<IMainWindowVm> OnMainWindowTypeChanged
-        {
-            get { return _mainWindowTypehanged; }
-        }
+        public IObservable<IMainWindowVm> OnMainWindowTypeChanged => _mainWindowTypehanged;
 
         #endregion // Navigation
 
-        public int Radius
-        {
-            get { return (int) RadiusSliderVm.Value; }
-        }
+        public int Radius => (int) RadiusSliderVm.Value;
 
-        public double Decay
-        {
-            get { return _decaySliderVm.Value; }
-        }
+        public double Decay => DecaySliderVm.Value;
 
-        public double Frequency
-        {
-            get { return _frequencySliderVm.Value; }
-        }
+        public double Frequency => FrequencySliderVm.Value;
 
         private void DrawMainNetwork()
         {
@@ -73,11 +56,11 @@ namespace DonutDevilMain.ViewModel
             var valueList = n.ToReadingOrder.Select(v=> v) .ToList();
 
             var cellColors = valueList.Select(
-                (v,i) => new D2Val<Color>
+                (v,i) => new DTVal<Color>
                             (
                                 x: i % (GridStride),
                                 y: i / (GridStride),
-                                value: LegendVm.ColorFor1D((float)(v / 2.0 + 0.5))
+                                val: LegendVm.ColorFor1D((float)(v / 2.0 + 0.5))
                             )
                 ).ToList();
 
@@ -90,40 +73,11 @@ namespace DonutDevilMain.ViewModel
             _histogramVm.MakeHistogram(valueList.Select(cc => (float)(cc / 2.0 + 0.5)));
         }
 
+        public SliderVm RadiusSliderVm { get; }
 
-        private void DrawMainNetwork0()
-        {
-            var randy = new Random();
-            var cellColors =
-            Enumerable.Range(0, GridStride * GridStride).Select(
-                i => new D2Val<Color>
-                            (
-                                x: i % (GridStride),
-                                y: i / (GridStride),
-                                value: LegendVm.ColorFor1D((float)randy.NextDouble())
-                            )
-                   ).ToList();
+        public SliderVm FrequencySliderVm { get; }
 
-            MainGridVm.AddValues(cellColors);
-        }
-
-        private readonly SliderVm _radiusSliderVm;
-        public SliderVm RadiusSliderVm
-        {
-            get { return _radiusSliderVm; }
-        }
-
-        private readonly SliderVm _frequencySliderVm;
-        public SliderVm FrequencySliderVm
-        {
-            get { return _frequencySliderVm; }
-        }
-
-        private readonly SliderVm _decaySliderVm;
-        public SliderVm DecaySliderVm
-        {
-            get { return _decaySliderVm; }
-        }
+        public SliderVm DecaySliderVm { get; }
 
         #region GoToMenuCommand
 
@@ -152,8 +106,8 @@ namespace DonutDevilMain.ViewModel
         #endregion // GoToMenuCommand
 
 
-        private WbUniformGridVm _mainGridVm;
-        public WbUniformGridVm MainGridVm
+        private WbUniformGridVm2 _mainGridVm;
+        public WbUniformGridVm2 MainGridVm
         {
             get { return _mainGridVm; }
             set

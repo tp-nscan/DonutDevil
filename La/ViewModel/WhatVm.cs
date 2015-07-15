@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,50 +10,73 @@ using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
 using LibNode;
 using MathLib.Intervals;
+using MathLib.NumericTypes;
 using WpfUtils;
+using WpfUtils.ViewModels.Graphics;
 
 namespace La.ViewModel
 {
-    public class NetworkVm : NotifyPropertyChanged, IMainContentVm
+    public class WhatVm : NotifyPropertyChanged, IMainContentVm
     {
-        public NetworkVm(ISym network)
+        public WhatVm(Wng wng)
         {
-            Network = network;
+            Wng = wng;
             DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
+            RadiusSliderVm = new SliderVm(RealInterval.Make(1, 40), 1, "0") { Title = "Radius", Value = 10 };
+            FrequencySliderVm = new SliderVm(RealInterval.Make(0.0, 3), 0.015, "0.000") { Title = "Frequency * Pi / Radius", Value = 0.5 };
+            DecaySliderVm = new SliderVm(RealInterval.Make(0, 1), 0.005, "0.000") { Title = "Decay", Value = 0.5 };
+
+            RadiusSliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
+            FrequencySliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
+            DecaySliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
+
+            _mainGridVm = new WbUniformGridVm2(1024, 1024);
         }
 
-        #region IMainWindowVm
+        public Wng Wng { get; private set; }
 
+
+        public string Generation => Wng?.Iteration.ToString() ?? "-";
+
+        #region Navigation
+
+        private IEntityRepo _entityRepo;
         public IEntityRepo EntityRepo
         {
             get { return _entityRepo; }
         }
 
-        public MainContentType MainContentType => MainContentType.Network;
+        public MainContentType MainContentType => MainContentType.What;
+
+
         private readonly Subject<IMainContentVm> _mainWindowTypehanged = new Subject<IMainContentVm>();
         public IObservable<IMainContentVm> OnMainWindowTypeChanged => _mainWindowTypehanged;
 
         #endregion
 
-        #region NetworkVm base impl
+        public int GridStride => (int)(RadiusSliderVm.Value * 2 + 1);
 
-        ISym Network { get; }
+        public int Radius => (int)RadiusSliderVm.Value;
 
-        public int Generation => Network?.Iteration ?? 0;
+        public double Decay => DecaySliderVm.Value;
 
-        public double DisplayFrequency => DisplayFrequencySliderVm.Value;
+        public double Frequency => FrequencySliderVm.Value;
 
         public SliderVm DisplayFrequencySliderVm { get; }
 
+        public SliderVm RadiusSliderVm { get; }
+
+        public SliderVm FrequencySliderVm { get; }
+
+        public SliderVm DecaySliderVm { get; }
+
+        #region local vars
+
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
         private bool _isRunning;
 
-        private readonly Stopwatch _stopwatch = new Stopwatch();
-        public string ElapsedTime =>
-            $"{_stopwatch.Elapsed.Hours.ToString("00")}:" +
-            $"{_stopwatch.Elapsed.Minutes.ToString("00")}:" +
-            $"{_stopwatch.Elapsed.Seconds.ToString("00")}:" +
-            $"{_stopwatch.Elapsed.Milliseconds.ToString("000")}";
+        #endregion
 
         #region UpdateNetworkCommand
 
@@ -145,8 +169,6 @@ namespace La.ViewModel
         #region GoToMenuCommand
 
         RelayCommand _goToMenuCommand;
-        private IEntityRepo _entityRepo;
-
         public ICommand GoToMenuCommand
         {
             get
@@ -173,12 +195,28 @@ namespace La.ViewModel
 
         void UpdateUi()
         {
-            this.OnPropertyChanged("ElapsedTime");
+
+        }
+
+        private WbUniformGridVm2 _mainGridVm;
+        public WbUniformGridVm2 MainGridVm
+        {
+            get { return _mainGridVm; }
+            set
+            {
+                _mainGridVm = value;
+                OnPropertyChanged("MainGridVm");
+            }
         }
 
 
+        private readonly Stopwatch _stopwatch = new Stopwatch();
 
-        #endregion
+        public string ElapsedTime =>
+            $"{_stopwatch.Elapsed.Hours.ToString("00")}:" +
+            $"{_stopwatch.Elapsed.Minutes.ToString("00")}:" +
+            $"{_stopwatch.Elapsed.Seconds.ToString("00")}:" +
+            $"{_stopwatch.Elapsed.Milliseconds.ToString("000")}";
 
     }
 }

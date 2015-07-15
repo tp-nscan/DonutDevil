@@ -36,6 +36,7 @@ namespace La.ViewModel
 
         #endregion // Navigation
 
+
         #region GoToNetworkCommand
 
         RelayCommand _resetNetworkCommand;
@@ -99,6 +100,46 @@ namespace La.ViewModel
 
         #endregion // GoToSandboxCommand
 
+
+        #region GoToWhatCommand
+
+        RelayCommand _goToWhatCommand;
+        public ICommand GoToWhatCommand
+        {
+            get
+            {
+                return _goToWhatCommand ?? (_goToWhatCommand = new RelayCommand(
+                    param => DoGoToWhat(),
+                    param => CanGoToWhat()
+                    ));
+            }
+        }
+
+        private void DoGoToWhat()
+        {
+            _mainWindowTypehanged.OnNext(
+                new WhatVm(WngBuilder.CreateRandom(
+                seed: 123,
+                ngSize: 100,
+                ppSig: 0.75f,
+                pSig: 0.75f,
+                sSig: 0.75f,
+                pNoise: 0.1f,
+                sNoise: 0.01f,
+                cPp: 0.01f,
+                cSs: 0.01f,
+                cRp: 0.01f,
+                cPs: 0.01f,
+                glauberRadius: 5
+                ).Value));
+        }
+
+        bool CanGoToWhat()
+        {
+            return true;
+        }
+
+        #endregion // GoToWhatCommand
 
         private readonly List<NetworkBuilderVm> _networkBuilderVms;
         public IList NetworkBuilderVms => _networkBuilderVms;

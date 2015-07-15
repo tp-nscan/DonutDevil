@@ -9,11 +9,13 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using LibNode;
 using MathLib.NumericTypes;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using WpfUtils;
 using WpfUtils.Utils;
 using Color = System.Windows.Media.Color;
+//Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System.Windows.Media.Color;
 
 namespace DonutDevilControls.ViewModel.Legend
 {
@@ -109,10 +111,10 @@ namespace DonutDevilControls.ViewModel.Legend
                             Plot2DVm.WbUniformGridVm.AddValues(
                                 Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
                                     .Select(
-                                        i=> new D2Val<Color>(
+                                        i=> new DTVal<Color>(
                                             x: i % ImageWidth,
                                             y: i / ImageWidth,
-                                            value: _imageColors[(i) / ImageHeight, (i) % ImageWidth]
+                                            val: _imageColors[(i) / ImageHeight, (i) % ImageWidth]
                                             )
                                     
                                     )
@@ -208,10 +210,10 @@ namespace DonutDevilControls.ViewModel.Legend
                     Plot2DVm.WbUniformGridVm.AddValues(
                         Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
                             .Select(
-                                i => new D2Val<Color>(
+                                i => new DTVal<Color>(
                                     x: i % 1024,
                                     y: i / 1024,
-                                    value: _imageColors[(i) / 1024, (i) % 1024]
+                                    val: _imageColors[(i) / 1024, (i) % 1024]
                                     )
 
                             )
@@ -265,10 +267,10 @@ namespace DonutDevilControls.ViewModel.Legend
                         Plot2DVm.WbUniformGridVm.AddValues(
                             Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
                                 .Select(
-                                    i => new D2Val<Color>(
+                                    i => new DTVal<Color>(
                                         x: i % 1024,
                                         y: i / 1024,
-                                        value: _imageColors[(i) / 1024, (i) % 1024]
+                                        val: _imageColors[(i) / 1024, (i) % 1024]
                                         )
 
                                 )
@@ -323,10 +325,10 @@ namespace DonutDevilControls.ViewModel.Legend
                     Plot2DVm.WbUniformGridVm.AddValues(
                         Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
                             .Select(
-                                i => new D2Val<Color>(
+                                i => new DTVal<Color>(
                                     x: i % 1024,
                                     y: i / 1024,
-                                    value: _imageColors[(i) / 1024, (i) % 1024]
+                                    val: _imageColors[(i) / 1024, (i) % 1024]
                                     )
 
                             )

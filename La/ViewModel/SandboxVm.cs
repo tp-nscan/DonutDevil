@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Subjects;
@@ -16,6 +17,7 @@ using MathLib.Intervals;
 using MathLib.NumericTypes;
 using WpfUtils;
 using WpfUtils.ViewModels.Graphics;
+using WpfUtils.Views.Graphics;
 
 namespace La.ViewModel
 {
@@ -32,7 +34,7 @@ namespace La.ViewModel
             FrequencySliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
             DecaySliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
 
-            _mainGridVm = new WbUniformGridVm(1024, 1024);
+            _mainGridVm = new WbUniformGridVm2(1024, 1024);
             _histogramVm = new DesignLinearHistogramVm();
             _legendVm = new LinearLegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
@@ -44,6 +46,7 @@ namespace La.ViewModel
 
         #region Navigation
 
+        private IEntityRepo _entityRepo;
         public IEntityRepo EntityRepo
         {
             get { return _entityRepo; }
@@ -79,6 +82,7 @@ namespace La.ViewModel
         private bool _isRunning;
 
         #endregion
+
 
         #region UpdateNetworkCommand
 
@@ -194,17 +198,18 @@ namespace La.ViewModel
 
         #endregion // GoToMenuCommand
 
+
         void UpdateUi()
         {
             var n = NeighborhoodExt.CircularGlauber(Radius, Frequency * Math.PI / Radius, Decay);
             var valueList = n.ToReadingOrder.Select(v => v).ToList();
 
             var cellColors = valueList.Select(
-                (v, i) => new D2Val<Color>
+                (v, i) => new DTVal<Color>
                             (
                                 x: i % (GridStride),
                                 y: i / (GridStride),
-                                value: LegendVm.ColorFor1D((float)(v / 2.0 + 0.5))
+                                val: LegendVm.ColorFor1D((float)(v / 2.0 + 0.5))
                             )
                 ).ToList();
 
@@ -214,8 +219,8 @@ namespace La.ViewModel
             _histogramVm.MakeHistogram(valueList.Select(cc => (float)(cc / 2.0 + 0.5)));
         }
 
-        private WbUniformGridVm _mainGridVm;
-        public WbUniformGridVm MainGridVm
+        private WbUniformGridVm2 _mainGridVm;
+        public WbUniformGridVm2 MainGridVm
         {
             get { return _mainGridVm; }
             set
@@ -290,7 +295,6 @@ namespace La.ViewModel
         }
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
-        private IEntityRepo _entityRepo;
 
         public string ElapsedTime => 
             $"{_stopwatch.Elapsed.Hours.ToString("00")}:" +

@@ -12,6 +12,7 @@ using DonutDevilControls.ViewModel.Common;
 using DonutDevilControls.ViewModel.D2Indexer;
 using DonutDevilControls.ViewModel.Legend;
 using DonutDevilControls.ViewModel.ParamsOld;
+using LibNode;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
 using NodeLib.Indexers;
@@ -42,7 +43,7 @@ namespace DonutDevilMain.ViewModel
                     slaves: Network.NodeGroupIndexers.Skip(1).Select(i => (D2IndexerBase<float>)i)
                 );
 
-            MainGridVm = new WbUniformGridVm(1024, 1024);
+            MainGridVm = new WbUniformGridVm2(1024, 1024);
 
             ParamSetEditorVm = new ParamSetEditorVm(network.Parameters.Values.ToList(), false);
 
@@ -71,7 +72,7 @@ namespace DonutDevilMain.ViewModel
 
         #endregion
 
-        public WbUniformGridVm MainGridVm { get; }
+        public WbUniformGridVm2 MainGridVm { get; }
 
         #region UpdateNetworkCommand
 
@@ -196,11 +197,11 @@ namespace DonutDevilMain.ViewModel
                     .IndexingFunc(Network.NodeGroup)
                     .Select(
                         d2F =>
-                            new D2Val<Color>
+                            new DTVal<Color>
                                 (
                                 x: d2F.X,
                                 y: d2F.Y,
-                                value: LegendVm.ColorFor1D(NgIndexerSetVm.Indexer1D().IndexerDataType.ValuesToUnitRange()(d2F.Value))
+                                val: LegendVm.ColorFor1D(NgIndexerSetVm.Indexer1D().IndexerDataType.ValuesToUnitRange()(d2F.Value))
                     )).ToList();
 
                 MainGridVm.AddValues(cellColors);
@@ -212,15 +213,15 @@ namespace DonutDevilMain.ViewModel
                     .Zip
                     (
                         NgIndexerSetVm.Indexer2Dy().IndexingFunc(Network.NodeGroup),
-                            (x, y) => new D2Val<Color>
+                            (x, y) => new DTVal<Color>
                             (
                                 x: x.X,
                                 y: x.Y,
-                                value: LegendVm.ColorFor2D
-                                            (
-                                                xVal: NgIndexerSetVm.Indexer2Dx().IndexerDataType.ValuesToUnitRange()(x.Value),
-                                                yVal: NgIndexerSetVm.Indexer2Dy().IndexerDataType.ValuesToUnitRange()(y.Value)
-                                            )
+                                val: LegendVm.ColorFor2D
+                                        (
+                                            xVal: NgIndexerSetVm.Indexer2Dx().IndexerDataType.ValuesToUnitRange()(x.Value),
+                                            yVal: NgIndexerSetVm.Indexer2Dy().IndexerDataType.ValuesToUnitRange()(y.Value)
+                                        )
                             )
                    ).ToList();
 

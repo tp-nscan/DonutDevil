@@ -14,6 +14,7 @@ namespace La.ViewModel
     {
         Menu,
         Network,
-        Sandbox
+        Sandbox,
+        What
     }
 }

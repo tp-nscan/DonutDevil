@@ -47,7 +47,7 @@ namespace DonutDevilControls.ViewModel.Legend
         {
             LegendVm.WbUniformGridVm.AddValues
             (
-                Colorsteps.ToSquareD2Array(
+                Colorsteps.ToSquareDTArray(
                     (i, j) => colorFunc(i.FractionOf(Colorsteps), j.FractionOf(Colorsteps))
                 )
             );
@@ -70,7 +70,7 @@ namespace DonutDevilControls.ViewModel.Legend
 
             HistogramVm.WbUniformGridVm.AddValues
                 (
-                    Colorsteps.ToSquareD2Array(
+                    Colorsteps.ToSquareDTArray(
                         (i, j) => _histogramColorSequence.ToUnitColor(hist[i,j])
                     )
                 );
