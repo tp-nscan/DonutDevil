@@ -111,7 +111,7 @@ namespace DonutDevilControls.ViewModel.Legend
                             Plot2DVm.WbUniformGridVm.AddValues(
                                 Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
                                     .Select(
-                                        i=> new DTVal<Color>(
+                                        i=> new D2Val<Color>(
                                             x: i % ImageWidth,
                                             y: i / ImageWidth,
                                             val: _imageColors[(i) / ImageHeight, (i) % ImageWidth]
@@ -210,7 +210,7 @@ namespace DonutDevilControls.ViewModel.Legend
                     Plot2DVm.WbUniformGridVm.AddValues(
                         Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
                             .Select(
-                                i => new DTVal<Color>(
+                                i => new D2Val<Color>(
                                     x: i % 1024,
                                     y: i / 1024,
                                     val: _imageColors[(i) / 1024, (i) % 1024]
@@ -267,7 +267,7 @@ namespace DonutDevilControls.ViewModel.Legend
                         Plot2DVm.WbUniformGridVm.AddValues(
                             Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
                                 .Select(
-                                    i => new DTVal<Color>(
+                                    i => new D2Val<Color>(
                                         x: i % 1024,
                                         y: i / 1024,
                                         val: _imageColors[(i) / 1024, (i) % 1024]
@@ -325,12 +325,11 @@ namespace DonutDevilControls.ViewModel.Legend
                     Plot2DVm.WbUniformGridVm.AddValues(
                         Enumerable.Range(0, ImageColors.GetLength(0) * ImageColors.GetLength(1))
                             .Select(
-                                i => new DTVal<Color>(
-                                    x: i % 1024,
-                                    y: i / 1024,
-                                    val: _imageColors[(i) / 1024, (i) % 1024]
+                                i => new D2Val<Color>(
+                                        x: i % 1024,
+                                        y: i / 1024,
+                                        val: _imageColors[(i) / 1024, (i) % 1024]
                                     )
-
                             )
                         );
                     IsDirty = true;

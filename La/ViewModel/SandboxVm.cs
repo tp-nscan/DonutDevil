@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Subjects;
@@ -17,7 +16,6 @@ using MathLib.Intervals;
 using MathLib.NumericTypes;
 using WpfUtils;
 using WpfUtils.ViewModels.Graphics;
-using WpfUtils.Views.Graphics;
 
 namespace La.ViewModel
 {
@@ -34,7 +32,7 @@ namespace La.ViewModel
             FrequencySliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
             DecaySliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
 
-            _mainGridVm = new WbUniformGridVm2(1024, 1024);
+            _mainGridVm = new WbUniformGridVm(1024, 1024);
             _histogramVm = new DesignLinearHistogramVm();
             _legendVm = new LinearLegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
@@ -205,7 +203,7 @@ namespace La.ViewModel
             var valueList = n.ToReadingOrder.Select(v => v).ToList();
 
             var cellColors = valueList.Select(
-                (v, i) => new DTVal<Color>
+                (v, i) => new D2Val<Color>
                             (
                                 x: i % (GridStride),
                                 y: i / (GridStride),
@@ -219,8 +217,8 @@ namespace La.ViewModel
             _histogramVm.MakeHistogram(valueList.Select(cc => (float)(cc / 2.0 + 0.5)));
         }
 
-        private WbUniformGridVm2 _mainGridVm;
-        public WbUniformGridVm2 MainGridVm
+        private WbUniformGridVm _mainGridVm;
+        public WbUniformGridVm MainGridVm
         {
             get { return _mainGridVm; }
             set

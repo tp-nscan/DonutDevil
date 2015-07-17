@@ -212,5 +212,25 @@ module MathUtils =
 
     let getRow r (A:_[,]) = A.[r,*] |> Seq.toArray
 
-    let ZeroTheDiagonalF32 (mtx : float32[,]) = 
-        Array2D.init (mtx.GetLength 0) (mtx.GetLength 1) (fun x y -> if(x=y) then 0.0f  else mtx.[x,y])
+    let ZeroTheDiagonalF32 (mtx:float32[,]) = 
+        Array2D.init (mtx.GetLength 0) 
+                     (mtx.GetLength 1) 
+                     (fun x y -> if(x=y) then 0.0f  else mtx.[x,y])
+
+    let rec Tithe3 (lst:List<'a>) =
+        match lst with
+        | [] -> []
+        | a::b::c::d -> a::b::(Tithe3 d)
+        | a::b -> a::b
+
+    let rec Tithe4 (lst:List<'a>) =
+        match lst with
+        | [] -> []
+        | a::b::c::d::e -> a::b::c::(Tithe4 e)
+        | a::b -> a::b
+
+    let rec Tithe5 (lst:List<'a>) =
+        match lst with
+        | [] -> []
+        | a::b::c::d::e::f -> a::b::c::d::(Tithe5 f)
+        | a::b -> a::b

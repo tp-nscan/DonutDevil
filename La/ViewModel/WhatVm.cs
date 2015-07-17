@@ -6,11 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
+using DonutDevilControls.ViewModel.Legend;
 using LibNode;
 using MathLib.Intervals;
-using MathLib.NumericTypes;
 using WpfUtils;
 using WpfUtils.ViewModels.Graphics;
 
@@ -21,6 +22,9 @@ namespace La.ViewModel
         public WhatVm(Wng wng)
         {
             Wng = wng;
+
+            WngHistories = WngBuilder.InitHistories(wng, 12, 5);
+
             DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
             RadiusSliderVm = new SliderVm(RealInterval.Make(1, 40), 1, "0") { Title = "Radius", Value = 10 };
             FrequencySliderVm = new SliderVm(RealInterval.Make(0.0, 3), 0.015, "0.000") { Title = "Frequency * Pi / Radius", Value = 0.5 };
@@ -30,13 +34,24 @@ namespace La.ViewModel
             FrequencySliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
             DecaySliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
 
-            _mainGridVm = new WbUniformGridVm2(1024, 1024);
+            _mainGridVm = new WbRollingGridVm(
+                imageWidth:1000,
+                imageHeight: 1000,
+                cellDimX: 1000,
+                cellDimY: 1000
+                );
+
+            _legendVm = new LinearLegendVm();
+            _legendVm.OnLegendVmChanged.Subscribe(lvm => UpdateUi());
+
         }
+
+        public WngHistories WngHistories { get; private set; }
 
         public Wng Wng { get; private set; }
 
 
-        public string Generation => Wng?.Iteration.ToString() ?? "-";
+        public string Generation => Wng.Iteration.ToString();
 
         #region Navigation
 
@@ -110,7 +125,7 @@ namespace La.ViewModel
                     //    ParamSetEditorVm.IsDirty = false;
                     //}
 
-                    // Network = Network.UpdateNodeGroup();
+                    Wng = Wng.Update();
 
                     if (_cancellationTokenSource.IsCancellationRequested)
                     {
@@ -192,14 +207,27 @@ namespace La.ViewModel
 
         #endregion // GoToMenuCommand
 
-
         void UpdateUi()
         {
+            WngHistories = WngBuilder.UpdateHistories(WngHistories, Wng);
 
+            var d2Vs = ArrayHistory.GetD2Vals(WngHistories.ahA);
+
+            var cellColors = d2Vs.Select(
+                    (v, i) => new D2Val<Color>
+                                (
+                                    x: v.X,
+                                    y: v.Y,
+                                    val: LegendVm.ColorFor1D((float)(v.Val / 2.0 + 0.5))
+                                )
+                    ).ToList();
+
+            MainGridVm.AddValues(cellColors);
+            OnPropertyChanged("Generation");
         }
 
-        private WbUniformGridVm2 _mainGridVm;
-        public WbUniformGridVm2 MainGridVm
+        private WbRollingGridVm _mainGridVm;
+        public WbRollingGridVm MainGridVm
         {
             get { return _mainGridVm; }
             set
@@ -209,6 +237,16 @@ namespace La.ViewModel
             }
         }
 
+        private ILegendVm _legendVm;
+        public ILegendVm LegendVm
+        {
+            get { return _legendVm; }
+            set
+            {
+                _legendVm = value;
+                OnPropertyChanged("LegendVm");
+            }
+        }
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
 

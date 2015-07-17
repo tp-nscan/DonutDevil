@@ -21,6 +21,16 @@ fsi.AddPrinter(fun (vector:Vector<complex32>) -> vector.ToString())
 open LibNode
 
 #load "Generators.fs"
+#load "MathUtils.fs"
+open MathUtils
+
+let tstLst = [1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17]
+
+let t3 = Tithe3 tstLst
+let t4 = Tithe4 tstLst
+let t5 = Tithe5 tstLst
+
+
 
 let kvps = [("one",1); ("two",2)] |> Dict.ofList
 

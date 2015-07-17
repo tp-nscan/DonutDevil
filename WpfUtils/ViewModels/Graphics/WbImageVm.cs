@@ -7,38 +7,22 @@ namespace WpfUtils.ViewModels.Graphics
     {
         public WbImageVm(int imageWidth, int imageHeight)
         {
-            _imageWidth = imageWidth;
-            _imageHeight = imageHeight;
+            ImageWidth = imageWidth;
+            ImageHeight = imageHeight;
         }
 
-        private readonly int _imageWidth;
-        public int ImageWidth
-        {
-            get { return _imageWidth; }
-        }
+        public int ImageWidth { get; }
 
-        private readonly int _imageHeight;
-        public int ImageHeight
-        {
-            get { return _imageHeight; }
-        }
+        public int ImageHeight { get; }
 
         protected List<PlotPoint> PlotPointList = new List<PlotPoint>();
-        public IReadOnlyList<PlotPoint> PlotPoints
-        {
-            get { return PlotPointList; }
-        }
+        public IReadOnlyList<PlotPoint> PlotPoints => PlotPointList;
 
         protected List<PlotRectangle> PlotRectangleList = new List<PlotRectangle>();
-        public IReadOnlyList<PlotRectangle> PlotRectangles
-        {
-            get { return PlotRectangleList; }
-        }
+        public IReadOnlyList<PlotRectangle> PlotRectangles => PlotRectangleList;
 
         protected List<PlotLine> PlotLineList = new List<PlotLine>();
-        public IReadOnlyList<PlotLine> PlotLines
-        {
-            get { return PlotLineList; }
-        }
+        public IReadOnlyList<PlotLine> PlotLines => PlotLineList;
+
     }
 }

@@ -47,7 +47,7 @@ namespace DonutDevilControls.ViewModel.Legend
         {
             LegendVm.WbUniformGridVm.AddValues
             (
-                Colorsteps.ToSquareDTArray(
+                Colorsteps.ToSquareDtArray(
                     (i, j) => colorFunc(i.FractionOf(Colorsteps), j.FractionOf(Colorsteps))
                 )
             );
@@ -70,16 +70,13 @@ namespace DonutDevilControls.ViewModel.Legend
 
             HistogramVm.WbUniformGridVm.AddValues
                 (
-                    Colorsteps.ToSquareDTArray(
+                    Colorsteps.ToSquareDtArray(
                         (i, j) => _histogramColorSequence.ToUnitColor(hist[i,j])
                     )
                 );
         }
 
-        public LegendType DisplaySpaceType
-        {
-            get { return LegendType.Torus; }
-        }
+        public LegendType DisplaySpaceType => LegendType.Torus;
 
         private string _title;
         public string Title

@@ -86,6 +86,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\LibNode\LibNode.fsproj">
+      <Project>{237DB6BC-49F0-438F-9C79-5BA6EABC1189}</Project>
+      <Name>LibNode</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MathLib\MathLib.csproj">
       <Project>{94c035c1-dd49-4936-b9c4-f0f2aea561a3}</Project>
       <Name>MathLib</Name>

@@ -7,10 +7,15 @@ using WpfUtils.Views.Graphics;
 
 namespace WpfUtils.ViewModels.Graphics
 {
-    public class WbUniformGridVm : WbImageVm
+    public class WbRollingGridVm : WbImageVm
     {
-        public WbUniformGridVm(int cellDimX, int cellDimY) : base(cellDimX, cellDimY)
+        public WbRollingGridVm(
+            int imageWidth, int imageHeight,
+            int cellDimX, int cellDimY) 
+            : base(imageWidth, imageHeight)
         {
+            CellDimX = cellDimX;
+            CellDimY = cellDimY;
         }
 
         public void AddValues(IEnumerable<D2Val<Color>> cellColors)
@@ -20,8 +25,8 @@ namespace WpfUtils.ViewModels.Graphics
             var cellColorList = cellColors.ToList();
             var squareStride = Math.Min
                 (
-                    ImageWidth / (cellColorList.Max(c => c.X) + 1),
-                    ImageHeight / (cellColorList.Max(c => c.Y) + 1)
+                    ImageWidth / CellDimX,
+                    ImageHeight / CellDimY
                 );
 
             PlotRectangleList = cellColorList.Select(
@@ -39,6 +44,10 @@ namespace WpfUtils.ViewModels.Graphics
 
             OnPropertyChanged("PlotRectangles");
         }
+
+        public int CellDimX { get; private set; }
+
+        public int CellDimY { get; private set; }
 
     }
 }

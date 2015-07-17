@@ -120,17 +120,17 @@ namespace La.ViewModel
             _mainWindowTypehanged.OnNext(
                 new WhatVm(WngBuilder.CreateRandom(
                 seed: 123,
-                ngSize: 100,
+                ngSize: 1000,
                 ppSig: 0.75f,
                 pSig: 0.75f,
                 sSig: 0.75f,
-                pNoise: 0.1f,
-                sNoise: 0.01f,
-                cPp: 0.01f,
+                pNoise: 0.03f,
+                sNoise: 0.03f,
+                cPp: 0.002f,
                 cSs: 0.01f,
                 cRp: 0.01f,
                 cPs: 0.01f,
-                glauberRadius: 5
+                glauberRadius: 7
                 ).Value));
         }
 

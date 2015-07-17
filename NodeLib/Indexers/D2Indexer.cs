@@ -23,8 +23,8 @@ namespace NodeLib.Indexers
         {
             return (m, s) =>
             {
-                var masterList = m.IndexingFunc(nodeGroup).Select(n=>n.Value).ToList();
-                var slaveList = s.IndexingFunc(nodeGroup).Select(n => n.Value).ToList();
+                var masterList = m.IndexingFunc(nodeGroup).Select(n=>n.Val).ToList();
+                var slaveList = s.IndexingFunc(nodeGroup).Select(n => n.Val).ToList();
 
                 var correlation = masterList.Zip(slaveList, (nm, ns) => Math.Abs(nm - ns)).Sum();
 

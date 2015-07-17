@@ -48,7 +48,13 @@
             </StackPanel>
 
             <StackPanel Orientation="Vertical">
-
+                
+                <Border  DockPanel.Dock="Bottom" Margin="5" Background="#F222">
+                    <ContentControl
+                                Content="{Binding LegendVm}" 
+                                ContentTemplateSelector="{DynamicResource LegendSelector}" />
+                </Border>
+                
                 <Border BorderBrush="Black" BorderThickness="2">
                     <Border BorderBrush="#1FFF" BorderThickness="1">
                         <common:SliderControl DataContext="{Binding RadiusSliderVm}"/>

@@ -26,7 +26,7 @@ namespace DonutDevilMain.ViewModel
             FrequencySliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
             DecaySliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
 
-            _mainGridVm = new WbUniformGridVm2(1024, 1024);
+            _mainGridVm = new WbUniformGridVm(1024, 1024);
             _histogramVm = new DesignLinearHistogramVm();
             _legendVm = new LinearLegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
@@ -56,7 +56,7 @@ namespace DonutDevilMain.ViewModel
             var valueList = n.ToReadingOrder.Select(v=> v) .ToList();
 
             var cellColors = valueList.Select(
-                (v,i) => new DTVal<Color>
+                (v,i) => new D2Val<Color>
                             (
                                 x: i % (GridStride),
                                 y: i / (GridStride),
@@ -106,8 +106,8 @@ namespace DonutDevilMain.ViewModel
         #endregion // GoToMenuCommand
 
 
-        private WbUniformGridVm2 _mainGridVm;
-        public WbUniformGridVm2 MainGridVm
+        private WbUniformGridVm _mainGridVm;
+        public WbUniformGridVm MainGridVm
         {
             get { return _mainGridVm; }
             set

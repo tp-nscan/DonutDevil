@@ -9,6 +9,34 @@ namespace NodeLib.Test
     [TestClass]
     public class WhatFixture
     {
+        static ArrayHistories MakeArrayHistories()
+        {
+            var ah = ArrayHistory.Init(
+                name: "Ralph",
+                newHist: Enumerable.Range(0, 3).Select(i => (float) i),
+                targetLength: 12,
+                trimStep: 5
+                );
+
+            ah = ArrayHistory
+                    .Add(ah, Enumerable.Range(10, 3).Select(i => (float) i), 4);
+
+            ah = ArrayHistory
+                    .Add(ah, Enumerable.Range(20, 3).Select(i => (float)i), 4);
+
+            ah = ArrayHistory
+                    .Add(ah, Enumerable.Range(30, 3).Select(i => (float)i), 4);
+
+            return ah;
+        }
+
+        [TestMethod]
+        public void TestArrayHistory()
+        {
+            var ah = MakeArrayHistories();
+            var d2s = ArrayHistory.GetD2Vals(ah);
+            var d2a = d2s.ToArray();
+        }
 
         [TestMethod]
         public void TestSpots1D()

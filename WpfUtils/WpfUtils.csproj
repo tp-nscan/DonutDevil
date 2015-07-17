@@ -90,6 +90,7 @@
     <Compile Include="TextFormat.cs" />
     <Compile Include="ViewModels\Graphics\WbImageVm.cs" />
     <Compile Include="ViewModels\Graphics\WbRingPlotVm.cs" />
+    <Compile Include="ViewModels\Graphics\WbRollingGridVm.cs" />
     <Compile Include="ViewModels\Graphics\WbUniformGridVm.cs" />
     <Compile Include="ViewModels\Graphics\WbVerticalStripesVm.cs" />
     <Compile Include="ViewModels\Graphics\WbVerticalStripesVmOld.cs" />

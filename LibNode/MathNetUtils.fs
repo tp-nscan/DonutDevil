@@ -6,6 +6,7 @@ open MathNet.Numerics.Random
 open MathNet.Numerics.LinearAlgebra
 open MathNet.Numerics.LinearAlgebra.Matrix
 open Rop
+open MathUtils
 
 module MathNetUtils =
 
@@ -63,3 +64,6 @@ module MathNetUtils =
         let siter = Generators.NormalSF32 rng stddev
         DenseMatrix.init stride stride
             (UpperTriangulate stride (fun x y -> siter |> Seq.head))
+
+    let FlattenRm (mnMatrix:Matrix<'a>) = 
+        mnMatrix.ToArray() |> Seq.cast<'a>

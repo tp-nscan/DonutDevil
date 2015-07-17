@@ -17,7 +17,7 @@ namespace MathLib.Test.NumericTypes
 
             foreach (var ps in nbrhd.ToElementsColumnMajor())
             {
-                Debug.WriteLine("{0} {1} {2}", ps.X, ps.Y, ps.Value);
+                Debug.WriteLine("{0} {1} {2}", ps.X, ps.Y, ps.Val);
             }
             
         }
@@ -31,7 +31,7 @@ namespace MathLib.Test.NumericTypes
 
             foreach (var ps in nbrhd.ToElementsColumnMajor())
             {
-                Debug.WriteLine("{0} {1} {2}", ps.X, ps.Y, ps.Value);
+                Debug.WriteLine("{0} {1} {2}", ps.X, ps.Y, ps.Val);
             }
 
             foreach (var ps in nbrhd.ToReadingOrder)
@@ -40,7 +40,6 @@ namespace MathLib.Test.NumericTypes
             }
 
         }
-
 
 
         [TestMethod]

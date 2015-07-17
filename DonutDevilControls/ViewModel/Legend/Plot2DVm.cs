@@ -7,11 +7,11 @@ namespace DonutDevilControls.ViewModel.Legend
     {
         public Plot2DVm(int width, int height)
         {
-            WbUniformGridVm = new WbUniformGridVm2(width, height);
+            WbUniformGridVm = new WbUniformGridVm(width, height);
             
         }
 
-        public WbUniformGridVm2 WbUniformGridVm { get; }
+        public WbUniformGridVm WbUniformGridVm { get; }
 
         private double _minValueX;
         public double MinValueX

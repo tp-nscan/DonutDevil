@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
-using MathLib.NumericTypes;
+using LibNode;
 using WpfUtils.Views.Graphics;
 
 namespace WpfUtils.ViewModels.Graphics
@@ -68,7 +68,7 @@ namespace WpfUtils.ViewModels.Graphics
                             y: PixelResolution * gv.Y,
                             width: PixelResolution,
                             height: ImageHeight,
-                            color: ColorMap.Invoke(gv.Value)                    
+                            color: ColorMap.Invoke(gv.Val)                    
                        )
                     ).ToList();
 

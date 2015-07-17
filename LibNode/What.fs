@@ -6,8 +6,6 @@ open MathNet.Numerics.LinearAlgebra.Matrix
 open MathNet.Numerics.Random
 open Rop
 open MathUtils
-open ArrayDataGen
-open ArrayDataExtr
 open EntityOps
 open MathNetUtils
 open Glauber
@@ -51,6 +49,8 @@ module WhatUtils =
         | _, _     -> failwith  "cant happen"
 
 open WhatUtils
+
+type WngHistories = {ahA:ArrayHistories; ahB:ArrayHistories; ahR:ArrayHistories; ahS:ArrayHistories;}
 
 type Wng(
             iteration:int,
@@ -188,7 +188,7 @@ type Wng(
                       - this.mB.[0,i]) ))
 
         new Wng(
-            iteration = this.Iteration,
+            iteration = this.Iteration + 1,
             aaM = this.mAa,
             abM = this.mAb,
             baM = this.mBa,
@@ -358,9 +358,6 @@ type Wng(
         )
 
 
-
-
-
  module WngBuilder =
     
 
@@ -426,3 +423,20 @@ type Wng(
                             nS = sNoise
                     ))
         | None -> None
+
+
+    let InitHistories (wng:Wng) targetLength trimStep  =
+      {
+        ahA=ArrayHistory.Init "A" (wng.mA |> FlattenRm) targetLength trimStep 
+        ahB=ArrayHistory.Init "B" (wng.mB |> FlattenRm) targetLength trimStep 
+        ahR=ArrayHistory.Init "R" (wng.mR |> FlattenRm) targetLength trimStep 
+        ahS=ArrayHistory.Init "S" (wng.mS |> FlattenRm) targetLength trimStep 
+      }
+
+    let UpdateHistories (wngHist:WngHistories) (wng:Wng) =
+      {
+        ahA=ArrayHistory.Add wngHist.ahA (wng.mA |> FlattenRm) wng.Iteration
+        ahB=ArrayHistory.Add wngHist.ahB (wng.mB |> FlattenRm) wng.Iteration
+        ahR=ArrayHistory.Add wngHist.ahR (wng.mR |> FlattenRm) wng.Iteration
+        ahS=ArrayHistory.Add wngHist.ahS (wng.mS |> FlattenRm) wng.Iteration
+      }

@@ -43,7 +43,7 @@ namespace DonutDevilMain.ViewModel
                     slaves: Network.NodeGroupIndexers.Skip(1).Select(i => (D2IndexerBase<float>)i)
                 );
 
-            MainGridVm = new WbUniformGridVm2(1024, 1024);
+            MainGridVm = new WbUniformGridVm(1024, 1024);
 
             ParamSetEditorVm = new ParamSetEditorVm(network.Parameters.Values.ToList(), false);
 
@@ -72,7 +72,7 @@ namespace DonutDevilMain.ViewModel
 
         #endregion
 
-        public WbUniformGridVm2 MainGridVm { get; }
+        public WbUniformGridVm MainGridVm { get; }
 
         #region UpdateNetworkCommand
 
@@ -197,11 +197,11 @@ namespace DonutDevilMain.ViewModel
                     .IndexingFunc(Network.NodeGroup)
                     .Select(
                         d2F =>
-                            new DTVal<Color>
+                            new D2Val<Color>
                                 (
                                 x: d2F.X,
                                 y: d2F.Y,
-                                val: LegendVm.ColorFor1D(NgIndexerSetVm.Indexer1D().IndexerDataType.ValuesToUnitRange()(d2F.Value))
+                                val: LegendVm.ColorFor1D(NgIndexerSetVm.Indexer1D().IndexerDataType.ValuesToUnitRange()(d2F.Val))
                     )).ToList();
 
                 MainGridVm.AddValues(cellColors);
@@ -213,14 +213,14 @@ namespace DonutDevilMain.ViewModel
                     .Zip
                     (
                         NgIndexerSetVm.Indexer2Dy().IndexingFunc(Network.NodeGroup),
-                            (x, y) => new DTVal<Color>
+                            (x, y) => new D2Val<Color>
                             (
                                 x: x.X,
                                 y: x.Y,
                                 val: LegendVm.ColorFor2D
                                         (
-                                            xVal: NgIndexerSetVm.Indexer2Dx().IndexerDataType.ValuesToUnitRange()(x.Value),
-                                            yVal: NgIndexerSetVm.Indexer2Dy().IndexerDataType.ValuesToUnitRange()(y.Value)
+                                            xVal: NgIndexerSetVm.Indexer2Dx().IndexerDataType.ValuesToUnitRange()(x.Val),
+                                            yVal: NgIndexerSetVm.Indexer2Dy().IndexerDataType.ValuesToUnitRange()(y.Val)
                                         )
                             )
                    ).ToList();
@@ -270,7 +270,7 @@ namespace DonutDevilMain.ViewModel
                     HistogramVm.MakeHistogram
                     (
                         NgIndexerSetVm.Indexer1D().IndexingFunc(Network.NodeGroup)
-                                .Select(d2V => NgIndexerSetVm.Indexer1D().IndexerDataType.ValuesToUnitRange()(d2V.Value))
+                                .Select(d2V => NgIndexerSetVm.Indexer1D().IndexerDataType.ValuesToUnitRange()(d2V.Val))
                     );
                     HistogramVm.DrawLegend(f=>LegendVm.ColorFor1D(f));
 
@@ -289,9 +289,9 @@ namespace DonutDevilMain.ViewModel
                     HistogramVm.MakeHistogram
                         (
                             xVals: NgIndexerSetVm.Indexer2Dx().IndexingFunc(Network.NodeGroup)
-                                    .Select(d2V => NgIndexerSetVm.Indexer2Dx().IndexerDataType.ValuesToUnitRange()(d2V.Value)),
+                                    .Select(d2V => NgIndexerSetVm.Indexer2Dx().IndexerDataType.ValuesToUnitRange()(d2V.Val)),
                             yVals: NgIndexerSetVm.Indexer2Dy().IndexingFunc(Network.NodeGroup)
-                                    .Select(d2V => NgIndexerSetVm.Indexer2Dy().IndexerDataType.ValuesToUnitRange()(d2V.Value))
+                                    .Select(d2V => NgIndexerSetVm.Indexer2Dy().IndexerDataType.ValuesToUnitRange()(d2V.Val))
                         );
 
 

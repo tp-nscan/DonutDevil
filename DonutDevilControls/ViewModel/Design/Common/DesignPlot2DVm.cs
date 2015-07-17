@@ -20,7 +20,7 @@ namespace DonutDevilControls.ViewModel.Design.Common
             MaxValueY = 1.0;
             WbUniformGridVm.AddValues(
                 PlotPointEx.TestSequence()
-                    .Select(pp=>new DTVal<Color>(pp.X,pp.Y,pp.Color))
+                    .Select(pp=>new D2Val<Color>(pp.X,pp.Y,pp.Color))
                 );
         }
 
