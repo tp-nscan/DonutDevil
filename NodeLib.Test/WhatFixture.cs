@@ -14,7 +14,7 @@ namespace NodeLib.Test
             var ah = ArrayHistory.Init(
                 name: "Ralph",
                 newHist: Enumerable.Range(0, 3).Select(i => (float) i),
-                targetLength: 12,
+                targetLength: 20,
                 trimStep: 5
                 );
 
@@ -30,12 +30,39 @@ namespace NodeLib.Test
             return ah;
         }
 
+        static ArrayHistories MakeArrayHistoriesLong()
+        {
+            var ah = ArrayHistory.Init(
+                name: "Ralph",
+                newHist: Enumerable.Range(0, 3).Select(i => (float)i),
+                targetLength: 12,
+                trimStep: 3
+                );
+
+            for (var ct = 1; ct < 100; ct++)
+            {
+                ah = ArrayHistory
+                        .Add(ah, Enumerable.Range(ct*10, 3).Select(i => (float)i), ct);
+            }
+
+            return ah;
+        }
+
         [TestMethod]
         public void TestArrayHistory()
         {
             var ah = MakeArrayHistories();
             var d2s = ArrayHistory.GetD2Vals(ah);
             var d2a = d2s.ToArray();
+        }
+
+        [TestMethod]
+        public void TestArrayHistoryLong()
+        {
+            var ah = MakeArrayHistoriesLong();
+            var d2s = ArrayHistory.GetIndxes(ah);
+            var d2a = d2s.ToArray();
+            Debug.WriteLine(d2a.Aggregate(string.Empty,(s,i)=> s + "\n" + i));
         }
 
         [TestMethod]

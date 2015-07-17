@@ -1,4 +1,5 @@
 ﻿namespace LibNode
+open MathUtils
 open Rop
 
     type IndexedF32A = { Index:int; Array:float32[]}
@@ -22,19 +23,35 @@ module ArrayHistory =
             TrimStep = trimStep;
         }
 
-    let Add arrayHistories newHist newIndex = 
-        { 
-            Name=arrayHistories.Name; 
-            ArrayLength=arrayHistories.ArrayLength; 
-            IndexedArrays = { 
-                                Index = newIndex;
-                                Array = newHist |> Seq.take arrayHistories.ArrayLength
-                                                |> Seq.toArray
-                            }
-                            :: arrayHistories.IndexedArrays
-            TargetLength = arrayHistories.TargetLength;
-            TrimStep = arrayHistories.TrimStep;
-        }
+    let rec Add arrayHistories newHist newIndex =
+        match (arrayHistories.IndexedArrays.Length = arrayHistories.TargetLength) with
+        | true -> 
+            let trimmed = { 
+                            Name=arrayHistories.Name
+                            ArrayLength=arrayHistories.ArrayLength
+                            IndexedArrays = { 
+                                                Index = newIndex;
+                                                Array = newHist |> Seq.take arrayHistories.ArrayLength
+                                                                |> Seq.toArray
+                                            }
+                                            :: (Tithe arrayHistories.TrimStep arrayHistories.IndexedArrays)
+                            TargetLength = arrayHistories.TargetLength
+                            TrimStep = arrayHistories.TrimStep
+                        }
+            (Add trimmed newHist newIndex)
+        | false ->
+                { 
+                    Name=arrayHistories.Name
+                    ArrayLength=arrayHistories.ArrayLength
+                    IndexedArrays = { 
+                                        Index = newIndex;
+                                        Array = newHist |> Seq.take arrayHistories.ArrayLength
+                                                        |> Seq.toArray
+                                    }
+                                    :: arrayHistories.IndexedArrays
+                    TargetLength = arrayHistories.TargetLength
+                    TrimStep = arrayHistories.TrimStep
+                }
 
     let GetD2Vals (arrayHistories:ArrayHistories) = 
         let rec d2vs (ahl:List<IndexedF32A>) yCoord =
@@ -49,3 +66,6 @@ module ArrayHistory =
                         
             }
         d2vs arrayHistories.IndexedArrays (arrayHistories.IndexedArrays.Length- 1)
+
+    let GetIndxes (arrayHistories:ArrayHistories) = 
+        arrayHistories.IndexedArrays |> List.toSeq |> Seq.map(fun la -> la.Index)
