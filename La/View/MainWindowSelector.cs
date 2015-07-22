@@ -13,6 +13,8 @@ namespace La.View
 
         public DataTemplate NetworkTemplate { get; set; }
 
+        public DataTemplate WaffleTemplate { get; set; }
+
         public DataTemplate WhatTemplate { get; set; }
 
         public DataTemplate DefaultTemplate { get; set; }
@@ -31,6 +33,8 @@ namespace La.View
                         return NetworkTemplate;
                     case MainContentType.Sandbox:
                         return SandboxTemplate;
+                    case MainContentType.Waffle:
+                        return WaffleTemplate;
                     case MainContentType.What:
                         return WhatTemplate;
                     default:

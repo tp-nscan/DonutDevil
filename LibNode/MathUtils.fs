@@ -218,28 +218,11 @@ module MathUtils =
                      (fun x y -> if(x=y) then 0.0f  else mtx.[x,y])
 
 
-    let rec Tithe3 (lst:List<'a>) =
+    let rec Skip (lst:List<'a>) =
         match lst with
         | [] -> []
-        | a::b::c::d -> a::b::(Tithe3 d)
+        | a::b::c -> b::(Skip c)
         | a::b -> a::b
 
-    let rec Tithe4 (lst:List<'a>) =
-        match lst with
-        | [] -> []
-        | a::b::c::d::e -> a::b::c::(Tithe4 e)
-        | a::b -> a::b
 
-    let rec Tithe5 (lst:List<'a>) =
-        match lst with
-        | [] -> []
-        | a::b::c::d::e::f -> a::b::c::d::(Tithe5 f)
-        | a::b -> a::b
-
-    let Tithe spacing (lst:List<'a>) =
-        match (spacing) with
-        | 3 -> Tithe3 lst
-        | 4 -> Tithe4 lst
-        | 5 -> Tithe5 lst
-        | _ -> failwith "invalid trim length"
 

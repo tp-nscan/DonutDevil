@@ -3,7 +3,7 @@
     public class DesignParamBoolVm : ParamBoolVm
     {
         public DesignParamBoolVm() 
-            : base(true, name: "Design Int name")
+            : base(true, name: "Design bool name")
         {
         }
     }

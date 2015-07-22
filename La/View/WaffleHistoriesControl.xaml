@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="La.View.WaffleHistoriesControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModel="clr-namespace:La.ViewModel.Design"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance {x:Type viewModel:DesignWaffleHistoriesVm}, IsDesignTimeCreatable=True}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <DataTemplate x:Key="ItemTemplate">
+            <Border Background="Transparent">
+                <TextBlock Width="120" TextAlignment="Center" Foreground="Wheat" 
+                           FontSize="18" FontWeight="Bold" Text="{Binding Name}"/>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <ListBox
+                Margin="8"
+                SelectionMode="Single"
+                IsSynchronizedWithCurrentItem="True"
+                ItemsSource="{Binding ArrayHistVms}" 
+                Background="{x:Null}" BorderBrush="{x:Null}"
+                SelectedItem="{Binding Path=ArrayHistVm, Mode=TwoWay}" 
+                ItemTemplate="{DynamicResource ItemTemplate}"
+            />
+    </Grid>
+</UserControl>

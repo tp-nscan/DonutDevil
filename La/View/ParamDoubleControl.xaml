@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance {x:Type param:DesignParamDoubleVm}, 
                                 IsDesignTimeCreatable=True}"
-             d:DesignHeight="30" d:DesignWidth="200">
+             d:DesignHeight="30" d:DesignWidth="250">
     <Grid>
         <DockPanel TextBlock.FontSize="18" LastChildFill="True">
             <xctk:DoubleUpDown Margin="5,0" DockPanel.Dock="Right" HorizontalAlignment="Right"
@@ -18,7 +18,7 @@
                                 FormatString="{Binding FormatString}"
                                 Value="{Binding CurVal}" />
             <Viewbox Stretch="Uniform">
-                <TextBlock Margin="5,0" DockPanel.Dock="Left" Text="{Binding Name}" Foreground="Beige"/>
+                <TextBlock Margin="5,3" DockPanel.Dock="Left" Text="{Binding Name}" Foreground="Beige"/>
             </Viewbox>
         </DockPanel>
     </Grid>

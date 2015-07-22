@@ -17,6 +17,8 @@ let rng = Random.MersenneTwister(123)
 
 let mS = RandNormalSqSymDenseSF32 5 rng 0.8
 
+let mrS = mS.SubMatrix(2,0,0,5)
+
 let vs = GlauberRadius5
 
 let m = GlauberDenseMatrix 15 GlauberRadius5

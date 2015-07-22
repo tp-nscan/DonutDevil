@@ -15,6 +15,7 @@ namespace La.ViewModel
         Menu,
         Network,
         Sandbox,
+        Waffle,
         What
     }
 }

@@ -105,7 +105,9 @@
     <Compile Include="ViewModel\Design\DesignEntityDataVm.cs" />
     <Compile Include="ViewModel\Design\DesignEntityRepoVm.cs" />
     <Compile Include="ViewModel\Design\DesignEntityVm.cs" />
+    <Compile Include="ViewModel\Design\DesignIndexSelectorVm.cs" />
     <Compile Include="ViewModel\Design\DesignNetworkVm.cs" />
+    <Compile Include="ViewModel\Design\DesignWaffleHistoriesVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignIntParamIntVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignParamBoolVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignParamDoubleVm.cs" />
@@ -118,7 +120,14 @@
     <Compile Include="ViewModel\ParamBoolVm.cs" />
     <Compile Include="ViewModel\ParamDoubleVm.cs" />
     <Compile Include="ViewModel\ParamIntVm.cs" />
+    <Compile Include="ViewModel\WaffleHistoriesVm.cs" />
+    <Compile Include="ViewModel\IndexSelectorVm.cs" />
+    <Compile Include="ViewModel\WaffleParamsVm.cs" />
+    <Compile Include="ViewModel\WaffleVm.cs" />
     <Compile Include="ViewModel\WhatVm.cs" />
+    <Compile Include="View\D2ValSelectorControl.xaml.cs">
+      <DependentUpon>D2ValSelectorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\GenResultControl.xaml.cs">
       <DependentUpon>GenResultControl.xaml</DependentUpon>
     </Compile>
@@ -147,9 +156,25 @@
     <Compile Include="View\SbControl.xaml.cs">
       <DependentUpon>SbControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\WaffleControl.xaml.cs">
+      <DependentUpon>WaffleControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\IndexSelectorControl.xaml.cs">
+      <DependentUpon>IndexSelectorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaffleHistoriesControl.xaml.cs">
+      <DependentUpon>WaffleHistoriesControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaffleParamsControl.xaml.cs">
+      <DependentUpon>WaffleParamsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\WhatControl.xaml.cs">
       <DependentUpon>WhatControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\D2ValSelectorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\GenResultControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -201,6 +226,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SbControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaffleControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\IndexSelectorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaffleHistoriesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaffleParamsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

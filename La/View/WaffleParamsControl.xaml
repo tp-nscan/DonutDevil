@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="La.View.WaffleParamsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModel="clr-namespace:La.ViewModel"
+             xmlns:view="clr-namespace:La.View"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance {x:Type viewModel:WaffleParamsVm}, IsDesignTimeCreatable=True}"
+             d:DesignHeight="410" d:DesignWidth="250">
+    <StackPanel Margin="0,5">
+        <view:ParamIntControl DataContext="{Binding GlauberRadiusVm}" Height="30" Margin="5"/>
+        <view:ParamDoubleControl DataContext="{Binding PSigVm}" Height="30" Margin="5"/>
+        <view:ParamDoubleControl DataContext="{Binding SSigVm}" Height="30" Margin="5"/>
+        <view:ParamDoubleControl DataContext="{Binding CPpVm}" Height="30" Margin="5"/>
+        <view:ParamDoubleControl DataContext="{Binding CSsVm}" Height="30" Margin="5"/>
+        <view:ParamDoubleControl DataContext="{Binding CRpVm}" Height="30" Margin="5"/>
+        <view:ParamDoubleControl DataContext="{Binding CPsVm}" Height="30" Margin="5"/>
+        <view:ParamDoubleControl DataContext="{Binding PNoiseLevelVm}" Height="30" Margin="5"/>
+        <view:ParamDoubleControl DataContext="{Binding SNoiseLevelVm}" Height="30" Margin="5"/>
+        <view:ParamIntControl DataContext="{Binding SeedVm}" Height="30" Margin="5"/>
+    </StackPanel>
+    
+</UserControl>

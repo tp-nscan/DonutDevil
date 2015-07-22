@@ -9,13 +9,12 @@ namespace NodeLib.Test
     [TestClass]
     public class WhatFixture
     {
-        static ArrayHistories MakeArrayHistories()
+        static ArrayHist MakeArrayHistories()
         {
             var ah = ArrayHistory.Init(
                 name: "Ralph",
-                newHist: Enumerable.Range(0, 3).Select(i => (float) i),
-                targetLength: 20,
-                trimStep: 5
+                arrayLength: 3,
+                targetLength: 20
                 );
 
             ah = ArrayHistory
@@ -30,16 +29,15 @@ namespace NodeLib.Test
             return ah;
         }
 
-        static ArrayHistories MakeArrayHistoriesLong()
+        static ArrayHist MakeArrayHistoriesLong()
         {
             var ah = ArrayHistory.Init(
-                name: "Ralph",
-                newHist: Enumerable.Range(0, 3).Select(i => (float)i),
-                targetLength: 12,
-                trimStep: 3
+                    name: "Ralph",
+                    newHist: Enumerable.Range(0, 3).Select(i => (float)i),
+                    targetLength: 200
                 );
 
-            for (var ct = 1; ct < 100; ct++)
+            for (var ct = 1; ct< 4000; ct++)
             {
                 ah = ArrayHistory
                         .Add(ah, Enumerable.Range(ct*10, 3).Select(i => (float)i), ct);
@@ -104,8 +102,8 @@ namespace NodeLib.Test
                 ppSig: 0.75f,
                 pSig: 0.75f,
                 sSig: 0.75f,
-                pNoise: 0.1f,
-                sNoise: 0.01f,
+                pNoiseLevel: 0.1f,
+                sNoiseLevel: 0.01f,
                 cPp: 0.01f,
                 cSs: 0.01f,
                 cRp: 0.01f,

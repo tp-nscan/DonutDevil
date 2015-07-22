@@ -17,47 +17,47 @@ using WpfUtils.ViewModels.Graphics;
 
 namespace La.ViewModel
 {
-    public class WhatVm : NotifyPropertyChanged, IMainContentVm
+    public class WaffleVm : NotifyPropertyChanged, IMainContentVm
     {
-        public WhatVm(Wng wng)
+        public WaffleVm(Waffle waffle)
         {
-            Wng = wng;
-
-            WaffleHistories = WngBuilder.InitHistories(arrayLength: 5, targetLength: 200);
-
+            Waffle = waffle;
+            WaffleParamsVm = new WaffleParamsVm();
+            WaffleHistories = WngBuilder.InitHistories(arrayLength:5, targetLength:200);
+            WaffleHistoriesVm = new WaffleHistoriesVm(WaffleHistories);
+            IndexSelectorVm = new IndexSelectorVm(Enumerable.Range(0, waffle.EnsembleCount));
             DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
-            RadiusSliderVm = new SliderVm(RealInterval.Make(1, 40), 1, "0") { Title = "Radius", Value = 10 };
-            FrequencySliderVm = new SliderVm(RealInterval.Make(0.0, 3), 0.015, "0.000") { Title = "Frequency * Pi / Radius", Value = 0.5 };
-            DecaySliderVm = new SliderVm(RealInterval.Make(0, 1), 0.005, "0.000") { Title = "Decay", Value = 0.5 };
 
-            RadiusSliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
-            FrequencySliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
-            DecaySliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
-
-            _mainGridVm = new WbRollingGridVm(
-                imageWidth:1000,
-                imageHeight: 1000,
-                cellDimX: Wng.GroupCount,
-                cellDimY: Wng.GroupCount
-                );
+            //_mainGridVm = new WbRollingGridVm(
+            //    imageWidth: 1000,
+            //    imageHeight: 1000,
+            //    cellDimX: Wng.GroupCount,
+            //    cellDimY: Wng.GroupCount
+            //    );
 
             _legendVm = new LinearLegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(lvm => UpdateUi());
 
         }
+        public IndexSelectorVm IndexSelectorVm { get; private set; }
 
-        public WaffleHistories WaffleHistories { get; private set; }
+        public WaffleParamsVm WaffleParamsVm { get; private set; }
+
+        WaffleHistories WaffleHistories { get; set; }
+
+        public WaffleHistoriesVm WaffleHistoriesVm { get; private set; }
+
+        public Waffle Waffle { get; private set; }
 
         public Wng Wng { get; private set; }
 
-
-        public string Generation => Wng.Iteration.ToString();
+        public string Generation => Wng?.Iteration.ToString() ?? "-";
 
         #region Navigation
 
         public IEntityRepo EntityRepo { get; }
 
-        public MainContentType MainContentType => MainContentType.What;
+        public MainContentType MainContentType => MainContentType.Waffle;
 
 
         private readonly Subject<IMainContentVm> _mainWindowTypehanged = new Subject<IMainContentVm>();
@@ -65,21 +65,7 @@ namespace La.ViewModel
 
         #endregion
 
-        public int GridStride => (int)(RadiusSliderVm.Value * 2 + 1);
-
-        public int Radius => (int)RadiusSliderVm.Value;
-
-        public double Decay => DecaySliderVm.Value;
-
-        public double Frequency => FrequencySliderVm.Value;
-
         public SliderVm DisplayFrequencySliderVm { get; }
-
-        public SliderVm RadiusSliderVm { get; }
-
-        public SliderVm FrequencySliderVm { get; }
-
-        public SliderVm DecaySliderVm { get; }
 
         #region local vars
 
@@ -123,6 +109,7 @@ namespace La.ViewModel
 
                     Wng = Wng.Update();
 
+
                     if (_cancellationTokenSource.IsCancellationRequested)
                     {
                         _isRunning = false;
@@ -132,6 +119,8 @@ namespace La.ViewModel
 
                     if (i % (int)DisplayFrequencySliderVm.Value == 0)
                     {
+                        WaffleHistories = WngBuilder.UpdateHistories(WaffleHistories, Wng, Waffle);
+
                         Application.Current.Dispatcher.Invoke
                             (
                                 UpdateUi,
@@ -205,20 +194,18 @@ namespace La.ViewModel
 
         void UpdateUi()
         {
-            //WngHistories = WngBuilder.UpdateHistories(WngHistories, Wng);
+            var d2Vs = ArrayHistory.GetD2Vals(WaffleHistories.ahA);
 
-            //var d2Vs = ArrayHistory.GetD2Vals(WngHistories.ahA);
+            var cellColors = d2Vs.Select(
+                    (v, i) => new D2Val<Color>
+                                (
+                                    x: v.X,
+                                    y: v.Y,
+                                    val: LegendVm.ColorFor1D((float)(v.Val / 2.0 + 0.5))
+                                )
+                    ).ToList();
 
-            //var cellColors = d2Vs.Select(
-            //        (v, i) => new D2Val<Color>
-            //                    (
-            //                        x: v.X,
-            //                        y: v.Y,
-            //                        val: LegendVm.ColorFor1D((float)(v.Val / 2.0 + 0.5))
-            //                    )
-            //        ).ToList();
-
-            //MainGridVm.AddValues(cellColors);
+            MainGridVm.AddValues(cellColors);
             OnPropertyChanged("Generation");
         }
 
@@ -254,3 +241,4 @@ namespace La.ViewModel
 
     }
 }
+

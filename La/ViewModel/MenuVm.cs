@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Reactive.Subjects;
 using System.Windows.Input;
 using DonutDevilControls.ViewModel.Common;
-using La.Model;
 using LibNode;
 using WpfUtils;
 
@@ -120,12 +119,12 @@ namespace La.ViewModel
             _mainWindowTypehanged.OnNext(
                 new WhatVm(WngBuilder.CreateRandom(
                 seed: 123,
-                ngSize: 1000,
+                ngSize: 200,
                 ppSig: 0.75f,
                 pSig: 0.75f,
                 sSig: 0.75f,
-                pNoise: 0.03f,
-                sNoise: 0.03f,
+                pNoiseLevel: 0.03f,
+                sNoiseLevel: 0.03f,
                 cPp: 0.002f,
                 cSs: 0.01f,
                 cRp: 0.01f,
@@ -140,6 +139,40 @@ namespace La.ViewModel
         }
 
         #endregion // GoToWhatCommand
+
+
+        #region GoToWaffleCommand
+
+        RelayCommand _goToWaffleCommand;
+        public ICommand GoToWaffleCommand
+        {
+            get
+            {
+                return _goToWaffleCommand ?? (_goToWaffleCommand = new RelayCommand(
+                    param => DoGoToWaffle(),
+                    param => CanGoToWaffle()
+                    ));
+            }
+        }
+
+        private void DoGoToWaffle()
+        {
+            _mainWindowTypehanged.OnNext(
+                new WaffleVm(WaffleBuilder.CreateRandom(
+                seed: 123,
+                ngSize: 200,
+                geSize: 20,
+                ppSig: 0.75f
+                )));
+        }
+
+        bool CanGoToWaffle()
+        {
+            return true;
+        }
+
+        #endregion // GoToWaffleCommand
+
 
         private readonly List<NetworkBuilderVm> _networkBuilderVms;
         public IList NetworkBuilderVms => _networkBuilderVms;
