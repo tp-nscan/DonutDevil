@@ -397,7 +397,6 @@ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHi
         let mBb = (RandNormalSqSymDenseSF32 ngSize rng ppSig)
                   |> MatrixF32ZeroD
         
-
         let temp = Generators.NormalSF32 rng pSig
                        |> Seq.take(ngSize) |> Seq.toArray
         let mA = DenseMatrix.init 1 ngSize

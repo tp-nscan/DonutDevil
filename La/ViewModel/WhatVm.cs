@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
 using DonutDevilControls.ViewModel.Legend;
@@ -59,7 +57,6 @@ namespace La.ViewModel
 
         public MainContentType MainContentType => MainContentType.What;
 
-
         private readonly Subject<IMainContentVm> _mainWindowTypehanged = new Subject<IMainContentVm>();
         public IObservable<IMainContentVm> OnMainWindowTypeChanged => _mainWindowTypehanged;
 
@@ -89,22 +86,22 @@ namespace La.ViewModel
 
         #endregion
 
-        #region UpdateNetworkCommand
+        #region UpdateCommand
 
-        RelayCommand _updateNetworkCommand;
-        public ICommand UpdateNetworkCommand
+        RelayCommand _updateCommand;
+        public ICommand UpdateCommand
         {
             get
             {
-                return _updateNetworkCommand ?? (
-                    _updateNetworkCommand = new RelayCommand(
-                        param => DoUpdateNetwork(),
-                        param => CanUpdateNetwork()
+                return _updateCommand ?? (
+                    _updateCommand = new RelayCommand(
+                        param => DoUpdate(),
+                        param => CanUpdate()
                     ));
             }
         }
 
-        private async void DoUpdateNetwork()
+        private async void DoUpdate()
         {
             _cancellationTokenSource = new CancellationTokenSource();
             _isRunning = true;
@@ -117,7 +114,7 @@ namespace La.ViewModel
                 {
                     //if (ParamSetEditorVm.IsDirty)
                     //{
-                    //    Network = Network.UpdateParams(ParamSetEditorVm.LatestParameters.ToDictionary(p => p.Name));
+                    //     = .UpdateParams(ParamSetEditorVm.LatestParameters.ToDictionary(p => p.Name));
                     //    ParamSetEditorVm.IsDirty = false;
                     //}
 
@@ -144,38 +141,64 @@ namespace La.ViewModel
             );
         }
 
-        bool CanUpdateNetwork()
+        bool CanUpdate()
         {
             return !_isRunning;
         }
 
-        #endregion // UpdateNetworkCommand
+        #endregion // UpdateCommand
 
-        #region StopUpdateNetworkCommand
+        #region LearnCommand
 
-        RelayCommand _stopUpdateNetworkCommand;
-        public ICommand StopUpdateNetworkCommand
+        RelayCommand _learnCommand;
+        public ICommand LearnCommand
         {
             get
             {
-                return _stopUpdateNetworkCommand ?? (_stopUpdateNetworkCommand = new RelayCommand(
-                    param => DoCancelUpdateNetwork(),
-                    param => CanCancelUpdateNetwork()
+                return _learnCommand ?? (_learnCommand = new RelayCommand(
+                    param => DoCancelUpdate(),
+                    param => CanCancelUpdate()
                     ));
             }
         }
 
-        private void DoCancelUpdateNetwork()
+        private void DoCancelUpdate()
         {
             _cancellationTokenSource.Cancel();
         }
 
-        bool CanCancelUpdateNetwork()
+        bool CanCancelUpdate()
         {
             return _isRunning;
         }
 
-        #endregion // StopUpdateNetworkCommand
+        #endregion // LearnCommand
+
+        #region ResetCommand
+
+        RelayCommand _resetCommand;
+        public ICommand ResetCommand
+        {
+            get
+            {
+                return _resetCommand ?? (_resetCommand = new RelayCommand(
+                    param => DoReset(),
+                    param => CanReset()
+                    ));
+            }
+        }
+
+        private void DoReset()
+        {
+            _cancellationTokenSource.Cancel();
+        }
+
+        bool CanReset()
+        {
+            return _isRunning;
+        }
+
+        #endregion // ResetCommand
 
         #region GoToMenuCommand
 
