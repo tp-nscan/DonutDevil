@@ -223,6 +223,3 @@ module MathUtils =
         | [] -> []
         | a::b::c -> b::(Skip c)
         | a::b -> a::b
-
-
-
