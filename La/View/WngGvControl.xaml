@@ -15,6 +15,7 @@
                 <DataGridTextColumn Header="B" Binding="{Binding B, StringFormat=F3}"/>
                 <DataGridTextColumn Header="V" Binding="{Binding V, StringFormat=F3}"/>
                 <DataGridTextColumn Header="R" Binding="{Binding R, StringFormat=F3}"/>
+                <DataGridTextColumn Header="M" Binding="{Binding M, StringFormat=F3}"/>
                 <DataGridTextColumn Header="AA1" Binding="{Binding AA1, StringFormat=F3}"/>
                 <DataGridTextColumn Header="BA1" Binding="{Binding BA1, StringFormat=F3}"/>
                 <DataGridTextColumn Header="AB1" Binding="{Binding AB1, StringFormat=F3}"/>

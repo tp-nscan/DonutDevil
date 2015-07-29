@@ -25,6 +25,9 @@ module Glauber =
         let gvs = (GlauberVals r f d) 
         (gvs , (gvs |> Array.sum))
 
+    let GlauberRadius2 =
+        [|1.0f; 1.0f; -1.0f|]
+
     let GlauberRadius3 =
         GlauberVals 4 0.95 0.465
         |> Array.map(fun v -> System.Convert.ToSingle v)
@@ -43,6 +46,7 @@ module Glauber =
 
     let GlauberRadius radius =
         match radius with
+        | 2 -> Some GlauberRadius3
         | 3 -> Some GlauberRadius3
         | 5 -> Some GlauberRadius5
         | 7 -> Some GlauberRadius7

@@ -28,14 +28,14 @@ module WhatUtils =
         match si, sj with
         | si, sj when (si< 0.0f) && (sj< 0.0f) -> 0.0f
         | si, sj when (si< 0.0f) && (sj>=0.0f) -> 0.0f
-        | si, sj when (si>=0.0f) && (sj< 0.0f) -> si*sj
+        | si, sj when (si>=0.0f) && (sj< 0.0f) -> -si*sj
         | si, sj when (si>=0.0f) && (sj>=0.0f) -> 0.0f
         | _, _     -> failwith  "cant happen"
 
     let BAadj si sj =
         match si, sj with
         | si, sj when (si< 0.0f) && (sj< 0.0f) -> 0.0f
-        | si, sj when (si< 0.0f) && (sj>=0.0f) -> si*sj
+        | si, sj when (si< 0.0f) && (sj>=0.0f) -> -si*sj
         | si, sj when (si>=0.0f) && (sj< 0.0f) -> 0.0f
         | si, sj when (si>=0.0f) && (sj>=0.0f) -> 0.0f
         | _, _     -> failwith  "cant happen"
@@ -215,7 +215,7 @@ type Wng(
                             this.mAb.[i,j] +          
                             (ABadj this.mS.[0,i] this.mS.[0,j]) *
                             learnRate *
-                            (FpFrTpTr this.mAa.[0,i] this.mR.[0,i] this.mAa.[0,j] this.mR.[0,j])
+                            (FpFrTpTr this.mA.[0,i] this.mR.[0,i] this.mA.[0,j] this.mR.[0,j])
                         )
                 )
         
@@ -228,7 +228,7 @@ type Wng(
                             this.mBa.[i,j] +          
                             (BAadj this.mS.[0,i] this.mS.[0,j]) *
                             learnRate *
-                            (FpFrTpTr this.mAa.[0,i] this.mR.[0,i] this.mAa.[0,j] this.mR.[0,j])
+                            (FpFrTpTr this.mA.[0,i] this.mR.[0,i] this.mA.[0,j] this.mR.[0,j])
                         )
                 )
 
@@ -474,6 +474,7 @@ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHi
         let rSqData = Generators.SeqOfRandSF32Bits 0.5 rng
                        |> Seq.take(ngSize * geSize) 
                        |> Seq.toArray
+
         let mRe = DenseMatrix.init geSize ngSize 
                     (fun x y -> rSqData.[x*ngSize + y])
 
@@ -485,6 +486,80 @@ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHi
             reM = mRe
         )
 
+    let Create12 =
+
+        let mAa = DenseMatrix.init 12 12 (fun x y -> 0.10f)
+
+        let mAb = DenseMatrix.init 12 12 (fun x y -> 0.10f)
+
+        let mBb = DenseMatrix.init 12 12 (fun x y -> 0.10f)
+
+        let mRe = DenseMatrix.init 12 12 (fun x y -> System.Convert.ToSingle(2 * (y%2) - 1))
+
+        new Waffle(
+            aaM = mAa,
+            abM = mAb,
+            baM = mAb.Transpose(),
+            bbM = mBb,
+            reM = mRe
+        )
+
+    let CreateS1 (waffle:Waffle) =
+        let ngSize = 12
+        let pNoiseLevel = 0.0
+        let sNoiseLevel = 0.0
+        let rIndex = 1
+        let glauberRadius = 3
+
+        let rng = Random.MersenneTwister(1)
+
+        let temp = [0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f;]
+        
+        let tempP = [1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f;]
+        
+        let tempM = [-1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f;]
+
+        let tempT = [0.0f; 0.1f; 0.2f; 0.3f; 0.4f; 0.5f; 0.0f; -0.1f; -0.2f; -0.3f; -0.4f; -0.5f;]
+
+        let mA = DenseMatrix.init 1 ngSize 
+                    (fun x y -> temp.[x*ngSize + y])
+
+
+        let mB = DenseMatrix.init 1 ngSize 
+                    (fun x y -> temp.[x*ngSize + y])
+
+
+        let mS = DenseMatrix.init 1 ngSize 
+                    (fun x y -> tempT.[x*ngSize + y])
+
+        let mR = DenseMatrix.init 1 ngSize 
+                    (fun x y -> temp.[x*ngSize + y])
+
+        let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rng
+        let sNoise = Generators.SeqOfRandSF32 sNoiseLevel rng
+
+        match GlauberNeutralDense ngSize glauberRadius with
+        | Some csMatrix -> 
+            Some ( 
+                new Wng(
+                        iteration = 0,
+                        aaM = waffle.mAa,
+                        abM = waffle.mAb,
+                        baM = waffle.mBa,
+                        bbM = waffle.mBb,
+                        aM = mA,
+                        bM = mB,
+                        sM = mS,
+                        rM = waffle.meR.SubMatrix(rIndex, 1, 0, ngSize),
+                        ssM = csMatrix,
+                        cPp = 0.1f,
+                        cSs = 0.1f,
+                        cRp = 0.1f,
+                        cPs = 0.1f,
+                        nP = pNoise,
+                        nS = sNoise
+                ))
+        | None -> None
 
     let CreateWng glauberRadius pSig sSig cPp
                   pNoiseLevel sNoiseLevel cSs cRp 

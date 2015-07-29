@@ -96,6 +96,8 @@ namespace La.ViewModel
 
         #endregion
 
+
+
         #region UpdateNetworkCommand
 
         RelayCommand _updateNetworkCommand;
@@ -140,9 +142,9 @@ namespace La.ViewModel
                     if (WaffleParamsVm.IsDirty)
                     {
                         Wng = Wng.NewPrams(
-                                cPp: (float) WaffleParamsVm.CPpVm.CurVal, 
-                                cSs: (float)WaffleParamsVm.CSsVm.CurVal, 
-                                cRp: (float)WaffleParamsVm.CRpVm.CurVal, 
+                                cPp: (float)WaffleParamsVm.CPpVm.CurVal,
+                                cSs: (float)WaffleParamsVm.CSsVm.CurVal,
+                                cRp: (float)WaffleParamsVm.CRpVm.CurVal,
                                 cPs: (float)WaffleParamsVm.CPsVm.CurVal
                             );
                         WaffleParamsVm.Clean();
@@ -201,16 +203,16 @@ namespace La.ViewModel
             get
             {
                 return _learnCommand ?? (
-                    _learnCommand = new RelayCommand(
-                        param => DoLearn(),
-                        param => CanLearn()
+                        _learnCommand = new RelayCommand(
+                            param => DoLearn(),
+                            param => CanLearn()
                     ));
             }
         }
 
         private async void DoLearn()
         {
-            var newWng = Wng.Learn((float) WaffleParamsVm.LearnRateVm.CurVal);
+            var newWng = Wng.Learn((float)WaffleParamsVm.LearnRateVm.CurVal);
             Waffle = WaffleBuilder.UpdateFromWng(Waffle, newWng);
         }
 
@@ -275,6 +277,9 @@ namespace La.ViewModel
 
         #endregion // GoToMenuCommand
 
+
+
+
         void UpdateUi()
         {
             WaffleHistoriesVm = WaffleHistoriesVm.Update(Wng, Waffle);
@@ -295,7 +300,7 @@ namespace La.ViewModel
                             )
                 ).ToList();
 
-            WngGvVm = new WngGvVm(Wng);
+            WngGvVm = new WngGvVm(Wng, Waffle, IndexSelectorVm.IndexVm.Index);
             MainGridVm.AddValues(cellColors);
             OnPropertyChanged("Generation");
         }

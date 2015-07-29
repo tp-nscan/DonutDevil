@@ -6,7 +6,7 @@ namespace La.ViewModel
 {
     public class WngGvVm : NotifyPropertyChanged
     {
-        public WngGvVm(Wng wng)
+        public WngGvVm(Wng wng, Waffle waffle, int rindex)
         {
             WngGvRecVms = new List<WngGvRecVm>();
             for (var i = 0; i < wng.GroupCount; i++)
@@ -19,6 +19,7 @@ namespace La.ViewModel
                         b: wng.mB[0, i],
                         v: wng.mV[0, i],
                         r: wng.mR[0, i],
+                        m: waffle.meR[rindex, i],
                         aa1: wng.mAa[1, i],
                         ba1: wng.mBa[1, i],
                         ab1: wng.mAb[1, i],
@@ -33,7 +34,7 @@ namespace La.ViewModel
     public class WngGvRecVm : NotifyPropertyChanged
     {
         public WngGvRecVm(int step, int index, float s, 
-            float a, float b, float v, float r, 
+            float a, float b, float v, float r, float m,
             float aa1, float ba1, float ab1, float bb1)
         {
             Step = step;
@@ -43,6 +44,7 @@ namespace La.ViewModel
             B = b;
             V = v;
             R = r;
+            M = m;
             AA1 = aa1;
             BA1 = ba1;
             AB1 = ab1;
@@ -56,6 +58,7 @@ namespace La.ViewModel
         public float B { get; }
         public float V { get; }
         public float R { get; }
+        public float M { get; }
 
         public float AA1 { get; }
         public float BA1 { get; }
