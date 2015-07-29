@@ -1,15 +1,16 @@
 ﻿using WpfUtils;
 
-namespace La.ViewModel
+namespace La.ViewModel.Pram
 {
-    public class ParamDoubleVm : NotifyPropertyChanged
+    public class ParamDoubleVm : NotifyPropertyChanged, IPramVm
     {
         public ParamDoubleVm(double minVal, double maxVal, 
                              double curVal, string name,
-                             string formatString)
+                             string formatString, double increment)
         {
             _curVal = curVal;
             FormatString = formatString;
+            Increment = increment;
             MinVal = minVal;
             MaxVal = maxVal;
             Name = name;
@@ -27,7 +28,14 @@ namespace La.ViewModel
             }
         }
 
+        public void Clean()
+        {
+            IsDirty = false;
+        }
+
         public string FormatString { get; }
+
+        public double Increment { get; }
 
         public bool IsDirty { get; private set; }
 

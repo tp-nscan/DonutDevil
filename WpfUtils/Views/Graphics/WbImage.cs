@@ -31,8 +31,7 @@ namespace WpfUtils.Views.Graphics
             }
 
             var gridImage = d as WbImage;
-            if ((gridImage == null)) return;
-            gridImage.DoPlotPoints();
+            gridImage?.DoPlotPoints();
         }
 
         void DoPlotPoints()

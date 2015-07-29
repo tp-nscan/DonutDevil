@@ -6,11 +6,13 @@
              xmlns:viewModel="clr-namespace:La.ViewModel.Design"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance {x:Type viewModel:DesignWaffleHistoriesVm}, IsDesignTimeCreatable=True}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" >
+                <!--Width="{Binding ActualWidth, Mode=OneWay, 
+                RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}">-->
     <UserControl.Resources>
         <DataTemplate x:Key="ItemTemplate">
-            <Border Background="Transparent">
-                <TextBlock Width="120" TextAlignment="Center" Foreground="Wheat" 
+            <Border BorderBrush="Pink" BorderThickness="1" Background="#1FFF">
+                <TextBlock Width="200" TextAlignment="Center" Foreground="Wheat" 
                            FontSize="18" FontWeight="Bold" Text="{Binding Name}"/>
             </Border>
         </DataTemplate>

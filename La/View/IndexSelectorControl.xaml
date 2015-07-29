@@ -9,7 +9,9 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ItemsPanelTemplate x:Key="ItemsPanelWrap">
-            <WrapPanel Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}" IsItemsHost="True"/>
+            <WrapPanel
+                Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}" IsItemsHost="True"/>
+            
         </ItemsPanelTemplate>
         <DataTemplate x:Key="ItemTemplate">
             <Border Background="Transparent">

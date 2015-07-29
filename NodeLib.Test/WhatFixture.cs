@@ -33,7 +33,7 @@ namespace NodeLib.Test
         {
             var ah = ArrayHistory.Init(
                     name: "Ralph",
-                    newHist: Enumerable.Range(0, 3).Select(i => (float)i),
+                    arrayLength: 3,
                     targetLength: 200
                 );
 

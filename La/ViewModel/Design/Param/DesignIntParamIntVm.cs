@@ -1,4 +1,6 @@
-﻿namespace La.ViewModel.Design.Param
+﻿using La.ViewModel.Pram;
+
+namespace La.ViewModel.Design.Param
 {
     public class DesignParamIntVm : ParamIntVm
     {

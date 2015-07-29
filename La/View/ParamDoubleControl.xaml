@@ -13,6 +13,7 @@
         <DockPanel TextBlock.FontSize="18" LastChildFill="True">
             <xctk:DoubleUpDown Margin="5,0" DockPanel.Dock="Right" HorizontalAlignment="Right"
                                 FontWeight="Bold"
+                                Increment="{Binding Increment}"
                                 Maximum="{Binding MaxVal}"
                                 Minimum="{Binding MinVal}"
                                 FormatString="{Binding FormatString}"

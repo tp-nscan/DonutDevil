@@ -23,21 +23,25 @@ namespace WpfUtils.ViewModels.Graphics
             PlotRectangleList.Clear();
 
             var cellColorList = cellColors.ToList();
-            var squareStride = Math.Min
-                (
-                    ImageWidth / CellDimX,
-                    ImageHeight / CellDimY
-                );
+
+            //var squareStride = Math.Min
+            //    (
+            //        ImageWidth / CellDimX,
+            //        ImageHeight / CellDimY
+            //    );
+            var squareWidth = ImageWidth/CellDimX;
+            var squareHeight = ImageHeight/CellDimY;
+;
 
             PlotRectangleList = cellColorList.Select(
 
                 gv =>
                     new PlotRectangle
                         (
-                            x: squareStride * gv.X,
-                            y: squareStride * gv.Y,
-                            width: squareStride,
-                            height: squareStride,
+                            x: squareWidth * gv.X,
+                            y: squareHeight * gv.Y,
+                            width: squareWidth,
+                            height: squareHeight,
                             color: gv.Val
                         )
                     ).ToList();

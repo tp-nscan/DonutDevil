@@ -117,14 +117,16 @@
     <Compile Include="ViewModel\IMainContentVm.cs" />
     <Compile Include="ViewModel\MainWindowVm.cs" />
     <Compile Include="ViewModel\NetworkVm.cs" />
-    <Compile Include="ViewModel\ParamBoolVm.cs" />
-    <Compile Include="ViewModel\ParamDoubleVm.cs" />
-    <Compile Include="ViewModel\ParamIntVm.cs" />
+    <Compile Include="ViewModel\Pram\IPramVm.cs" />
+    <Compile Include="ViewModel\Pram\ParamBoolVm.cs" />
+    <Compile Include="ViewModel\Pram\ParamDoubleVm.cs" />
+    <Compile Include="ViewModel\Pram\ParamIntVm.cs" />
     <Compile Include="ViewModel\WaffleHistoriesVm.cs" />
     <Compile Include="ViewModel\IndexSelectorVm.cs" />
-    <Compile Include="ViewModel\WaffleParamsVm.cs" />
+    <Compile Include="ViewModel\Pram\WaffleParamsVm.cs" />
     <Compile Include="ViewModel\WaffleVm.cs" />
     <Compile Include="ViewModel\WhatVm.cs" />
+    <Compile Include="ViewModel\WngGvVm.cs" />
     <Compile Include="View\D2ValSelectorControl.xaml.cs">
       <DependentUpon>D2ValSelectorControl.xaml</DependentUpon>
     </Compile>
@@ -170,6 +172,9 @@
     </Compile>
     <Compile Include="View\WhatControl.xaml.cs">
       <DependentUpon>WhatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WngGvControl.xaml.cs">
+      <DependentUpon>WngGvControl.xaml</DependentUpon>
     </Compile>
     <Page Include="View\D2ValSelectorControl.xaml">
       <SubType>Designer</SubType>
@@ -246,6 +251,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\WhatControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WngGvControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

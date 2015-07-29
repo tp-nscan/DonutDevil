@@ -18,7 +18,7 @@
                                 Minimum="{Binding MinVal}"
                                 Value="{Binding CurVal}" />
             <Viewbox Stretch="Uniform">
-                <TextBlock Margin="5,0" DockPanel.Dock="Left" Text="{Binding Name}" Foreground="Beige"/>
+                <TextBlock Margin="5,3" DockPanel.Dock="Left" Text="{Binding Name}" Foreground="Beige"/>
             </Viewbox>
         </DockPanel>
     </Grid>

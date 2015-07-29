@@ -1,10 +1,11 @@
 ﻿using WpfUtils;
 
-namespace La.ViewModel
+namespace La.ViewModel.Pram
 {
-    public class ParamIntVm : NotifyPropertyChanged
+    public class ParamIntVm : NotifyPropertyChanged, IPramVm
     {
-        public ParamIntVm(int minVal, int maxVal, int curVal, string name)
+        public ParamIntVm(int minVal, int maxVal, int curVal, 
+            string name)
         {
             _curVal = curVal;
             MinVal = minVal;
@@ -23,7 +24,12 @@ namespace La.ViewModel
                 IsDirty = true;
             }
         }
-        
+
+        public void Clean()
+        {
+            IsDirty = false;
+        }
+
         public bool IsDirty { get; private set; }
 
         public int MaxVal { get; }

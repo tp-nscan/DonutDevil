@@ -59,7 +59,7 @@ module ArrayHistory =
         let rec d2vs (ahl:List<IndexedF32A>) yCoord =
             seq {
                 match ahl with
-                    | [] -> failwith "should never get here"
+                    | [] -> [] |> ignore
                     | head::[] -> 
                         yield! head.Array |> Seq.mapi(fun i ia -> { X=i; Y=yCoord; Val=ia} )
                     | head::tail -> 

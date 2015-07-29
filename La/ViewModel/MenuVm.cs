@@ -117,20 +117,12 @@ namespace La.ViewModel
         private void DoGoToWhat()
         {
             _mainWindowTypehanged.OnNext(
-                new WhatVm(WngBuilder.CreateRandom(
+                new WhatVm(WaffleBuilder.CreateRandom(
                 seed: 123,
-                ngSize: 200,
-                ppSig: 0.75f,
-                pSig: 0.75f,
-                sSig: 0.75f,
-                pNoiseLevel: 0.03f,
-                sNoiseLevel: 0.03f,
-                cPp: 0.002f,
-                cSs: 0.01f,
-                cRp: 0.01f,
-                cPs: 0.01f,
-                glauberRadius: 7
-                ).Value));
+                ngSize: 100,
+                geSize: 20,
+                ppSig: 0.75f
+                )));
         }
 
         bool CanGoToWhat()
@@ -160,7 +152,7 @@ namespace La.ViewModel
             _mainWindowTypehanged.OnNext(
                 new WaffleVm(WaffleBuilder.CreateRandom(
                 seed: 123,
-                ngSize: 200,
+                ngSize: 100,
                 geSize: 20,
                 ppSig: 0.75f
                 )));

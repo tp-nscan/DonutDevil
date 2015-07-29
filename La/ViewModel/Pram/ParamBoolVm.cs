@@ -1,8 +1,8 @@
 ﻿using WpfUtils;
 
-namespace La.ViewModel
+namespace La.ViewModel.Pram
 {
-    public class ParamBoolVm : NotifyPropertyChanged
+    public class ParamBoolVm : NotifyPropertyChanged, IPramVm
     {
         public ParamBoolVm(bool curVal, string name)
         {
@@ -20,6 +20,11 @@ namespace La.ViewModel
                 OnPropertyChanged("CurVal");
                 IsDirty = true;
             }
+        }
+
+        public void Clean()
+        {
+            IsDirty = false;
         }
 
         public bool IsDirty { get; private set; }

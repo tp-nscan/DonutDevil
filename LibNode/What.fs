@@ -92,54 +92,30 @@ type Wng(
                                     | v when v<0.0f -> -v * this.mB.[0,y]
                                     | v -> v* this.mA.[0,y])
 
-
-    member this.UpdateOld() =
-
-        let dPdR = this.mR.Map2((fun x y -> x * y * this.cRp), this.mS)
-        let dAdA = this.mA.Multiply(this.mAa)
-        let dAdB = this.mB.Multiply(this.mBa)
-        let dBdA = this.mA.Multiply(this.mAb)
-        let dBdB = this.mB.Multiply(this.mBb)
-        let dSdS = this.mS.Multiply(this.mSs)
-        let sNoise = this.sNoise |> Seq.take this.mS.ColumnCount |> Seq.toArray
-        let aNoise = this.pNoise |> Seq.take this.mS.ColumnCount |> Seq.toArray
-        let bNoise = this.pNoise |> Seq.take this.mS.ColumnCount |> Seq.toArray
-        
-        let newA = aNoise |> Array.mapi(fun i n -> 
-            F32ToSF32(n + this.mA.[0,i] + this.cPp * (dAdA.[0,i] + dAdB.[0,i]) 
-                      + dPdR.[0,i] ))
-
-        let newB = bNoise |> Array.mapi(fun i n -> 
-            F32ToSF32(n + this.mB.[0,i] + this.cPp * (dBdB.[0,i] + dBdA.[0,i]) 
-                      - dPdR.[0,i] ))
-
-        let newS = sNoise |> Array.mapi(fun i n -> 
-            F32ToSF32(n + this.mS.[0,i] + this.cSs * dSdS.[0,i] + 
-                      this.cPs * this.mR.[0,i]  * (this.mA .[0,i] 
-                      - this.mB.[0,i]) ))
-
+    member this.NewPrams(
+                        cPp:float32,
+                        cSs:float32,
+                        cRp:float32,
+                        cPs:float32
+                     ) =
         new Wng(
             iteration = this.Iteration,
             aaM = this.mAa,
             abM = this.mAb,
             baM = this.mBa,
             bbM = this.mBb,
-            aM = DenseMatrix.init 1 this.mS.ColumnCount  
-                    (fun x y -> newA.[x * this.mA.ColumnCount + y]),
-            bM = DenseMatrix.init 1 this.mS.ColumnCount  
-                    (fun x y -> newB.[x * this.mB.ColumnCount + y]),
-            sM = DenseMatrix.init 1 this.mS.ColumnCount  
-                    (fun x y -> newS.[x * this.mS.ColumnCount + y]),
+            aM = this.mA,
+            bM = this.mB,
+            sM = this.mS,
             rM = this.mR,
             ssM = this.mSs,
-            cPp = this.cPp,
-            cSs = this.cSs,
-            cRp = this.cRp,
-            cPs = this.cPs,
+            cPp = cPp,
+            cSs = cSs,
+            cRp = cRp,
+            cPs = cPs,
             nP = this.pNoise,
             nS = this.sNoise
         )
-
 
     member this.Update() =
         let stride = this.mS.ColumnCount 
@@ -288,7 +264,7 @@ type Wng(
             nS = this.sNoise
         )
 
-    member this.Learn2(learnRate:float32) =
+    member this.LearnSymmetric(learnRate:float32) =
         
         let aamNew = 
             DenseMatrix.init 
@@ -299,7 +275,7 @@ type Wng(
                             aaM.[i,j] +          
                             (AAadj this.mS.[0,i] this.mS.[0,j]) *
                             learnRate *
-                            (FpFrTpTr this.mAa.[0,i] this.mR.[0,i] this.mAa.[0,j] this.mR.[0,j])
+                            this.mAa.[0,i] * this.mAa.[0,j]
                         )
                 )
 
@@ -445,9 +421,9 @@ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHi
         | None -> None
 
 
-    let InitHistories arrayLength targetLength =
+    let InitHistories arrayLength ensembleSize targetLength =
       {
-        WaffleHistories.aeR=ArrayHistory.Init "C" arrayLength targetLength
+        WaffleHistories.aeR=ArrayHistory.Init "C" ensembleSize targetLength
         ahV=ArrayHistory.Init "V" arrayLength targetLength 
         ahA=ArrayHistory.Init "A" arrayLength targetLength 
         ahB=ArrayHistory.Init "B" arrayLength targetLength 
@@ -456,8 +432,12 @@ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHi
       }
 
     let UpdateHistories (waffleHist:WaffleHistories) (wng:Wng) (waffle:Waffle) =
+      let fgc = System.Convert.ToSingle(waffle.GroupCount)
       {
-        WaffleHistories.aeR=ArrayHistory.Add waffleHist.aeR (wng.mA.TransposeAndMultiply(waffle.meR) |> FlattenRm) wng.Iteration
+        WaffleHistories.aeR=ArrayHistory.Add 
+            waffleHist.aeR 
+            (wng.mA.TransposeAndMultiply(waffle.meR) |> FlattenRm |> Seq.map(fun v->v/fgc)) 
+            wng.Iteration
         ahV=ArrayHistory.Add waffleHist.ahV (wng.mV |> FlattenRm) wng.Iteration
         ahA=ArrayHistory.Add waffleHist.ahA (wng.mA |> FlattenRm) wng.Iteration
         ahB=ArrayHistory.Add waffleHist.ahB (wng.mB |> FlattenRm) wng.Iteration
@@ -468,6 +448,7 @@ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHi
 
 
  module WaffleBuilder =
+
     let GetArrayHistories (waffleHistories:WaffleHistories) =
         seq { 
                yield waffleHistories.aeR
