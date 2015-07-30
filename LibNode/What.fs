@@ -486,111 +486,34 @@ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHi
             reM = mRe
         )
 
-    let Create12 =
-
-        let mAa = DenseMatrix.init 12 12 (fun x y -> 0.10f)
-
-        let mAb = DenseMatrix.init 12 12 (fun x y -> 0.10f)
-
-        let mBb = DenseMatrix.init 12 12 (fun x y -> 0.10f)
-
-        let mRe = DenseMatrix.init 12 12 (fun x y -> System.Convert.ToSingle(2 * (y%2) - 1))
-
-        new Waffle(
-            aaM = mAa,
-            abM = mAb,
-            baM = mAb.Transpose(),
-            bbM = mBb,
-            reM = mRe
-        )
-
-    let CreateS1 (waffle:Waffle) =
-        let ngSize = 12
-        let pNoiseLevel = 0.0
-        let sNoiseLevel = 0.0
-        let rIndex = 1
-        let glauberRadius = 3
-
-        let rng = Random.MersenneTwister(1)
-
-        let temp = [0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f; 0.0f;]
-        
-        let tempP = [1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f; 1.0f;]
-        
-        let tempM = [-1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f; -1.0f;]
-
-        let tempT = [0.0f; 0.1f; 0.2f; 0.3f; 0.4f; 0.5f; 0.0f; -0.1f; -0.2f; -0.3f; -0.4f; -0.5f;]
-
-        let mA = DenseMatrix.init 1 ngSize 
-                    (fun x y -> temp.[x*ngSize + y])
-
-
-        let mB = DenseMatrix.init 1 ngSize 
-                    (fun x y -> temp.[x*ngSize + y])
-
-
-        let mS = DenseMatrix.init 1 ngSize 
-                    (fun x y -> tempT.[x*ngSize + y])
-
-        let mR = DenseMatrix.init 1 ngSize 
-                    (fun x y -> temp.[x*ngSize + y])
-
-        let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rng
-        let sNoise = Generators.SeqOfRandSF32 sNoiseLevel rng
-
-        match GlauberNeutralDense ngSize glauberRadius with
-        | Some csMatrix -> 
-            Some ( 
-                new Wng(
-                        iteration = 0,
-                        aaM = waffle.mAa,
-                        abM = waffle.mAb,
-                        baM = waffle.mBa,
-                        bbM = waffle.mBb,
-                        aM = mA,
-                        bM = mB,
-                        sM = mS,
-                        rM = waffle.meR.SubMatrix(rIndex, 1, 0, ngSize),
-                        ssM = csMatrix,
-                        cPp = 0.1f,
-                        cSs = 0.1f,
-                        cRp = 0.1f,
-                        cPs = 0.1f,
-                        nP = pNoise,
-                        nS = sNoise
-                ))
-        | None -> None
 
     let CreateWng glauberRadius pSig sSig cPp
                   pNoiseLevel sNoiseLevel cSs cRp 
-                  cPs rIndex (seed:int) (waffle:Waffle) =
+                  cPs rIndex (sseed:int) 
+                  (pseed:int) (waffle:Waffle) =
 
-        let rng = Random.MersenneTwister(seed)
+        let rngS = Random.MersenneTwister(sseed)
+        let rngP = Random.MersenneTwister(pseed)
         
         let ngSize = waffle.GroupCount
 
-        let temp = Generators.NormalSF32 rng pSig
+        let temp = Generators.NormalSF32 rngP pSig
                         |> Seq.take(ngSize) |> Seq.toArray
         let mA = DenseMatrix.init 1 ngSize 
                     (fun x y -> temp.[x*ngSize + y])
 
-        let temp = Generators.NormalSF32 rng pSig
+        let temp = Generators.NormalSF32 rngP pSig
                         |> Seq.take(ngSize) |> Seq.toArray
         let mB = DenseMatrix.init 1 ngSize 
                     (fun x y -> temp.[x*ngSize + y])
 
-        let temp = Generators.NormalSF32 rng sSig
+        let temp = Generators.NormalSF32 rngS sSig
                         |> Seq.take(ngSize) |> Seq.toArray
         let mS = DenseMatrix.init 1 ngSize 
                     (fun x y -> temp.[x*ngSize + y])
 
-        let temp = Generators.SeqOfRandSF32Bits 0.5 rng
-                        |> Seq.take(ngSize) |> Seq.toArray
-        let mR = DenseMatrix.init 1 ngSize 
-                    (fun x y -> temp.[x*ngSize + y])
-
-        let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rng
-        let sNoise = Generators.SeqOfRandSF32 sNoiseLevel rng
+        let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rngP
+        let sNoise = Generators.SeqOfRandSF32 sNoiseLevel rngS
 
         match GlauberNeutralDense ngSize glauberRadius with
         | Some csMatrix -> 
@@ -614,6 +537,73 @@ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHi
                         nS = sNoise
                 ))
         | None -> None
+
+
+
+    let ResetP pSig (pseed:int) (wng:Wng) =
+
+        let rngP = Random.MersenneTwister(pseed)
+        let ngSize = wng.GroupCount
+
+        let temp = Generators.NormalSF32 rngP pSig
+                        |> Seq.take(ngSize) |> Seq.toArray
+        let mA = DenseMatrix.init 1 ngSize 
+                    (fun x y -> temp.[x*ngSize + y])
+
+        let temp = Generators.NormalSF32 rngP pSig
+                        |> Seq.take(ngSize) |> Seq.toArray
+        let mB = DenseMatrix.init 1 ngSize 
+                    (fun x y -> temp.[x*ngSize + y])
+
+        new Wng(
+                iteration = 0,
+                aaM = wng.mAa,
+                abM = wng.mAb,
+                baM = wng.mBa,
+                bbM = wng.mBb,
+                aM = mA,
+                bM = mB,
+                sM = wng.mS,
+                rM = wng.mR,
+                ssM = wng.mSs,
+                cPp = wng.cPp,
+                cSs = wng.cSs,
+                cRp = wng.cRp,
+                cPs = wng.cPs,
+                nP = wng.pNoise,
+                nS = wng.sNoise
+        )
+
+
+    let ResetS sSig (sseed:int) (wng:Wng) =
+    
+        let rngS = Random.MersenneTwister(sseed)
+        let ngSize = wng.GroupCount
+
+        let temp = Generators.NormalSF32 rngS sSig
+                        |> Seq.take(ngSize) |> Seq.toArray
+        let mS = DenseMatrix.init 1 ngSize 
+                    (fun x y -> temp.[x*ngSize + y])
+
+        new Wng(
+                iteration = 0,
+                aaM = wng.mAa,
+                abM = wng.mAb,
+                baM = wng.mBa,
+                bbM = wng.mBb,
+                aM = wng.mA,
+                bM = wng.mB,
+                sM = mS,
+                rM = wng.mR,
+                ssM = wng.mSs,
+                cPp = wng.cPp,
+                cSs = wng.cSs,
+                cRp = wng.cRp,
+                cPs = wng.cPs,
+                nP = wng.pNoise,
+                nS = wng.sNoise
+                )
+
 
     let UpdateFromWng (waffle:Waffle) (wng:Wng) =
         new Waffle(

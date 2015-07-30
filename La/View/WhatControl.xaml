@@ -11,8 +11,6 @@
              d:DesignHeight="700" d:DesignWidth="600">
 
 
-
-
     <Grid Background="Black">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -24,8 +22,10 @@
 
             <StackPanel Margin="5" DockPanel.Dock="Top" Orientation="Vertical" Background="#F222">
                 <WrapPanel  Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetCommand}" Content="Reset" />
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding UpdateCommand}" Content="Update" />
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetAllCommand}" Content="Reset All" />
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetSCommand}" Content="Reset S" />
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetPCommand}" Content="Reset P" />
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding LearnCommand}" Content="Learn" />
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ChangeParamsCommand}" Content="Params" />
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding GoToMenuCommand}" Content="Menu" />
@@ -126,7 +126,7 @@
 				VerticalScrollBarVisibility="Visible" 
 				HorizontalScrollBarVisibility="Visible"
 				Template="{DynamicResource DonutDevilScrollViewerTemplate}">
-                <local:WngGvControl DataContext="{Binding WngGvVm}"/>
+                <local:WngGvControl DataContext="{Binding WngGvVm}" RenderTransformOrigin="0.5,0.5"/>
             </ScrollViewer>
 
         </Grid>

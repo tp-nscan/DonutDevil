@@ -133,7 +133,8 @@ namespace La.ViewModel
                      cRp: (float)WaffleParamsVm.CRpVm.CurVal,
                      cPs: (float)WaffleParamsVm.CPsVm.CurVal,
                      rIndex: IndexSelectorVm.IndexVm.Index,
-                     seed: WaffleParamsVm.SeedVm.CurVal,
+                     sseed: WaffleParamsVm.SSeedVm.CurVal,
+                     pseed: WaffleParamsVm.PSeedVm.CurVal,
                      waffle: Waffle
                   ).Value;
 
@@ -276,9 +277,6 @@ namespace La.ViewModel
         }
 
         #endregion // GoToMenuCommand
-
-
-
 
         void UpdateUi()
         {

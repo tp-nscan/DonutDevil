@@ -116,20 +116,15 @@ namespace La.ViewModel
 
         private void DoGoToWhat()
         {
-            //_mainWindowTypehanged.OnNext(
-            //    new WhatVm(WaffleBuilder.CreateRandom(
-            //    seed: 123,
-            //    ngSize: 6,
-            //    geSize: 20,
-            //    ppSig: 0.75f
-            //    )));
             _mainWindowTypehanged.OnNext(
                 new WhatVm(
-                    
-                    WaffleBuilder.Create12
-                
-                ));
 
+            WaffleBuilder.CreateRandom(
+                            seed: 123,
+                            ngSize: 16,
+                            geSize: 20,
+                            ppSig: 0.25f
+                            )));
         }
 
         bool CanGoToWhat()

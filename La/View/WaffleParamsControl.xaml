@@ -7,20 +7,34 @@
              xmlns:pram="clr-namespace:La.ViewModel.Pram"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance {x:Type pram:WaffleParamsVm}, IsDesignTimeCreatable=True}"
-             d:DesignHeight="470" d:DesignWidth="250">
-    <StackPanel Margin="0,5">
-        <view:ParamDoubleControl DataContext="{Binding CPpVm}" Height="30" Margin="5"/>
-        <view:ParamDoubleControl DataContext="{Binding CSsVm}" Height="30" Margin="5"/>
-        <view:ParamDoubleControl DataContext="{Binding CRpVm}" Height="30" Margin="5"/>
-        <view:ParamDoubleControl DataContext="{Binding CPsVm}" Height="30" Margin="5"/>
-        <view:ParamDoubleControl DataContext="{Binding LearnRateVm}" Height="30" Margin="5"/>
-        <view:ParamIntControl DataContext="{Binding LearnFreqVm}" Height="30" Margin="5,5,5,25"/>
-        <view:ParamIntControl DataContext="{Binding GlauberRadiusVm}" Height="30" Margin="5"/>
-        <view:ParamDoubleControl DataContext="{Binding PSigVm}" Height="30" Margin="5"/>
-        <view:ParamDoubleControl DataContext="{Binding SSigVm}" Height="30" Margin="5"/>
-        <view:ParamDoubleControl DataContext="{Binding PNoiseLevelVm}" Height="30" Margin="5"/>
-        <view:ParamDoubleControl DataContext="{Binding SNoiseLevelVm}" Height="30" Margin="5"/>
-        <view:ParamIntControl DataContext="{Binding SeedVm}" Height="30" Margin="5"/>
-    </StackPanel>
-    
+             d:DesignHeight="300" d:DesignWidth="500">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel Grid.Column="0" Margin="0,5">
+            <view:ParamDoubleControl DataContext="{Binding CPpVm}" Height="30" Margin="5"/>
+            <view:ParamDoubleControl DataContext="{Binding CSsVm}" Height="30" Margin="5"/>
+            <view:ParamDoubleControl DataContext="{Binding CRpVm}" Height="30" Margin="5"/>
+            <view:ParamDoubleControl DataContext="{Binding CPsVm}" Height="30" Margin="5"/>
+            <view:ParamDoubleControl DataContext="{Binding LearnRateVm}" Height="30" Margin="5"/>
+            <!--<view:ParamIntControl DataContext="{Binding LearnFreqVm}" Height="30" Margin="5"/>-->
+            <view:ParamIntControl DataContext="{Binding SSeedVm}" Height="30" Margin="5"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Margin="0,5">
+            <view:ParamIntControl DataContext="{Binding GlauberRadiusVm}" Height="30" Margin="5"/>
+            <view:ParamDoubleControl DataContext="{Binding PSigVm}" Height="30" Margin="5"/>
+            <view:ParamDoubleControl DataContext="{Binding SSigVm}" Height="30" Margin="5"/>
+            <view:ParamDoubleControl DataContext="{Binding PNoiseLevelVm}" Height="30" Margin="5"/>
+            <view:ParamDoubleControl DataContext="{Binding SNoiseLevelVm}" Height="30" Margin="5"/>
+            <view:ParamIntControl DataContext="{Binding PSeedVm}" Height="30" Margin="5"/>
+        </StackPanel>
+
+
+
+    </Grid>
+
 </UserControl>

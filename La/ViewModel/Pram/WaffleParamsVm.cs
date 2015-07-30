@@ -76,11 +76,17 @@ namespace La.ViewModel.Pram
                     formatString: "0.000",
                     name: "S noise level"
                 );
-            SeedVm = new ParamIntVm(
+            SSeedVm = new ParamIntVm(
                     minVal: 1,
                     maxVal: 1000,
                     curVal: 0,
-                    name: "Seed"
+                    name: "S Seed"
+                );
+            PSeedVm = new ParamIntVm(
+                    minVal: 1,
+                    maxVal: 1000,
+                    curVal: 0,
+                    name: "P Seed"
                 );
             LearnRateVm = new ParamDoubleVm(
                     minVal: 0,
@@ -107,7 +113,8 @@ namespace La.ViewModel.Pram
         public ParamDoubleVm CPsVm { get; }
         public ParamDoubleVm PNoiseLevelVm { get; }
         public ParamDoubleVm SNoiseLevelVm { get; }
-        public ParamIntVm SeedVm { get; }
+        public ParamIntVm PSeedVm { get; }
+        public ParamIntVm SSeedVm { get; }
         public ParamDoubleVm LearnRateVm { get; }
         public ParamIntVm LearnFreqVm { get; }
 
