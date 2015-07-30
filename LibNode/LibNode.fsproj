@@ -68,6 +68,7 @@
     <Compile Include="CliqueEnsemble.fs" />
     <Compile Include="Correltor.fs" />
     <Compile Include="Perturb.fs" />
+    <Compile Include="Zeus.fs" />
     <Compile Include="Sim.fs" />
     <Compile Include="Spots1d.fs" />
     <Compile Include="What.fs" />
