@@ -29,7 +29,15 @@ type Athena(
             iteration:int,
             aM:Matrix<float32>,
             bM:Matrix<float32>,
-            sM:Matrix<float32>
+            sM:Matrix<float32>,
+            dAdR:Matrix<float32>,
+            dBdR:Matrix<float32>,
+            dAdA:Matrix<float32>,
+            dAdB:Matrix<float32>,
+            dBdA:Matrix<float32>,
+            dBdB:Matrix<float32>,
+            dSdS:Matrix<float32>,
+            dSdP:Matrix<float32>
         ) =
 
     member this.Iteration = iteration
@@ -37,6 +45,14 @@ type Athena(
     member this.mA = aM
     member this.mB = bM
     member this.mS = sM
+    member this.dAdR = dAdR
+    member this.dBdR = dBdR
+    member this.dAdA = dAdA
+    member this.dAdB = dAdB
+    member this.dBdA = dBdA
+    member this.dBdB = dBdB
+    member this.dSdS = dSdS
+    member this.dSdP = dSdP
 
 module ZeusUtils =
 
