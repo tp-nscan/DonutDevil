@@ -29,15 +29,7 @@ type Athena(
             iteration:int,
             aM:Matrix<float32>,
             bM:Matrix<float32>,
-            sM:Matrix<float32>,
-            dAdR:Matrix<float32>,
-            dBdR:Matrix<float32>,
-            dAdA:Matrix<float32>,
-            dAdB:Matrix<float32>,
-            dBdA:Matrix<float32>,
-            dBdB:Matrix<float32>,
-            dSdS:Matrix<float32>,
-            dSdP:Matrix<float32>
+            sM:Matrix<float32>
         ) =
 
     member this.Iteration = iteration
@@ -45,6 +37,24 @@ type Athena(
     member this.mA = aM
     member this.mB = bM
     member this.mS = sM
+
+
+type AthenaTr(
+                iteration:int,
+                aM:Matrix<float32>,
+                bM:Matrix<float32>,
+                sM:Matrix<float32>,
+                dAdR:Matrix<float32>,
+                dBdR:Matrix<float32>,
+                dAdA:Matrix<float32>,
+                dAdB:Matrix<float32>,
+                dBdA:Matrix<float32>,
+                dBdB:Matrix<float32>,
+                dSdS:Matrix<float32>,
+                dSdP:Matrix<float32>
+            ) =
+
+    member this.Athena = new Athena(iteration, aM, bM, sM)
     member this.dAdR = dAdR
     member this.dBdR = dBdR
     member this.dAdA = dAdA
@@ -92,7 +102,8 @@ module ZeusUtils =
         | si, sj when (si>=0.0f) && (sj>=0.0f) -> 0.0f
         | _, _     -> failwith  "cant happen"
 
-    let Update zeus pNoise (mem:Matrix<float32>) sNoise cRp (athena:Athena) =
+    let UpdateTr zeus pNoise (mem:Matrix<float32>) sNoise cPp cSs cRp cPs (athena:Athena) =
+
         let stride = athena.GroupCount
 
         let sNoise = sNoise |> Seq.take athena.GroupCount |> Seq.toArray
@@ -101,6 +112,21 @@ module ZeusUtils =
 
         let dAdR = mem.Map2((fun x y -> x * (1.0f+y) * (1.0f+y) * cRp), athena.mS)
         let dBdR = mem.Map2((fun x y -> x * (1.0f-y) * (1.0f-y) * cRp), athena.mS)
+
+
+        let res = new AthenaTr(                
+                                iteration=athena.Iteration,
+                                aM=athena.mA,
+                                bM=athena.mA,
+                                sM=athena.mA,
+                                dAdR=athena.mA,
+                                dBdR=athena.mA,
+                                dAdA=athena.mA,
+                                dAdB=athena.mA,
+                                dBdA=athena.mA,
+                                dBdB=athena.mA,
+                                dSdS=athena.mA,
+                                dSdP=athena.mA)
 
         None
 
