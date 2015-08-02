@@ -42,7 +42,18 @@ namespace La.ViewModel
             _legendVm.OnLegendVmChanged.Subscribe(lvm => UpdateUi());
         }
 
-        public IndexSelectorVm IndexSelectorVm { get; private set; }
+        private IndexSelectorVm _indexSelectorVm;
+        public IndexSelectorVm IndexSelectorVm
+        {
+            get { return _indexSelectorVm; }
+            set
+            {
+                _indexSelectorVm = value;
+                _indexSelectorVm.OnSelectionChanged.Subscribe(
+                        ivm=> ResetRCommand.Execute(null)
+                    );
+            }
+        }
 
         public WaffleParamsVm WaffleParamsVm { get; private set; }
 
@@ -169,6 +180,7 @@ namespace La.ViewModel
         {
             var newWng = Wng.Learn((float)WaffleParamsVm.LearnRateVm.CurVal);
             Waffle = WaffleBuilder.UpdateFromWng(Waffle, newWng);
+            Wng = WaffleBuilder.ResetC(waffle:Waffle, wng: Wng);
             UpdateUi();
         }
 
@@ -255,6 +267,39 @@ namespace La.ViewModel
 
         #endregion // ResetPCommand
 
+        #region ResetRCommand
+
+        RelayCommand _resetRCommand;
+        public ICommand ResetRCommand
+        {
+            get
+            {
+                return _resetRCommand ?? (
+                    _resetRCommand = new RelayCommand(
+                        param => DoResetR(),
+                        param => CanResetR()
+                    ));
+            }
+        }
+
+        private void DoResetR()
+        {
+            Wng = WaffleBuilder.ResetR(
+                 waffle: Waffle,
+                 memDex: IndexSelectorVm.IndexVm.Index,
+                 wng: Wng
+              );
+
+            UpdateUi();
+        }
+
+        bool CanResetR()
+        {
+            return (!_isRunning) && (Wng != null);
+        }
+
+        #endregion // ResetRCommand
+
         #region ResetSCommand
 
         RelayCommand _resetSCommand;
@@ -319,6 +364,7 @@ namespace La.ViewModel
         }
 
         #endregion // ChangeParamsCommand
+
 
         #region GoToMenuCommand
 

@@ -43,8 +43,8 @@ namespace La.ViewModel
             A = a;
             B = b;
             V = v;
-            R = r;
-            M = m;
+            R = (r > 0) ? "+" : "-";
+            M = (m > 0) ? "+" : "-";
             AA1 = aa1;
             BA1 = ba1;
             AB1 = ab1;
@@ -57,8 +57,8 @@ namespace La.ViewModel
         public float A { get; }
         public float B { get; }
         public float V { get; }
-        public float R { get; }
-        public float M { get; }
+        public string R { get; }
+        public string M { get; }
 
         public float AA1 { get; }
         public float BA1 { get; }

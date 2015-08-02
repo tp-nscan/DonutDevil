@@ -121,7 +121,7 @@ namespace La.ViewModel
 
             WaffleBuilder.CreateRandom(
                             seed: 123,
-                            ngSize: 16,
+                            ngSize: 24,
                             geSize: 20,
                             ppSig: 0.25f
                             )));

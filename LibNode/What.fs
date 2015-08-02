@@ -215,7 +215,7 @@ type Wng(
                             this.mAb.[i,j] +          
                             (ABadj this.mS.[0,i] this.mS.[0,j]) *
                             learnRate *
-                            (FpFrTpTr this.mA.[0,i] this.mR.[0,i] this.mA.[0,j] this.mR.[0,j])
+                            (FpFrTpTr this.mA.[0,i] this.mR.[0,i] this.mB.[0,j] this.mR.[0,j])
                         )
                 )
         
@@ -228,7 +228,7 @@ type Wng(
                             this.mBa.[i,j] +          
                             (BAadj this.mS.[0,i] this.mS.[0,j]) *
                             learnRate *
-                            (FpFrTpTr this.mA.[0,i] this.mR.[0,i] this.mA.[0,j] this.mR.[0,j])
+                            (FpFrTpTr this.mB.[0,i] this.mR.[0,i] this.mA.[0,j] this.mR.[0,j])
                         )
                 )
 
@@ -474,7 +474,6 @@ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHi
         let rSqData = Generators.SeqOfRandSF32Bits 0.5 rng
                        |> Seq.take(ngSize * geSize) 
                        |> Seq.toArray
-
         let mRe = DenseMatrix.init geSize ngSize 
                     (fun x y -> rSqData.[x*ngSize + y])
 
@@ -574,6 +573,46 @@ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHi
                 nS = wng.sNoise
         )
 
+    let ResetC (waffle:Waffle) (wng:Wng) =
+
+        new Wng(
+                iteration = 0,
+                aaM = waffle.mAa,
+                abM = waffle.mAb,
+                baM = waffle.mBa,
+                bbM = waffle.mBb,
+                aM = wng.mA,
+                bM = wng.mB,
+                sM = wng.mS,
+                rM = wng.mR,
+                ssM = wng.mSs,
+                cPp = wng.cPp,
+                cSs = wng.cSs,
+                cRp = wng.cRp,
+                cPs = wng.cPs,
+                nP = wng.pNoise,
+                nS = wng.sNoise
+        )
+
+    let ResetR (waffle:Waffle) (memDex:int) (wng:Wng) =
+        new Wng(
+                iteration = 0,
+                aaM = wng.mAa,
+                abM = wng.mAb,
+                baM = wng.mBa,
+                bbM = wng.mBb,
+                aM = wng.mA,
+                bM = wng.mB,
+                sM = wng.mS,
+                rM = waffle.meR.SubMatrix(memDex, 1, 0, waffle.GroupCount),
+                ssM = wng.mSs,
+                cPp = wng.cPp,
+                cSs = wng.cSs,
+                cRp = wng.cRp,
+                cPs = wng.cPs,
+                nP = wng.pNoise,
+                nS = wng.sNoise
+        )
 
     let ResetS sSig (sseed:int) (wng:Wng) =
     

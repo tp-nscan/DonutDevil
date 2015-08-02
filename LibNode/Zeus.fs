@@ -15,6 +15,7 @@ type Zeus(
             abM:Matrix<float32>,
             baM:Matrix<float32>,
             bbM:Matrix<float32>,
+            ssM:Matrix<float32>,
             reM:Matrix<float32>
         ) =
     member this.GroupCount = reM.ColumnCount
@@ -23,6 +24,7 @@ type Zeus(
     member this.mAb = abM
     member this.mBa = baM
     member this.mBb = bbM
+    member this.mSs = ssM
     member this.meR = reM
 
 type Athena(
@@ -102,104 +104,84 @@ module ZeusUtils =
         | si, sj when (si>=0.0f) && (sj>=0.0f) -> 0.0f
         | _, _     -> failwith  "cant happen"
 
-    let UpdateTr zeus pNoise (mem:Matrix<float32>) sNoise cPp cSs cRp cPs (athena:Athena) =
+    let UpdateTr (zeus:Zeus) (mem:Matrix<float32>) 
+                 memIndex pNoise sNoise cPp cSs cRp cPs 
+                 (athena:Athena) =
 
-        let stride = athena.GroupCount
+        let groupCt = athena.GroupCount
+        let curMem = zeus.meR.SubMatrix(memIndex, 1, 0, groupCt)
 
-        let sNoise = sNoise |> Seq.take athena.GroupCount |> Seq.toArray
-        let aNoise = pNoise |> Seq.take athena.GroupCount |> Seq.toArray
-        let bNoise = pNoise |> Seq.take athena.GroupCount |> Seq.toArray
+
+        let sNoise = sNoise |> Seq.take groupCt |> Seq.toArray
+        let aNoise = pNoise |> Seq.take groupCt |> Seq.toArray
+        let bNoise = pNoise |> Seq.take groupCt |> Seq.toArray
 
         let dAdR = mem.Map2((fun x y -> x * (1.0f+y) * (1.0f+y) * cRp), athena.mS)
         let dBdR = mem.Map2((fun x y -> x * (1.0f-y) * (1.0f-y) * cRp), athena.mS)
 
+        let corrM = DenseMatrix.init 
+                     groupCt groupCt  
+                     (UpperTriangulateZd 
+                       groupCt ( fun x y -> let sqr = (1.0f + athena.mS.[0,x] * athena.mS.[0,y])
+                                            sqr*sqr ))
 
-        let res = new AthenaTr(                
-                                iteration=athena.Iteration,
-                                aM=athena.mA,
-                                bM=athena.mA,
-                                sM=athena.mA,
-                                dAdR=athena.mA,
-                                dBdR=athena.mA,
-                                dAdA=athena.mA,
-                                dAdB=athena.mA,
-                                dBdA=athena.mA,
-                                dBdB=athena.mA,
-                                dSdS=athena.mA,
-                                dSdP=athena.mA)
+        let acorM = DenseMatrix.init 
+                     groupCt groupCt  
+                     (UpperTriangulateZd 
+                       groupCt ( fun x y -> let sqr = (1.0f - athena.mS.[0,x] * athena.mS.[0,y])
+                                            sqr*sqr ))
 
-        None
-
-//
-//        let dAdR = this.mR.Map2((fun x y -> x * (1.0f+y) * (1.0f+y) * this.cRp), this.mS)
-//        let dBdR = this.mR.Map2((fun x y -> x * (1.0f-y) * (1.0f-y) * this.cRp), this.mS)
-//
-//        let fcM = DenseMatrix.init 
-//                   stride stride  
-//                   (UpperTriangulateZd 
-//                     stride ( fun x y -> let sqr = (1.0f + this.mS.[0,x] * this.mS.[0,y])
-//                                         sqr*sqr ))
-//
-//        let faM = DenseMatrix.init 
-//                   stride stride  
-//                   (UpperTriangulateZd 
-//                     stride ( fun x y -> let sqr = (1.0f - this.mS.[0,x] * this.mS.[0,y])
-//                                         sqr*sqr ))
-//
-//        let mAas = this.mAa.Map2 ((fun a b -> a*b), fcM)
-//
-//        let mBas = this.mBa.Map2 ((fun a b -> a*b), faM)
-//
-//        let mAbs = this.mAb.Map2 ((fun a b -> a*b), faM)
-//
-//        let mBbs = this.mBb.Map2 ((fun a b -> a*b), fcM)
-//
-//
-//        let dAdA = this.mA.Multiply(mAas)
-//        let dAdB = this.mB.Multiply(mBas)
-//        let dBdA = this.mA.Multiply(mAbs)
-//        let dBdB = this.mB.Multiply(mBbs)
-//
-//
-//        let newA = aNoise |> Array.mapi(fun i n -> 
-//            F32ToSF32(n + this.mA.[0,i] + this.cPp * (dAdA.[0,i] + dAdB.[0,i]) 
-//                      + dAdR.[0,i] ))
-//
-//        let newB = aNoise |> Array.mapi(fun i n -> 
-//            F32ToSF32(n + this.mB.[0,i] + this.cPp * (dBdB.[0,i] + dBdA.[0,i]) 
-//                      + dBdR.[0,i] ))
-//
-//
-//        let dSdS = this.mS.Multiply(this.mSs)
-//        let newS = sNoise |> Array.mapi(fun i n -> 
-//            F32ToSF32(n + this.mS.[0,i] + this.cSs * dSdS.[0,i] + 
-//                      this.cPs * this.mR.[0,i]  * (this.mA .[0,i] 
-//                      - this.mB.[0,i]) ))
-//
-//        new Wng(
-//            iteration = this.Iteration + 1,
-//            aaM = this.mAa,
-//            abM = this.mAb,
-//            baM = this.mBa,
-//            bbM = this.mBb,
-//            aM = DenseMatrix.init 1 this.mS.ColumnCount  
-//                    (fun x y -> newA.[x * this.mA.ColumnCount + y]),
-//            bM = DenseMatrix.init 1 this.mS.ColumnCount  
-//                    (fun x y -> newB.[x * this.mB.ColumnCount + y]),
-//            sM = DenseMatrix.init 1 this.mS.ColumnCount  
-//                    (fun x y -> newS.[x * this.mS.ColumnCount + y]),
-//            rM = this.mR ,
-//            ssM = this.mSs,
-//            cPp = this.cPp,
-//            cSs = this.cSs,
-//            cRp = this.cRp,
-//            cPs = this.cPs,
-//            nP = this.pNoise,
-//            nS = this.sNoise
-//        )
+        let mAas = zeus.mAa.Map2 ((fun a b -> a*b), corrM)
+        let mBas = zeus.mBa.Map2 ((fun a b -> a*b), acorM)
+        let mAbs = zeus.mAb.Map2 ((fun a b -> a*b), acorM)
+        let mBbs = zeus.mBb.Map2 ((fun a b -> a*b), corrM)
 
 
-    let Learn (learnRate:float32) =
+        let dAdA = athena.mA.Multiply(mAas)
+        let dAdB = athena.mB.Multiply(mBas)
+        let dBdA = athena.mA.Multiply(mAbs)
+        let dBdB = athena.mB.Multiply(mBbs)
+
+        let newA = aNoise |> Array.mapi(fun i n -> 
+            F32ToSF32(n + athena.mA.[0,i] + cPp * (dAdA.[0,i] + dAdB.[0,i]) 
+                      + dAdR.[0,i] ))
+
+        let newB = aNoise |> Array.mapi(fun i n -> 
+            F32ToSF32(n + athena.mB.[0,i] + cPp * (dBdB.[0,i] + dBdA.[0,i]) 
+                      + dBdR.[0,i] ))
+
+
+        let dSdS = athena.mS.Multiply(zeus.mSs)
+
+        let dSdP = DenseMatrix.init 1 groupCt  
+                        (fun x y -> curMem.[0,y]  * (athena.mA .[0,y] 
+                                    - athena.mB.[0,y]))
+
+        let newS = sNoise |> Array.mapi(fun i n -> 
+            F32ToSF32(n + athena.mS.[0,i] + cSs * dSdS.[0,i] + 
+                      cPs * dSdP.[0,i]))
+
+        new AthenaTr(                
+            iteration=athena.Iteration + 1,
+            aM=DenseMatrix.init 1 groupCt  
+                    (fun x y -> newA.[x * groupCt + y]),
+            bM=DenseMatrix.init 1 groupCt  
+                    (fun x y -> newB.[x * groupCt + y]),
+            sM=DenseMatrix.init 1 groupCt  
+                    (fun x y -> newS.[x * groupCt + y]),
+            dAdR=dAdR,
+            dBdR=dBdR,
+            dAdA=dAdA,
+            dAdB=dAdB,
+            dBdA=dBdA,
+            dBdB=dBdB,
+            dSdS=dSdS,
+            dSdP=dSdP
+            )
+
+
+    let Learn (learnRate:float32) (athena:Athena) 
+              (zeus:Zeus) =
         
         None
 
@@ -226,7 +208,7 @@ module ZeusUtils =
 //                            this.mAb.[i,j] +          
 //                            (ABadj this.mS.[0,i] this.mS.[0,j]) *
 //                            learnRate *
-//                            (FpFrTpTr this.mA.[0,i] this.mR.[0,i] this.mA.[0,j] this.mR.[0,j])
+//                            (FpFrTpTr this.mA.[0,i] this.mR.[0,i] this.mB.[0,j] this.mR.[0,j])
 //                        )
 //                )
 //        
@@ -239,7 +221,7 @@ module ZeusUtils =
 //                            this.mBa.[i,j] +          
 //                            (BAadj this.mS.[0,i] this.mS.[0,j]) *
 //                            learnRate *
-//                            (FpFrTpTr this.mA.[0,i] this.mR.[0,i] this.mA.[0,j] this.mR.[0,j])
+//                            (FpFrTpTr this.mB.[0,i] this.mR.[0,i] this.mA.[0,j] this.mR.[0,j])
 //                        )
 //                )
 //
@@ -255,22 +237,3 @@ module ZeusUtils =
 //                            (FpFrTpTr this.mB.[0,i] this.mR.[0,i] this.mB.[0,j] this.mR.[0,j])
 //                        )
 //                )
-//
-//        new Wng(
-//            iteration = this.Iteration,
-//            aaM = aamNew,
-//            abM = abmNew,
-//            baM = bamNew,
-//            bbM = bbmNew,
-//            aM = this.mA,
-//            bM = this.mB,
-//            sM = this.mS,
-//            rM = this.mR,
-//            ssM = this.mSs,
-//            cPp = this.cPp,
-//            cSs = this.cSs,
-//            cRp = this.cRp,
-//            cPs = this.cPs,
-//            nP = this.pNoise,
-//            nS = this.sNoise
-//        )

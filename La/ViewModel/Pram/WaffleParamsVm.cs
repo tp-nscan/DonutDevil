@@ -39,7 +39,7 @@ namespace La.ViewModel.Pram
             CSsVm = new ParamDoubleVm(
                     minVal: 0,
                     maxVal: 0.3,
-                    curVal: 0.1,
+                    curVal: 0.03,
                     increment: 0.005,
                     formatString: "0.000",
                     name: "S to S step"
@@ -55,7 +55,7 @@ namespace La.ViewModel.Pram
             CPsVm = new ParamDoubleVm(
                     minVal: 0,
                     maxVal: 0.3,
-                    curVal: 0.1,
+                    curVal: 0.03,
                     increment: 0.005,
                     formatString: "0.000",
                     name: "P to S step"
