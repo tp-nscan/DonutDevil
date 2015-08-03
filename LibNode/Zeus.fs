@@ -27,6 +27,27 @@ type Zeus(
     member this.mSs = ssM
     member this.meR = reM
 
+
+ type ZeusTr(
+            aaM:Matrix<float32>,
+            abM:Matrix<float32>,
+            baM:Matrix<float32>,
+            bbM:Matrix<float32>,
+            ssM:Matrix<float32>,
+            reM:Matrix<float32>
+        ) =
+
+    member this.Zeus = new Zeus(            
+                                aaM = aaM,
+                                abM = abM,
+                                baM = baM,
+                                bbM = bbM,
+                                ssM = ssM,
+                                reM = reM
+                            )
+
+
+
 type Athena(
             iteration:int,
             aM:Matrix<float32>,
@@ -40,6 +61,11 @@ type Athena(
     member this.mB = bM
     member this.mS = sM
 
+type Scorr =
+    | AA of float32
+    | AB of float32
+    | BA of float32
+    | BB of float32
 
 type AthenaTr(
                 iteration:int,
@@ -68,41 +94,18 @@ type AthenaTr(
 
 module ZeusUtils =
 
+    let MakeScorr si sj =
+        match si, sj with
+        | si, sj when (si< 0.0f) && (sj< 0.0f) -> Scorr.AA (si*sj)
+        | si, sj when (si< 0.0f) && (sj>=0.0f) -> Scorr.AB (- si*sj)
+        | si, sj when (si>=0.0f) && (sj< 0.0f) -> Scorr.BA (- si*sj)
+        | si, sj when (si>=0.0f) && (sj>=0.0f) -> Scorr.BB (si*sj)
+        | _, _     -> failwith  "cant happen"
+
     let FpFrTpTr (fp:float32) fr tp tr = 
         if (fp*fr < 0.0f) then 0.0f else
         (fr*tr - fp*tp)
 
-    let AAadj si sj =
-        match si, sj with
-        | si, sj when (si< 0.0f) && (sj< 0.0f) -> 0.0f
-        | si, sj when (si< 0.0f) && (sj>=0.0f) -> 0.0f
-        | si, sj when (si>=0.0f) && (sj< 0.0f) -> 0.0f
-        | si, sj when (si>=0.0f) && (sj>=0.0f) -> si*sj
-        | _, _     -> failwith  "cant happen"
-
-    let ABadj si sj =
-        match si, sj with
-        | si, sj when (si< 0.0f) && (sj< 0.0f) -> 0.0f
-        | si, sj when (si< 0.0f) && (sj>=0.0f) -> 0.0f
-        | si, sj when (si>=0.0f) && (sj< 0.0f) -> -si*sj
-        | si, sj when (si>=0.0f) && (sj>=0.0f) -> 0.0f
-        | _, _     -> failwith  "cant happen"
-
-    let BAadj si sj =
-        match si, sj with
-        | si, sj when (si< 0.0f) && (sj< 0.0f) -> 0.0f
-        | si, sj when (si< 0.0f) && (sj>=0.0f) -> -si*sj
-        | si, sj when (si>=0.0f) && (sj< 0.0f) -> 0.0f
-        | si, sj when (si>=0.0f) && (sj>=0.0f) -> 0.0f
-        | _, _     -> failwith  "cant happen"
-
-    let BBadj si sj =
-        match si, sj with
-        | si, sj when (si< 0.0f) && (sj< 0.0f) -> si*sj
-        | si, sj when (si< 0.0f) && (sj>=0.0f) -> 0.0f
-        | si, sj when (si>=0.0f) && (sj< 0.0f) -> 0.0f
-        | si, sj when (si>=0.0f) && (sj>=0.0f) -> 0.0f
-        | _, _     -> failwith  "cant happen"
 
     let UpdateTr (zeus:Zeus) (mem:Matrix<float32>) 
                  memIndex pNoise sNoise cPp cSs cRp cPs 
@@ -180,11 +183,25 @@ module ZeusUtils =
             )
 
 
-    let Learn (learnRate:float32) (athena:Athena) 
-              (zeus:Zeus) =
-        
-        None
+    let LearnTr (zeus:Zeus) memIndex (learnRate:float32) (athena:Athena) =
 
+        let curMem = zeus.meR.Row memIndex
+
+        let mCs = Array2D.init athena.GroupCount athena.GroupCount
+                     (fun i j -> MakeScorr athena.mS.[0,i] athena.mS.[0,j]) 
+        
+//        let aamNew = 
+//            DenseMatrix.init 
+//                this.mAa.RowCount this.mAa.ColumnCount
+//                (fun i j 
+//                    -> if(i=j) then 0.0f else 
+//                        (F32ToSF32
+//                            aaM.[i,j] +          
+//                            (AAadj this.mS.[0,i] this.mS.[0,j]) *
+//                            learnRate *
+//                            (FpFrTpTr athena.mA.[0,i] curMem.[i] athena.mA.[0,j] curMem.[j])
+//                        )
+//                )
 
 //        let aamNew = 
 //            DenseMatrix.init 
@@ -237,3 +254,11 @@ module ZeusUtils =
 //                            (FpFrTpTr this.mB.[0,i] this.mR.[0,i] this.mB.[0,j] this.mR.[0,j])
 //                        )
 //                )
+        new ZeusTr(
+                    aaM = zeus.mAa,
+                    abM = zeus.mAb,
+                    baM = zeus.mBa,
+                    bbM = zeus.mBb,
+                    ssM = zeus.mSs,
+                    reM = zeus.meR
+                 )
