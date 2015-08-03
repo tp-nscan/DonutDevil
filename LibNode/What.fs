@@ -279,10 +279,6 @@ type Waffle(
     member this.mBb = bbM
     member this.meR = reM
 
-type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHist; 
-                        ahR:ArrayHist; ahS:ArrayHist;}
-
-
  module WngBuilder =
     
     let CreateRandom((seed:int), ngSize, ppSig, pSig, sSig,
@@ -347,6 +343,11 @@ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHi
         | None -> None
 
 
+ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHist; 
+                        ahR:ArrayHist; ahS:ArrayHist;}
+
+ module WaffleHistBuilder =
+
     let InitHistories arrayLength ensembleSize targetLength =
       {
         WaffleHistories.aeR=ArrayHistory.Init "C" ensembleSize targetLength
@@ -358,20 +359,18 @@ type WaffleHistories = {aeR:ArrayHist; ahV:ArrayHist; ahA:ArrayHist; ahB:ArrayHi
       }
 
     let UpdateHistories (waffleHist:WaffleHistories) (wng:Wng) (waffle:Waffle) =
-      let fgc = System.Convert.ToSingle(waffle.GroupCount)
+      let fgc = System.Convert.ToSingle(wng.GroupCount)
       {
         WaffleHistories.aeR=ArrayHistory.Add 
             waffleHist.aeR 
-            (wng.mA.TransposeAndMultiply(waffle.meR) |> FlattenRm |> Seq.map(fun v->v/fgc)) 
+            (wng.mV.TransposeAndMultiply(waffle.meR) |> ToRowMajorSequence |> Seq.map(fun v->v/fgc)) 
             wng.Iteration
-        ahV=ArrayHistory.Add waffleHist.ahV (wng.mV |> FlattenRm) wng.Iteration
-        ahA=ArrayHistory.Add waffleHist.ahA (wng.mA |> FlattenRm) wng.Iteration
-        ahB=ArrayHistory.Add waffleHist.ahB (wng.mB |> FlattenRm) wng.Iteration
-        ahR=ArrayHistory.Add waffleHist.ahR (wng.mR |> FlattenRm) wng.Iteration
-        ahS=ArrayHistory.Add waffleHist.ahS (wng.mS |> FlattenRm) wng.Iteration
+        ahV=ArrayHistory.Add waffleHist.ahV (wng.mV |> ToRowMajorSequence) wng.Iteration
+        ahA=ArrayHistory.Add waffleHist.ahA (wng.mA |> ToRowMajorSequence) wng.Iteration
+        ahB=ArrayHistory.Add waffleHist.ahB (wng.mB |> ToRowMajorSequence) wng.Iteration
+        ahR=ArrayHistory.Add waffleHist.ahR (wng.mR |> ToRowMajorSequence) wng.Iteration
+        ahS=ArrayHistory.Add waffleHist.ahS (wng.mS |> ToRowMajorSequence) wng.Iteration
       }
-
-
 
  module WaffleBuilder =
 

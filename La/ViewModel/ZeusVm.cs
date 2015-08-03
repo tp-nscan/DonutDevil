@@ -24,15 +24,15 @@ namespace La.ViewModel
         {
             Zeus = zeus;
             ZeusParamsVm = new ZeusParamsVm();
-            //ZeusHistoriesVm = new ZeusHistoriesVm(
-            //    WngBuilder.InitHistories
-            //        (
-            //            arrayLength: Waffle.GroupCount,
-            //            ensembleSize: Waffle.EnsembleCount,
-            //            targetLength: 500
-            //        ),
-            //        "C"
-            //    );
+            WaffleHistoriesVm = new WaffleHistoriesVm(
+                WaffleHistBuilder.InitHistories
+                    (
+                        arrayLength: Zeus.GroupCount,
+                        ensembleSize: Zeus.EnsembleCount,
+                        targetLength: 500
+                    ),
+                    "C"
+                );
 
             IndexSelectorVm = new IndexSelectorVm(Enumerable.Range(0, zeus.EnsembleCount));
             DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0")
@@ -58,16 +58,17 @@ namespace La.ViewModel
         public ZeusParamsVm ZeusParamsVm { get; private set; }
 
         private IDisposable _whvmSub;
-        private ZeusHistoriesVm _zeusHistoriesVm;
-        public ZeusHistoriesVm ZeusHistoriesVm
+        private WaffleHistoriesVm _waffleHistoriesVm;
+        public WaffleHistoriesVm WaffleHistoriesVm
         {
-            get { return _zeusHistoriesVm; }
+            get { return _waffleHistoriesVm; }
             set
             {
                 _whvmSub?.Dispose();
-                _zeusHistoriesVm = value;
-                _whvmSub = _zeusHistoriesVm.OnArrayHistVmChanged.Subscribe(lvm => UpdateUi());
-                OnPropertyChanged("ZeusHistoriesVm");
+                _waffleHistoriesVm = value;
+                _whvmSub = _waffleHistoriesVm.OnArrayHistVmChanged
+                            .Subscribe(lvm => UpdateUi());
+                OnPropertyChanged("WaffleHistoriesVm");
             }
         }
 
@@ -149,7 +150,7 @@ namespace La.ViewModel
             },
                 cancellationToken: _cancellationTokenSource.Token
             );
-            //ZeusHistoriesVm = ZeusHistoriesVm.Update(Wng, Zeus);
+            //WaffleHistoriesVm = WaffleHistoriesVm.Update(Wng, Zeus);
             UpdateUi();
             IsRunning = false;
         }
@@ -398,11 +399,11 @@ namespace La.ViewModel
             MainGridVm = new WbRollingGridVm(
                 imageWidth: 1000,
                 imageHeight: 1000,
-                cellDimX: ZeusHistoriesVm.ArrayHistVm.ArrayLength,
+                cellDimX: Zeus.GroupCount,
                 cellDimY: 500
             );
 
-            var cellColors = ZeusHistoriesVm.ArrayHistVm.GetD2Vals.Select(
+            var cellColors = WaffleHistoriesVm.ArrayHistVm.GetD2Vals.Select(
                 (v, i) => new D2Val<Color>
                             (
                                 x: v.X,

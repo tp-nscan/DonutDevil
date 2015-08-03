@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModel="clr-namespace:La.ViewModel.Design"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance {x:Type viewModel:DesignZeusHistoriesVm}, IsDesignTimeCreatable=True}"
+             d:DataContext="{d:DesignInstance {x:Type viewModel:DesignWaffleHistoriesVm}, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="300" >
                 <!--Width="{Binding ActualWidth, Mode=OneWay, 
                 RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}">-->

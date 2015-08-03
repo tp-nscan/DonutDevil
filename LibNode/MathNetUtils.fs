@@ -65,5 +65,5 @@ module MathNetUtils =
         DenseMatrix.init stride stride
             (UpperTriangulate stride (fun x y -> siter |> Seq.head))
 
-    let FlattenRm (mnMatrix:Matrix<'a>) = 
-        mnMatrix.ToArray() |> Seq.cast<'a>
+    let ToRowMajorSequence (mnMatrix:Matrix<'a>) = 
+         mnMatrix.ToArray() |> Seq.cast<'a>

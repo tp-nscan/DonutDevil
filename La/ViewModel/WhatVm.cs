@@ -24,8 +24,8 @@ namespace La.ViewModel
         {
             Waffle = waffle;
             ZeusParamsVm = new ZeusParamsVm();
-            ZeusHistoriesVm = new ZeusHistoriesVm(
-                WngBuilder.InitHistories
+            WaffleHistoriesVm = new WaffleHistoriesVm(
+                WaffleHistBuilder.InitHistories
                     (
                         arrayLength: Waffle.GroupCount,
                         ensembleSize: Waffle.EnsembleCount,
@@ -58,8 +58,8 @@ namespace La.ViewModel
         public ZeusParamsVm ZeusParamsVm { get; private set; }
 
         private IDisposable _whvmSub;
-        private ZeusHistoriesVm _waffleHistoriesVm;
-        public ZeusHistoriesVm ZeusHistoriesVm
+        private WaffleHistoriesVm _waffleHistoriesVm;
+        public WaffleHistoriesVm WaffleHistoriesVm
         {
             get { return _waffleHistoriesVm; }
             set
@@ -67,7 +67,7 @@ namespace La.ViewModel
                 _whvmSub?.Dispose();
                 _waffleHistoriesVm = value;
                 _whvmSub = _waffleHistoriesVm.OnArrayHistVmChanged.Subscribe(lvm => UpdateUi());
-                OnPropertyChanged("ZeusHistoriesVm");
+                OnPropertyChanged("WaffleHistoriesVm");
             }
         }
 
@@ -149,7 +149,7 @@ namespace La.ViewModel
             },
                 cancellationToken: _cancellationTokenSource.Token
             );
-            ZeusHistoriesVm = ZeusHistoriesVm.Update(Wng, Waffle);
+            WaffleHistoriesVm = WaffleHistoriesVm.Update(Wng, Waffle);
             UpdateUi();
             IsRunning = false;
         }
@@ -398,11 +398,11 @@ namespace La.ViewModel
             MainGridVm = new WbRollingGridVm(
                 imageWidth: 1000,
                 imageHeight: 1000,
-                cellDimX: ZeusHistoriesVm.ArrayHistVm.ArrayLength,
+                cellDimX: WaffleHistoriesVm.ArrayHistVm.ArrayLength,
                 cellDimY: 500
             );
 
-            var cellColors = ZeusHistoriesVm.ArrayHistVm.GetD2Vals.Select(
+            var cellColors = WaffleHistoriesVm.ArrayHistVm.GetD2Vals.Select(
                 (v, i) => new D2Val<Color>
                             (
                                 x: v.X,

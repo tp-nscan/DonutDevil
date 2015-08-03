@@ -2,15 +2,15 @@
 
 namespace La.ViewModel.Design
 {
-    public class DesignZeusHistoriesVm : ZeusHistoriesVm
+    public class DesignWaffleHistoriesVm : WaffleHistoriesVm
     {
-        public DesignZeusHistoriesVm() : base(DesignZeusHistories(), "C")
+        public DesignWaffleHistoriesVm() : base(DesignZeusHistories(), "C")
         {
         }
 
         static WaffleHistories DesignZeusHistories()
         {
-            return WngBuilder.InitHistories(10, 10, 10);
+            return WaffleHistBuilder.InitHistories(10, 10, 10);
         }
     }
 }
