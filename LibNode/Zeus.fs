@@ -186,74 +186,67 @@ module ZeusUtils =
     let LearnTr (zeus:Zeus) memIndex (learnRate:float32) (athena:Athena) =
 
         let curMem = zeus.meR.Row memIndex
+        let grpCt = athena.GroupCount
 
-        let mCs = Array2D.init athena.GroupCount athena.GroupCount
+        let mCs = Array2D.init grpCt grpCt
                      (fun i j -> MakeScorr athena.mS.[0,i] athena.mS.[0,j]) 
         
-//        let aamNew = 
-//            DenseMatrix.init 
-//                this.mAa.RowCount this.mAa.ColumnCount
-//                (fun i j 
-//                    -> if(i=j) then 0.0f else 
-//                        (F32ToSF32
-//                            aaM.[i,j] +          
-//                            (AAadj this.mS.[0,i] this.mS.[0,j]) *
-//                            learnRate *
-//                            (FpFrTpTr athena.mA.[0,i] curMem.[i] athena.mA.[0,j] curMem.[j])
-//                        )
-//                )
+        let aamNew = 
+            DenseMatrix.init 
+                grpCt grpCt
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        (F32ToSF32
+                            zeus.mAa.[i,j] +
+                            match mCs.[i,j] with
+                            | AA sc ->  sc * learnRate *
+                                        (FpFrTpTr athena.mA.[0,i] curMem.[i] athena.mA.[0,j] curMem.[j])
+                            | _ -> 0.0f
+                        )
+                )
 
-//        let aamNew = 
-//            DenseMatrix.init 
-//                this.mAa.RowCount this.mAa.ColumnCount
-//                (fun i j 
-//                    -> if(i=j) then 0.0f else 
-//                        (F32ToSF32
-//                            aaM.[i,j] +          
-//                            (AAadj this.mS.[0,i] this.mS.[0,j]) *
-//                            learnRate *
-//                            (FpFrTpTr this.mA.[0,i] this.mR.[0,i] this.mA.[0,j] this.mR.[0,j])
-//                        )
-//                )
-//
-//        let abmNew = 
-//            DenseMatrix.init 
-//                this.mAb.RowCount this.mAb.ColumnCount
-//                (fun i j 
-//                    -> if(i=j) then 0.0f else 
-//                        (F32ToSF32
-//                            this.mAb.[i,j] +          
-//                            (ABadj this.mS.[0,i] this.mS.[0,j]) *
-//                            learnRate *
-//                            (FpFrTpTr this.mA.[0,i] this.mR.[0,i] this.mB.[0,j] this.mR.[0,j])
-//                        )
-//                )
-//        
-//        let bamNew = 
-//            DenseMatrix.init 
-//                this.mBa.RowCount this.mBa.ColumnCount
-//                (fun i j 
-//                    -> if(i=j) then 0.0f else 
-//                        (F32ToSF32
-//                            this.mBa.[i,j] +          
-//                            (BAadj this.mS.[0,i] this.mS.[0,j]) *
-//                            learnRate *
-//                            (FpFrTpTr this.mB.[0,i] this.mR.[0,i] this.mA.[0,j] this.mR.[0,j])
-//                        )
-//                )
-//
-//        let bbmNew = 
-//            DenseMatrix.init 
-//                this.mBb.RowCount this.mBb.ColumnCount
-//                (fun i j 
-//                    -> if(i=j) then 0.0f else 
-//                        (F32ToSF32
-//                            this.mBb.[i,j] +          
-//                            (BBadj this.mS.[0,i] this.mS.[0,j]) *
-//                            learnRate *
-//                            (FpFrTpTr this.mB.[0,i] this.mR.[0,i] this.mB.[0,j] this.mR.[0,j])
-//                        )
-//                )
+        let abmNew = 
+            DenseMatrix.init 
+                grpCt grpCt
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        (F32ToSF32
+                            zeus.mAb.[i,j] +
+                            match mCs.[i,j] with
+                            | AB sc ->  sc * learnRate *
+                                        (FpFrTpTr athena.mA.[0,i] curMem.[i] athena.mB.[0,j] curMem.[j])
+                            | _ -> 0.0f
+                        )
+                )
+
+        let bamNew = 
+            DenseMatrix.init 
+                grpCt grpCt
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        (F32ToSF32
+                            zeus.mBa.[i,j] +
+                            match mCs.[i,j] with
+                            | BA sc ->  sc * learnRate *
+                                        (FpFrTpTr athena.mB.[0,i] curMem.[i] athena.mA.[0,j] curMem.[j])
+                            | _ -> 0.0f
+                        )
+                )
+
+        let bbmNew = 
+            DenseMatrix.init 
+                grpCt grpCt
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        (F32ToSF32
+                            zeus.mBb.[i,j] +
+                            match mCs.[i,j] with
+                            | BB sc ->  sc * learnRate *
+                                        (FpFrTpTr athena.mB.[0,i] curMem.[i] athena.mB.[0,j] curMem.[j])
+                            | _ -> 0.0f
+                        )
+                )
+
         new ZeusTr(
                     aaM = zeus.mAa,
                     abM = zeus.mAb,

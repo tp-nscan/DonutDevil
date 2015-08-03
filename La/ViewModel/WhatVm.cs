@@ -365,7 +365,6 @@ namespace La.ViewModel
 
         #endregion // ChangeParamsCommand
 
-
         #region GoToMenuCommand
 
         RelayCommand _goToMenuCommand;

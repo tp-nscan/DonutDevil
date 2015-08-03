@@ -29,20 +29,31 @@ namespace La.ViewModel
                     (
                         arrayLength: Waffle.GroupCount,
                         ensembleSize: Waffle.EnsembleCount,
-                        targetLength: 200
+                        targetLength: 500
                     ),
                     "C"
                 );
 
             IndexSelectorVm = new IndexSelectorVm(Enumerable.Range(0, waffle.EnsembleCount));
             DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0")
-                { Title = "Display Frequency", Value = 10 };
+            { Title = "Display Frequency", Value = 10 };
 
             _legendVm = new LinearLegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(lvm => UpdateUi());
         }
 
-        public IndexSelectorVm IndexSelectorVm { get; private set; }
+        private IndexSelectorVm _indexSelectorVm;
+        public IndexSelectorVm IndexSelectorVm
+        {
+            get { return _indexSelectorVm; }
+            set
+            {
+                _indexSelectorVm = value;
+                _indexSelectorVm.OnSelectionChanged.Subscribe(
+                        ivm => ResetRCommand.Execute(null)
+                    );
+            }
+        }
 
         public WaffleParamsVm WaffleParamsVm { get; private set; }
 
@@ -64,7 +75,15 @@ namespace La.ViewModel
 
         public Wng Wng { get; private set; }
 
-        public string Generation => Wng?.Iteration.ToString() ?? "-";
+        public string Generation
+        {
+            get { return _generation; }
+            set
+            {
+                _generation = value;
+                OnPropertyChanged("Generation");
+            }
+        }
 
         #region Navigation
 
@@ -96,105 +115,51 @@ namespace La.ViewModel
 
         #endregion
 
+        #region UpdateCommand
 
-
-        #region UpdateNetworkCommand
-
-        RelayCommand _updateNetworkCommand;
-        public ICommand UpdateNetworkCommand
+        RelayCommand _updateCommand;
+        public ICommand UpdateCommand
         {
             get
             {
-                return _updateNetworkCommand ?? (
-                    _updateNetworkCommand = new RelayCommand(
-                        param => DoUpdateNetwork(),
-                        param => CanUpdateNetwork()
+                return _updateCommand ?? (
+                    _updateCommand = new RelayCommand(
+                        param => DoUpdate(),
+                        param => CanUpdate()
                     ));
             }
         }
 
-        private async void DoUpdateNetwork()
+        private async void DoUpdate()
         {
             _cancellationTokenSource = new CancellationTokenSource();
             IsRunning = true;
-
             await Task.Run(() =>
             {
-                _stopwatch.Start();
-
-                Wng = WaffleBuilder.CreateWng(
-                     glauberRadius: WaffleParamsVm.GlauberRadiusVm.CurVal,
-                     pSig: WaffleParamsVm.PSigVm.CurVal,
-                     sSig: WaffleParamsVm.SSigVm.CurVal,
-                     cPp: (float)WaffleParamsVm.CPpVm.CurVal,
-                     pNoiseLevel: (float)WaffleParamsVm.PNoiseLevelVm.CurVal,
-                     sNoiseLevel: (float)WaffleParamsVm.SNoiseLevelVm.CurVal,
-                     cSs: (float)WaffleParamsVm.CSsVm.CurVal,
-                     cRp: (float)WaffleParamsVm.CRpVm.CurVal,
-                     cPs: (float)WaffleParamsVm.CPsVm.CurVal,
-                     rIndex: IndexSelectorVm.IndexVm.Index,
-                     sseed: WaffleParamsVm.SSeedVm.CurVal,
-                     pseed: WaffleParamsVm.PSeedVm.CurVal,
-                     waffle: Waffle
-                  ).Value;
-
-                for (var i = 1; _isRunning; i++)
+                for (var i = 1; i < (int)DisplayFrequencySliderVm.Value + 1; i++)
                 {
-                    if (WaffleParamsVm.IsDirty)
-                    {
-                        Wng = Wng.NewPrams(
-                                cPp: (float)WaffleParamsVm.CPpVm.CurVal,
-                                cSs: (float)WaffleParamsVm.CSsVm.CurVal,
-                                cRp: (float)WaffleParamsVm.CRpVm.CurVal,
-                                cPs: (float)WaffleParamsVm.CPsVm.CurVal
-                            );
-                        WaffleParamsVm.Clean();
-                    }
-
-                    var learnMod = i % WaffleParamsVm.LearnFreqVm.CurVal;
-                    var learnTime = (learnMod == 0);
-
-                    // ************************
-                    if ((WaffleParamsVm.LearnFreqVm.CurVal > 0) &&
-                         learnTime
-                       )
-                    {
-                        Wng = Wng.Learn((float)WaffleParamsVm.LearnRateVm.CurVal);
-                    }
-
                     Wng = Wng.Update();
-                    // ************************
-
-                    if (_cancellationTokenSource.IsCancellationRequested)
-                    {
-                        IsRunning = false;
-                        _stopwatch.Stop();
-                        Application.Current.Dispatcher.Invoke
-                        (
-                            CommandManager.InvalidateRequerySuggested
-                        );
-                    }
-
-                    if (i % (int)DisplayFrequencySliderVm.Value == 0)
-                    {
-                        Application.Current.Dispatcher.Invoke
-                            (
-                                UpdateUi,
-                                DispatcherPriority.ApplicationIdle
-                            );
-                    }
+                    Application.Current.Dispatcher.Invoke
+                    (
+                        () => Generation = i.ToString(),
+                        DispatcherPriority.ApplicationIdle
+                    );
                 }
+
             },
                 cancellationToken: _cancellationTokenSource.Token
             );
+            WaffleHistoriesVm = WaffleHistoriesVm.Update(Wng, Waffle);
+            UpdateUi();
+            IsRunning = false;
         }
 
-        bool CanUpdateNetwork()
+        bool CanUpdate()
         {
-            return !_isRunning;
+            return (!_isRunning) && (Wng != null);
         }
 
-        #endregion // UpdateNetworkCommand
+        #endregion // UpdateCommand
 
         #region LearnCommand
 
@@ -204,52 +169,201 @@ namespace La.ViewModel
             get
             {
                 return _learnCommand ?? (
-                        _learnCommand = new RelayCommand(
-                            param => DoLearn(),
-                            param => CanLearn()
+                    _learnCommand = new RelayCommand(
+                        param => DoLearn(),
+                        param => CanLearn()
                     ));
             }
         }
 
-        private async void DoLearn()
+        private void DoLearn()
         {
             var newWng = Wng.Learn((float)WaffleParamsVm.LearnRateVm.CurVal);
             Waffle = WaffleBuilder.UpdateFromWng(Waffle, newWng);
+            Wng = WaffleBuilder.ResetC(waffle: Waffle, wng: Wng);
+            UpdateUi();
         }
 
         bool CanLearn()
         {
-            return !_isRunning;
+            return (!_isRunning) && (Wng != null);
         }
 
         #endregion // LearnCommand
 
-        #region StopUpdateNetworkCommand
+        #region ResetAllCommand
 
-        RelayCommand _stopUpdateNetworkCommand;
-        public ICommand StopUpdateNetworkCommand
+        RelayCommand _resetAllCommand;
+        public ICommand ResetAllCommand
         {
             get
             {
-                return _stopUpdateNetworkCommand ?? (
-                    _stopUpdateNetworkCommand = new RelayCommand(
-                        param => DoCancelUpdateNetwork(),
-                        param => CanCancelUpdateNetwork()
+                return _resetAllCommand ?? (
+                    _resetAllCommand = new RelayCommand(
+                        param => DoResetAll(),
+                        param => CanResetAll()
                     ));
             }
         }
 
-        private void DoCancelUpdateNetwork()
+        private void DoResetAll()
         {
-            _cancellationTokenSource.Cancel();
+            Wng = WaffleBuilder.CreateWng(
+                 glauberRadius: WaffleParamsVm.GlauberRadiusVm.CurVal,
+                 pSig: WaffleParamsVm.PSigVm.CurVal,
+                 sSig: WaffleParamsVm.SSigVm.CurVal,
+                 cPp: (float)WaffleParamsVm.CPpVm.CurVal,
+                 pNoiseLevel: (float)WaffleParamsVm.PNoiseLevelVm.CurVal,
+                 sNoiseLevel: (float)WaffleParamsVm.SNoiseLevelVm.CurVal,
+                 cSs: (float)WaffleParamsVm.CSsVm.CurVal,
+                 cRp: (float)WaffleParamsVm.CRpVm.CurVal,
+                 cPs: (float)WaffleParamsVm.CPsVm.CurVal,
+                 rIndex: IndexSelectorVm.IndexVm.Index,
+                 sseed: WaffleParamsVm.SSeedVm.CurVal,
+                 pseed: WaffleParamsVm.PSeedVm.CurVal,
+                 waffle: Waffle
+              ).Value;
+
+            UpdateUi();
         }
 
-        bool CanCancelUpdateNetwork()
+        bool CanResetAll()
         {
-            return _isRunning;
+            return !_isRunning;
         }
 
-        #endregion // StopUpdateNetworkCommand
+        #endregion // ResetAllCommand
+
+        #region ResetPCommand
+
+        RelayCommand _resetPCommand;
+        public ICommand ResetPCommand
+        {
+            get
+            {
+                return _resetPCommand ?? (
+                    _resetPCommand = new RelayCommand(
+                        param => DoResetP(),
+                        param => CanResetP()
+                    ));
+            }
+        }
+
+        private void DoResetP()
+        {
+            Wng = WaffleBuilder.ResetP(
+                 pSig: WaffleParamsVm.PSigVm.CurVal,
+                 pseed: WaffleParamsVm.PSeedVm.CurVal,
+                 wng: Wng
+              );
+
+            UpdateUi();
+        }
+
+        bool CanResetP()
+        {
+            return (!_isRunning) && (Wng != null);
+        }
+
+        #endregion // ResetPCommand
+
+        #region ResetRCommand
+
+        RelayCommand _resetRCommand;
+        public ICommand ResetRCommand
+        {
+            get
+            {
+                return _resetRCommand ?? (
+                    _resetRCommand = new RelayCommand(
+                        param => DoResetR(),
+                        param => CanResetR()
+                    ));
+            }
+        }
+
+        private void DoResetR()
+        {
+            Wng = WaffleBuilder.ResetR(
+                 waffle: Waffle,
+                 memDex: IndexSelectorVm.IndexVm.Index,
+                 wng: Wng
+              );
+
+            UpdateUi();
+        }
+
+        bool CanResetR()
+        {
+            return (!_isRunning) && (Wng != null);
+        }
+
+        #endregion // ResetRCommand
+
+        #region ResetSCommand
+
+        RelayCommand _resetSCommand;
+        public ICommand ResetSCommand
+        {
+            get
+            {
+                return _resetSCommand ?? (
+                    _resetSCommand = new RelayCommand(
+                        param => DoResetS(),
+                        param => CanResetS()
+                    ));
+            }
+        }
+
+        private void DoResetS()
+        {
+            Wng = WaffleBuilder.ResetS(
+                 sSig: WaffleParamsVm.SSigVm.CurVal,
+                 sseed: WaffleParamsVm.SSeedVm.CurVal,
+                 wng: Wng
+              );
+
+            UpdateUi();
+        }
+
+        bool CanResetS()
+        {
+            return (!_isRunning) && (Wng != null);
+        }
+
+        #endregion // ResetSCommand
+
+        #region  ChangeParamsCommand
+
+        RelayCommand _changeParamsCommand;
+        public ICommand ChangeParamsCommand
+        {
+            get
+            {
+                return _changeParamsCommand ?? (
+                    _changeParamsCommand = new RelayCommand(
+                        param => DochangeParams(),
+                        param => CanchangeParams()
+                    ));
+            }
+        }
+
+        private void DochangeParams()
+        {
+            Wng = Wng.NewPrams(
+                    cPp: (float)WaffleParamsVm.CPpVm.CurVal,
+                    cSs: (float)WaffleParamsVm.CSsVm.CurVal,
+                    cRp: (float)WaffleParamsVm.CRpVm.CurVal,
+                    cPs: (float)WaffleParamsVm.CPsVm.CurVal
+                );
+        }
+
+        bool CanchangeParams()
+        {
+            return (!_isRunning) && (Wng != null);
+        }
+
+        #endregion // ChangeParamsCommand
 
         #region GoToMenuCommand
 
@@ -278,15 +392,14 @@ namespace La.ViewModel
 
         #endregion // GoToMenuCommand
 
+
         void UpdateUi()
         {
-            WaffleHistoriesVm = WaffleHistoriesVm.Update(Wng, Waffle);
-
             MainGridVm = new WbRollingGridVm(
                 imageWidth: 1000,
                 imageHeight: 1000,
                 cellDimX: WaffleHistoriesVm.ArrayHistVm.ArrayLength,
-                cellDimY: 200
+                cellDimY: 500
             );
 
             var cellColors = WaffleHistoriesVm.ArrayHistVm.GetD2Vals.Select(
@@ -298,6 +411,7 @@ namespace La.ViewModel
                             )
                 ).ToList();
 
+            if (Wng == null) return;
             WngGvVm = new WngGvVm(Wng, Waffle, IndexSelectorVm.IndexVm.Index);
             MainGridVm.AddValues(cellColors);
             OnPropertyChanged("Generation");
@@ -337,6 +451,7 @@ namespace La.ViewModel
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private WngGvVm _wngGvVm;
+        private string _generation;
 
         public string ElapsedTime =>
             $"{_stopwatch.Elapsed.Hours.ToString("00")}:" +

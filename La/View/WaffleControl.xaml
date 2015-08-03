@@ -9,7 +9,6 @@
              xmlns:WpfUtils="clr-namespace:WpfUtils;assembly=WpfUtils" x:Class="La.View.WaffleControl"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="800">
-
     <Grid Background="Black">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -21,10 +20,14 @@
 
             <StackPanel Margin="5" DockPanel.Dock="Top" Orientation="Vertical" Background="#F222">
                 <WrapPanel  Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding UpdateNetworkCommand}" Content="Run" />
-                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding StopUpdateNetworkCommand}" Content="Stop" />
-                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding GoToMenuCommand}" Content="Reset" />
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding UpdateCommand}" Content="Update" />
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetAllCommand}" Content="Reset All" />
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetSCommand}" Content="Reset S" />
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetPCommand}" Content="Reset P" />
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding LearnCommand}" Content="Learn" />
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ChangeParamsCommand}" Content="Params" />
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding GoToMenuCommand}" Content="Menu" />
+
                 </WrapPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -121,12 +124,13 @@
 				VerticalScrollBarVisibility="Visible" 
 				HorizontalScrollBarVisibility="Visible"
 				Template="{DynamicResource DonutDevilScrollViewerTemplate}">
-                <local:WngGvControl DataContext="{Binding WngGvVm}"/>
+                <local:WngGvControl DataContext="{Binding WngGvVm}" RenderTransformOrigin="0.5,0.5"/>
             </ScrollViewer>
-            
+
         </Grid>
 
     </Grid>
+
 
 
 </UserControl>
