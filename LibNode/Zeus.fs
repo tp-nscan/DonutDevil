@@ -27,6 +27,12 @@ type Zeus(
     member this.mSs = ssM
     member this.meR = reM
 
+type Scorr =
+    | AA of float32
+    | AB of float32
+    | BA of float32
+    | BB of float32
+
 
  type ZeusTr(
             aaM:Matrix<float32>,
@@ -34,17 +40,20 @@ type Zeus(
             baM:Matrix<float32>,
             bbM:Matrix<float32>,
             ssM:Matrix<float32>,
-            reM:Matrix<float32>
+            reM:Matrix<float32>,
+            scM:Scorr[,]
         ) =
 
-    member this.Zeus = new Zeus(            
-                                aaM = aaM,
-                                abM = abM,
-                                baM = baM,
-                                bbM = bbM,
-                                ssM = ssM,
-                                reM = reM
-                            )
+    member this.Zeus 
+        = new Zeus(            
+                    aaM = aaM,
+                    abM = abM,
+                    baM = baM,
+                    bbM = bbM,
+                    ssM = ssM,
+                    reM = reM
+                  )
+    member this.scM = scM
 
 
 
@@ -60,12 +69,6 @@ type Athena(
     member this.mA = aM
     member this.mB = bM
     member this.mS = sM
-
-type Scorr =
-    | AA of float32
-    | AB of float32
-    | BA of float32
-    | BB of float32
 
 type AthenaTr(
                 iteration:int,
@@ -108,8 +111,8 @@ module ZeusUtils =
 
 
     let UpdateTr (zeus:Zeus) (mem:Matrix<float32>) 
-                 memIndex pNoise sNoise cPp cSs cRp cPs 
-                 (athena:Athena) =
+                    memIndex pNoise sNoise cPp cSs cRp cPs 
+                    (athena:Athena) =
 
         let groupCt = athena.GroupCount
         let curMem = zeus.meR.SubMatrix(memIndex, 1, 0, groupCt)
@@ -123,16 +126,16 @@ module ZeusUtils =
         let dBdR = mem.Map2((fun x y -> x * (1.0f-y) * (1.0f-y) * cRp), athena.mS)
 
         let corrM = DenseMatrix.init 
-                     groupCt groupCt  
-                     (UpperTriangulateZd 
-                       groupCt ( fun x y -> let sqr = (1.0f + athena.mS.[0,x] * athena.mS.[0,y])
-                                            sqr*sqr ))
+                        groupCt groupCt  
+                        (UpperTriangulateZd 
+                        groupCt ( fun x y -> let sqr = (1.0f + athena.mS.[0,x] * athena.mS.[0,y])
+                                             sqr*sqr ))
 
         let acorM = DenseMatrix.init 
-                     groupCt groupCt  
-                     (UpperTriangulateZd 
-                       groupCt ( fun x y -> let sqr = (1.0f - athena.mS.[0,x] * athena.mS.[0,y])
-                                            sqr*sqr ))
+                        groupCt groupCt  
+                        (UpperTriangulateZd 
+                        groupCt ( fun x y -> let sqr = (1.0f - athena.mS.[0,x] * athena.mS.[0,y])
+                                             sqr*sqr ))
 
         let mAas = zeus.mAa.Map2 ((fun a b -> a*b), corrM)
         let mBas = zeus.mBa.Map2 ((fun a b -> a*b), acorM)
@@ -147,11 +150,11 @@ module ZeusUtils =
 
         let newA = aNoise |> Array.mapi(fun i n -> 
             F32ToSF32(n + athena.mA.[0,i] + cPp * (dAdA.[0,i] + dAdB.[0,i]) 
-                      + dAdR.[0,i] ))
+                        + dAdR.[0,i] ))
 
         let newB = aNoise |> Array.mapi(fun i n -> 
             F32ToSF32(n + athena.mB.[0,i] + cPp * (dBdB.[0,i] + dBdA.[0,i]) 
-                      + dBdR.[0,i] ))
+                        + dBdR.[0,i] ))
 
 
         let dSdS = athena.mS.Multiply(zeus.mSs)
@@ -162,7 +165,7 @@ module ZeusUtils =
 
         let newS = sNoise |> Array.mapi(fun i n -> 
             F32ToSF32(n + athena.mS.[0,i] + cSs * dSdS.[0,i] + 
-                      cPs * dSdP.[0,i]))
+                        cPs * dSdP.[0,i]))
 
         new AthenaTr(                
             iteration=athena.Iteration + 1,
@@ -189,7 +192,7 @@ module ZeusUtils =
         let grpCt = athena.GroupCount
 
         let mCs = Array2D.init grpCt grpCt
-                     (fun i j -> MakeScorr athena.mS.[0,i] athena.mS.[0,j]) 
+                        (fun i j -> MakeScorr athena.mS.[0,i] athena.mS.[0,j]) 
         
         let aamNew = 
             DenseMatrix.init 
@@ -253,5 +256,72 @@ module ZeusUtils =
                     baM = zeus.mBa,
                     bbM = zeus.mBb,
                     ssM = zeus.mSs,
-                    reM = zeus.meR
-                 )
+                    reM = zeus.meR,
+                    scM = mCs
+                  )
+
+
+ module AthenaBuilder =
+
+    let CreateRandom((seed:int), ngSize, pSig, sSig) =
+
+        let rng = Random.MersenneTwister(seed)
+        
+        let temp = Generators.NormalSF32 rng pSig
+                       |> Seq.take(ngSize) |> Seq.toArray
+        let mA = DenseMatrix.init 1 ngSize
+                    (fun x y -> temp.[x*ngSize + y])
+
+        let temp = Generators.NormalSF32 rng pSig
+                       |> Seq.take(ngSize) |> Seq.toArray
+        let mB = DenseMatrix.init 1 ngSize
+                    (fun x y -> temp.[x*ngSize + y])
+
+        let temp = Generators.NormalSF32 rng sSig
+                       |> Seq.take(ngSize) |> Seq.toArray
+        let mS = DenseMatrix.init 1 ngSize
+                    (fun x y -> temp.[x*ngSize + y])
+
+        new Athena(
+                iteration=0,
+                aM=mA,
+                bM=mB,
+                sM=mS
+            )
+
+
+ module ZeusBuilder =
+
+    let CreateRandom((seed:int), ngSize, memSize,
+                      ppSig, glauberRadius) =
+
+        let rng = Random.MersenneTwister(seed)
+
+        let mAa = (RandNormalSqSymDenseSF32 ngSize rng ppSig)
+                  |> MatrixF32ZeroD
+
+        let mAb = (RandNormalSqSymDenseSF32 ngSize rng ppSig)
+                  |> MatrixF32ZeroD
+
+        let mBb = (RandNormalSqSymDenseSF32 ngSize rng ppSig)
+                  |> MatrixF32ZeroD
+
+        let rSqData = Generators.SeqOfRandSF32Bits 0.5 rng
+                       |> Seq.take(ngSize * memSize) 
+                       |> Seq.toArray
+        let mRe = DenseMatrix.init memSize ngSize
+                    (fun x y -> rSqData.[x*ngSize + y])
+
+        match GlauberNeutralDense ngSize glauberRadius with
+        | Some csMatrix ->
+            Some (
+                    new Zeus(            
+                                aaM = mAa,
+                                abM = mAb,
+                                baM = mAb.Transpose(),
+                                bbM = mBb,
+                                ssM = csMatrix,
+                                reM = mRe
+                            )
+                    )
+        | None -> None

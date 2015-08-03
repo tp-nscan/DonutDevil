@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace La.View
 {
     /// <summary>
-    /// Interaction logic for WaffleHistoriesControl.xaml
+    /// Interaction logic for ZeusHistoriesControl.xaml
     /// </summary>
-    public partial class WaffleHistoriesControl : UserControl
+    public partial class ZeusHistoriesControl : UserControl
     {
-        public WaffleHistoriesControl()
+        public ZeusHistoriesControl()
         {
             InitializeComponent();
         }

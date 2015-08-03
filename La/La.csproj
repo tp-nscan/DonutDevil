@@ -124,7 +124,7 @@
     <Compile Include="ViewModel\WaffleHistoriesVm.cs" />
     <Compile Include="ViewModel\IndexSelectorVm.cs" />
     <Compile Include="ViewModel\Pram\WaffleParamsVm.cs" />
-    <Compile Include="ViewModel\WaffleVm.cs" />
+    <Compile Include="ViewModel\ZeusVm.cs" />
     <Compile Include="ViewModel\WhatVm.cs" />
     <Compile Include="ViewModel\WngGvVm.cs" />
     <Compile Include="View\D2ValSelectorControl.xaml.cs">
@@ -158,8 +158,8 @@
     <Compile Include="View\SbControl.xaml.cs">
       <DependentUpon>SbControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\WaffleControl.xaml.cs">
-      <DependentUpon>WaffleControl.xaml</DependentUpon>
+    <Compile Include="View\ZeusControl.xaml.cs">
+      <DependentUpon>ZeusControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\IndexSelectorControl.xaml.cs">
       <DependentUpon>IndexSelectorControl.xaml</DependentUpon>
@@ -234,7 +234,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\WaffleControl.xaml">
+    <Page Include="View\ZeusControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

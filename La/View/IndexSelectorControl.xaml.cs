@@ -2,7 +2,7 @@
 namespace La.View
 {
     /// <summary>
-    /// Interaction logic for WaffleMemoriesControl.xaml
+    /// Interaction logic for ZeusMemoriesControl.xaml
     /// </summary>
     public partial class IndexSelectorControl
     {

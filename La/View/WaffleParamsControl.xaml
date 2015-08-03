@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="La.View.WaffleParamsControl"
+﻿<UserControl x:Class="La.View.ZeusParamsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,7 +6,7 @@
              xmlns:view="clr-namespace:La.View"
              xmlns:pram="clr-namespace:La.ViewModel.Pram"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance {x:Type pram:WaffleParamsVm}, IsDesignTimeCreatable=True}"
+             d:DataContext="{d:DesignInstance {x:Type pram:ZeusParamsVm}, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="500">
     <Grid>
         <Grid.ColumnDefinitions>

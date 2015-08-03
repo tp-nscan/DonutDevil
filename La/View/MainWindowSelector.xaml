@@ -14,8 +14,8 @@
         <view:NetworkControl/>
     </DataTemplate>
 
-    <DataTemplate x:Key="WaffleTemplate">
-        <view:WaffleControl/>
+    <DataTemplate x:Key="ZeusTemplate">
+        <view:ZeusControl/>
     </DataTemplate>
     
     <DataTemplate x:Key="WhatTemplate">
@@ -30,7 +30,7 @@
         MenuTemplate="{StaticResource MenuTemplate}"
         SandboxTemplate="{StaticResource SandboxTemplate}"
         NetworkTemplate="{StaticResource NetworkTemplate}"
-        WaffleTemplate="{StaticResource WaffleTemplate}"
+        ZeusTemplate="{StaticResource ZeusTemplate}"
         WhatTemplate="{StaticResource WhatTemplate}"
         DefaultTemplate="{StaticResource DefaultMainWindowTemplate}"            
     />

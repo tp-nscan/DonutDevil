@@ -2,9 +2,9 @@
 
 namespace La.ViewModel.Pram
 {
-    public class WaffleParamsVm : NotifyPropertyChanged
+    public class ZeusParamsVm : NotifyPropertyChanged
     {
-        public WaffleParamsVm()
+        public ZeusParamsVm()
         {
             GlauberRadiusVm = new ParamIntVm(
                     minVal: 1,

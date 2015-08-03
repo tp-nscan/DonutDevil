@@ -68,10 +68,10 @@
     <Compile Include="CliqueEnsemble.fs" />
     <Compile Include="Correltor.fs" />
     <Compile Include="Perturb.fs" />
-    <Compile Include="Zeus.fs" />
     <Compile Include="Sim.fs" />
     <Compile Include="Spots1d.fs" />
     <Compile Include="What.fs" />
+    <Compile Include="Zeus.fs" />
     <None Include="Script.fsx" />
     <None Include="ScriptMathNet.fsx" />
     <None Include="ScriptRop.fsx" />

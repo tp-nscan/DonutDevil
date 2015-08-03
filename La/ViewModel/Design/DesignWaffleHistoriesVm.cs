@@ -2,13 +2,13 @@
 
 namespace La.ViewModel.Design
 {
-    public class DesignWaffleHistoriesVm : WaffleHistoriesVm
+    public class DesignZeusHistoriesVm : ZeusHistoriesVm
     {
-        public DesignWaffleHistoriesVm() : base(DesignWaffleHistories(), "C")
+        public DesignZeusHistoriesVm() : base(DesignZeusHistories(), "C")
         {
         }
 
-        static WaffleHistories DesignWaffleHistories()
+        static WaffleHistories DesignZeusHistories()
         {
             return WngBuilder.InitHistories(10, 10, 10);
         }

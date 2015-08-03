@@ -135,37 +135,38 @@ namespace La.ViewModel
         #endregion // GoToWhatCommand
 
 
-        #region GoToWaffleCommand
+        #region GoToZeusCommand
 
-        RelayCommand _goToWaffleCommand;
-        public ICommand GoToWaffleCommand
+        RelayCommand _goToZeusCommand;
+        public ICommand GoToZeusCommand
         {
             get
             {
-                return _goToWaffleCommand ?? (_goToWaffleCommand = new RelayCommand(
-                    param => DoGoToWaffle(),
-                    param => CanGoToWaffle()
+                return _goToZeusCommand ?? (_goToZeusCommand = new RelayCommand(
+                    param => DoGoToZeus(),
+                    param => CanGoToZeus()
                     ));
             }
         }
 
-        private void DoGoToWaffle()
+        private void DoGoToZeus()
         {
             _mainWindowTypehanged.OnNext(
-                new WaffleVm(WaffleBuilder.CreateRandom(
+                new ZeusVm(ZeusBuilder.CreateRandom(
                 seed: 123,
                 ngSize: 100,
-                geSize: 20,
-                ppSig: 0.75f
-                )));
+                memSize: 20,
+                ppSig: 0.75f,
+                glauberRadius: 5
+                ).Value));
         }
 
-        bool CanGoToWaffle()
+        bool CanGoToZeus()
         {
             return true;
         }
 
-        #endregion // GoToWaffleCommand
+        #endregion // GoToZeusCommand
 
 
         private readonly List<NetworkBuilderVm> _networkBuilderVms;

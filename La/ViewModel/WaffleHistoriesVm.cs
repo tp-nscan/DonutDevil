@@ -7,24 +7,24 @@ using WpfUtils;
 
 namespace La.ViewModel
 {
-    public class WaffleHistoriesVm : NotifyPropertyChanged
+    public class ZeusHistoriesVm : NotifyPropertyChanged
     {
-        public WaffleHistoriesVm(WaffleHistories waffleHistories, string curName)
+        public ZeusHistoriesVm(WaffleHistories waffleHistories, string curName)
         {
-            WaffleHistories = waffleHistories;
+            ZeusHistories = waffleHistories;
             ArrayHistVms = new List<ArrayHistVm>
             {
-                new ArrayHistVm(WaffleHistories.aeR),
-                new ArrayHistVm(WaffleHistories.ahA),
-                new ArrayHistVm(WaffleHistories.ahB),
-                new ArrayHistVm(WaffleHistories.ahR),
-                new ArrayHistVm(WaffleHistories.ahS),
-                new ArrayHistVm(WaffleHistories.ahV)
+                new ArrayHistVm(ZeusHistories.aeR),
+                new ArrayHistVm(ZeusHistories.ahA),
+                new ArrayHistVm(ZeusHistories.ahB),
+                new ArrayHistVm(ZeusHistories.ahR),
+                new ArrayHistVm(ZeusHistories.ahS),
+                new ArrayHistVm(ZeusHistories.ahV)
             };
             ArrayHistVm = ArrayHistVms.Single(h => h.Name == curName);
         }
 
-        public WaffleHistories WaffleHistories { get; }
+        public WaffleHistories ZeusHistories { get; }
 
         public IList<ArrayHistVm> ArrayHistVms { get; }
 
@@ -39,20 +39,20 @@ namespace La.ViewModel
             }
         }
 
-        public WaffleHistoriesVm Update(Wng wng, Waffle waffle)
+        public ZeusHistoriesVm Update(Wng wng, Waffle waffle)
         {
-            return new WaffleHistoriesVm(
-                waffleHistories: WngBuilder.UpdateHistories(WaffleHistories, wng, waffle),
+            return new ZeusHistoriesVm(
+                waffleHistories: WngBuilder.UpdateHistories(ZeusHistories, wng, waffle),
                 curName: ArrayHistVm.Name
                 );
         }
 
-        private readonly Subject<WaffleHistoriesVm> _arrayHistVmChanged
-                = new Subject<WaffleHistoriesVm>();
+        private readonly Subject<ZeusHistoriesVm> _arrayHistVmChanged
+                = new Subject<ZeusHistoriesVm>();
 
         private ArrayHistVm _arrayHistVm;
 
-        public IObservable<WaffleHistoriesVm> OnArrayHistVmChanged
+        public IObservable<ZeusHistoriesVm> OnArrayHistVmChanged
         {
             get { return _arrayHistVmChanged; }
         }

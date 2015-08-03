@@ -18,23 +18,23 @@ using WpfUtils.ViewModels.Graphics;
 
 namespace La.ViewModel
 {
-    public class WaffleVm : NotifyPropertyChanged, IMainContentVm
+    public class ZeusVm : NotifyPropertyChanged, IMainContentVm
     {
-        public WaffleVm(Waffle waffle)
+        public ZeusVm(Zeus zeus)
         {
-            Waffle = waffle;
-            WaffleParamsVm = new WaffleParamsVm();
-            WaffleHistoriesVm = new WaffleHistoriesVm(
-                WngBuilder.InitHistories
-                    (
-                        arrayLength: Waffle.GroupCount,
-                        ensembleSize: Waffle.EnsembleCount,
-                        targetLength: 500
-                    ),
-                    "C"
-                );
+            Zeus = zeus;
+            ZeusParamsVm = new ZeusParamsVm();
+            //ZeusHistoriesVm = new ZeusHistoriesVm(
+            //    WngBuilder.InitHistories
+            //        (
+            //            arrayLength: Waffle.GroupCount,
+            //            ensembleSize: Waffle.EnsembleCount,
+            //            targetLength: 500
+            //        ),
+            //        "C"
+            //    );
 
-            IndexSelectorVm = new IndexSelectorVm(Enumerable.Range(0, waffle.EnsembleCount));
+            IndexSelectorVm = new IndexSelectorVm(Enumerable.Range(0, zeus.EnsembleCount));
             DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0")
             { Title = "Display Frequency", Value = 10 };
 
@@ -55,23 +55,23 @@ namespace La.ViewModel
             }
         }
 
-        public WaffleParamsVm WaffleParamsVm { get; private set; }
+        public ZeusParamsVm ZeusParamsVm { get; private set; }
 
         private IDisposable _whvmSub;
-        private WaffleHistoriesVm _waffleHistoriesVm;
-        public WaffleHistoriesVm WaffleHistoriesVm
+        private ZeusHistoriesVm _zeusHistoriesVm;
+        public ZeusHistoriesVm ZeusHistoriesVm
         {
-            get { return _waffleHistoriesVm; }
+            get { return _zeusHistoriesVm; }
             set
             {
                 _whvmSub?.Dispose();
-                _waffleHistoriesVm = value;
-                _whvmSub = _waffleHistoriesVm.OnArrayHistVmChanged.Subscribe(lvm => UpdateUi());
-                OnPropertyChanged("WaffleHistoriesVm");
+                _zeusHistoriesVm = value;
+                _whvmSub = _zeusHistoriesVm.OnArrayHistVmChanged.Subscribe(lvm => UpdateUi());
+                OnPropertyChanged("ZeusHistoriesVm");
             }
         }
 
-        public Waffle Waffle { get; private set; }
+        public Zeus Zeus { get; private set; }
 
         public Wng Wng { get; private set; }
 
@@ -89,7 +89,7 @@ namespace La.ViewModel
 
         public IEntityRepo EntityRepo { get; }
 
-        public MainContentType MainContentType => MainContentType.Waffle;
+        public MainContentType MainContentType => MainContentType.Zeus;
 
         private readonly Subject<IMainContentVm> _mainWindowTypeChanged = new Subject<IMainContentVm>();
         public IObservable<IMainContentVm> OnMainWindowTypeChanged => _mainWindowTypeChanged;
@@ -149,7 +149,7 @@ namespace La.ViewModel
             },
                 cancellationToken: _cancellationTokenSource.Token
             );
-            WaffleHistoriesVm = WaffleHistoriesVm.Update(Wng, Waffle);
+            //ZeusHistoriesVm = ZeusHistoriesVm.Update(Wng, Zeus);
             UpdateUi();
             IsRunning = false;
         }
@@ -178,9 +178,9 @@ namespace La.ViewModel
 
         private void DoLearn()
         {
-            var newWng = Wng.Learn((float)WaffleParamsVm.LearnRateVm.CurVal);
-            Waffle = WaffleBuilder.UpdateFromWng(Waffle, newWng);
-            Wng = WaffleBuilder.ResetC(waffle: Waffle, wng: Wng);
+            var newWng = Wng.Learn((float)ZeusParamsVm.LearnRateVm.CurVal);
+            //Waffle = ZeusBuilder.UpdateFromWng(Waffle, newWng);
+            //Wng = ZeusBuilder.ResetC(zeus: Waffle, wng: Wng);
             UpdateUi();
         }
 
@@ -208,21 +208,21 @@ namespace La.ViewModel
 
         private void DoResetAll()
         {
-            Wng = WaffleBuilder.CreateWng(
-                 glauberRadius: WaffleParamsVm.GlauberRadiusVm.CurVal,
-                 pSig: WaffleParamsVm.PSigVm.CurVal,
-                 sSig: WaffleParamsVm.SSigVm.CurVal,
-                 cPp: (float)WaffleParamsVm.CPpVm.CurVal,
-                 pNoiseLevel: (float)WaffleParamsVm.PNoiseLevelVm.CurVal,
-                 sNoiseLevel: (float)WaffleParamsVm.SNoiseLevelVm.CurVal,
-                 cSs: (float)WaffleParamsVm.CSsVm.CurVal,
-                 cRp: (float)WaffleParamsVm.CRpVm.CurVal,
-                 cPs: (float)WaffleParamsVm.CPsVm.CurVal,
-                 rIndex: IndexSelectorVm.IndexVm.Index,
-                 sseed: WaffleParamsVm.SSeedVm.CurVal,
-                 pseed: WaffleParamsVm.PSeedVm.CurVal,
-                 waffle: Waffle
-              ).Value;
+            //Wng = ZeusBuilder.CreateWng(
+            //     glauberRadius: ZeusParamsVm.GlauberRadiusVm.CurVal,
+            //     pSig: ZeusParamsVm.PSigVm.CurVal,
+            //     sSig: ZeusParamsVm.SSigVm.CurVal,
+            //     cPp: (float)ZeusParamsVm.CPpVm.CurVal,
+            //     pNoiseLevel: (float)ZeusParamsVm.PNoiseLevelVm.CurVal,
+            //     sNoiseLevel: (float)ZeusParamsVm.SNoiseLevelVm.CurVal,
+            //     cSs: (float)ZeusParamsVm.CSsVm.CurVal,
+            //     cRp: (float)ZeusParamsVm.CRpVm.CurVal,
+            //     cPs: (float)ZeusParamsVm.CPsVm.CurVal,
+            //     rIndex: IndexSelectorVm.IndexVm.Index,
+            //     sseed: ZeusParamsVm.SSeedVm.CurVal,
+            //     pseed: ZeusParamsVm.PSeedVm.CurVal,
+            //     zeus: Waffle
+            //  ).Value;
 
             UpdateUi();
         }
@@ -251,11 +251,11 @@ namespace La.ViewModel
 
         private void DoResetP()
         {
-            Wng = WaffleBuilder.ResetP(
-                 pSig: WaffleParamsVm.PSigVm.CurVal,
-                 pseed: WaffleParamsVm.PSeedVm.CurVal,
-                 wng: Wng
-              );
+            //Wng = ZeusBuilder.ResetP(
+            //     pSig: ZeusParamsVm.PSigVm.CurVal,
+            //     pseed: ZeusParamsVm.PSeedVm.CurVal,
+            //     wng: Wng
+            //  );
 
             UpdateUi();
         }
@@ -284,11 +284,11 @@ namespace La.ViewModel
 
         private void DoResetR()
         {
-            Wng = WaffleBuilder.ResetR(
-                 waffle: Waffle,
-                 memDex: IndexSelectorVm.IndexVm.Index,
-                 wng: Wng
-              );
+            //Wng = ZeusBuilder.ResetR(
+            //     zeus: Waffle,
+            //     memDex: IndexSelectorVm.IndexVm.Index,
+            //     wng: Wng
+            //  );
 
             UpdateUi();
         }
@@ -317,11 +317,11 @@ namespace La.ViewModel
 
         private void DoResetS()
         {
-            Wng = WaffleBuilder.ResetS(
-                 sSig: WaffleParamsVm.SSigVm.CurVal,
-                 sseed: WaffleParamsVm.SSeedVm.CurVal,
-                 wng: Wng
-              );
+            //Wng = ZeusBuilder.ResetS(
+            //     sSig: ZeusParamsVm.SSigVm.CurVal,
+            //     sseed: ZeusParamsVm.SSeedVm.CurVal,
+            //     wng: Wng
+            //  );
 
             UpdateUi();
         }
@@ -351,10 +351,10 @@ namespace La.ViewModel
         private void DochangeParams()
         {
             Wng = Wng.NewPrams(
-                    cPp: (float)WaffleParamsVm.CPpVm.CurVal,
-                    cSs: (float)WaffleParamsVm.CSsVm.CurVal,
-                    cRp: (float)WaffleParamsVm.CRpVm.CurVal,
-                    cPs: (float)WaffleParamsVm.CPsVm.CurVal
+                    cPp: (float)ZeusParamsVm.CPpVm.CurVal,
+                    cSs: (float)ZeusParamsVm.CSsVm.CurVal,
+                    cRp: (float)ZeusParamsVm.CRpVm.CurVal,
+                    cPs: (float)ZeusParamsVm.CPsVm.CurVal
                 );
         }
 
@@ -398,11 +398,11 @@ namespace La.ViewModel
             MainGridVm = new WbRollingGridVm(
                 imageWidth: 1000,
                 imageHeight: 1000,
-                cellDimX: WaffleHistoriesVm.ArrayHistVm.ArrayLength,
+                cellDimX: ZeusHistoriesVm.ArrayHistVm.ArrayLength,
                 cellDimY: 500
             );
 
-            var cellColors = WaffleHistoriesVm.ArrayHistVm.GetD2Vals.Select(
+            var cellColors = ZeusHistoriesVm.ArrayHistVm.GetD2Vals.Select(
                 (v, i) => new D2Val<Color>
                             (
                                 x: v.X,
@@ -412,7 +412,7 @@ namespace La.ViewModel
                 ).ToList();
 
             if (Wng == null) return;
-            WngGvVm = new WngGvVm(Wng, Waffle, IndexSelectorVm.IndexVm.Index);
+           // WngGvVm = new WngGvVm(Wng, Zeus, IndexSelectorVm.IndexVm.Index);
             MainGridVm.AddValues(cellColors);
             OnPropertyChanged("Generation");
         }

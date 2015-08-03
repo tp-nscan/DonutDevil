@@ -69,7 +69,7 @@
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="0" Margin="5" Background="#F222">
-                    <local:WaffleHistoriesControl DataContext="{Binding WaffleHistoriesVm}"/>
+                    <local:ZeusHistoriesControl DataContext="{Binding ZeusHistoriesVm}"/>
                 </Border>
 
                 <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="2" ResizeBehavior="PreviousAndNext"  
@@ -80,7 +80,7 @@
 					HorizontalScrollBarVisibility="Visible"
 					Template="{DynamicResource DonutDevilScrollViewerTemplate}">
 
-                    <local:WaffleParamsControl DataContext="{Binding WaffleParamsVm}"/>
+                    <local:ZeusParamsControl DataContext="{Binding ZeusParamsVm}"/>
 
                 </ScrollViewer>
 
