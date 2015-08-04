@@ -396,7 +396,7 @@ namespace La.ViewModel
 
         void UpdateUi()
         {
-            MainGridVm = new WbRollingGridVm(
+            MainGridVm = new WbUniformGridVm(
                 imageWidth: 1000,
                 imageHeight: 1000,
                 cellDimX: Zeus.GroupCount,
@@ -418,8 +418,8 @@ namespace La.ViewModel
             OnPropertyChanged("Generation");
         }
 
-        private WbRollingGridVm _mainGridVm;
-        public WbRollingGridVm MainGridVm
+        private WbUniformGridVm _mainGridVm;
+        public WbUniformGridVm MainGridVm
         {
             get { return _mainGridVm; }
             set

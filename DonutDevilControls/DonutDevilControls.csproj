@@ -97,7 +97,6 @@
       <DependentUpon>D2IndexerSelectorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\Common\NetworkBuilderVm.cs" />
-    <Compile Include="ViewModel\Common\Plot1DVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignLinearHistogramVm.cs" />
     <Compile Include="ViewModel\Design\NgIndexer\DesignLayerCorrelationVm.cs" />
     <Compile Include="ViewModel\D2Indexer\CorrelationVm.cs" />
@@ -117,7 +116,6 @@
     <Compile Include="ViewModel\Legend\RingHistogramVm.cs" />
     <Compile Include="ViewModel\Common\SliderVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignNgLayerSelectorVm.cs" />
-    <Compile Include="ViewModel\Design\Common\DesignPlot1DVm.cs" />
     <Compile Include="ViewModel\Design\Common\DesignPlot2DVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignTorusLegendVm.cs" />
     <Compile Include="ViewModel\Design\Legend\DesignRingHistogramVm.cs" />
@@ -170,9 +168,6 @@
     </Compile>
     <Compile Include="View\D2Indexer\NgIndexerSetControl.xaml.cs">
       <DependentUpon>NgIndexerSetControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\Common\Plot1DControl.xaml.cs">
-      <DependentUpon>Plot1DControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Common\Plot2DControl.xaml.cs">
       <DependentUpon>Plot2DControl.xaml</DependentUpon>
@@ -258,10 +253,6 @@
     <Page Include="View\D2Indexer\NgIndexerSetControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\Common\Plot1DControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Common\Plot2DControl.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -14,11 +14,11 @@ namespace WpfUtils.ViewModels.Graphics
             
         }
 
-        public void AddValues(IEnumerable<D1Val<Color>> ringVals)
+        public void AddValues(IEnumerable<D1Val<Color>> stripeVals)
         {
             PlotRectangleList.Clear();
 
-            PlotRectangleList = ringVals.Select(
+            PlotRectangleList = stripeVals.Select(
                 gv =>
                     new PlotRectangle
                        (

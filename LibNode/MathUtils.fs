@@ -1,6 +1,12 @@
 ﻿namespace LibNode
 open System
 
+//%s for strings
+//%b for bools
+//%i for ints
+//%f for floats
+//%A for pretty-printing tuples, records and union types
+
 // see also 
 // http://stackoverflow.com/questions/4949941/convert-string-to-system-datetime-in-f
 module TryParser =

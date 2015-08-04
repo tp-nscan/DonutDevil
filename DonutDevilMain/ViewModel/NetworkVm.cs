@@ -43,7 +43,7 @@ namespace DonutDevilMain.ViewModel
                     slaves: Network.NodeGroupIndexers.Skip(1).Select(i => (D2IndexerBase<float>)i)
                 );
 
-            MainGridVm = new WbUniformGridVm(1024, 1024);
+            MainGridVm = new WbFullUniformGridVm(1024, 1024);
 
             ParamSetEditorVm = new ParamSetEditorVm(network.Parameters.Values.ToList(), false);
 
@@ -72,7 +72,7 @@ namespace DonutDevilMain.ViewModel
 
         #endregion
 
-        public WbUniformGridVm MainGridVm { get; }
+        public WbFullUniformGridVm MainGridVm { get; }
 
         #region UpdateNetworkCommand
 

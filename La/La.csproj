@@ -108,6 +108,7 @@
     <Compile Include="ViewModel\Design\DesignIndexSelectorVm.cs" />
     <Compile Include="ViewModel\Design\DesignNetworkVm.cs" />
     <Compile Include="ViewModel\Design\DesignWaffleHistoriesVm.cs" />
+    <Compile Include="ViewModel\Design\DesignZeusSnapVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignIntParamIntVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignParamBoolVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignParamDoubleVm.cs" />
@@ -124,6 +125,8 @@
     <Compile Include="ViewModel\WaffleHistoriesVm.cs" />
     <Compile Include="ViewModel\IndexSelectorVm.cs" />
     <Compile Include="ViewModel\Pram\WaffleParamsVm.cs" />
+    <Compile Include="ViewModel\ZeusSnapSeriesVm.cs" />
+    <Compile Include="ViewModel\ZeusSnapVm.cs" />
     <Compile Include="ViewModel\ZeusVm.cs" />
     <Compile Include="ViewModel\WhatVm.cs" />
     <Compile Include="ViewModel\WngGvVm.cs" />
@@ -175,6 +178,9 @@
     </Compile>
     <Compile Include="View\WngGvControl.xaml.cs">
       <DependentUpon>WngGvControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ZeusSnapControl.xaml.cs">
+      <DependentUpon>ZeusSnapControl.xaml</DependentUpon>
     </Compile>
     <Page Include="View\D2ValSelectorControl.xaml">
       <SubType>Designer</SubType>
@@ -255,6 +261,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\WngGvControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ZeusSnapControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

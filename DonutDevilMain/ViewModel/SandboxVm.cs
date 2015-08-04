@@ -26,7 +26,7 @@ namespace DonutDevilMain.ViewModel
             FrequencySliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
             DecaySliderVm.OnSliderVmChanged.Subscribe(v => DrawMainNetwork());
 
-            _mainGridVm = new WbUniformGridVm(1024, 1024);
+            _mainGridVm = new WbFullUniformGridVm(1024, 1024);
             _histogramVm = new DesignLinearHistogramVm();
             _legendVm = new LinearLegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
@@ -106,8 +106,8 @@ namespace DonutDevilMain.ViewModel
         #endregion // GoToMenuCommand
 
 
-        private WbUniformGridVm _mainGridVm;
-        public WbUniformGridVm MainGridVm
+        private WbFullUniformGridVm _mainGridVm;
+        public WbFullUniformGridVm MainGridVm
         {
             get { return _mainGridVm; }
             set

@@ -32,7 +32,7 @@ namespace La.ViewModel
             FrequencySliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
             DecaySliderVm.OnSliderVmChanged.Subscribe(v => UpdateUi());
 
-            _mainGridVm = new WbUniformGridVm(1024, 1024);
+            _mainGridVm = new WbFullUniformGridVm(1024, 1024);
             _histogramVm = new DesignLinearHistogramVm();
             _legendVm = new LinearLegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(LegendChangedHandler);
@@ -217,8 +217,8 @@ namespace La.ViewModel
             _histogramVm.MakeHistogram(valueList.Select(cc => (float)(cc / 2.0 + 0.5)));
         }
 
-        private WbUniformGridVm _mainGridVm;
-        public WbUniformGridVm MainGridVm
+        private WbFullUniformGridVm _mainGridVm;
+        public WbFullUniformGridVm MainGridVm
         {
             get { return _mainGridVm; }
             set

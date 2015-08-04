@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="La.View.ZeusSnapControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:design="clr-namespace:La.ViewModel.Design"
+             xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance {x:Type design:DesignZeusSnapVm}, IsDesignTimeCreatable=True}"
+             d:DesignHeight="300" d:DesignWidth="500">
+    <DockPanel LastChildFill="True">
+        <StackPanel HorizontalAlignment="Stretch" DockPanel.Dock="Top" Orientation="Horizontal">
+            <TextBlock FontSize="14" Foreground="AliceBlue" Margin="5" Text="{Binding Iteration}"/>
+            <TextBlock FontSize="14" Foreground="AliceBlue" Margin="5" Text="{Binding Caption}"/>
+        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Viewbox Grid.Row="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="A"/>
+            </Viewbox>
+            <Viewbox Grid.Row="1" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="B"/>
+            </Viewbox>
+            <Viewbox Grid.Row="2" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="S"/>
+            </Viewbox>
+            <Viewbox Grid.Row="3" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="dAdR"/>
+            </Viewbox>
+            <Viewbox Grid.Row="4" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="dBdR"/>
+            </Viewbox>
+            <Viewbox Grid.Row="5" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="dAdA"/>
+            </Viewbox>
+            <Viewbox Grid.Row="6" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="dAdB"/>
+            </Viewbox>
+            <Viewbox Grid.Row="7" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="dBdA"/>
+            </Viewbox>
+            <Viewbox Grid.Row="8" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="dBdB"/>
+            </Viewbox>
+            <Viewbox Grid.Row="9" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="dSdS"/>
+            </Viewbox>
+            <Viewbox Grid.Row="10" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="dSdP"/>
+            </Viewbox>
+
+            <graphics:WbImage Grid.Column="1" Grid.Row="0"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding aM.PlotRectangles, Delay=100}"/>
+
+
+        </Grid>
+
+    </DockPanel>
+</UserControl>
