@@ -130,12 +130,18 @@ namespace NodeLib.Test
         }
 
         [TestMethod]
-        public void TestUtCoords()
+        public void TestDesignAthenaTr()
         {
-            var rng = new MathNet.Numerics.Random.MersenneTwister(123);
-            var res = MathNetUtils.RandNormalSqSymDenseSF32(3, rng, 0.7);
+            var res = ZeusBuilder.DesignAthenaTr(
+                seed: 123,
+                ngSize: 24,
+                memSize: 16,
+                ppSig: 0.4,
+                glauberRadius: 5
+                );
 
-
+            var p = res.Value;
         }
+
     }
 }

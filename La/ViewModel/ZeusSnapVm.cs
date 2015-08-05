@@ -1,11 +1,23 @@
-﻿using LibNode;
+﻿using System;
+using System.Linq;
+using System.Windows.Media;
+using LibNode;
+using MathLib.NumericTypes;
+using MathNet.Numerics.LinearAlgebra;
 using WpfUtils;
+using WpfUtils.Utils;
 using WpfUtils.ViewModels.Graphics;
 
 namespace La.ViewModel
 {
     public class ZeusSnapVm : NotifyPropertyChanged
     {
+        WbVerticalStripesVm Standard => 
+            new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, 
+                                    heightOverWidth: 0.07, 
+                                    crispness:8);
+
+        protected const int Colorsteps = 256;
         public ZeusSnapVm(AthenaTr athenaTr, string caption)
         {
             AthenaTr = athenaTr;
@@ -13,17 +25,50 @@ namespace La.ViewModel
             if (AthenaTr == null) return;
 
             Iteration = AthenaTr.Athena.Iteration;
-            aM = new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, heightOverWidth: 2.0);
-            bM = new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, heightOverWidth: 2.0);
-            sM = new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, heightOverWidth: 2.0);
-            dAdR = new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, heightOverWidth: 2.0);
-            dBdR = new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, heightOverWidth: 2.0);
-            dAdA = new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, heightOverWidth: 2.0);
-            dAdB = new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, heightOverWidth: 2.0);
-            dBdA = new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, heightOverWidth: 2.0);
-            dBdB = new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, heightOverWidth: 2.0);
-            dSdS = new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, heightOverWidth: 2.0);
-            dSdP = new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, heightOverWidth: 2.0);
+            aM = Standard;
+            bM = Standard;
+            sM = Standard;
+            dAdR = Standard;
+            dBdR = Standard;
+            dAdA = Standard;
+            dAdB = Standard;
+            dBdA = Standard;
+            dBdB = Standard;
+            dSdS = Standard;
+            dSdP = Standard;
+
+            var legendColorSequence = ColorSequence.Dipolar(Colors.Red, Colors.Green, Colorsteps / 2);
+            DrawLegend(i => legendColorSequence.Colors[(int)(i * Colorsteps)]);
+        }
+
+        public void DrawLegend(Func<float, Color> colorFunc)
+        {
+            DrawLegendM1(colorFunc, AthenaTr.Athena.mA, aM);
+            DrawLegendM1(colorFunc, AthenaTr.Athena.mB, bM);
+            DrawLegendM1(colorFunc, AthenaTr.Athena.mS, sM);
+            DrawLegendM1(colorFunc, AthenaTr.dAdR, dAdR);
+            DrawLegendM1(colorFunc, AthenaTr.dBdR, dBdR);
+            DrawLegendM1(colorFunc, AthenaTr.dAdA, dAdA);
+            DrawLegendM1(colorFunc, AthenaTr.dAdB, dAdB);
+            DrawLegendM1(colorFunc, AthenaTr.dBdA, dBdA);
+            DrawLegendM1(colorFunc, AthenaTr.dBdB, dBdB);
+            DrawLegendM1(colorFunc, AthenaTr.dSdS, dSdS);
+            DrawLegendM1(colorFunc, AthenaTr.dSdP, dSdP);
+        }
+
+        public void DrawLegendM1(Func<float, Color> colorFunc, Matrix<float> m, WbVerticalStripesVm vsvm)
+        {
+            var absMax = (float)(Math.Max(Enumerable.Range(0, m.ColumnCount).Max(i => Math.Abs(m[0, i])), 
+                                          1.0));
+            vsvm.AddValues
+            (
+                Enumerable.Range(0, aM.StripeCount)
+                    .Select(i =>
+                        new D1Val<Color>(
+                            i,
+                            colorFunc((m[0, i] / absMax + 1.0f) /2.05f)
+                        ))
+            );
         }
 
         public AthenaTr AthenaTr { get;}

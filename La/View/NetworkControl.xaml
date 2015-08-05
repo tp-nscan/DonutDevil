@@ -8,7 +8,7 @@
              xmlns:view="clr-namespace:La.View"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance {x:Type design:DesignNetworkVm}, IsDesignTimeCreatable=True}"
-             d:DesignHeight="300" d:DesignWidth="900">
+             d:DesignHeight="600" d:DesignWidth="900">
     <DockPanel LastChildFill="True" Background="#FF232121">
         
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
@@ -42,7 +42,7 @@
         </StackPanel>
         
         <Grid Margin="0,5,0,0" >
-
+            <view:ZeusSnapControl DataContext="{Binding ZeusSnapVm}"/>
         </Grid>
 
     </DockPanel>

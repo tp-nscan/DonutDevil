@@ -60,6 +60,21 @@ module MathNetUtils =
 
         (fun x y -> cached.[SymRowMajorIndex x y] )
 
+
+    let RandRectDenseSF32Bits rows cols rng = 
+        let rSqData = Generators.SeqOfRandSF32Bits 0.5 rng
+                       |> Seq.take(rows * cols) 
+                       |> Seq.toArray
+        DenseMatrix.init rows cols 
+                    (fun x y -> rSqData.[x*cols + y])
+
+    let RandNormalRectDenseSF32 rows cols rng stddev = 
+        let rSqData = Generators.NormalSF32 rng stddev
+                        |> Seq.take(rows * cols) 
+                        |> Seq.toArray
+        DenseMatrix.init rows cols 
+                    (fun x y -> rSqData.[x*cols + y])
+
     let RandNormalSqSymDenseSF32 stride rng stddev = 
         let siter = Generators.NormalSF32 rng stddev
         DenseMatrix.init stride stride
@@ -67,3 +82,5 @@ module MathNetUtils =
 
     let ToRowMajorSequence (mnMatrix:Matrix<'a>) = 
          mnMatrix.ToArray() |> Seq.cast<'a>
+
+

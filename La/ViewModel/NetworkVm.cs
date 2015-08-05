@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
+using La.ViewModel.Design;
 using LibNode;
 using MathLib.Intervals;
 using WpfUtils;
@@ -19,7 +20,10 @@ namespace La.ViewModel
         {
             Network = network;
             DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0") { Title = "Display Frequency", Value = 10 };
+            ZeusSnapVm  = new DesignZeusSnapVm();
         }
+
+        public ZeusSnapVm ZeusSnapVm { get; set; }
 
         #region IMainWindowVm
 

@@ -115,20 +115,21 @@ module ZeusUtils =
                     (athena:Athena) =
 
         let groupCt = athena.GroupCount
-        let curMem = zeus.meR.SubMatrix(memIndex, 1, 0, groupCt)
+        let curMem = zeus.meR.SubMatrix(memIndex, 1, 0, zeus.meR.ColumnCount)
 
 
         let sNoise = sNoise |> Seq.take groupCt |> Seq.toArray
         let aNoise = pNoise |> Seq.take groupCt |> Seq.toArray
         let bNoise = pNoise |> Seq.take groupCt |> Seq.toArray
 
-        let dAdR = mem.Map2((fun x y -> x * (1.0f+y) * (1.0f+y) * cRp), athena.mS)
-        let dBdR = mem.Map2((fun x y -> x * (1.0f-y) * (1.0f-y) * cRp), athena.mS)
+        let dAdR = curMem.Map2((fun x y -> x * (1.0f+y) * (1.0f+y) * cRp), athena.mS)
+        let dBdR = curMem.Map2((fun x y -> x * (1.0f-y) * (1.0f-y) * cRp), athena.mS)
 
         let corrM = DenseMatrix.init 
                         groupCt groupCt  
                         (UpperTriangulateZd 
-                        groupCt ( fun x y -> let sqr = (1.0f + athena.mS.[0,x] * athena.mS.[0,y])
+                        groupCt ( fun x y -> let sqr = (1.0f + athena.mS.[0,x] 
+                                                          * athena.mS.[0,y])
                                              sqr*sqr ))
 
         let acorM = DenseMatrix.init 
@@ -263,7 +264,7 @@ module ZeusUtils =
 
  module AthenaBuilder =
 
-    let CreateRandom((seed:int), ngSize, pSig, sSig) =
+    let CreateRandom (seed:int) ngSize pSig sSig =
 
         let rng = Random.MersenneTwister(seed)
         
@@ -292,8 +293,8 @@ module ZeusUtils =
 
  module ZeusBuilder =
 
-    let CreateRandom((seed:int), ngSize, memSize,
-                      ppSig, glauberRadius) =
+    let CreateRandom (seed:int) ngSize memSize
+                      ppSig glauberRadius =
 
         let rng = Random.MersenneTwister(seed)
 
@@ -306,11 +307,9 @@ module ZeusUtils =
         let mBb = (RandNormalSqSymDenseSF32 ngSize rng ppSig)
                   |> MatrixF32ZeroD
 
-        let rSqData = Generators.SeqOfRandSF32Bits 0.5 rng
-                       |> Seq.take(ngSize * memSize) 
-                       |> Seq.toArray
-        let mRe = DenseMatrix.init memSize ngSize
-                    (fun x y -> rSqData.[x*ngSize + y])
+        let mRe = MathNetUtils.RandRectDenseSF32Bits
+                    memSize ngSize rng
+
 
         match GlauberNeutralDense ngSize glauberRadius with
         | Some csMatrix ->
@@ -325,3 +324,25 @@ module ZeusUtils =
                             )
                     )
         | None -> None
+
+
+    let DesignAthenaTr (seed:int) ngSize memSize
+                        ppSig glauberRadius = 
+
+        let rnd = Random.MersenneTwister(seed);
+        let sNoise = Generators.NormalSF32 rnd 0.4
+        let pNoise = Generators.NormalSF32 rnd 0.4
+
+
+        let rndAthena = AthenaBuilder.CreateRandom
+                            seed ngSize 0.5 0.3
+        let rndMems = MathNetUtils.RandNormalRectDenseSF32
+                        memSize ngSize rnd 0.33
+
+        match CreateRandom seed ngSize memSize ppSig
+                            glauberRadius with
+        | Some rndZeus-> Some (ZeusUtils.UpdateTr rndZeus rndMems 1 pNoise 
+                                sNoise 0.1f
+                                0.1f 0.1f 0.1f rndAthena)
+        | None -> None
+

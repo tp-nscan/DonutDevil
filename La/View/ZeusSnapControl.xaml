@@ -7,7 +7,7 @@
              xmlns:graphics="clr-namespace:WpfUtils.Views.Graphics;assembly=WpfUtils"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance {x:Type design:DesignZeusSnapVm}, IsDesignTimeCreatable=True}"
-             d:DesignHeight="300" d:DesignWidth="500">
+             d:DesignHeight="400" d:DesignWidth="600">
     <DockPanel LastChildFill="True">
         <StackPanel HorizontalAlignment="Stretch" DockPanel.Dock="Top" Orientation="Horizontal">
             <TextBlock FontSize="14" Foreground="AliceBlue" Margin="5" Text="{Binding Iteration}"/>
@@ -69,7 +69,37 @@
 
             <graphics:WbImage Grid.Column="1" Grid.Row="0"
                 ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
-                PlotRectangles="{Binding aM.PlotRectangles, Delay=100}"/>
+                PlotRectangles="{Binding aM.PlotRectangles}"/> <!--, Delay=100}"/>-->
+            <graphics:WbImage Grid.Column="1" Grid.Row="1"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding bM.PlotRectangles}"/>
+            <graphics:WbImage Grid.Column="1" Grid.Row="2"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding sM.PlotRectangles}"/>
+            <graphics:WbImage Grid.Column="1" Grid.Row="3"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding dAdR.PlotRectangles}"/>
+            <graphics:WbImage Grid.Column="1" Grid.Row="4"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding dBdR.PlotRectangles}"/>
+            <graphics:WbImage Grid.Column="1" Grid.Row="5"
+                ImageWidth="{Binding dAdA.ImageWidth}" ImageHeight="{Binding dAdA.ImageHeight}"
+                PlotRectangles="{Binding dAdA.PlotRectangles}"/>
+            <graphics:WbImage Grid.Column="1" Grid.Row="6"
+                ImageWidth="{Binding dAdB.ImageWidth}" ImageHeight="{Binding dAdB.ImageHeight}"
+                PlotRectangles="{Binding dAdB.PlotRectangles}"/>
+            <graphics:WbImage Grid.Column="1" Grid.Row="7"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding dBdA.PlotRectangles}"/>
+            <graphics:WbImage Grid.Column="1" Grid.Row="8"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding dBdB.PlotRectangles}"/>
+            <graphics:WbImage Grid.Column="1" Grid.Row="9"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding dSdS.PlotRectangles}"/>
+            <graphics:WbImage Grid.Column="1" Grid.Row="10"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding dSdP.PlotRectangles}"/>
 
 
         </Grid>

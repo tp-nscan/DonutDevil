@@ -8,11 +8,16 @@ namespace WpfUtils.ViewModels.Graphics
 {
     public class WbVerticalStripesVm : WbImageVm
     {
-        public WbVerticalStripesVm(int stripeCount, double heightOverWidth)
-            : base(2 * stripeCount, (int) (2 * stripeCount * heightOverWidth))
+        public WbVerticalStripesVm(int stripeCount, double heightOverWidth, int crispness)
+            : base(crispness * stripeCount, (int) (crispness * stripeCount * heightOverWidth))
         {
-            
+            StripeCount = stripeCount;
+            Crispness = crispness;
         }
+
+        public int StripeCount { get; }
+
+        public int Crispness { get; }
 
         public void AddValues(IEnumerable<D1Val<Color>> stripeVals)
         {
@@ -22,9 +27,9 @@ namespace WpfUtils.ViewModels.Graphics
                 gv =>
                     new PlotRectangle
                        (
-                            x: gv.Index * 2,
+                            x: gv.Index * Crispness,
                             y: 0,
-                            width: 2,
+                            width: Crispness,
                             height: ImageHeight,
                             color: gv.Value
                        )

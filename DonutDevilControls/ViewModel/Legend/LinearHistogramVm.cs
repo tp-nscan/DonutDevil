@@ -19,8 +19,8 @@ namespace DonutDevilControls.ViewModel.Legend
             _title = title;
             _minValue = minValue;
             _maxValue = maxValue;
-            _legendVm = new WbVerticalStripesVm(Colorsteps, 0.1);
-            _histogramVm = new WbVerticalStripesVm(Colorsteps, 0.1);
+            _legendVm = new WbVerticalStripesVm(Colorsteps, 0.1, 2);
+            _histogramVm = new WbVerticalStripesVm(Colorsteps, 0.1, 2);
             _histogramColorSequence = Colors.White.ToUniformColorSequence(Colorsteps);
         }
 
