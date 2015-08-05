@@ -323,22 +323,22 @@ type Waffle(
         | Some csMatrix ->
             Some (
                 new Wng(
-                            iteration = 0,
-                            aaM = mAa,
-                            abM = mAb,
-                            baM = mAb.Transpose(),
-                            bbM = mBb,
-                            aM = mA,
-                            bM = mB,
-                            sM = mS,
-                            rM = mR,
-                            ssM = csMatrix,
-                            cPp = cPp,
-                            cSs = cSs,
-                            cRp = cRp,
-                            cPs = cPs,
-                            nP = pNoise,
-                            nS = sNoise
+                        iteration = 0,
+                        aaM = mAa,
+                        abM = mAb,
+                        baM = mAb.Transpose(),
+                        bbM = mBb,
+                        aM = mA,
+                        bM = mB,
+                        sM = mS,
+                        rM = mR,
+                        ssM = csMatrix,
+                        cPp = cPp,
+                        cSs = cSs,
+                        cRp = cRp,
+                        cPs = cPs,
+                        nP = pNoise,
+                        nS = sNoise
                     ))
         | None -> None
 

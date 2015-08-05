@@ -110,9 +110,10 @@ module ZeusUtils =
         (fr*tr - fp*tp)
 
 
+
     let UpdateTr (zeus:Zeus) (mem:Matrix<float32>) 
-                    memIndex pNoise sNoise cPp cSs cRp cPs 
-                    (athena:Athena) =
+                 memIndex pNoise sNoise cPp cSs cRp cPs 
+                 (athena:Athena) =
 
         let groupCt = athena.GroupCount
         let curMem = zeus.meR.SubMatrix(memIndex, 1, 0, zeus.meR.ColumnCount)
@@ -185,6 +186,40 @@ module ZeusUtils =
             dSdS=dSdS,
             dSdP=dSdP
             )
+
+
+    let f a b = a + b
+
+    let rec g a b i =
+        match i with
+        | 0 -> f a b
+        | k -> g a (f a b) (i-1)
+
+
+    let UpdateTrRep (zeus:Zeus) (mems:Matrix<float32>) 
+                    memIndex pNoiseLevel sNoiseLevel (seed:int)
+                    cPp cSs cRp cPs 
+                    (athena:Athena) reps =
+
+        let rng = Random.MersenneTwister(seed)
+        let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rng
+        let sNoise = Generators.SeqOfRandSF32 sNoiseLevel rng
+
+//            let UpdateTr (zeus:Zeus) (mem:Matrix<float32>) 
+//                 memIndex pNoise sNoise cPp cSs cRp cPs 
+//                 (athena:Athena) =
+
+        let UpdateA a = (UpdateTr zeus mems memIndex pNoise sNoise
+                                cPp cSs cRp cPp cPs a)
+
+        let rec Ura (a:Athena) i =
+            match i with
+            | 0 -> (UpdateA a)
+            | k -> Ura (UpdateA a).Athena (i-1)
+
+        None
+
+        //[1..reps] |> List.iter(fun i -> )
 
 
     let LearnTr (zeus:Zeus) memIndex (learnRate:float32) (athena:Athena) =
