@@ -111,8 +111,8 @@ module ZeusUtils =
 
 
 
-    let UpdateTr (zeus:Zeus) (mem:Matrix<float32>) 
-                 memIndex pNoise sNoise cPp cSs cRp cPs 
+    let UpdateTr (zeus:Zeus) memIndex pNoise 
+                 sNoise cPp cSs cRp cPs 
                  (athena:Athena) =
 
         let groupCt = athena.GroupCount
@@ -187,17 +187,8 @@ module ZeusUtils =
             )
 
 
-    let f a b = a + b
-
-    let rec g a b i =
-        let h b = f a b
-        match i with
-        | 0 -> h b
-        | k -> g a (h b) (i-1)
-
-
-    let UpdateTrRep (zeus:Zeus) (mems:Matrix<float32>) 
-                    memIndex pNoiseLevel sNoiseLevel (seed:int)
+    let UpdateTrRep (zeus:Zeus) memIndex pNoiseLevel 
+                    sNoiseLevel (seed:int)
                     cPp cSs cRp cPs 
                     (athena:Athena) reps =
 
@@ -205,11 +196,9 @@ module ZeusUtils =
         let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rng
         let sNoise = Generators.SeqOfRandSF32 sNoiseLevel rng
 
-
-        let UpdateA (a:Athena) = 
-            fun  UpdateTr zeus mems memIndex pNoise 
-                               sNoise cPp cSs cRp cPp cPs a
-
+        let UpdateA  = 
+                UpdateTr zeus memIndex
+                     pNoise sNoise cPp cSs cRp cPs
 
         let rec Ura (a:Athena) i =
             match i with
@@ -218,10 +207,9 @@ module ZeusUtils =
 
         Ura athena reps
 
-        None
-        
 
-    let LearnTr (zeus:Zeus) memIndex (learnRate:float32) (athena:Athena) =
+    let LearnTr (zeus:Zeus) memIndex 
+                learnRate (athena:Athena) =
 
         let curMem = zeus.meR.Row memIndex
         let grpCt = athena.GroupCount
@@ -327,8 +315,8 @@ module ZeusUtils =
 
  module ZeusBuilder =
 
-    let CreateRandom (seed:int) ngSize memSize
-                      ppSig glauberRadius =
+    let CreateRandomZeus (seed:int) ngSize memSize
+                          ppSig glauberRadius =
 
         let rng = Random.MersenneTwister(seed)
 
@@ -370,12 +358,10 @@ module ZeusUtils =
 
         let rndAthena = AthenaBuilder.CreateRandom
                             seed ngSize 0.5 0.3
-        let rndMems = MathNetUtils.RandNormalRectDenseSF32
-                        memSize ngSize rnd 0.33
 
-        match CreateRandom seed ngSize memSize ppSig
-                            glauberRadius with
-        | Some rndZeus-> Some (ZeusUtils.UpdateTr rndZeus rndMems 1 pNoise 
+        match CreateRandomZeus seed ngSize memSize ppSig
+                                glauberRadius with
+        | Some rndZeus-> Some (ZeusUtils.UpdateTr rndZeus 1 pNoise 
                                 sNoise 0.1f
                                 0.1f 0.1f 0.1f rndAthena)
         | None -> None

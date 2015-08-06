@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using LibNode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -141,6 +140,36 @@ namespace NodeLib.Test
                 );
 
             var p = res.Value;
+        }
+
+        [TestMethod]
+        public void TestUpdateTrRep()
+        {
+            var z = ZeusBuilder.CreateRandomZeus(
+                    seed:12347,
+                    ngSize:24,
+                    memSize:16,
+                    ppSig: 0.4,
+                    glauberRadius:5
+                ).Value;
+
+            var a = AthenaBuilder.CreateRandom(
+                    seed: 12347,
+                    ngSize: 24,
+                    pSig: 0.4,
+                    sSig: 0.4
+                );
+
+            var res = ZeusUtils.UpdateTrRep(
+                zeus:z,
+                memIndex: 1,
+                pNoiseLevel: 0.2,
+                sNoiseLevel: 0.2,
+                seed: 123,
+                cPp:0.1f, cSs: 0.1f, cRp: 0.1f, cPs: 0.1f,
+                athena: a,
+                reps: 4
+            );
         }
 
     }

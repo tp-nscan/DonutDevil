@@ -152,7 +152,7 @@ namespace La.ViewModel
         private void DoGoToZeus()
         {
             _mainWindowTypehanged.OnNext(
-                new ZeusVm(ZeusBuilder.CreateRandom(
+                new ZeusVm(ZeusBuilder.CreateRandomZeus(
                 seed: 123,
                 ngSize: 100,
                 memSize: 20,
