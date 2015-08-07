@@ -213,22 +213,13 @@ namespace La.ViewModel
 
         private void DoResetAll()
         {
-            //Wng = ZeusBuilder.CreateWng(
-            //     glauberRadius: ZeusParamsVm.GlauberRadiusVm.CurVal,
-            //     pSig: ZeusParamsVm.PSigVm.CurVal,
-            //     sSig: ZeusParamsVm.SSigVm.CurVal,
-            //     cPp: (float)ZeusParamsVm.CPpVm.CurVal,
-            //     pNoiseLevel: (float)ZeusParamsVm.PNoiseLevelVm.CurVal,
-            //     sNoiseLevel: (float)ZeusParamsVm.SNoiseLevelVm.CurVal,
-            //     cSs: (float)ZeusParamsVm.CSsVm.CurVal,
-            //     cRp: (float)ZeusParamsVm.CRpVm.CurVal,
-            //     cPs: (float)ZeusParamsVm.CPsVm.CurVal,
-            //     rIndex: IndexSelectorVm.IndexVm.Index,
-            //     sseed: ZeusParamsVm.SSeedVm.CurVal,
-            //     pseed: ZeusParamsVm.PSeedVm.CurVal,
-            //     zeus: Waffle
-            //  ).Value;
-
+            AthenaTr = ZeusBuilders.AthenaToTr(
+                ZeusBuilders.CreateRandomAthena(
+                    seed: ZeusParamsVm.SSeedVm.CurVal,
+                    ngSize: Zeus.GroupCount,
+                    pSig: ZeusParamsVm.PSigVm.CurVal,
+                    sSig: ZeusParamsVm.SSigVm.CurVal
+                ));
             UpdateUi();
         }
 

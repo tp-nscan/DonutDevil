@@ -9,7 +9,8 @@ namespace La.ViewModel
 {
     public class WaffleHistoriesVm : NotifyPropertyChanged
     {
-        public WaffleHistoriesVm(WaffleHistories waffleHistories, string curName)
+        public WaffleHistoriesVm(WaffleHistories waffleHistories, 
+            string curName)
         {
             WaffleHistories = waffleHistories;
             ArrayHistVms = new List<ArrayHistVm>

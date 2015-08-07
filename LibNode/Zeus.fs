@@ -74,6 +74,9 @@ type AthenaTr(
                 aM:Matrix<float32>,
                 bM:Matrix<float32>,
                 sM:Matrix<float32>,
+                dA:Matrix<float32>,
+                dB:Matrix<float32>,
+                dS:Matrix<float32>,
                 dAdR:Matrix<float32>,
                 dBdR:Matrix<float32>,
                 dAdA:Matrix<float32>,
@@ -85,6 +88,9 @@ type AthenaTr(
             ) =
 
     member this.Athena = new Athena(iteration, aM, bM, sM)
+    member this.dA = dA
+    member this.dB = dB
+    member this.dS = dS
     member this.dAdR = dAdR
     member this.dBdR = dBdR
     member this.dAdA = dAdA
@@ -111,8 +117,8 @@ module ZeusUtils =
 module ZeusF =
 
     let NextAthenaTr (zeus:Zeus) memIndex pNoise 
-                 sNoise cPp cSs cRp cPs 
-                 (athena:Athena) =
+                     sNoise cPp cSs cRp cPs 
+                     (athena:Athena) =
 
         let groupCt = athena.GroupCount
         let curMem = zeus.meR.SubMatrix(memIndex, 1, 0, zeus.meR.ColumnCount)
@@ -148,33 +154,38 @@ module ZeusF =
         let dBdA = athena.mA.Multiply(mAbs)
         let dBdB = athena.mB.Multiply(mBbs)
 
-        let newA = aNoise |> Array.mapi(fun i n -> 
-            F32ToSF32(n + athena.mA.[0,i] + cPp * (dAdA.[0,i] + dAdB.[0,i]) 
-                        + dAdR.[0,i] ))
+        let dA = DenseMatrix.init 1 groupCt  
+                  (fun x y -> aNoise.[y] + 
+                              cPp * (dAdA.[0,y] + dAdB.[0,y]) + 
+                              dAdR.[0,y])
 
-        let newB = aNoise |> Array.mapi(fun i n -> 
-            F32ToSF32(n + athena.mB.[0,i] + cPp * (dBdB.[0,i] + dBdA.[0,i]) 
-                        + dBdR.[0,i] ))
-
+        let dB = DenseMatrix.init 1 groupCt  
+                  (fun x y -> bNoise.[y] +
+                              cPp * (dBdB.[0,y] + dBdA.[0,y]) + 
+                              dBdR.[0,y])
 
         let dSdS = athena.mS.Multiply(zeus.mSs)
 
         let dSdP = DenseMatrix.init 1 groupCt  
-                        (fun x y -> curMem.[0,y]  * (athena.mA .[0,y] 
+                        (fun x y -> curMem.[0,y]  * (athena.mA.[0,y] 
                                     - athena.mB.[0,y]))
 
-        let newS = sNoise |> Array.mapi(fun i n -> 
-            F32ToSF32(n + athena.mS.[0,i] + cSs * dSdS.[0,i] + 
-                        cPs * dSdP.[0,i]))
+        let dS = DenseMatrix.init 1 groupCt  
+                  (fun x y -> sNoise.[y] +
+                              cSs * dSdS.[0,y] + 
+                              cPs * dSdP.[0,y])
 
         new AthenaTr(                
                 iteration=athena.Iteration + 1,
                 aM=DenseMatrix.init 1 groupCt  
-                        (fun x y -> newA.[x * groupCt + y]),
+                        (fun x y -> F32ToSF32(athena.mA.[0,y] + dA.[0,y])),
                 bM=DenseMatrix.init 1 groupCt  
-                        (fun x y -> newB.[x * groupCt + y]),
+                        (fun x y -> F32ToSF32(athena.mB.[0,y] + dB.[0,y])),
                 sM=DenseMatrix.init 1 groupCt  
-                        (fun x y -> newS.[x * groupCt + y]),
+                        (fun x y -> F32ToSF32(athena.mS.[0,y] + dS.[0,y])),
+                dA=dA,
+                dB=dA,
+                dS=dA,
                 dAdR=dAdR,
                 dBdR=dBdR,
                 dAdA=dAdA,
@@ -189,7 +200,7 @@ module ZeusF =
     let RepAthenaTr (zeus:Zeus) memIndex pNoiseLevel 
                     sNoiseLevel (seed:int)
                     cPp cSs cRp cPs 
-                    (athena:Athena) reps =
+                    (athena:Athena) halter =
 
         let rng = Random.MersenneTwister(seed)
         let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rng
@@ -199,12 +210,32 @@ module ZeusF =
                 NextAthenaTr zeus memIndex
                      pNoise sNoise cPp cSs cRp cPs
 
-        let rec Ura (a:Athena) i =
-            match i with
-            | 0 -> CurriedNext a
-            | k -> Ura ((CurriedNext a).Athena) (k-1)
+        let rec Ura (a:Athena) halter =
+            match halter with
+            | true -> CurriedNext a
+            | _ -> Ura ((CurriedNext a).Athena) halter
 
-        Ura athena reps
+        Ura athena halter
+
+//    let RepAthenaTr (zeus:Zeus) memIndex pNoiseLevel 
+//                    sNoiseLevel (seed:int)
+//                    cPp cSs cRp cPs 
+//                    (athena:Athena) reps =
+//
+//        let rng = Random.MersenneTwister(seed)
+//        let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rng
+//        let sNoise = Generators.SeqOfRandSF32 sNoiseLevel rng
+//
+//        let CurriedNext  = 
+//                NextAthenaTr zeus memIndex
+//                     pNoise sNoise cPp cSs cRp cPs
+//
+//        let rec Ura (a:Athena) i =
+//            match i with
+//            | 0 -> CurriedNext a
+//            | k -> Ura ((CurriedNext a).Athena) (k-1)
+//
+//        Ura athena reps
 
 
     let NextZeusTr (zeus:Zeus) memIndex 
@@ -315,9 +346,8 @@ module ZeusF =
                 sM=mS
             )
 
-    let CreateRandomAthenaTr (seed:int) ngSize pSig sSig =
+    let AthenaToTr (athena:Athena)  =
 
-        let athena = CreateRandomAthena seed ngSize pSig sSig 
         let groupCt = athena.GroupCount
 
         new AthenaTr(                
@@ -325,6 +355,9 @@ module ZeusF =
                 aM=athena.mA,
                 bM=athena.mB,
                 sM=athena.mS,
+                dA=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
+                dB=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
+                dS=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
                 dAdR=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
                 dBdR=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
                 dAdA=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
@@ -334,6 +367,7 @@ module ZeusF =
                 dSdS=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
                 dSdP=DenseMatrix.init 1 groupCt (fun x y -> 0.0f)
             )
+
 
     let ResetAthenaP pSig (seed:int) (athena:Athena) =
 
@@ -375,6 +409,7 @@ module ZeusF =
                 bM=athena.mB,
                 sM=mS
             )
+
 
     let CreateRandomZeus (seed:int) ngSize memSize
                           ppSig glauberRadius =
