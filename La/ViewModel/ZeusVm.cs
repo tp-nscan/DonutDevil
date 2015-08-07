@@ -143,7 +143,7 @@ namespace La.ViewModel
             {
                 for (var i = 1; i < (int)DisplayFrequencySliderVm.Value + 1; i++)
                 {
-                    Wng = Wng.Update();
+                   // Wng = Wng.Update();
                     Application.Current.Dispatcher.Invoke
                     (
                         () => Generation = i.ToString(),
@@ -161,7 +161,7 @@ namespace La.ViewModel
 
         bool CanUpdate()
         {
-            return (!_isRunning) && (Wng != null);
+            return (!_isRunning); //&& (Wng != null);
         }
 
         #endregion // UpdateCommand
@@ -183,7 +183,7 @@ namespace La.ViewModel
 
         private void DoLearn()
         {
-            var newWng = Wng.Learn((float)ZeusParamsVm.LearnRateVm.CurVal);
+           // var newWng = Wng.Learn((float)ZeusParamsVm.LearnRateVm.CurVal);
             //Waffle = ZeusBuilder.UpdateFromWng(Waffle, newWng);
             //Wng = ZeusBuilder.ResetC(zeus: Waffle, wng: Wng);
             UpdateUi();
@@ -191,7 +191,7 @@ namespace La.ViewModel
 
         bool CanLearn()
         {
-            return (!_isRunning) && (Wng != null);
+            return (!_isRunning); // && (Wng != null);
         }
 
         #endregion // LearnCommand
@@ -267,7 +267,7 @@ namespace La.ViewModel
 
         bool CanResetP()
         {
-            return (!_isRunning) && (Wng != null);
+            return (!_isRunning); /// && (Wng != null);
         }
 
         #endregion // ResetPCommand
@@ -300,7 +300,7 @@ namespace La.ViewModel
 
         bool CanResetR()
         {
-            return (!_isRunning) && (Wng != null);
+            return (!_isRunning); // && (Wng != null);
         }
 
         #endregion // ResetRCommand
@@ -333,7 +333,7 @@ namespace La.ViewModel
 
         bool CanResetS()
         {
-            return (!_isRunning) && (Wng != null);
+            return (!_isRunning); // && (Wng != null);
         }
 
         #endregion // ResetSCommand
@@ -355,17 +355,17 @@ namespace La.ViewModel
 
         private void DochangeParams()
         {
-            Wng = Wng.NewPrams(
-                    cPp: (float)ZeusParamsVm.CPpVm.CurVal,
-                    cSs: (float)ZeusParamsVm.CSsVm.CurVal,
-                    cRp: (float)ZeusParamsVm.CRpVm.CurVal,
-                    cPs: (float)ZeusParamsVm.CPsVm.CurVal
-                );
+            //Wng = Wng.NewPrams(
+            //        cPp: (float)ZeusParamsVm.CPpVm.CurVal,
+            //        cSs: (float)ZeusParamsVm.CSsVm.CurVal,
+            //        cRp: (float)ZeusParamsVm.CRpVm.CurVal,
+            //        cPs: (float)ZeusParamsVm.CPsVm.CurVal
+            //    );
         }
 
         bool CanchangeParams()
         {
-            return (!_isRunning) && (Wng != null);
+            return (!_isRunning); // && (Wng != null);
         }
 
         #endregion // ChangeParamsCommand
@@ -416,7 +416,7 @@ namespace La.ViewModel
                             )
                 ).ToList();
 
-            if (Wng == null) return;
+          //  if (Wng == null) return;
            // WngGvVm = new WngGvVm(Wng, Zeus, IndexSelectorVm.IndexVm.Index);
             MainGridVm.AddValues(cellColors);
             OnPropertyChanged("Generation");
