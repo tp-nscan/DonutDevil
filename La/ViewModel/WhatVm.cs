@@ -20,6 +20,8 @@ namespace La.ViewModel
 {
     public class WhatVm : NotifyPropertyChanged, IMainContentVm
     {
+        const int TargetLength = 350;
+
         public WhatVm(Waffle waffle)
         {
             Waffle = waffle;
@@ -28,15 +30,14 @@ namespace La.ViewModel
                 WaffleHistBuilder.InitHistories
                     (
                         arrayLength: Waffle.GroupCount,
-                        ensembleSize: Waffle.EnsembleCount,
-                        targetLength: 500
+                        ensembleSize: Waffle.EnsembleCount
                     ),
                     "C"
                 );
 
             IndexSelectorVm = new IndexSelectorVm(Enumerable.Range(0, waffle.EnsembleCount));
             DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0")
-            { Title = "Display Frequency", Value = 10 };
+                { Title = "Display Frequency", Value = 10 };
 
             _legendVm = new LinearLegendVm();
             _legendVm.OnLegendVmChanged.Subscribe(lvm => UpdateUi());
@@ -91,8 +92,10 @@ namespace La.ViewModel
 
         public MainContentType MainContentType => MainContentType.What;
 
-        private readonly Subject<IMainContentVm> _mainWindowTypeChanged = new Subject<IMainContentVm>();
-        public IObservable<IMainContentVm> OnMainWindowTypeChanged => _mainWindowTypeChanged;
+        private readonly Subject<IMainContentVm> _mainWindowTypeChanged 
+            = new Subject<IMainContentVm>();
+        public IObservable<IMainContentVm> OnMainWindowTypeChanged => 
+            _mainWindowTypeChanged;
 
         #endregion
 
@@ -100,7 +103,8 @@ namespace La.ViewModel
 
         #region local vars
 
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource _cancellationTokenSource 
+            = new CancellationTokenSource();
 
         private bool _isRunning;
         public bool IsRunning
@@ -149,7 +153,7 @@ namespace La.ViewModel
             },
                 cancellationToken: _cancellationTokenSource.Token
             );
-            WaffleHistoriesVm = WaffleHistoriesVm.Update(Wng, Waffle);
+            WaffleHistoriesVm = WaffleHistoriesVm.Update(Wng, Waffle, TargetLength);
             UpdateUi();
             IsRunning = false;
         }

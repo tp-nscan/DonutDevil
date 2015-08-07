@@ -39,10 +39,10 @@ namespace La.ViewModel
             }
         }
 
-        public WaffleHistoriesVm Update(Wng wng, Waffle waffle)
+        public WaffleHistoriesVm Update(Wng wng, Waffle waffle, int targetLength)
         {
             return new WaffleHistoriesVm(
-                waffleHistories: WaffleHistBuilder.UpdateHistories(WaffleHistories, wng, waffle),
+                waffleHistories: WaffleHistBuilder.UpdateHistories(WaffleHistories, wng, waffle, targetLength),
                 curName: ArrayHistVm.Name
                 );
         }

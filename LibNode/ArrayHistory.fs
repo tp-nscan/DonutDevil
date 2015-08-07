@@ -5,43 +5,28 @@ open Rop
     type IndexedF32A = { Index:int; Array:float32[]}
 
     type ArrayHist = { Name:string; ArrayLength:int; 
-                            IndexedArrays:List<IndexedF32A>; 
-                            TargetLength:int;}
+                        IndexedArrays:List<IndexedF32A>;}
 
     type D2Val<'a> = {X:int; Y:int; Val:'a}
 
 module ArrayHistory =
     
-    let Init name arrayLength targetLength = 
+    let Init name arrayLength = 
         { 
             Name = name; 
             ArrayLength = arrayLength; 
             IndexedArrays = [];
-            TargetLength = targetLength;
         }
 
-//    let Init name newHist targetLength = 
-//        let firstArray = {
-//                            Index = 0;
-//                            Array = newHist |> Seq.toArray
-//                         }
-//        { 
-//            Name = name; 
-//            ArrayLength = firstArray.Array.GetLength(0); 
-//            IndexedArrays = [firstArray];
-//            TargetLength = targetLength;
-//        }
-
-    let rec Add arrayHist newHist newIndex =
-        match (arrayHist.IndexedArrays.Length = arrayHist.TargetLength) with
+    let rec Add arrayHist newHist newIndex targetLength =
+        match (arrayHist.IndexedArrays.Length = targetLength) with
         | true -> 
             let trimmed = { 
                             Name=arrayHist.Name
                             ArrayLength=arrayHist.ArrayLength
                             IndexedArrays = (Skip arrayHist.IndexedArrays)
-                            TargetLength = arrayHist.TargetLength
                           }
-            (Add trimmed newHist newIndex)
+            (Add trimmed newHist newIndex targetLength)
         | false ->
                 { 
                     Name=arrayHist.Name
@@ -52,7 +37,6 @@ module ArrayHistory =
                                                         |> Seq.toArray
                                     }
                                     :: arrayHist.IndexedArrays
-                    TargetLength = arrayHist.TargetLength
                 }
 
     let GetD2Vals (arrayHist:ArrayHist) = 

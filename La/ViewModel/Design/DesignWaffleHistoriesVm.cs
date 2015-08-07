@@ -10,7 +10,7 @@ namespace La.ViewModel.Design
 
         static WaffleHistories DesignZeusHistories()
         {
-            return WaffleHistBuilder.InitHistories(10, 10, 10);
+            return WaffleHistBuilder.InitHistories(10, 10);
         }
     }
 }

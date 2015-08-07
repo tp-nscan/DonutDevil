@@ -8,22 +8,26 @@ namespace NodeLib.Test
     [TestClass]
     public class WhatFixture
     {
+        const int TargetLength = 10;
         static ArrayHist MakeArrayHistories()
         {
+
             var ah = ArrayHistory.Init(
                 name: "Ralph",
-                arrayLength: 3,
-                targetLength: 20
+                arrayLength: 3
                 );
 
             ah = ArrayHistory
-                    .Add(ah, Enumerable.Range(10, 3).Select(i => (float) i), 4);
+                    .Add(ah, Enumerable.Range(10, 3)
+                    .Select(i => (float) i), 4, TargetLength);
 
             ah = ArrayHistory
-                    .Add(ah, Enumerable.Range(20, 3).Select(i => (float)i), 4);
+                    .Add(ah, Enumerable.Range(20, 3)
+                    .Select(i => (float)i), 4, TargetLength);
 
             ah = ArrayHistory
-                    .Add(ah, Enumerable.Range(30, 3).Select(i => (float)i), 4);
+                    .Add(ah, Enumerable.Range(30, 3)
+                    .Select(i => (float)i), 4, TargetLength);
 
             return ah;
         }
@@ -32,14 +36,14 @@ namespace NodeLib.Test
         {
             var ah = ArrayHistory.Init(
                     name: "Ralph",
-                    arrayLength: 3,
-                    targetLength: 200
+                    arrayLength: 3
                 );
 
             for (var ct = 1; ct< 4000; ct++)
             {
                 ah = ArrayHistory
-                        .Add(ah, Enumerable.Range(ct*10, 3).Select(i => (float)i), ct);
+                        .Add(ah, Enumerable.Range(ct*10, 3)
+                        .Select(i => (float)i), ct, TargetLength);
             }
 
             return ah;
@@ -131,7 +135,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestDesignAthenaTr()
         {
-            var res = ZeusBuilder.DesignAthenaTr(
+            var res = ZeusBuilders.DesignAthenaTr(
                 seed: 123,
                 ngSize: 24,
                 memSize: 16,
@@ -145,7 +149,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestUpdateTrRep()
         {
-            var z = ZeusBuilder.CreateRandomZeus(
+            var z = ZeusBuilders.CreateRandomZeus(
                     seed:12347,
                     ngSize:24,
                     memSize:16,
@@ -153,14 +157,14 @@ namespace NodeLib.Test
                     glauberRadius:5
                 ).Value;
 
-            var a = AthenaBuilder.CreateRandom(
+            var a = ZeusBuilders.CreateRandomAthena(
                     seed: 12347,
                     ngSize: 24,
                     pSig: 0.4,
                     sSig: 0.4
                 );
 
-            var res = ZeusUtils.UpdateTrRep(
+            var res = ZeusF.RepAthenaTr(
                 zeus:z,
                 memIndex: 1,
                 pNoiseLevel: 0.2,

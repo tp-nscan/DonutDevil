@@ -17,7 +17,7 @@ namespace La.ViewModel.Design
         const int DMemSz = 16;
         const int GlauberRadius = 5;
 
-        public static AthenaTr DesignAthenaTr => ZeusBuilder.DesignAthenaTr(seed: Seed,
+        public static AthenaTr DesignAthenaTr => ZeusBuilders.DesignAthenaTr(seed: Seed,
             ngSize: DGpSz, memSize: DMemSz,
             ppSig: 0.3f,
             glauberRadius: GlauberRadius).Value;
