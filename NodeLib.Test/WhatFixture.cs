@@ -164,16 +164,16 @@ namespace NodeLib.Test
                     sSig: 0.4
                 );
 
-            var res = ZeusF.RepAthenaTr(
-                zeus:z,
-                memIndex: 1,
-                pNoiseLevel: 0.2,
-                sNoiseLevel: 0.2,
-                seed: 123,
-                cPp:0.1f, cSs: 0.1f, cRp: 0.1f, cPs: 0.1f,
-                athena: a,
-                reps: 4
-            );
+            //var res = ZeusF.RepAthenaTr(
+            //    zeus:z,
+            //    memIndex: 1,
+            //    pNoiseLevel: 0.2,
+            //    sNoiseLevel: 0.2,
+            //    seed: 123,
+            //    cPp:0.1f, cSs: 0.1f, cRp: 0.1f, cPs: 0.1f,
+            //    athena: a,
+            //    reps: 4
+            //);
         }
 
     }
