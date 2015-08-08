@@ -41,6 +41,7 @@ type Scorr =
             bbM:Matrix<float32>,
             ssM:Matrix<float32>,
             reM:Matrix<float32>,
+            learnRate:float32,
             scM:Scorr[,]
         ) =
 
@@ -54,6 +55,7 @@ type Scorr =
                     reM = reM
                   )
     member this.scM = scM
+    member this.LearnRate = learnRate
 
 
 type Athena(
@@ -238,21 +240,6 @@ module ZeusF =
                        sNoiseLevel seed
                        cPp cSs cRp cPs 
                        athena
-//
-//        let rng = Random.MersenneTwister(seed)
-//        let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rng
-//        let sNoise = Generators.SeqOfRandSF32 sNoiseLevel rng
-//
-//        let CurriedNext  = 
-//                NextAthenaTr zeus memIndex
-//                     pNoise sNoise cPp cSs cRp cPs
-//
-//        let rec Ura (a:Athena) i =
-//            match i with
-//            | 0 -> CurriedNext a
-//            | k -> Ura ((CurriedNext a).Athena) (k-1)
-//
-//        Ura athena reps
 
 
     let NextZeusTr (zeus:Zeus) memIndex 
@@ -331,7 +318,8 @@ module ZeusF =
                     bbM = zeus.mBb,
                     ssM = zeus.mSs,
                     reM = zeus.meR,
-                    scM = mCs
+                    scM = mCs,
+                    learnRate = learnRate
                   )
 
 
@@ -479,4 +467,9 @@ module ZeusF =
                                 sNoise 0.1f
                                 0.1f 0.1f 0.1f "hi" rndAthena)
         | None -> None
+
+
+
+ module ZeusHistory =
+    type ZeusSnap = { Id:Guid; ParentId:Option<Guid>; AthenaTr:AthenaTr; ZeusTr:ZeusTr;}
 
