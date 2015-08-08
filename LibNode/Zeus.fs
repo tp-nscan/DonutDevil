@@ -84,7 +84,8 @@ type AthenaTr(
                 dBdA:Matrix<float32>,
                 dBdB:Matrix<float32>,
                 dSdS:Matrix<float32>,
-                dSdP:Matrix<float32>
+                dSdP:Matrix<float32>,
+                message:string
             ) =
 
     member this.Athena = new Athena(iteration, aM, bM, sM)
@@ -99,6 +100,7 @@ type AthenaTr(
     member this.dBdB = dBdB
     member this.dSdS = dSdS
     member this.dSdP = dSdP
+    member this.Message = message
 
 module ZeusUtils =
 
@@ -117,7 +119,7 @@ module ZeusUtils =
 module ZeusF =
 
     let NextAthenaTr (zeus:Zeus) memIndex pNoise 
-                     sNoise cPp cSs cRp cPs 
+                     sNoise cPp cSs cRp cPs message 
                      (athena:Athena) =
 
         let groupCt = athena.GroupCount
@@ -193,34 +195,49 @@ module ZeusF =
                 dBdA=dBdA,
                 dBdB=dBdB,
                 dSdS=dSdS,
-                dSdP=dSdP
+                dSdP=dSdP,
+                message = message
             )
 
 
-    let RepAthenaTr (zeus:Zeus) memIndex pNoiseLevel 
-                    sNoiseLevel (seed:int)
+    let HaltAthenaTr halter (zeus:Zeus) memIndex  
+                    pNoiseLevel sNoiseLevel (seed:int)
                     cPp cSs cRp cPs 
-                    (athena:Athena) halter =
+                    (athena:Athena) =
 
         let rng = Random.MersenneTwister(seed)
         let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rng
         let sNoise = Generators.SeqOfRandSF32 sNoiseLevel rng
 
+        let message  = sprintf "memIndex:%i; pNoiseLevel:%f; sNoiseLevel:%f; 
+                                    seed:%i; cPp:%f; cSs:%f; cRp:%f; cPs:%f;"
+                                    memIndex pNoiseLevel sNoiseLevel seed cPp cSs cRp cPs 
+
+        let message  = "hi"
         let CurriedNext  = 
                 NextAthenaTr zeus memIndex
-                     pNoise sNoise cPp cSs cRp cPs
+                     pNoise sNoise cPp cSs cRp cPs message
 
-        let rec Ura (a:Athena) halter =
-            match halter with
-            | true -> CurriedNext a
-            | _ -> Ura ((CurriedNext a).Athena) halter
+        let rec Ura (aTr:AthenaTr) halter =
+            match halter(aTr) with
+            | true -> aTr
+            | _ -> Ura (CurriedNext aTr.Athena) halter
 
-        Ura athena halter
+        Ura (CurriedNext athena) halter
 
-//    let RepAthenaTr (zeus:Zeus) memIndex pNoiseLevel 
-//                    sNoiseLevel (seed:int)
-//                    cPp cSs cRp cPs 
-//                    (athena:Athena) reps =
+    let RepAthenaTr (zeus:Zeus) memIndex pNoiseLevel 
+                    sNoiseLevel (seed:int)
+                    cPp cSs cRp cPs 
+                    (athena:Athena) reps =
+
+          HaltAthenaTr (fun (aTr:AthenaTr) -> 
+                                aTr.Athena.Iteration = 
+                                    reps + athena.Iteration
+                       )
+                       zeus memIndex pNoiseLevel
+                       sNoiseLevel seed
+                       cPp cSs cRp cPs 
+                       athena
 //
 //        let rng = Random.MersenneTwister(seed)
 //        let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rng
@@ -365,7 +382,8 @@ module ZeusF =
                 dBdA=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
                 dBdB=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
                 dSdS=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
-                dSdP=DenseMatrix.init 1 groupCt (fun x y -> 0.0f)
+                dSdP=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
+                message = ""
             )
 
 
@@ -459,6 +477,6 @@ module ZeusF =
                                 glauberRadius with
         | Some rndZeus-> Some (ZeusF.NextAthenaTr rndZeus 1 pNoise 
                                 sNoise 0.1f
-                                0.1f 0.1f 0.1f rndAthena)
+                                0.1f 0.1f 0.1f "hi" rndAthena)
         | None -> None
 
