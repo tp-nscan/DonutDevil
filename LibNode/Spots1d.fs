@@ -99,11 +99,12 @@ type Spots1dGpu(  ppM:Matrix<float32>,
         let sMatrix = DenseMatrix.init 1 ngSize (fun x y -> svals.[y])
 
         let stepR32 = System.Convert.ToSingle(stepR)
-        let rvals = (Generators.SeqOfRandSF32Bits 0.5 rng
+        let rvals = (Generators.SeqOfRandSF32Bits 0.5f rng
                       |> Seq.take(ngSize)) |> Seq.toArray
         let rMatrix = DenseMatrix.init 1 ngSize (fun x y -> rvals.[y] * stepR32)
 
-        let seqNoise = Generators.SeqOfRandSF32 noiseLevel rng
+        let seqNoise = Generators.SeqOfRandSF32 
+                            (System.Convert.ToSingle(noiseLevel)) rng
 
 
         match GlauberNeutralDense ngSize glauberRadius with

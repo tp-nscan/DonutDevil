@@ -62,7 +62,7 @@ module MathNetUtils =
 
 
     let RandRectDenseSF32Bits rows cols rng = 
-        let rSqData = Generators.SeqOfRandSF32Bits 0.5 rng
+        let rSqData = Generators.SeqOfRandSF32Bits 0.5f rng
                        |> Seq.take(rows * cols) 
                        |> Seq.toArray
         DenseMatrix.init rows cols 

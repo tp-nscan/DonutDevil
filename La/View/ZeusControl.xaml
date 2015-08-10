@@ -26,7 +26,7 @@
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetSCommand}" Content="Reset S" />
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ResetPCommand}" Content="Reset P" />
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding LearnCommand}" Content="Learn" />
-                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding ChangeParamsCommand}" Content="Params" />
+                    <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding StopCommand}" Content="Stop" />
                     <Button Style="{DynamicResource AppPartButtonStyle}" Command="{Binding GoToMenuCommand}" Content="Menu" />
 
                 </WrapPanel>
@@ -49,27 +49,17 @@
                     </Border>
                 </Border>
 
-                <Border Margin="5" Background="#F222">
-                    <ContentControl
-						Content="{Binding LegendVm}" 
-						ContentTemplateSelector="{DynamicResource LegendSelector}" />
-                </Border>
-
             </StackPanel>
 
             <Grid>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="7*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="3*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-
-                <Border Grid.Row="0" Margin="5" Background="#F222">
-                    <local:ZeusHistoriesControl DataContext="{Binding ZeusHistoriesVm}"/>
-                </Border>
 
                 <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="2" ResizeBehavior="PreviousAndNext"  
 					ResizeDirection="Rows" Background="#4CE41818"/>
@@ -108,14 +98,10 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Viewbox Stretch="Uniform">
-                <Border Background="#F222">
-                    <graphics:WbImage Height="300"
-						ImageWidth="{Binding MainGridVm.ImageWidth}" 
-						ImageHeight="{Binding MainGridVm.ImageHeight}"
-						PlotRectangles="{Binding MainGridVm.PlotRectangles}" 
-                        />
-                </Border>
+            <Viewbox Margin="25" Stretch="Uniform">
+                <Grid Margin="0,5,0,0" Height="300" Width="800" >
+                    <local:ZeusSnapControl DataContext="{Binding ZeusSnapVm}"/>
+                </Grid>
             </Viewbox>
 
             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="2" ResizeBehavior="PreviousAndNext"  
@@ -125,7 +111,8 @@
 				VerticalScrollBarVisibility="Visible" 
 				HorizontalScrollBarVisibility="Visible"
 				Template="{DynamicResource DonutDevilScrollViewerTemplate}">
-                <local:WngGvControl DataContext="{Binding WngGvVm}" RenderTransformOrigin="0.5,0.5"/>
+
+                
             </ScrollViewer>
 
         </Grid>

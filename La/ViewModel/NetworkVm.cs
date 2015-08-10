@@ -2,10 +2,7 @@
 using System.Diagnostics;
 using System.Reactive.Subjects;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
 using La.ViewModel.Design;
 using LibNode;
@@ -23,7 +20,15 @@ namespace La.ViewModel
             ZeusSnapVm  = new DesignZeusSnapVm();
         }
 
-        public ZeusSnapVm ZeusSnapVm { get; set; }
+        public ZeusSnapVm ZeusSnapVm
+        {
+            get { return _zeusSnapVm; }
+            set
+            {
+                _zeusSnapVm = value;
+                OnPropertyChanged("ZeusSnapVm");
+            }
+        }
 
         #region IMainWindowVm
 
@@ -72,46 +77,62 @@ namespace La.ViewModel
                     ));
             }
         }
+        const int Seed = 1238;
+        const int DGpSz = 256;
+        const int DMemSz = 16;
+        const int GlauberRadius = 5;
 
         private async void DoUpdateNetwork()
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-            _isRunning = true;
 
-            await Task.Run(() =>
-            {
-                _stopwatch.Start();
-
-                for (var i = 0; _isRunning; i++)
-                {
-                    //if (ParamSetEditorVm.IsDirty)
-                    //{
-                    //    Network = Network.UpdateParams(ParamSetEditorVm.LatestParameters.ToDictionary(p => p.Name));
-                    //    ParamSetEditorVm.IsDirty = false;
-                    //}
-
-                    // Network = Network.UpdateNodeGroup();
-
-                    if (_cancellationTokenSource.IsCancellationRequested)
-                    {
-                        _isRunning = false;
-                        _stopwatch.Stop();
-                        CommandManager.InvalidateRequerySuggested();
-                    }
-
-                    if (i % (int)DisplayFrequencySliderVm.Value == 0)
-                    {
-                        Application.Current.Dispatcher.Invoke
-                            (
-                                UpdateUi,
-                                DispatcherPriority.Background
-                            );
-                    }
-                }
-            },
-                cancellationToken: _cancellationTokenSource.Token
-            );
+            ZeusSnapVm = new ZeusSnapVm(
+                ZeusBuilders.DesignAthenaTr(seed: DateTime.Now.Millisecond,
+                    ngSize: DGpSz, memSize: DMemSz,
+                    ppSig: 0.3f,
+                    glauberRadius: GlauberRadius).Value,
+                "yo"
+                );
         }
+
+
+        //_cancellationTokenSource = new CancellationTokenSource();
+        //_isRunning = true;
+
+        //await Task.Run(() =>
+        //    {
+        //        _stopwatch.Start();
+
+        //        for (var i = 0; _isRunning; i++)
+        //        {
+
+        //            //if (ParamSetEditorVm.IsDirty)
+        //            //{
+        //            //    Network = Network.UpdateParams(ParamSetEditorVm.LatestParameters.ToDictionary(p => p.Name));
+        //            //    ParamSetEditorVm.IsDirty = false;
+        //            //}
+
+        //            // Network = Network.UpdateNodeGroup();
+
+        //            if (_cancellationTokenSource.IsCancellationRequested)
+        //            {
+        //                _isRunning = false;
+        //                _stopwatch.Stop();
+        //                CommandManager.InvalidateRequerySuggested();
+        //            }
+
+        //            if (i % (int)DisplayFrequencySliderVm.Value == 0)
+        //            {
+        //                Application.Current.Dispatcher.Invoke
+        //                    (
+        //                        UpdateUi,
+        //                        DispatcherPriority.Background
+        //                    );
+        //            }
+        //        }
+        //    },
+        //        cancellationToken: _cancellationTokenSource.Token
+        //    );
+        //}
 
         bool CanUpdateNetwork()
         {
@@ -150,6 +171,7 @@ namespace La.ViewModel
 
         RelayCommand _goToMenuCommand;
         private IEntityRepo _entityRepo;
+        private ZeusSnapVm _zeusSnapVm;
 
         public ICommand GoToMenuCommand
         {

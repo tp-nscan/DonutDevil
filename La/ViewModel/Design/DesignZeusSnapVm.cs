@@ -12,8 +12,8 @@ namespace La.ViewModel.Design
         {
         }
 
-        const int Seed = 123;
-        const int DGpSz = 64;
+        const int Seed = 1238;
+        const int DGpSz = 256;
         const int DMemSz = 16;
         const int GlauberRadius = 5;
 

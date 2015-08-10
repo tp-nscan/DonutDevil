@@ -105,8 +105,8 @@ namespace NodeLib.Test
                 ppSig: 0.75f,
                 pSig: 0.75f,
                 sSig: 0.75f,
-                pNoiseLevel: 0.1f,
-                sNoiseLevel: 0.01f,
+                pNoiseL: 0.1f,
+                sNoiseL: 0.01f,
                 cPp: 0.01f,
                 cSs: 0.01f,
                 cRp: 0.01f,
@@ -167,8 +167,8 @@ namespace NodeLib.Test
             var res = ZeusF.RepAthenaTr(
                 zeus: z,
                 memIndex: 1,
-                pNoiseLevel: 0.2,
-                sNoiseLevel: 0.2,
+                pNoiseL: 0.2f,
+                sNoiseL: 0.2f,
                 seed: 123,
                 cPp: 0.1f, cSs: 0.1f, cRp: 0.1f, cPs: 0.1f,
                 athena: a,
@@ -178,11 +178,11 @@ namespace NodeLib.Test
             var res2 = ZeusF.RepAthenaTr(
                 zeus: z,
                 memIndex: 1,
-                pNoiseLevel: 0.2,
-                sNoiseLevel: 0.2,
+                pNoiseL: 0.2f,
+                sNoiseL: 0.2f,
                 seed: 123,
                 cPp: 0.1f, cSs: 0.1f, cRp: 0.1f, cPs: 0.1f,
-                athena: res.Athena,
+                athena: res.AthenaTr.Athena,
                 reps: 7
             );
 

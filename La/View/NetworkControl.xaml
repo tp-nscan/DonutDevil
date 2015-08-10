@@ -40,10 +40,12 @@
 
 
         </StackPanel>
-        
-        <Grid Margin="0,5,0,0" >
-            <view:ZeusSnapControl DataContext="{Binding ZeusSnapVm}"/>
-        </Grid>
+        <Viewbox Margin="25" Stretch="Uniform">
+            <Grid Margin="0,5,0,0" Height="300" Width="800" >
+                <view:ZeusSnapControl DataContext="{Binding ZeusSnapVm}"/>
+            </Grid>
+        </Viewbox>
+
 
     </DockPanel>
 

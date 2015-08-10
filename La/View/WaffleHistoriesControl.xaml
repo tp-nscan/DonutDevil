@@ -7,8 +7,7 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance {x:Type viewModel:DesignWaffleHistoriesVm}, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="300" >
-                <!--Width="{Binding ActualWidth, Mode=OneWay, 
-                RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}">-->
+    
     <UserControl.Resources>
         <DataTemplate x:Key="ItemTemplate">
             <Border BorderBrush="Pink" BorderThickness="1" Background="#1FFF">

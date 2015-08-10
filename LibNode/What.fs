@@ -89,8 +89,8 @@ type Wng(
     member this.mV = DenseMatrix.init 1 this.mS.ColumnCount  
                         (fun x y -> let sw = this.mS.[0,y]
                                     match sw with
-                                    | v when v<0.0f -> -v * this.mB.[0,y]
-                                    | v -> v* this.mA.[0,y])
+                                    | v when v < 0.0f -> -v * this.mB.[0,y]
+                                    | v -> v * this.mA.[0,y])
 
     member this.NewPrams(
                         cPp:float32,
@@ -180,7 +180,7 @@ type Wng(
                     (fun x y -> newB.[x * this.mB.ColumnCount + y]),
             sM = DenseMatrix.init 1 this.mS.ColumnCount  
                     (fun x y -> newS.[x * this.mS.ColumnCount + y]),
-            rM = this.mR ,
+            rM = this.mR,
             ssM = this.mSs,
             cPp = this.cPp,
             cSs = this.cSs,
@@ -282,7 +282,7 @@ type Waffle(
  module WngBuilder =
     
     let CreateRandom((seed:int), ngSize, ppSig, pSig, sSig,
-                      pNoiseLevel, sNoiseLevel, cPp, cSs, cRp, cPs,
+                      pNoiseL, sNoiseL, cPp, cSs, cRp, cPs,
                       glauberRadius) =
 
         let rng = Random.MersenneTwister(seed)
@@ -311,13 +311,13 @@ type Waffle(
         let mS = DenseMatrix.init 1 ngSize
                     (fun x y -> temp.[x*ngSize + y])
 
-        let rSqData = Generators.SeqOfRandSF32Bits 0.5 rng
+        let rSqData = Generators.SeqOfRandSF32Bits 0.5f rng
                        |> Seq.take(ngSize) |> Seq.toArray
         let mR = DenseMatrix.init 1 ngSize
                     (fun x y -> rSqData.[x*ngSize + y])
 
-        let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rng
-        let sNoise = Generators.SeqOfRandSF32 sNoiseLevel rng
+        let pNoise = Generators.SeqOfRandSF32 pNoiseL rng
+        let sNoise = Generators.SeqOfRandSF32 sNoiseL rng
 
         match GlauberNeutralDense ngSize glauberRadius with
         | Some csMatrix ->
@@ -397,7 +397,7 @@ type Waffle(
         let mBb = (RandNormalSqSymDenseSF32 ngSize rng ppSig)
                   |> MatrixF32ZeroD
 
-        let rSqData = Generators.SeqOfRandSF32Bits 0.5 rng
+        let rSqData = Generators.SeqOfRandSF32Bits 0.5f rng
                        |> Seq.take(ngSize * geSize) 
                        |> Seq.toArray
         let mRe = DenseMatrix.init geSize ngSize 
@@ -413,7 +413,7 @@ type Waffle(
 
 
     let CreateWng glauberRadius pSig sSig cPp
-                  pNoiseLevel sNoiseLevel cSs cRp 
+                  pNoiseL sNoiseL cSs cRp 
                   cPs rIndex (sseed:int) 
                   (pseed:int) (waffle:Waffle) =
 
@@ -437,8 +437,8 @@ type Waffle(
         let mS = DenseMatrix.init 1 ngSize 
                     (fun x y -> temp.[x*ngSize + y])
 
-        let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rngP
-        let sNoise = Generators.SeqOfRandSF32 sNoiseLevel rngS
+        let pNoise = Generators.SeqOfRandSF32 pNoiseL rngP
+        let sNoise = Generators.SeqOfRandSF32 sNoiseL rngS
 
         match GlauberNeutralDense ngSize glauberRadius with
         | Some csMatrix -> 

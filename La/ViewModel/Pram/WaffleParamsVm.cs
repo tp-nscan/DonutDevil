@@ -15,7 +15,7 @@ namespace La.ViewModel.Pram
             PSigVm = new ParamDoubleVm(
                     minVal: 0,
                     maxVal: 0.3,
-                    curVal: 0.1,
+                    curVal: 0.0,
                     increment: 0.005,
                     formatString: "0.000",
                     name: "P initial stDev"
@@ -23,7 +23,7 @@ namespace La.ViewModel.Pram
             SSigVm = new ParamDoubleVm(
                     minVal: 0,
                     maxVal: 0.3,
-                    curVal: 0.1,
+                    curVal: 0.0,
                     increment: 0.005,
                     formatString: "0.000",
                     name: "S initial stDev"
@@ -31,7 +31,7 @@ namespace La.ViewModel.Pram
             CPpVm = new ParamDoubleVm(
                     minVal: 0,
                     maxVal: 0.3,
-                    curVal: 0.1,
+                    curVal: 0.0,
                     increment: 0.005,
                     formatString: "0.000",
                     name: "P to P step"
@@ -39,7 +39,7 @@ namespace La.ViewModel.Pram
             CSsVm = new ParamDoubleVm(
                     minVal: 0,
                     maxVal: 0.3,
-                    curVal: 0.03,
+                    curVal: 0.0,
                     increment: 0.005,
                     formatString: "0.000",
                     name: "S to S step"
@@ -47,7 +47,7 @@ namespace La.ViewModel.Pram
             CRpVm = new ParamDoubleVm(
                     minVal: 0,
                     maxVal: 0.3,
-                    curVal: 0.1,
+                    curVal: 0.0,
                     increment: 0.005,
                     formatString: "0.000",
                     name: "R to P step"
@@ -55,20 +55,20 @@ namespace La.ViewModel.Pram
             CPsVm = new ParamDoubleVm(
                     minVal: 0,
                     maxVal: 0.3,
-                    curVal: 0.03,
+                    curVal: 0.0,
                     increment: 0.005,
                     formatString: "0.000",
                     name: "P to S step"
                 );
-            PNoiseLevelVm = new ParamDoubleVm(
+            pNoiseLVm = new ParamDoubleVm(
                     minVal: 0,
                     maxVal: 0.3,
-                    curVal: 0.1,
+                    curVal: 0.0,
                     increment: 0.005,
                     formatString: "0.000",
                     name: "P noise level"
                 );
-            SNoiseLevelVm = new ParamDoubleVm(
+            sNoiseLVm = new ParamDoubleVm(
                     minVal: 0,
                     maxVal: 0.3,
                     curVal: 0.1,
@@ -92,7 +92,7 @@ namespace La.ViewModel.Pram
                     minVal: 0,
                     maxVal: 0.3,
                     curVal: 0.01,
-                    increment: 0.005,
+                    increment: 0.00,
                     formatString: "0.000",
                     name: "Learn rate"
                 );
@@ -111,8 +111,8 @@ namespace La.ViewModel.Pram
         public ParamDoubleVm CSsVm { get; }
         public ParamDoubleVm CRpVm { get; }
         public ParamDoubleVm CPsVm { get; }
-        public ParamDoubleVm PNoiseLevelVm { get; }
-        public ParamDoubleVm SNoiseLevelVm { get; }
+        public ParamDoubleVm pNoiseLVm { get; }
+        public ParamDoubleVm sNoiseLVm { get; }
         public ParamIntVm PSeedVm { get; }
         public ParamIntVm SSeedVm { get; }
         public ParamDoubleVm LearnRateVm { get; }

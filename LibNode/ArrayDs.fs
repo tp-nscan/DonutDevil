@@ -55,10 +55,10 @@ module ArrayDataGen =
 
     let RandFloat32 (float32Type:Float32Type) (pOfOne:float32) (rng:Random) =
         match float32Type with
-        | UF max -> Generators.SeqOfRandUF32 (System.Convert.ToDouble(max)) rng
-        | SF max -> Generators.SeqOfRandSF32 (System.Convert.ToDouble(max)) rng
-        | UB -> Generators.SeqOfRandUF32Bits (System.Convert.ToDouble(pOfOne)) rng
-        | SB -> Generators.SeqOfRandSF32Bits (System.Convert.ToDouble(pOfOne)) rng
+        | UF max -> Generators.SeqOfRandUF32 max rng
+        | SF max -> Generators.SeqOfRandSF32 max rng
+        | UB -> Generators.SeqOfRandUF32Bits pOfOne rng
+        | SB -> Generators.SeqOfRandSF32Bits pOfOne rng
 
 
     let FullArrayCount (arrayShape:ArrayShape) =

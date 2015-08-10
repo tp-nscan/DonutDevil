@@ -6,15 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
-using DonutDevilControls.ViewModel.Legend;
 using La.ViewModel.Pram;
 using LibNode;
 using MathLib.Intervals;
 using WpfUtils;
-using WpfUtils.ViewModels.Graphics;
 
 namespace La.ViewModel
 {
@@ -22,25 +19,39 @@ namespace La.ViewModel
     {
         const int TargetLength = 350;
 
+        ZeusSnaps _zeusSnaps = new ZeusSnaps();
+        private AthenaStageRes _athenaStageRes;
+
         public ZeusVm(Zeus zeus)
         {
             Zeus = zeus;
             ZeusParamsVm = new ZeusParamsVm();
-            WaffleHistoriesVm = new WaffleHistoriesVm(
-                WaffleHistBuilder.InitHistories
-                    (
-                        arrayLength: Zeus.GroupCount,
-                        ensembleSize: Zeus.EnsembleCount
-                    ),
-                    "C"
+            AthenaTr = ZeusBuilders.AthenaToTr(ZeusBuilders.CreateRandomAthena(
+                    seed: ZeusParamsVm.PSeedVm.CurVal,
+                    ngSize: Zeus.GroupCount,
+                    pSig: ZeusParamsVm.PSigVm.CurVal,
+                    sSig: ZeusParamsVm.SSigVm.CurVal
+                ));
+
+            ZeusSnapVm = new ZeusSnapVm(
+                    athenaTr: AthenaTr,
+                    caption: "Start"
                 );
 
             IndexSelectorVm = new IndexSelectorVm(Enumerable.Range(0, zeus.EnsembleCount));
             DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0")
                 { Title = "Display Frequency", Value = 10 };
+        }
 
-            _legendVm = new LinearLegendVm();
-            _legendVm.OnLegendVmChanged.Subscribe(lvm => UpdateUi());
+        private ZeusSnapVm _zeusSnapVm;
+        public ZeusSnapVm ZeusSnapVm
+        {
+            get { return _zeusSnapVm; }
+            set
+            {
+                _zeusSnapVm = value;
+                OnPropertyChanged("ZeusSnapVm");
+            }
         }
 
         private IndexSelectorVm _indexSelectorVm;
@@ -57,21 +68,6 @@ namespace La.ViewModel
         }
 
         public ZeusParamsVm ZeusParamsVm { get; private set; }
-
-        private IDisposable _whvmSub;
-        private WaffleHistoriesVm _waffleHistoriesVm;
-        public WaffleHistoriesVm WaffleHistoriesVm
-        {
-            get { return _waffleHistoriesVm; }
-            set
-            {
-                _whvmSub?.Dispose();
-                _waffleHistoriesVm = value;
-                _whvmSub = _waffleHistoriesVm.OnArrayHistVmChanged
-                            .Subscribe(lvm => UpdateUi());
-                OnPropertyChanged("WaffleHistoriesVm");
-            }
-        }
 
         public Zeus Zeus { get; private set; }
 
@@ -141,20 +137,24 @@ namespace La.ViewModel
             IsRunning = true;
             await Task.Run(() =>
             {
-                for (var i = 1; i < (int)DisplayFrequencySliderVm.Value + 1; i++)
-                {
-                   // Wng = Wng.Update();
-                    Application.Current.Dispatcher.Invoke
-                    (
-                        () => Generation = i.ToString(),
-                        DispatcherPriority.ApplicationIdle
-                    );
-                }
+                AthenaTr = ZeusF.RepAthenaTr(
+                        zeus: Zeus,
+                        memIndex: IndexSelectorVm.IndexVm.Index,
+                        pNoiseL: (float)ZeusParamsVm.pNoiseLVm.CurVal,
+                        sNoiseL: (float)ZeusParamsVm.sNoiseLVm.CurVal,
+                        seed: ZeusParamsVm.PSeedVm.CurVal,
+                        cPp: (float)ZeusParamsVm.CPpVm.CurVal,
+                        cSs: (float)ZeusParamsVm.CSsVm.CurVal,
+                        cRp: (float)ZeusParamsVm.CRpVm.CurVal,
+                        cPs: (float)ZeusParamsVm.CPsVm.CurVal,
+                        athena: AthenaTr.Athena,
+                        reps: (int)DisplayFrequencySliderVm.Value
+                    ).AthenaTr;
 
             },
                 cancellationToken: _cancellationTokenSource.Token
             );
-            //WaffleHistoriesVm = WaffleHistoriesVm.Update(Wng, Zeus);
+
             UpdateUi();
             IsRunning = false;
         }
@@ -329,37 +329,32 @@ namespace La.ViewModel
 
         #endregion // ResetSCommand
 
-        #region  ChangeParamsCommand
+        #region  StopCommand
 
-        RelayCommand _changeParamsCommand;
-        public ICommand ChangeParamsCommand
+        RelayCommand _stopCommand;
+        public ICommand StopCommand
         {
             get
             {
-                return _changeParamsCommand ?? (
-                    _changeParamsCommand = new RelayCommand(
-                        param => DochangeParams(),
-                        param => CanchangeParams()
+                return _stopCommand ?? (
+                    _stopCommand = new RelayCommand(
+                        param => Dostop(),
+                        param => Canstop()
                     ));
             }
         }
 
-        private void DochangeParams()
+        private void Dostop()
         {
-            //Wng = Wng.NewPrams(
-            //        cPp: (float)ZeusParamsVm.CPpVm.CurVal,
-            //        cSs: (float)ZeusParamsVm.CSsVm.CurVal,
-            //        cRp: (float)ZeusParamsVm.CRpVm.CurVal,
-            //        cPs: (float)ZeusParamsVm.CPsVm.CurVal
-            //    );
+            _cancellationTokenSource.Cancel();
         }
 
-        bool CanchangeParams()
+        bool Canstop()
         {
             return (!_isRunning); // && (Wng != null);
         }
 
-        #endregion // ChangeParamsCommand
+        #endregion // StopCommand
 
         #region GoToMenuCommand
 
@@ -391,62 +386,15 @@ namespace La.ViewModel
 
         void UpdateUi()
         {
-            MainGridVm = new WbUniformGridVm(
-                imageWidth: 1000,
-                imageHeight: 1000,
-                cellDimX: Zeus.GroupCount,
-                cellDimY: 500
+            ZeusSnapVm = new ZeusSnapVm(
+                athenaTr: AthenaTr,
+                caption: AthenaTr.Athena.Iteration.ToString()
             );
 
-            var cellColors = WaffleHistoriesVm.ArrayHistVm.GetD2Vals.Select(
-                (v, i) => new D2Val<Color>
-                            (
-                                x: v.X,
-                                y: v.Y,
-                                val: LegendVm.ColorFor1D((float)(v.Val / 2.0 + 0.5))
-                            )
-                ).ToList();
-
-          //  if (Wng == null) return;
-           // WngGvVm = new WngGvVm(Wng, Zeus, IndexSelectorVm.IndexVm.Index);
-            MainGridVm.AddValues(cellColors);
             OnPropertyChanged("Generation");
         }
 
-        private WbUniformGridVm _mainGridVm;
-        public WbUniformGridVm MainGridVm
-        {
-            get { return _mainGridVm; }
-            set
-            {
-                _mainGridVm = value;
-                OnPropertyChanged("MainGridVm");
-            }
-        }
-
-        private ILegendVm _legendVm;
-        public ILegendVm LegendVm
-        {
-            get { return _legendVm; }
-            set
-            {
-                _legendVm = value;
-                OnPropertyChanged("LegendVm");
-            }
-        }
-
-        public WngGvVm WngGvVm
-        {
-            get { return _wngGvVm; }
-            set
-            {
-                _wngGvVm = value;
-                OnPropertyChanged("WngGvVm");
-            }
-        }
-
         private readonly Stopwatch _stopwatch = new Stopwatch();
-        private WngGvVm _wngGvVm;
         private string _generation;
 
         public string ElapsedTime =>

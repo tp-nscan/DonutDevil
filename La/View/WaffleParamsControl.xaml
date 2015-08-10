@@ -28,8 +28,8 @@
             <view:ParamIntControl DataContext="{Binding GlauberRadiusVm}" Height="30" Margin="5"/>
             <view:ParamDoubleControl DataContext="{Binding PSigVm}" Height="30" Margin="5"/>
             <view:ParamDoubleControl DataContext="{Binding SSigVm}" Height="30" Margin="5"/>
-            <view:ParamDoubleControl DataContext="{Binding PNoiseLevelVm}" Height="30" Margin="5"/>
-            <view:ParamDoubleControl DataContext="{Binding SNoiseLevelVm}" Height="30" Margin="5"/>
+            <view:ParamDoubleControl DataContext="{Binding pNoiseLVm}" Height="30" Margin="5"/>
+            <view:ParamDoubleControl DataContext="{Binding sNoiseLVm}" Height="30" Margin="5"/>
             <view:ParamIntControl DataContext="{Binding PSeedVm}" Height="30" Margin="5"/>
         </StackPanel>
 

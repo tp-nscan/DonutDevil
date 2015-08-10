@@ -17,7 +17,7 @@ type Zeus(
             bbM:Matrix<float32>,
             ssM:Matrix<float32>,
             reM:Matrix<float32>
-        ) =
+         ) =
     member this.GroupCount = reM.ColumnCount
     member this.EnsembleCount = reM.RowCount
     member this.mAa = aaM
@@ -76,6 +76,7 @@ type AthenaTr(
                 aM:Matrix<float32>,
                 bM:Matrix<float32>,
                 sM:Matrix<float32>,
+                rM:Matrix<float32>,
                 dA:Matrix<float32>,
                 dB:Matrix<float32>,
                 dS:Matrix<float32>,
@@ -86,11 +87,16 @@ type AthenaTr(
                 dBdA:Matrix<float32>,
                 dBdB:Matrix<float32>,
                 dSdS:Matrix<float32>,
-                dSdP:Matrix<float32>,
-                message:string
+                dSdP:Matrix<float32>
             ) =
 
     member this.Athena = new Athena(iteration, aM, bM, sM)
+    member this.mR = rM
+    member this.mV = DenseMatrix.init 1 sM.ColumnCount  
+                        (fun x y -> let sw = sM.[0,y]
+                                    match sw with
+                                    | v when v < 0.0f -> -v * bM.[0,y]
+                                    | v -> v * aM.[0,y])
     member this.dA = dA
     member this.dB = dB
     member this.dS = dS
@@ -102,7 +108,53 @@ type AthenaTr(
     member this.dBdB = dBdB
     member this.dSdS = dSdS
     member this.dSdP = dSdP
+
+type AthenaStageRes(
+                    athenaTr:AthenaTr,
+                    memIndex:int, 
+                    pNoiseL:float32, 
+                    sNoiseL:float32, 
+                    seed:int, 
+                    cPp:float32, 
+                    cSs:float32, 
+                    cRp:float32, 
+                    cPs:float32, 
+                    message:string 
+                ) =
+
+    member this.AthenaTr = athenaTr
+    member this.MemIndex = memIndex
+    member this.pNoiseL = pNoiseL
+    member this.sNoiseL = sNoiseL
+    member this.Seed = seed
+    member this.Cpp = cPp
+    member this.Css = cSs
+    member this.Crp = cRp
+    member this.Cps = cPs
     member this.Message = message
+
+    
+    type ZeusSnap = { Id:Guid; ParentId:Option<Guid>; 
+                      AthenaStageRes:AthenaStageRes;}
+
+    
+    type ZeusSnaps() =
+        let _snapList = ([]: ZeusSnap list)
+                
+        member this.AddAthenaStageRes(athenaStageRes:AthenaStageRes) (parentId:Guid) =
+            _snapList = { ZeusSnap.Id=Guid.NewGuid(); ParentId=(Some parentId); 
+                            AthenaStageRes=athenaStageRes;}::_snapList
+
+        member this.AddOrpanAthenaStageRes(athenaStageRes:AthenaStageRes) =
+            _snapList = { ZeusSnap.Id=Guid.NewGuid(); ParentId=None; 
+                            AthenaStageRes=athenaStageRes;}::_snapList
+
+        member this.Snaps() = 
+            _snapList |> List.toSeq
+
+        member this.Clear() = 
+            _snapList = ([]: ZeusSnap list)
+
 
 module ZeusUtils =
 
@@ -121,7 +173,7 @@ module ZeusUtils =
 module ZeusF =
 
     let NextAthenaTr (zeus:Zeus) memIndex pNoise 
-                     sNoise cPp cSs cRp cPs message 
+                     sNoise cPp (cSs:float32) cRp cPs 
                      (athena:Athena) =
 
         let groupCt = athena.GroupCount
@@ -139,13 +191,13 @@ module ZeusF =
                         (UpperTriangulateZd 
                         groupCt ( fun x y -> let sqr = (1.0f + athena.mS.[0,x] 
                                                           * athena.mS.[0,y])
-                                             sqr*sqr ))
+                                             sqr*sqr*cPp ))
 
         let acorM = DenseMatrix.init 
                         groupCt groupCt  
                         (UpperTriangulateZd 
                         groupCt ( fun x y -> let sqr = (1.0f - athena.mS.[0,x] * athena.mS.[0,y])
-                                             sqr*sqr ))
+                                             sqr*sqr*cPp ))
 
         let mAas = zeus.mAa.Map2 ((fun a b -> a*b), corrM)
         let mBas = zeus.mBa.Map2 ((fun a b -> a*b), acorM)
@@ -168,7 +220,7 @@ module ZeusF =
                               cPp * (dBdB.[0,y] + dBdA.[0,y]) + 
                               dBdR.[0,y])
 
-        let dSdS = athena.mS.Multiply(zeus.mSs)
+        let dSdS = athena.mS.Multiply(cSs).Multiply(zeus.mSs)
 
         let dSdP = DenseMatrix.init 1 groupCt  
                         (fun x y -> curMem.[0,y]  * (athena.mA.[0,y] 
@@ -187,9 +239,10 @@ module ZeusF =
                         (fun x y -> F32ToSF32(athena.mB.[0,y] + dB.[0,y])),
                 sM=DenseMatrix.init 1 groupCt  
                         (fun x y -> F32ToSF32(athena.mS.[0,y] + dS.[0,y])),
+                rM=curMem,
                 dA=dA,
-                dB=dA,
-                dS=dA,
+                dB=dB,
+                dS=dS,
                 dAdR=dAdR,
                 dBdR=dBdR,
                 dAdA=dAdA,
@@ -197,49 +250,46 @@ module ZeusF =
                 dBdA=dBdA,
                 dBdB=dBdB,
                 dSdS=dSdS,
-                dSdP=dSdP,
-                message = message
+                dSdP=dSdP
             )
 
 
     let HaltAthenaTr halter (zeus:Zeus) memIndex  
-                    pNoiseLevel sNoiseLevel (seed:int)
-                    cPp cSs cRp cPs 
+                    (pNoiseL:float32) (sNoiseL:float32) 
+                    (seed:int) cPp cSs cRp cPs message
                     (athena:Athena) =
 
         let rng = Random.MersenneTwister(seed)
-        let pNoise = Generators.SeqOfRandSF32 pNoiseLevel rng
-        let sNoise = Generators.SeqOfRandSF32 sNoiseLevel rng
+        let pNoise = Generators.SeqOfRandSF32 pNoiseL rng
+        let sNoise = Generators.SeqOfRandSF32 sNoiseL rng
 
-        let message  = sprintf "memIndex:%i; pNoiseLevel:%f; sNoiseLevel:%f; 
-                                    seed:%i; cPp:%f; cSs:%f; cRp:%f; cPs:%f;"
-                                    memIndex pNoiseLevel sNoiseLevel seed cPp cSs cRp cPs 
-
-        let message  = "hi"
         let CurriedNext  = 
                 NextAthenaTr zeus memIndex
-                     pNoise sNoise cPp cSs cRp cPs message
+                     pNoise sNoise cPp cSs cRp cPs
 
         let rec Ura (aTr:AthenaTr) halter =
             match halter(aTr) with
-            | true -> aTr
+            | true -> new AthenaStageRes(aTr, memIndex, pNoiseL, 
+                                         sNoiseL, seed, cPp, 
+                                         cSs, cRp, cPs, message)
             | _ -> Ura (CurriedNext aTr.Athena) halter
 
         Ura (CurriedNext athena) halter
 
-    let RepAthenaTr (zeus:Zeus) memIndex pNoiseLevel 
-                    sNoiseLevel (seed:int)
+    let RepAthenaTr (zeus:Zeus) memIndex pNoiseL 
+                    sNoiseL (seed:int)
                     cPp cSs cRp cPs 
-                    (athena:Athena) reps =
+                    (athena:Athena) (reps:int) =
 
-          HaltAthenaTr (fun (aTr:AthenaTr) -> 
-                                aTr.Athena.Iteration = 
-                                    reps + athena.Iteration
-                       )
-                       zeus memIndex pNoiseLevel
-                       sNoiseLevel seed
-                       cPp cSs cRp cPs 
-                       athena
+        HaltAthenaTr (fun (aTr:AthenaTr) -> 
+                            aTr.Athena.Iteration = 
+                                reps + athena.Iteration
+                     )
+                    zeus memIndex pNoiseL
+                    sNoiseL seed
+                    cPp cSs cRp cPs 
+                    (sprintf "reps: %i" reps)
+                    athena
 
 
     let NextZeusTr (zeus:Zeus) memIndex 
@@ -360,6 +410,7 @@ module ZeusF =
                 aM=athena.mA,
                 bM=athena.mB,
                 sM=athena.mS,
+                rM=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
                 dA=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
                 dB=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
                 dS=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
@@ -370,8 +421,7 @@ module ZeusF =
                 dBdA=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
                 dBdB=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
                 dSdS=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
-                dSdP=DenseMatrix.init 1 groupCt (fun x y -> 0.0f),
-                message = ""
+                dSdP=DenseMatrix.init 1 groupCt (fun x y -> 0.0f)
             )
 
 
@@ -465,11 +515,7 @@ module ZeusF =
                                 glauberRadius with
         | Some rndZeus-> Some (ZeusF.NextAthenaTr rndZeus 1 pNoise 
                                 sNoise 0.1f
-                                0.1f 0.1f 0.1f "hi" rndAthena)
+                                0.1f 0.1f 0.1f rndAthena)
         | None -> None
 
-
-
- module ZeusHistory =
-    type ZeusSnap = { Id:Guid; ParentId:Option<Guid>; AthenaTr:AthenaTr; ZeusTr:ZeusTr;}
 

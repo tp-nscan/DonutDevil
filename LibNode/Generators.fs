@@ -28,27 +28,25 @@ module Generators =
         Convert.ToSingle(rng.NextDouble() * 2.0) * max - max
 
     // a sequence of random float32 from (0, max)
-    let SeqOfRandUF32 (max:float) (rng:Random) =
-        let max32 = System.Convert.ToSingle max
-        Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()) * max32)
+    let SeqOfRandUF32 (max:float32) (rng:Random) =
+        Seq.initInfinite ( fun i -> Convert.ToSingle(rng.NextDouble()) * max)
 
     // a sequence of random float32 from (-max, max)
-    let SeqOfRandSF32 (max:float) (rng:Random) =
-        let max32 = System.Convert.ToSingle max
-        Seq.initInfinite ( fun i -> RandSF32 max32 rng)
+    let SeqOfRandSF32 (max:float32) (rng:Random) =
+        Seq.initInfinite ( fun i -> RandSF32 max rng)
 
     let SeqOfRandBools (rng:Random) (trueProb:float) =
         Seq.initInfinite ( fun i -> rng.NextDouble() < trueProb )
 
      // random draws from {0f, 1f}
-    let SeqOfRandUF32Bits (pOfOne:float) (rng:Random) =
+    let SeqOfRandUF32Bits (pOfOne:float32) (rng:Random) =
         let myCollapser = MathUtils.AorB 0.0f 1.0f pOfOne
-        Seq.initInfinite ( fun i -> myCollapser (rng.NextDouble()) )
+        Seq.initInfinite ( fun i -> myCollapser (System.Convert.ToSingle(rng.NextDouble())))
 
      // random draws from {-1f, 1f}
-    let SeqOfRandSF32Bits (pOfOne:float) (rng:Random) =
+    let SeqOfRandSF32Bits (pOfOne:float32) (rng:Random) =
         let myCollapser = MathUtils.AorB -1.0f 1.0f pOfOne
-        Seq.initInfinite ( fun i -> myCollapser (rng.NextDouble()))
+        Seq.initInfinite ( fun i -> myCollapser (System.Convert.ToSingle(rng.NextDouble())))
 
     // 0f <=> 1f with probability p
     let FlipUF32WithProb (rng:Random) (p:float) (value:float32) =
