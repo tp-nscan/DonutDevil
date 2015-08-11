@@ -175,6 +175,13 @@ module ZeusUtils =
     let RdotV (athenaTr:AthenaTr) =
         athenaTr.mR.Row(0).DotProduct(athenaTr.mV.Row(0))
 
+    let AdotB (athenaTr:AthenaTr) =
+        athenaTr.Athena.mA.Row(0).DotProduct(athenaTr.Athena.mB.Row(0))
+
+    let SCorr (athenaTr:AthenaTr) =
+      athenaTr.Athena.mA.Row(0).DotProduct(athenaTr.Athena.mB.Row(0))
+
+
 module ZeusF =
 
     let NextAthenaTr (zeus:Zeus) memIndex pNoise 

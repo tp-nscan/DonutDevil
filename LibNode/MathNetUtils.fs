@@ -83,4 +83,5 @@ module MathNetUtils =
     let ToRowMajorSequence (mnMatrix:Matrix<'a>) = 
          mnMatrix.ToArray() |> Seq.cast<'a>
 
-
+    let VectorShift (vec:Vector<'a>) =
+        DenseVector.init (vec.MaximumIndex()) (fun i ->vec.[i]) 

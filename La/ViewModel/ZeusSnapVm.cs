@@ -24,8 +24,8 @@ namespace La.ViewModel
 
 
             RdotV = ZeusUtils.RdotV(AthenaTr);
-            AdotB = ZeusUtils.RdotV(AthenaTr);
-            SCorr = ZeusUtils.RdotV(AthenaTr);
+            AdotB = ZeusUtils.AdotB(AthenaTr);
+            SCorr = ZeusUtils.SCorr(AthenaTr);
 
 
             Caption = caption;
