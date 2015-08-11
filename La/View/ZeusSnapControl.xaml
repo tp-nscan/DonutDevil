@@ -9,16 +9,36 @@
              d:DataContext="{d:DesignInstance {x:Type design:DesignZeusSnapVm}, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="800">
     <DockPanel LastChildFill="True">
-        <StackPanel HorizontalAlignment="Stretch" DockPanel.Dock="Top" Orientation="Horizontal">
-            <TextBlock FontSize="14" Foreground="AliceBlue" Margin="5" Text="{Binding Iteration}"/>
-            <TextBlock FontSize="14" Foreground="AliceBlue" Margin="5" Text="{Binding Caption}"/>
-        </StackPanel>
+        <WrapPanel HorizontalAlignment="Stretch" DockPanel.Dock="Top" Orientation="Horizontal">
+            <Border Margin="5" BorderBrush="LightBlue" BorderThickness="1" CornerRadius="4">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontSize="12" Foreground="AliceBlue" Margin="5" Text="Gen:"/>
+                    <TextBlock FontSize="12" Foreground="AliceBlue" Margin="5" Text="{Binding Iteration}"/>
+                </StackPanel>
+            </Border>
+            <Border Margin="5" BorderBrush="LightBlue" BorderThickness="1" CornerRadius="4">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontSize="12" Foreground="AliceBlue" Margin="5" Text="R&#x2218;V:"/>
+                    <TextBlock FontSize="12" Foreground="AliceBlue" Margin="5" Text="{Binding RdotV, StringFormat=N2}"/>
+                </StackPanel>
+            </Border>
+            <Border Margin="5" BorderBrush="LightBlue" BorderThickness="1" CornerRadius="4">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontSize="12" Foreground="AliceBlue" Margin="5" Text="A&#x2218;B:"/>
+                    <TextBlock FontSize="12" Foreground="AliceBlue" Margin="5" Text="{Binding AdotB, StringFormat=N2}"/>
+                </StackPanel>
+            </Border>
+
+        </WrapPanel>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -56,41 +76,64 @@
                 ImageWidth="{Binding dA.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
                 PlotRectangles="{Binding vM.PlotRectangles}"/>
 
-            <!--A Section-->
-            
-            <Viewbox Grid.Row="4" Stretch="Uniform" MaxHeight="20">
+
+            <Viewbox Grid.Row="3" Stretch="Uniform" MaxHeight="20">
                 <TextBlock Foreground="White" Text="A"/>
+            </Viewbox>
+            <graphics:WbImage Grid.Column="1" Grid.Row="3"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding aM.PlotRectangles}"/>
+
+            <Viewbox Grid.Row="4" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="B"/>
             </Viewbox>
             <graphics:WbImage Grid.Column="1" Grid.Row="4"
                 ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
-                PlotRectangles="{Binding aM.PlotRectangles}"/> <!--, Delay=100}"/>-->
+                PlotRectangles="{Binding bM.PlotRectangles}"/>
 
-            <Viewbox Grid.Row="5" Stretch="Uniform" MaxHeight="20">
-                <TextBlock Foreground="White" Text="dA"/>
+            <Viewbox Grid.Row="5" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="S"/>
             </Viewbox>
             <graphics:WbImage Grid.Column="1" Grid.Row="5"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding sM.PlotRectangles}"/>
+
+
+            <!--A Section-->
+            
+            <Viewbox Grid.Row="7" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="A"/>
+            </Viewbox>
+            <graphics:WbImage Grid.Column="1" Grid.Row="7"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding aM.PlotRectangles}"/> <!--, Delay=100}"/>-->
+
+            <Viewbox Grid.Row="8" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="dA"/>
+            </Viewbox>
+            <graphics:WbImage Grid.Column="1" Grid.Row="8"
                 ImageWidth="{Binding dA.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
                 PlotRectangles="{Binding dA.PlotRectangles}"/>
 
             
-            <Viewbox Grid.Row="6" Stretch="Uniform" MaxHeight="20">
+            <Viewbox Grid.Row="9" Stretch="Uniform" MaxHeight="20">
                 <TextBlock Foreground="White" Text="dAdR"/>
             </Viewbox>
-            <graphics:WbImage Grid.Column="1" Grid.Row="6"
+            <graphics:WbImage Grid.Column="1" Grid.Row="9"
                 ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
                 PlotRectangles="{Binding dAdR.PlotRectangles}"/>
             
-            <Viewbox Grid.Row="7" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+            <Viewbox Grid.Row="10" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
                 <TextBlock Foreground="White" Text="dAdA"/>
             </Viewbox>
-            <graphics:WbImage Grid.Column="1" Grid.Row="7"
+            <graphics:WbImage Grid.Column="1" Grid.Row="10"
                 ImageWidth="{Binding dAdA.ImageWidth}" ImageHeight="{Binding dAdA.ImageHeight}"
                 PlotRectangles="{Binding dAdA.PlotRectangles}"/>
             
-            <Viewbox Grid.Row="8" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+            <Viewbox Grid.Row="11" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
                 <TextBlock Foreground="White" Text="dAdB"/>
             </Viewbox>
-            <graphics:WbImage Grid.Column="1" Grid.Row="8"
+            <graphics:WbImage Grid.Column="1" Grid.Row="11"
                 ImageWidth="{Binding dAdB.ImageWidth}" ImageHeight="{Binding dAdB.ImageHeight}"
                 PlotRectangles="{Binding dAdB.PlotRectangles}"/>
 
@@ -98,69 +141,69 @@
 
             <!--B Section-->
 
-            <Viewbox Grid.Row="10" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
-                <TextBlock Foreground="White" Text="B"/>
-            </Viewbox>
-            <graphics:WbImage Grid.Column="1" Grid.Row="10"
-                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
-                PlotRectangles="{Binding bM.PlotRectangles}"/>
-            
-            <Viewbox Grid.Row="11" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
-                <TextBlock Foreground="White" Text="dB"/>
-            </Viewbox>
-            <graphics:WbImage Grid.Column="1" Grid.Row="11"
-                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
-                PlotRectangles="{Binding dB.PlotRectangles}"/>
-            
-            <Viewbox Grid.Row="12" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
-                <TextBlock Foreground="White" Text="dBdR"/>
-            </Viewbox>
-            <graphics:WbImage Grid.Column="1" Grid.Row="12"
-                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
-                PlotRectangles="{Binding dBdR.PlotRectangles}"/>
-
             <Viewbox Grid.Row="13" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
-                <TextBlock Foreground="White" Text="dBdA"/>
+                <TextBlock Foreground="White" Text="B"/>
             </Viewbox>
             <graphics:WbImage Grid.Column="1" Grid.Row="13"
                 ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
-                PlotRectangles="{Binding dBdA.PlotRectangles}"/>
+                PlotRectangles="{Binding bM.PlotRectangles}"/>
             
             <Viewbox Grid.Row="14" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
-                <TextBlock Foreground="White" Text="dBdB"/>
+                <TextBlock Foreground="White" Text="dB"/>
             </Viewbox>
             <graphics:WbImage Grid.Column="1" Grid.Row="14"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding dB.PlotRectangles}"/>
+            
+            <Viewbox Grid.Row="15" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="dBdR"/>
+            </Viewbox>
+            <graphics:WbImage Grid.Column="1" Grid.Row="15"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding dBdR.PlotRectangles}"/>
+
+            <Viewbox Grid.Row="16" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="dBdA"/>
+            </Viewbox>
+            <graphics:WbImage Grid.Column="1" Grid.Row="16"
+                ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
+                PlotRectangles="{Binding dBdA.PlotRectangles}"/>
+            
+            <Viewbox Grid.Row="17" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+                <TextBlock Foreground="White" Text="dBdB"/>
+            </Viewbox>
+            <graphics:WbImage Grid.Column="1" Grid.Row="17"
                 ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
                 PlotRectangles="{Binding dBdB.PlotRectangles}"/>
 
 
             <!--S Section-->
 
-            <Viewbox Grid.Row="16" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+            <Viewbox Grid.Row="19" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
                 <TextBlock Foreground="White" Text="S"/>
             </Viewbox>
-            <graphics:WbImage Grid.Column="1" Grid.Row="16"
+            <graphics:WbImage Grid.Column="1" Grid.Row="19"
                 ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
                 PlotRectangles="{Binding sM.PlotRectangles}"/>
 
-            <Viewbox Grid.Row="17" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+            <Viewbox Grid.Row="20" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
                 <TextBlock Foreground="White" Text="dS"/>
             </Viewbox>
-            <graphics:WbImage Grid.Column="1" Grid.Row="17"
+            <graphics:WbImage Grid.Column="1" Grid.Row="20"
                 ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
                 PlotRectangles="{Binding dS.PlotRectangles}"/>
 
-            <Viewbox Grid.Row="18" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+            <Viewbox Grid.Row="21" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
                 <TextBlock Foreground="White" Text="dSdS"/>
             </Viewbox>
-            <graphics:WbImage Grid.Column="1" Grid.Row="18"
+            <graphics:WbImage Grid.Column="1" Grid.Row="21"
                 ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
                 PlotRectangles="{Binding dSdS.PlotRectangles}"/>
 
-            <Viewbox Grid.Row="19" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
+            <Viewbox Grid.Row="22" Grid.Column="0" Stretch="Uniform" MaxHeight="20">
                 <TextBlock Foreground="White" Text="dSdP"/>
             </Viewbox>
-            <graphics:WbImage Grid.Column="1" Grid.Row="19"
+            <graphics:WbImage Grid.Column="1" Grid.Row="22"
                 ImageWidth="{Binding aM.ImageWidth}" ImageHeight="{Binding aM.ImageHeight}"
                 PlotRectangles="{Binding dSdP.PlotRectangles}"/>
 

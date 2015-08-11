@@ -30,7 +30,7 @@ namespace La.ViewModel.Pram
                 );
             CPpVm = new ParamDoubleVm(
                     minVal: 0,
-                    maxVal: 0.3,
+                    maxVal: 0.9,
                     curVal: 0.0,
                     increment: 0.005,
                     formatString: "0.000",
@@ -38,7 +38,7 @@ namespace La.ViewModel.Pram
                 );
             CSsVm = new ParamDoubleVm(
                     minVal: 0,
-                    maxVal: 0.3,
+                    maxVal: 0.9,
                     curVal: 0.0,
                     increment: 0.005,
                     formatString: "0.000",
@@ -46,7 +46,7 @@ namespace La.ViewModel.Pram
                 );
             CRpVm = new ParamDoubleVm(
                     minVal: 0,
-                    maxVal: 0.3,
+                    maxVal: 0.9,
                     curVal: 0.0,
                     increment: 0.005,
                     formatString: "0.000",
@@ -54,7 +54,7 @@ namespace La.ViewModel.Pram
                 );
             CPsVm = new ParamDoubleVm(
                     minVal: 0,
-                    maxVal: 0.3,
+                    maxVal: 0.9,
                     curVal: 0.0,
                     increment: 0.005,
                     formatString: "0.000",

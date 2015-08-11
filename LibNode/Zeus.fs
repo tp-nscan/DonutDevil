@@ -93,10 +93,12 @@ type AthenaTr(
     member this.Athena = new Athena(iteration, aM, bM, sM)
     member this.mR = rM
     member this.mV = DenseMatrix.init 1 sM.ColumnCount  
-                        (fun x y -> let sw = sM.[0,y]
-                                    match sw with
-                                    | v when v < 0.0f -> -v * bM.[0,y]
-                                    | v -> v * aM.[0,y])
+                        (fun x y -> (
+                                      aM.[0,y] * (1.0f + sM.[0,y])
+                                      + 
+                                      bM.[0,y] * (1.0f - sM.[0,y])
+                                     ) / 2.0f
+                        )
     member this.dA = dA
     member this.dB = dB
     member this.dS = dS
@@ -170,6 +172,9 @@ module ZeusUtils =
         if (fp*fr < 0.0f) then 0.0f else
         (fr*tr - fp*tp)
 
+    let RdotV (athenaTr:AthenaTr) =
+        athenaTr.mR.Row(0).DotProduct(athenaTr.mV.Row(0))
+
 module ZeusF =
 
     let NextAthenaTr (zeus:Zeus) memIndex pNoise 
@@ -204,32 +209,29 @@ module ZeusF =
         let mAbs = zeus.mAb.Map2 ((fun a b -> a*b), acorM)
         let mBbs = zeus.mBb.Map2 ((fun a b -> a*b), corrM)
 
-
         let dAdA = athena.mA.Multiply(mAas)
         let dAdB = athena.mB.Multiply(mBas)
         let dBdA = athena.mA.Multiply(mAbs)
         let dBdB = athena.mB.Multiply(mBbs)
 
-        let dA = DenseMatrix.init 1 groupCt  
+        let dA = DenseMatrix.init 1 groupCt
                   (fun x y -> aNoise.[y] + 
-                              cPp * (dAdA.[0,y] + dAdB.[0,y]) + 
+                              dAdA.[0,y] + dAdB.[0,y] + 
                               dAdR.[0,y])
 
-        let dB = DenseMatrix.init 1 groupCt  
+        let dB = DenseMatrix.init 1 groupCt
                   (fun x y -> bNoise.[y] +
-                              cPp * (dBdB.[0,y] + dBdA.[0,y]) + 
+                              dBdB.[0,y] + dBdA.[0,y] + 
                               dBdR.[0,y])
 
         let dSdS = athena.mS.Multiply(cSs).Multiply(zeus.mSs)
 
         let dSdP = DenseMatrix.init 1 groupCt  
-                        (fun x y -> curMem.[0,y]  * (athena.mA.[0,y] 
+                        (fun x y -> cPs * curMem.[0,y]  * (athena.mA.[0,y] 
                                     - athena.mB.[0,y]))
 
         let dS = DenseMatrix.init 1 groupCt  
-                  (fun x y -> sNoise.[y] +
-                              cSs * dSdS.[0,y] + 
-                              cPs * dSdP.[0,y])
+                  (fun x y -> sNoise.[y] + dSdS.[0,y] + dSdP.[0,y])
 
         new AthenaTr(                
                 iteration=athena.Iteration + 1,

@@ -76,10 +76,7 @@
                 <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" Height="2" ResizeBehavior="PreviousAndNext"  
 					ResizeDirection="Rows" Background="#4CE41818"/>
 
-                <Border Grid.Row="4" BorderBrush="Black" BorderThickness="2"
-                        
-						IsEnabled="{Binding IsRunning, Converter={WpfUtils:NegationConverter}}"
-                        >
+                <Border Grid.Row="4" BorderBrush="Black" BorderThickness="2">
                     <local:IndexSelectorControl 
 						DataContext="{Binding IndexSelectorVm}" />
                 </Border>
@@ -93,21 +90,22 @@
 
         <Grid Grid.Column="2" Background="#F333">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Viewbox Margin="25" Stretch="Uniform">
+            <Viewbox Grid.Row="1" Margin="25" Stretch="Uniform">
                 <Grid Margin="0,5,0,0" Height="300" Width="800" >
                     <local:ZeusSnapControl DataContext="{Binding ZeusSnapVm}"/>
                 </Grid>
             </Viewbox>
 
-            <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="2" ResizeBehavior="PreviousAndNext"  
+            <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" Height="2" ResizeBehavior="PreviousAndNext"  
 				ResizeDirection="Rows" Background="#4CE41818"/>
 
-            <ScrollViewer Grid.Row="2" Background="#F222"
+            <ScrollViewer Grid.Row="3" Background="#F222"
 				VerticalScrollBarVisibility="Visible" 
 				HorizontalScrollBarVisibility="Visible"
 				Template="{DynamicResource DonutDevilScrollViewerTemplate}">

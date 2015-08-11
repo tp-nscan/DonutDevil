@@ -21,6 +21,13 @@ namespace La.ViewModel
         public ZeusSnapVm(AthenaTr athenaTr, string caption)
         {
             AthenaTr = athenaTr;
+
+
+            RdotV = ZeusUtils.RdotV(AthenaTr);
+            AdotB = ZeusUtils.RdotV(AthenaTr);
+            SCorr = ZeusUtils.RdotV(AthenaTr);
+
+
             Caption = caption;
             if (AthenaTr == null) return;
 
@@ -106,5 +113,9 @@ namespace La.ViewModel
         public WbVerticalStripesVm dBdB { get; }
         public WbVerticalStripesVm dSdS { get; }
         public WbVerticalStripesVm dSdP { get; }
+
+        public float RdotV { get; }
+        public float AdotB { get; }
+        public float SCorr { get; }
     }
 }

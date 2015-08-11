@@ -137,26 +137,36 @@ namespace La.ViewModel
             IsRunning = true;
             await Task.Run(() =>
             {
-                AthenaTr = ZeusF.RepAthenaTr(
+                var randy = new System.Random(123);
+                while ( ! _cancellationTokenSource.IsCancellationRequested)
+                {
+                    AthenaTr = ZeusF.RepAthenaTr(
                         zeus: Zeus,
                         memIndex: IndexSelectorVm.IndexVm.Index,
-                        pNoiseL: (float)ZeusParamsVm.pNoiseLVm.CurVal,
-                        sNoiseL: (float)ZeusParamsVm.sNoiseLVm.CurVal,
-                        seed: ZeusParamsVm.PSeedVm.CurVal,
-                        cPp: (float)ZeusParamsVm.CPpVm.CurVal,
-                        cSs: (float)ZeusParamsVm.CSsVm.CurVal,
-                        cRp: (float)ZeusParamsVm.CRpVm.CurVal,
-                        cPs: (float)ZeusParamsVm.CPsVm.CurVal,
+                        pNoiseL: (float) ZeusParamsVm.pNoiseLVm.CurVal,
+                        sNoiseL: (float) ZeusParamsVm.sNoiseLVm.CurVal,
+                        seed: randy.Next(),
+                        cPp: (float) ZeusParamsVm.CPpVm.CurVal,
+                        cSs: (float) ZeusParamsVm.CSsVm.CurVal,
+                        cRp: (float) ZeusParamsVm.CRpVm.CurVal,
+                        cPs: (float) ZeusParamsVm.CPsVm.CurVal,
                         athena: AthenaTr.Athena,
-                        reps: (int)DisplayFrequencySliderVm.Value
-                    ).AthenaTr;
+                        reps: (int) DisplayFrequencySliderVm.Value
+                        ).AthenaTr;
+
+                    Application.Current.Dispatcher.Invoke
+                    (
+                        UpdateUi,
+                        DispatcherPriority.ApplicationIdle
+                    );
+                }
 
             },
                 cancellationToken: _cancellationTokenSource.Token
             );
 
-            UpdateUi();
             IsRunning = false;
+            UpdateUi();
         }
 
         bool CanUpdate()
@@ -351,7 +361,7 @@ namespace La.ViewModel
 
         bool Canstop()
         {
-            return (!_isRunning); // && (Wng != null);
+            return (_isRunning); // && (Wng != null);
         }
 
         #endregion // StopCommand
@@ -388,15 +398,15 @@ namespace La.ViewModel
         {
             ZeusSnapVm = new ZeusSnapVm(
                 athenaTr: AthenaTr,
-                caption: AthenaTr.Athena.Iteration.ToString()
+                caption: String.Empty
             );
-
-            OnPropertyChanged("Generation");
+            CommandManager.InvalidateRequerySuggested();
+            Generation = AthenaTr.Athena.Iteration.ToString();
         }
+
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private string _generation;
-
         public string ElapsedTime =>
             $"{_stopwatch.Elapsed.Hours.ToString("00")}:" +
             $"{_stopwatch.Elapsed.Minutes.ToString("00")}:" +
