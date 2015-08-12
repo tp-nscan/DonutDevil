@@ -28,7 +28,12 @@
                     <TextBlock FontSize="12" Foreground="AliceBlue" Margin="5" Text="{Binding AdotB, StringFormat=N2}"/>
                 </StackPanel>
             </Border>
-
+            <Border Margin="5" BorderBrush="LightBlue" BorderThickness="1" CornerRadius="4">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontSize="12" Foreground="AliceBlue" Margin="5" Text="Scorr:"/>
+                    <TextBlock FontSize="12" Foreground="AliceBlue" Margin="5" Text="{Binding SCorr, StringFormat=N2}"/>
+                </StackPanel>
+            </Border>
         </WrapPanel>
         <Grid>
             <Grid.ColumnDefinitions>

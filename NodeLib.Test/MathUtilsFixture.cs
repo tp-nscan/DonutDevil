@@ -44,5 +44,19 @@ namespace NodeLib.Test
 
             Assert.IsTrue(m != null);
         }
+
+        [TestMethod]
+        public void TestVectorShift()
+        {
+            var v = MathNet.Numerics.LinearAlgebra.Vector<float>.Build
+                        .Dense(10, i => i * i);
+
+            var vs = MathNetUtils.VectorShift(v);
+
+
+            Assert.IsTrue(true);
+        }
+
+
     }
 }

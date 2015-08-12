@@ -179,7 +179,8 @@ module ZeusUtils =
         athenaTr.Athena.mA.Row(0).DotProduct(athenaTr.Athena.mB.Row(0))
 
     let SCorr (athenaTr:AthenaTr) =
-      athenaTr.Athena.mA.Row(0).DotProduct(athenaTr.Athena.mB.Row(0))
+      athenaTr.Athena.mS.Row(0).DotProduct(
+            athenaTr.Athena.mS.Row(0) |> MathNetUtils.VectorShift )
 
 
 module ZeusF =
