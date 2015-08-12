@@ -162,14 +162,17 @@
     <Compile Include="View\SbControl.xaml.cs">
       <DependentUpon>SbControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ScorrControl.xaml.cs">
+      <DependentUpon>ScorrControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ZeusControl.xaml.cs">
       <DependentUpon>ZeusControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\IndexSelectorControl.xaml.cs">
       <DependentUpon>IndexSelectorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\WaffleHistoriesControl.xaml.cs">
-      <DependentUpon>WaffleHistoriesControl.xaml</DependentUpon>
+    <Compile Include="View\ZeusHistoriesControl.xaml.cs">
+      <DependentUpon>ZeusHistoriesControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ZeusParamsControl.xaml.cs">
       <DependentUpon>ZeusParamsControl.xaml</DependentUpon>
@@ -241,6 +244,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\ScorrControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ZeusControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -249,7 +256,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\WaffleHistoriesControl.xaml">
+    <Page Include="View\ZeusHistoriesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
