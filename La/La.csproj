@@ -171,8 +171,8 @@
     <Compile Include="View\WaffleHistoriesControl.xaml.cs">
       <DependentUpon>WaffleHistoriesControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\WaffleParamsControl.xaml.cs">
-      <DependentUpon>WaffleParamsControl.xaml</DependentUpon>
+    <Compile Include="View\ZeusParamsControl.xaml.cs">
+      <DependentUpon>ZeusParamsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\WhatControl.xaml.cs">
       <DependentUpon>WhatControl.xaml</DependentUpon>
@@ -253,7 +253,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\WaffleParamsControl.xaml">
+    <Page Include="View\ZeusParamsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

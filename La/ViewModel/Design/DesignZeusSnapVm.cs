@@ -8,7 +8,7 @@ namespace La.ViewModel.Design
     public class DesignZeusSnapVm : ZeusSnapVm
     {
         public DesignZeusSnapVm() 
-            : base(DesignAthenaTr, "hi there")
+            : base(DesignAthenaTr, "hi there", 100)
         {
         }
 

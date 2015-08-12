@@ -92,7 +92,7 @@ namespace La.ViewModel.Pram
                     minVal: 0,
                     maxVal: 0.3,
                     curVal: 0.01,
-                    increment: 0.00,
+                    increment: 0.01,
                     formatString: "0.000",
                     name: "Learn rate"
                 );

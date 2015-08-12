@@ -90,7 +90,8 @@ namespace La.ViewModel
                     ngSize: DGpSz, memSize: DMemSz,
                     ppSig: 0.3f,
                     glauberRadius: GlauberRadius).Value,
-                "yo"
+                "yo",
+                100
                 );
         }
 

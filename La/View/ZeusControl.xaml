@@ -96,9 +96,11 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
+            <local:ParamIntControl DataContext="{Binding PStrideVm}" Height="30" Margin="5"/>
+            
             <Viewbox Grid.Row="1" Margin="25" Stretch="Uniform">
-                <Grid Margin="0,5,0,0" Height="300" Width="800" >
-                    <local:ZeusSnapControl DataContext="{Binding ZeusSnapVm}"/>
+                <Grid Margin="0,5,0,0" Height="300" Width="300" >
+                    <local:ZeusSnapControl DataContext="{Binding ZeusSnapVm}" Margin="-10,0,10,0"/>
                 </Grid>
             </Viewbox>
 

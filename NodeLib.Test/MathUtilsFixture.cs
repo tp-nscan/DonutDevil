@@ -49,7 +49,7 @@ namespace NodeLib.Test
         public void TestVectorShift()
         {
             var v = MathNet.Numerics.LinearAlgebra.Vector<float>.Build
-                        .Dense(10, i => i * i);
+                        .Dense(100, i => i * i);
 
             var vs = MathNetUtils.VectorShift(v);
 

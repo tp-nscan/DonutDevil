@@ -308,9 +308,33 @@ module ZeusF =
         let curMem = zeus.meR.Row memIndex
         let grpCt = athena.GroupCount
 
-        let mCs = Array2D.init grpCt grpCt
-                        (fun i j -> ZeusUtils.MakeScorr athena.mS.[0,i] athena.mS.[0,j]) 
+        let a2Scorr 
+          = Array2D.init grpCt grpCt
+             (fun i j -> ZeusUtils.MakeScorr athena.mS.[0,i] 
+                                             athena.mS.[0,j]) 
+
         
+        let a2Dcoal 
+          = Array2D.init grpCt grpCt
+             (fun i j -> match a2Scorr.[i,j] with
+                         | AA sc -> AA (sc * (ZeusUtils.FpFrTpTr 
+                                        athena.mA.[0,i] curMem.[i] 
+                                        athena.mA.[0,j] curMem.[j]))
+                         | AB sc -> AB (sc * (ZeusUtils.FpFrTpTr 
+                                        athena.mA.[0,i] curMem.[i] 
+                                        athena.mB.[0,j] curMem.[j]))
+                         | BA sc -> BA (sc * (ZeusUtils.FpFrTpTr 
+                                        athena.mB.[0,i] curMem.[i] 
+                                        athena.mA.[0,j] curMem.[j]))
+                         | BB sc -> BB (sc * (ZeusUtils.FpFrTpTr 
+                                        athena.mB.[0,i] curMem.[i] 
+                                        athena.mB.[0,j] curMem.[j]))
+
+
+                         | _ -> failwith "cant get here"
+             )
+        
+
         let aamNew = 
             DenseMatrix.init 
                 grpCt grpCt
@@ -318,10 +342,8 @@ module ZeusF =
                     -> if(i=j) then 0.0f else 
                         (F32ToSF32
                             zeus.mAa.[i,j] +
-                            match mCs.[i,j] with
-                            | AA sc ->  sc * learnRate *
-                                        (ZeusUtils.FpFrTpTr athena.mA.[0,i] curMem.[i] 
-                                                            athena.mA.[0,j] curMem.[j])
+                            match a2Dcoal.[i,j] with
+                            | AA sc ->  sc * learnRate
                             | _ -> 0.0f
                         )
                 )
@@ -333,10 +355,8 @@ module ZeusF =
                     -> if(i=j) then 0.0f else 
                         (F32ToSF32
                             zeus.mAb.[i,j] +
-                            match mCs.[i,j] with
-                            | AB sc ->  sc * learnRate *
-                                        (ZeusUtils.FpFrTpTr athena.mA.[0,i] curMem.[i] 
-                                                            athena.mB.[0,j] curMem.[j])
+                            match a2Dcoal.[i,j] with
+                            | AB sc ->  sc * learnRate
                             | _ -> 0.0f
                         )
                 )
@@ -348,10 +368,8 @@ module ZeusF =
                     -> if(i=j) then 0.0f else 
                         (F32ToSF32
                             zeus.mBa.[i,j] +
-                            match mCs.[i,j] with
-                            | BA sc ->  sc * learnRate *
-                                        (ZeusUtils.FpFrTpTr athena.mB.[0,i] curMem.[i] 
-                                                            athena.mA.[0,j] curMem.[j])
+                            match a2Dcoal.[i,j] with
+                            | BA sc ->  sc * learnRate
                             | _ -> 0.0f
                         )
                 )
@@ -363,22 +381,20 @@ module ZeusF =
                     -> if(i=j) then 0.0f else 
                         (F32ToSF32
                             zeus.mBb.[i,j] +
-                            match mCs.[i,j] with
-                            | BB sc ->  sc * learnRate *
-                                        (ZeusUtils.FpFrTpTr athena.mB.[0,i] curMem.[i] 
-                                                            athena.mB.[0,j] curMem.[j])
+                            match a2Dcoal.[i,j] with
+                            | BB sc ->  sc * learnRate
                             | _ -> 0.0f
                         )
                 )
 
         new ZeusTr(
-                    aaM = zeus.mAa,
-                    abM = zeus.mAb,
-                    baM = zeus.mBa,
-                    bbM = zeus.mBb,
+                    aaM = aamNew,
+                    abM = abmNew,
+                    baM = bamNew,
+                    bbM = bbmNew,
                     ssM = zeus.mSs,
                     reM = zeus.meR,
-                    scM = mCs,
+                    scM = a2Scorr,
                     learnRate = learnRate
                   )
 

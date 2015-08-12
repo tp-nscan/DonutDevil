@@ -26,22 +26,45 @@ namespace La.ViewModel
         {
             Zeus = zeus;
             ZeusParamsVm = new ZeusParamsVm();
-            AthenaTr = ZeusBuilders.AthenaToTr(ZeusBuilders.CreateRandomAthena(
+            AthenaTr = ZeusBuilders.AthenaToTr(
+                ZeusBuilders.CreateRandomAthena(
                     seed: ZeusParamsVm.PSeedVm.CurVal,
                     ngSize: Zeus.GroupCount,
                     pSig: ZeusParamsVm.PSigVm.CurVal,
                     sSig: ZeusParamsVm.SSigVm.CurVal
                 ));
 
+            PStrideVm = new ParamIntVm(
+                minVal: 10,
+                maxVal: 100,
+                curVal: 50,
+                name: "Stride"
+            );
+
+            PStrideVm.PropertyChanged += PStrideVm_PropertyChanged;
             ZeusSnapVm = new ZeusSnapVm(
                     athenaTr: AthenaTr,
-                    caption: "Start"
+                    caption: "Start",
+                    stride: PStrideVm.CurVal
                 );
 
             IndexSelectorVm = new IndexSelectorVm(Enumerable.Range(0, zeus.EnsembleCount));
             DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0")
                 { Title = "Display Frequency", Value = 10 };
         }
+
+        private void PStrideVm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            ZeusSnapVm = new ZeusSnapVm(
+                    athenaTr: AthenaTr,
+                    caption: "Start",
+                    stride: PStrideVm.CurVal
+                );
+        }
+
+        public ParamIntVm PStrideVm { get; }
+
+
 
         private ZeusSnapVm _zeusSnapVm;
         public ZeusSnapVm ZeusSnapVm
@@ -141,17 +164,17 @@ namespace La.ViewModel
                 while ( ! _cancellationTokenSource.IsCancellationRequested)
                 {
                     AthenaTr = ZeusF.RepAthenaTr(
-                        zeus: Zeus,
-                        memIndex: IndexSelectorVm.IndexVm.Index,
-                        pNoiseL: (float) ZeusParamsVm.pNoiseLVm.CurVal,
-                        sNoiseL: (float) ZeusParamsVm.sNoiseLVm.CurVal,
-                        seed: randy.Next(),
-                        cPp: (float) ZeusParamsVm.CPpVm.CurVal,
-                        cSs: (float) ZeusParamsVm.CSsVm.CurVal,
-                        cRp: (float) ZeusParamsVm.CRpVm.CurVal,
-                        cPs: (float) ZeusParamsVm.CPsVm.CurVal,
-                        athena: AthenaTr.Athena,
-                        reps: (int) DisplayFrequencySliderVm.Value
+                            zeus: Zeus,
+                            memIndex: IndexSelectorVm.IndexVm.Index,
+                            pNoiseL: (float) ZeusParamsVm.pNoiseLVm.CurVal,
+                            sNoiseL: (float) ZeusParamsVm.sNoiseLVm.CurVal,
+                            seed: randy.Next(),
+                            cPp: (float) ZeusParamsVm.CPpVm.CurVal,
+                            cSs: (float) ZeusParamsVm.CSsVm.CurVal,
+                            cRp: (float) ZeusParamsVm.CRpVm.CurVal,
+                            cPs: (float) ZeusParamsVm.CPsVm.CurVal,
+                            athena: AthenaTr.Athena,
+                            reps: (int) DisplayFrequencySliderVm.Value
                         ).AthenaTr;
 
                     Application.Current.Dispatcher.Invoke
@@ -196,12 +219,20 @@ namespace La.ViewModel
            // var newWng = Wng.Learn((float)ZeusParamsVm.LearnRateVm.CurVal);
             //Waffle = ZeusBuilder.UpdateFromWng(Waffle, newWng);
             //Wng = ZeusBuilder.ResetC(zeus: Waffle, wng: Wng);
+
+            var nuZ = ZeusF.NextZeusTr(
+                zeus: Zeus,
+                memIndex: IndexSelectorVm.IndexVm.Index,
+                learnRate: (float)ZeusParamsVm.LearnRateVm.CurVal,
+                athena:AthenaTr.Athena
+                );
+            Zeus = nuZ.Zeus;
             UpdateUi();
         }
 
         bool CanLearn()
         {
-            return (!_isRunning); // && (Wng != null);
+            return (_isRunning); // && (Wng != null);
         }
 
         #endregion // LearnCommand
@@ -325,7 +356,7 @@ namespace La.ViewModel
         {
             //Wng = ZeusBuilder.ResetS(
             //     sSig: ZeusParamsVm.SSigVm.CurVal,
-            //     sseed: ZeusParamsVm.SSeedVm.CurVal,
+            //     sseed: ZeusParamsVm.Stride.CurVal,
             //     wng: Wng
             //  );
 
@@ -398,7 +429,8 @@ namespace La.ViewModel
         {
             ZeusSnapVm = new ZeusSnapVm(
                 athenaTr: AthenaTr,
-                caption: String.Empty
+                caption: String.Empty,
+                stride: PStrideVm.CurVal
             );
             CommandManager.InvalidateRequerySuggested();
             Generation = AthenaTr.Athena.Iteration.ToString();

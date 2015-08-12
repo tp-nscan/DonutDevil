@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Media;
+using La.ViewModel.Pram;
 using LibNode;
 using MathLib.NumericTypes;
 using MathNet.Numerics.LinearAlgebra;
@@ -13,12 +14,14 @@ namespace La.ViewModel
     public class ZeusSnapVm : NotifyPropertyChanged
     {
         WbVerticalStripesVm Standard => 
-            new WbVerticalStripesVm(stripeCount: AthenaTr.Athena.GroupCount, 
-                                    heightOverWidth: 0.02, 
+            new WbVerticalStripesVm(stripeCount: Stride, 
+                                    heightOverWidth: (0.02 * 100.0) / Stride,
                                     crispness:8);
 
+
+
         protected const int Colorsteps = 256;
-        public ZeusSnapVm(AthenaTr athenaTr, string caption)
+        public ZeusSnapVm(AthenaTr athenaTr, string caption, int stride)
         {
             AthenaTr = athenaTr;
 
@@ -29,6 +32,7 @@ namespace La.ViewModel
 
 
             Caption = caption;
+            Stride = stride;
             if (AthenaTr == null) return;
 
             Iteration = AthenaTr.Athena.Iteration;
@@ -52,6 +56,8 @@ namespace La.ViewModel
             var legendColorSequence = ColorSequence.Dipolar(Colors.Red, Colors.Green, Colorsteps / 2);
             DrawLegend(i => legendColorSequence.Colors[(int)(i * Colorsteps)]);
         }
+
+        public int Stride { get; }
 
         public void DrawLegend(Func<float, Color> colorFunc)
         {
