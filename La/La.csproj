@@ -108,11 +108,13 @@
     <Compile Include="ViewModel\Design\DesignEntityVm.cs" />
     <Compile Include="ViewModel\Design\DesignIndexSelectorVm.cs" />
     <Compile Include="ViewModel\Design\DesignNetworkVm.cs" />
+    <Compile Include="ViewModel\Design\DesignScorrVm.cs" />
     <Compile Include="ViewModel\Design\DesignWaffleHistoriesVm.cs" />
     <Compile Include="ViewModel\Design\DesignZeusSnapVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignIntParamIntVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignParamBoolVm.cs" />
     <Compile Include="ViewModel\Design\Param\DesignParamDoubleVm.cs" />
+    <Compile Include="ViewModel\ScorrVm.cs" />
     <Compile Include="ViewModel\EntityDataVm.cs" />
     <Compile Include="ViewModel\EntityRepoVm.cs" />
     <Compile Include="ViewModel\EntityVm.cs" />

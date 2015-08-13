@@ -334,6 +334,15 @@ module ZeusF =
                          | _ -> failwith "cant get here"
              )
         
+        let aamD = 
+            DenseMatrix.init 
+                grpCt grpCt
+                (fun i j 
+                    -> if(i=j) then 0.0f else 
+                        match a2Dcoal.[i,j] with
+                        | AA sc ->  sc * learnRate
+                        | _ -> 0.0f
+                )
 
         let aamNew = 
             DenseMatrix.init 
