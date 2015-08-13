@@ -403,7 +403,7 @@ module ZeusF =
                     bbM = bbmNew,
                     ssM = zeus.mSs,
                     reM = zeus.meR,
-                    scM = a2Scorr,
+                    scM = a2Dcoal,
                     learnRate = learnRate
                   )
 
@@ -435,6 +435,18 @@ module ZeusF =
                 bM=mB,
                 sM=mS
             )
+
+    let ZeusToTr (zeus:Zeus) =
+        new ZeusTr(                    
+                    aaM = zeus.mAa,
+                    abM = zeus.mAb,
+                    baM = zeus.mBa,
+                    bbM = zeus.mBb,
+                    ssM = zeus.mSs,
+                    reM = zeus.meR,
+                    scM = Array2D.init zeus.GroupCount zeus.GroupCount
+                            (fun i j -> ZeusUtils.MakeScorr 0.0f 0.0f),
+                    learnRate = 0.0f)
 
     let AthenaToTr (athena:Athena)  =
 

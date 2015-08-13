@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using LibNode;
-using MathNet.Numerics;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.Random;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NodeLib.Test
@@ -9,6 +9,14 @@ namespace NodeLib.Test
     [TestClass]
     public class MathUtilsFixture
     {
+        [TestMethod]
+        public void TestPrintMatrix()
+        {
+            var M = Matrix<float>.Build;
+            var m = M.Dense(3, 4, (i, j) => 100 * i + j);
+            var res = MathNetUtils.MatrixDebug(m);
+        }
+
         [TestMethod]
         public void TestArray2DRoundTrip()
         {
@@ -39,7 +47,7 @@ namespace NodeLib.Test
         public void TestSymGen()
         {
 
-            var rng = new MathNet.Numerics.Random.MersenneTwister(123);
+            var rng = new MersenneTwister(123);
             var m = MathNetUtils.RandNormalSqSymDenseSF32(3, rng, 0.7);
 
             Assert.IsTrue(m != null);
@@ -48,7 +56,7 @@ namespace NodeLib.Test
         [TestMethod]
         public void TestVectorShift()
         {
-            var v = MathNet.Numerics.LinearAlgebra.Vector<float>.Build
+            var v = Vector<float>.Build
                         .Dense(100, i => i * i);
 
             var vs = MathNetUtils.VectorShift(v);

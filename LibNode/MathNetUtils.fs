@@ -85,4 +85,12 @@ module MathNetUtils =
 
     let VectorShift (vec:Vector<'a>) =
         let mI = vec.Count
-        DenseVector.init mI (fun i ->vec.[(i+1)%mI]) 
+        DenseVector.init mI (fun i ->vec.[(i+1)%mI])
+
+    let VectorDebug (vector:Vector<float32>) =
+        vector.Enumerate()
+            |> Seq.fold(fun acc v -> acc + v.ToString("0.00") + "\t") String.Empty
+
+    let MatrixDebug (matrix:Matrix<float32>) =
+        matrix.EnumerateRows() 
+            |> Seq.fold(fun acc v -> acc + (v |> VectorDebug) + "\n") String.Empty

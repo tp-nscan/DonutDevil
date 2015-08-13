@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using DonutDevilControls.ViewModel.Common;
+using La.ViewModel.Design;
 using La.ViewModel.Pram;
 using LibNode;
 using MathLib.Intervals;
@@ -22,14 +23,14 @@ namespace La.ViewModel
         ZeusSnaps _zeusSnaps = new ZeusSnaps();
         private AthenaStageRes _athenaStageRes;
 
-        public ZeusVm(Zeus zeus)
+        public ZeusVm(Zeus zeusTr)
         {
-            Zeus = zeus;
+            ZeusTr = ZeusBuilders.ZeusToTr(zeusTr);
             ZeusParamsVm = new ZeusParamsVm();
             AthenaTr = ZeusBuilders.AthenaToTr(
                 ZeusBuilders.CreateRandomAthena(
                     seed: ZeusParamsVm.PSeedVm.CurVal,
-                    ngSize: Zeus.GroupCount,
+                    ngSize: ZeusTr.Zeus.GroupCount,
                     pSig: ZeusParamsVm.PSigVm.CurVal,
                     sSig: ZeusParamsVm.SSigVm.CurVal
                 ));
@@ -48,9 +49,57 @@ namespace La.ViewModel
                     stride: PStrideVm.CurVal
                 );
 
-            IndexSelectorVm = new IndexSelectorVm(Enumerable.Range(0, zeus.EnsembleCount));
+            IndexSelectorVm = new IndexSelectorVm(Enumerable.Range(0, zeusTr.EnsembleCount));
             DisplayFrequencySliderVm = new SliderVm(RealInterval.Make(1, 49), 2, "0")
                 { Title = "Display Frequency", Value = 10 };
+
+            _zeusTrPartSelector = new ZeusTrPartSelectorVm();
+
+            _zeusTrPartSelector.OnTextSelected.Subscribe(PasteTrToClipboard);
+        }
+
+        void PasteTrToClipboard(string trName)
+        {
+            ZeusTrParts outVal;
+            if (ZeusTrParts.TryParse(trName, out outVal))
+            {
+                Clipboard.Clear();
+                switch (outVal)
+                {
+                    case ZeusTrParts.A:
+                        break;
+                    case ZeusTrParts.B:
+                        break;
+                    case ZeusTrParts.S:
+                        break;
+                    case ZeusTrParts.R:
+                        break;
+                    case ZeusTrParts.AA:
+                        break;
+                    case ZeusTrParts.AB:
+                        break;
+                    case ZeusTrParts.BA:
+                        break;
+                    case ZeusTrParts.BB:
+                        break;
+                    case ZeusTrParts.dAA:
+                        break;
+                    case ZeusTrParts.dAB:
+                        break;
+                    case ZeusTrParts.dBA:
+                        break;
+                    case ZeusTrParts.dBB:
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        }
+
+        public ZeusTrPartSelectorVm ZeusTrPartSelector
+        {
+            get { return _zeusTrPartSelector; }
         }
 
         private void PStrideVm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -92,7 +141,7 @@ namespace La.ViewModel
 
         public ZeusParamsVm ZeusParamsVm { get; private set; }
 
-        public Zeus Zeus { get; private set; }
+        public ZeusTr ZeusTr { get; private set; }
 
         public AthenaTr AthenaTr { get; private set; }
 
@@ -164,7 +213,7 @@ namespace La.ViewModel
                 while ( ! _cancellationTokenSource.IsCancellationRequested)
                 {
                     AthenaTr = ZeusF.RepAthenaTr(
-                            zeus: Zeus,
+                            zeus: ZeusTr.Zeus,
                             memIndex: IndexSelectorVm.IndexVm.Index,
                             pNoiseL: (float) ZeusParamsVm.pNoiseLVm.CurVal,
                             sNoiseL: (float) ZeusParamsVm.sNoiseLVm.CurVal,
@@ -218,21 +267,21 @@ namespace La.ViewModel
         {
            // var newWng = Wng.Learn((float)ZeusParamsVm.LearnRateVm.CurVal);
             //Waffle = ZeusBuilder.UpdateFromWng(Waffle, newWng);
-            //Wng = ZeusBuilder.ResetC(zeus: Waffle, wng: Wng);
+            //Wng = ZeusBuilder.ResetC(ZeusTr: Waffle, wng: Wng);
 
             var nuZ = ZeusF.NextZeusTr(
-                zeus: Zeus,
+                zeus: ZeusTr.Zeus,
                 memIndex: IndexSelectorVm.IndexVm.Index,
                 learnRate: (float)ZeusParamsVm.LearnRateVm.CurVal,
                 athena:AthenaTr.Athena
                 );
-            Zeus = nuZ.Zeus;
+            ZeusTr = nuZ;
             UpdateUi();
         }
 
         bool CanLearn()
         {
-            return (_isRunning); // && (Wng != null);
+            return (! _isRunning) && (ZeusTr != null);
         }
 
         #endregion // LearnCommand
@@ -257,7 +306,7 @@ namespace La.ViewModel
             AthenaTr = ZeusBuilders.AthenaToTr(
                 ZeusBuilders.CreateRandomAthena(
                     seed: ZeusParamsVm.SSeedVm.CurVal,
-                    ngSize: Zeus.GroupCount,
+                    ngSize: ZeusTr.Zeus.GroupCount,
                     pSig: ZeusParamsVm.PSigVm.CurVal,
                     sSig: ZeusParamsVm.SSigVm.CurVal
                 ));
@@ -288,18 +337,19 @@ namespace La.ViewModel
 
         private void DoResetP()
         {
-            //Wng = ZeusBuilder.ResetP(
-            //     pSig: ZeusParamsVm.PSigVm.CurVal,
-            //     pseed: ZeusParamsVm.PSeedVm.CurVal,
-            //     wng: Wng
-            //  );
+            AthenaTr = ZeusBuilders.AthenaToTr(
+                ZeusBuilders.ResetAthenaP(
+                    athena: AthenaTr.Athena,
+                    pSig: ZeusParamsVm.PSigVm.CurVal,
+                    seed: ZeusParamsVm.PSeedVm.CurVal
+                    ));
 
             UpdateUi();
         }
 
         bool CanResetP()
         {
-            return (!_isRunning); /// && (Wng != null);
+            return (AthenaTr != null);
         }
 
         #endregion // ResetPCommand
@@ -322,7 +372,7 @@ namespace La.ViewModel
         private void DoResetR()
         {
             //Wng = ZeusBuilder.ResetR(
-            //     zeus: Waffle,
+            //     ZeusTr: Waffle,
             //     memDex: IndexSelectorVm.IndexVm.Index,
             //     wng: Wng
             //  );
@@ -439,6 +489,8 @@ namespace La.ViewModel
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private string _generation;
+        private readonly ZeusTrPartSelectorVm _zeusTrPartSelector;
+
         public string ElapsedTime =>
             $"{_stopwatch.Elapsed.Hours.ToString("00")}:" +
             $"{_stopwatch.Elapsed.Minutes.ToString("00")}:" +

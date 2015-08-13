@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="La.View.ScorrControl"
+﻿<UserControl x:Class="La.View.TrDebugControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,30 +6,32 @@
              xmlns:local="clr-namespace:La.View"
              xmlns:viewModel="clr-namespace:La.ViewModel.Design"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance {x:Type viewModel:DesignScorrVm}, IsDesignTimeCreatable=True}"
-             d:DesignHeight="500" d:DesignWidth="700">
+             d:DataContext="{d:DesignInstance {x:Type viewModel:DesignTrDebugVm}, IsDesignTimeCreatable=True}"
+             >
 
 
     <UserControl.Resources>
         <DataTemplate x:Key="ItemTemplate">
-            <Border BorderBrush="Pink" BorderThickness="1" Background="#1FFF">
-                <TextBlock Width="200" TextAlignment="Center" Foreground="Wheat" 
-                           FontSize="18" FontWeight="Bold" Text="{Binding Name}"/>
+            <Border BorderBrush="Pink" BorderThickness="1" Background="#F222">
+                <TextBlock Width="90" TextAlignment="Center" Foreground="Wheat" 
+                           FontSize="18" FontWeight="Bold" Text="{Binding .}"/>
             </Border>
         </DataTemplate>
     </UserControl.Resources>
 
-    <DockPanel LastChildFill="True">
-        <ListBox
+    <StackPanel>
+        <ComboBox Width="120" Height="30"
                 Margin="8"
-                SelectionMode="Single"
                 IsSynchronizedWithCurrentItem="True"
-                ItemsSource="{Binding ArrayHistVms}" 
+                ItemsSource="{Binding TextSelections}" 
                 Background="{x:Null}" BorderBrush="{x:Null}"
-                SelectedItem="{Binding Path=ArrayHistVm, Mode=TwoWay}" 
+                SelectedItem="{Binding Path=SelectedText, Mode=TwoWay}" 
                 ItemTemplate="{DynamicResource ItemTemplate}"
             />
+        
+        <Button Style="{DynamicResource AppPartButtonStyle}" 
+                Command="{Binding SelectCommand}" Content="Copy"/>
 
-    </DockPanel>
+    </StackPanel>
     
 </UserControl>

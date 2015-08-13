@@ -48,7 +48,7 @@
                         <common:SliderControl DataContext="{Binding DisplayFrequencySliderVm}"/>
                     </Border>
                 </Border>
-
+                <local:TrDebugControl DataContext="{Binding ZeusTrPartSelector}"/>
             </StackPanel>
 
             <Grid>
