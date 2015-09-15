@@ -99,9 +99,7 @@
     <Compile Include="Views\Graphics\PlotRectangle.cs" />
     <Compile Include="Views\Graphics\WbImage.cs" />
     <Compile Include="Views\Graphics\PlotPoint.cs" />
-    <Compile Include="Views\Graphics\ReadableImage.cs" />
     <Compile Include="ViewModels\Graphics\ReadableImageVm.cs" />
-    <Compile Include="Views\Graphics\SimpleBitmap.cs" />
     <Compile Include="CommandBase.cs" />
     <Compile Include="CoreLibConverters.cs" />
     <Compile Include="NotifyPropertyChanged.cs" />

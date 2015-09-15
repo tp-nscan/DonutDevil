@@ -67,29 +67,87 @@ namespace La.ViewModel
                 switch (outVal)
                 {
                     case ZeusTrParts.A:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            AthenaTr.Athena.mA));
                         break;
                     case ZeusTrParts.B:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            AthenaTr.Athena.mB));
                         break;
                     case ZeusTrParts.S:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            AthenaTr.Athena.mS));
                         break;
                     case ZeusTrParts.R:
+                        Clipboard.SetText(
+                        MathNetUtils.VectorDebug(
+                            ZeusTr.curMem));
                         break;
                     case ZeusTrParts.AA:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            ZeusTr.Zeus.mAa));
                         break;
                     case ZeusTrParts.AB:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            ZeusTr.Zeus.mAb));
                         break;
                     case ZeusTrParts.BA:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            ZeusTr.Zeus.mBa));
                         break;
                     case ZeusTrParts.BB:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            ZeusTr.Zeus.mBb));
                         break;
                     case ZeusTrParts.dAA:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            AthenaTr.dAdA));
                         break;
                     case ZeusTrParts.dAB:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            AthenaTr.dAdB));
                         break;
                     case ZeusTrParts.dBA:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            AthenaTr.dBdA));
                         break;
                     case ZeusTrParts.dBB:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            AthenaTr.dBdB));
                         break;
+                    case ZeusTrParts.sAA:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            ZeusUtils.ScorAA(ZeusTr.scM)));
+                        break;
+                    case ZeusTrParts.sAB:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            ZeusUtils.ScorAB(ZeusTr.scM)));
+                        break;
+                    case ZeusTrParts.sBA:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                             ZeusUtils.ScorBA(ZeusTr.scM)));
+                        break;
+                    case ZeusTrParts.sBB:
+                        Clipboard.SetText(
+                        MathNetUtils.MatrixDebug(
+                            ZeusUtils.ScorBB(ZeusTr.scM)));
+                        break;
+
+
                     default:
                         break;
                 }

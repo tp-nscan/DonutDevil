@@ -28,6 +28,10 @@ namespace La.ViewModel
         dAA,
         dAB,
         dBA,
-        dBB
+        dBB,
+        sAA,
+        sAB,
+        sBA,
+        sBB
     }
 }

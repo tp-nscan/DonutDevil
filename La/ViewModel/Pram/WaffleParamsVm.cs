@@ -62,7 +62,7 @@ namespace La.ViewModel.Pram
                 );
             pNoiseLVm = new ParamDoubleVm(
                     minVal: 0,
-                    maxVal: 0.3,
+                    maxVal: 0.9,
                     curVal: 0.0,
                     increment: 0.005,
                     formatString: "0.000",
@@ -70,7 +70,7 @@ namespace La.ViewModel.Pram
                 );
             sNoiseLVm = new ParamDoubleVm(
                     minVal: 0,
-                    maxVal: 0.3,
+                    maxVal: 0.9,
                     curVal: 0.1,
                     increment: 0.005,
                     formatString: "0.000",
@@ -78,13 +78,13 @@ namespace La.ViewModel.Pram
                 );
             SSeedVm = new ParamIntVm(
                     minVal: 1,
-                    maxVal: 1000,
+                    maxVal: 10000,
                     curVal: 0,
                     name: "S Seed"
                 );
             PSeedVm = new ParamIntVm(
                     minVal: 1,
-                    maxVal: 1000,
+                    maxVal: 10000,
                     curVal: 0,
                     name: "P Seed"
                 );

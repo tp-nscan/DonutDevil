@@ -154,7 +154,7 @@ namespace La.ViewModel
             _mainWindowTypehanged.OnNext(
                 new ZeusVm(ZeusBuilders.CreateRandomZeus(
                 seed: 123,
-                ngSize: 100,
+                ngSize: 50,
                 memSize: 20,
                 ppSig: 0.75f,
                 glauberRadius: 5

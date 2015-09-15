@@ -42,10 +42,11 @@ type Scorr =
             ssM:Matrix<float32>,
             reM:Matrix<float32>,
             learnRate:float32,
-            scM:Scorr[,]
+            scM:Scorr[,],
+            curMem:Vector<float32>
         ) =
 
-    member this.Zeus 
+    member this.Zeus
         = new Zeus(            
                     aaM = aaM,
                     abM = abM,
@@ -54,6 +55,7 @@ type Scorr =
                     ssM = ssM,
                     reM = reM
                   )
+    member this.curMem = curMem
     member this.scM = scM
     member this.LearnRate = learnRate
 
@@ -162,11 +164,48 @@ module ZeusUtils =
 
     let MakeScorr si sj =
         match si, sj with
-        | si, sj when (si< 0.0f) && (sj< 0.0f) -> Scorr.AA (si*sj)
-        | si, sj when (si< 0.0f) && (sj>=0.0f) -> Scorr.AB (- si*sj)
-        | si, sj when (si>=0.0f) && (sj< 0.0f) -> Scorr.BA (- si*sj)
-        | si, sj when (si>=0.0f) && (sj>=0.0f) -> Scorr.BB (si*sj)
+        | si, sj when (si< 0.0f) && (sj< 0.0f) -> Scorr.BB (si*sj)
+        | si, sj when (si< 0.0f) && (sj>=0.0f) -> Scorr.BA (- si*sj)
+        | si, sj when (si>=0.0f) && (sj< 0.0f) -> Scorr.AB (- si*sj)
+        | si, sj when (si>=0.0f) && (sj>=0.0f) -> Scorr.AA (si*sj)
         | _, _     -> failwith  "cant happen"
+
+    let ScorAA (scorr:Scorr[,]) =
+                DenseMatrix.init 
+                    (scorr.GetLength(0)) (scorr.GetLength(0))
+                    (fun i j 
+                        ->  match scorr.[i,j] with
+                                | AA sc ->  sc
+                                | _ -> 0.0f
+                    )
+
+    let ScorAB (scorr:Scorr[,]) =
+                DenseMatrix.init 
+                    (scorr.GetLength(0)) (scorr.GetLength(0))
+                    (fun i j 
+                        ->  match scorr.[i,j] with
+                                | AB sc ->  sc
+                                | _ -> 0.0f
+                    )
+
+    let ScorBA (scorr:Scorr[,]) =
+                DenseMatrix.init 
+                    (scorr.GetLength(0)) (scorr.GetLength(0))
+                    (fun i j 
+                        ->  match scorr.[i,j] with
+                                | BA sc ->  sc
+                                | _ -> 0.0f
+                    )
+    let ScorBB (scorr:Scorr[,]) =
+                DenseMatrix.init 
+                    (scorr.GetLength(0)) (scorr.GetLength(0))
+                    (fun i j 
+                        ->  match scorr.[i,j] with
+                                | BB sc ->  sc
+                                | _ -> 0.0f
+                    )
+
+
 
     let FpFrTpTr (fp:float32) fr tp tr = 
         if (fp*fr < 0.0f) then 0.0f else
@@ -196,8 +235,10 @@ module ZeusF =
         let aNoise = pNoise |> Seq.take groupCt |> Seq.toArray
         let bNoise = pNoise |> Seq.take groupCt |> Seq.toArray
 
-        let dAdR = curMem.Map2((fun x y -> x * (1.0f+y) * (1.0f+y) * cRp), athena.mS)
-        let dBdR = curMem.Map2((fun x y -> x * (1.0f-y) * (1.0f-y) * cRp), athena.mS)
+//        let dAdR = curMem.Map2((fun x y -> x * (1.0f+y) * (1.0f+y) * cRp), athena.mS)
+//        let dBdR = curMem.Map2((fun x y -> x * (1.0f-y) * (1.0f-y) * cRp), athena.mS)
+        let dAdR = curMem.Map(fun x -> x * cRp)
+        let dBdR = curMem.Map(fun x -> x * cRp)
 
         let corrM = DenseMatrix.init 
                         groupCt groupCt  
@@ -397,6 +438,7 @@ module ZeusF =
                 )
 
         new ZeusTr(
+                    curMem=curMem,
                     aaM = aamNew,
                     abM = abmNew,
                     baM = bamNew,
@@ -437,7 +479,8 @@ module ZeusF =
             )
 
     let ZeusToTr (zeus:Zeus) =
-        new ZeusTr(                    
+        new ZeusTr(
+                    curMem = Vector<float32>.Build.Dense(zeus.GroupCount),                 
                     aaM = zeus.mAa,
                     abM = zeus.mAb,
                     baM = zeus.mBa,
