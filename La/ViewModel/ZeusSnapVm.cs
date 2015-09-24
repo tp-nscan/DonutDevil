@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Media;
-using La.ViewModel.Pram;
 using LibNode;
-using MathLib.NumericTypes;
 using MathNet.Numerics.LinearAlgebra;
 using WpfUtils;
 using WpfUtils.Utils;

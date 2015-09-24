@@ -61,7 +61,6 @@
     <Compile Include="Intervals\RectFloat.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Functions.cs" />
-    <Compile Include="NumericTypes\D1Val.cs" />
     <Compile Include="NumericTypes\D2Val.cs" />
     <Compile Include="NumericTypes\Dt.cs" />
     <Compile Include="NumericTypes\EnumerableExt.cs" />
