@@ -7,9 +7,6 @@ open Rop
     type ArrayHist = { Name:string; ArrayLength:int; 
                         IndexedArrays:List<IndexedF32A>;}
 
-    type D1Val<'a> = {Index:int; Val:'a}
-    type D2Val<'a> = {X:int; Y:int; Val:'a}
-
 module ArrayHistory =
     
     let Init name arrayLength = 

@@ -2,7 +2,9 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using LibNode;
 
 namespace WpfUtils.Views.Graphics
 {
@@ -11,20 +13,20 @@ namespace WpfUtils.Views.Graphics
         private WriteableBitmap _writeableBmp;
 
         [Category("Custom Properties")]
-        public IReadOnlyList<PlotPoint> PlotPoints
+        public IReadOnlyList<D2Val<Color>> PlotPoints
         {
-            get { return (IReadOnlyList<PlotPoint>)GetValue(PlotPointsProperty); }
+            get { return (IReadOnlyList<D2Val<Color>>)GetValue(PlotPointsProperty); }
             set { SetValue(PlotPointsProperty, value); }
         }
 
         public static readonly DependencyProperty PlotPointsProperty =
-            DependencyProperty.Register("PlotPoints", typeof(IReadOnlyList<PlotPoint>), typeof(WbImage),
+            DependencyProperty.Register("PlotPoints", typeof(IReadOnlyList<D2Val<Color>>), typeof(WbImage),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender,
                 OnPlotPointsChanged));
 
         private static void OnPlotPointsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var graphicsInfo = (IReadOnlyList<PlotPoint>)e.NewValue;
+            var graphicsInfo = (IReadOnlyList<D2Val<Color>>)e.NewValue;
             if ((graphicsInfo == null) || (graphicsInfo.Count == 0))
             {
                 return;
@@ -58,7 +60,7 @@ namespace WpfUtils.Views.Graphics
                     _writeableBmp.SetPixel(
                         pixelInfo.X * rectWidth,
                         pixelInfo.Y * rectHeight,
-                        pixelInfo.Color);
+                        pixelInfo.Val);
                 }
 
             } // Invalidates on exit of using block

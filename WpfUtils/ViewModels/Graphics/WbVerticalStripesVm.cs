@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
+using LibNode;
 using MathLib.NumericTypes;
 using WpfUtils.Views.Graphics;
 
@@ -31,7 +32,7 @@ namespace WpfUtils.ViewModels.Graphics
                             y: 0,
                             width: Crispness,
                             height: ImageHeight,
-                            color: gv.Value
+                            color: gv.Val
                        )
                     ).ToList();
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
+using LibNode;
 using MathLib;
 using MathLib.NumericTypes;
 using WpfUtils.Views.Graphics;
@@ -42,7 +43,7 @@ namespace WpfUtils.ViewModels.Graphics
                             y1: _coords[gv.Index, 0, 1],
                             x2: _coords[gv.Index, 1, 0],
                             y2: _coords[gv.Index, 1, 1],
-                            color: gv.Value
+                            color: gv.Val
                        )
                     ).ToList();
 

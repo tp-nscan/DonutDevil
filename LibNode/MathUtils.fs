@@ -1,6 +1,11 @@
 ﻿namespace LibNode
 open System
 
+type D1Val<'a> = {Index:int; Val:'a}
+
+type D2Val<'a> = {X:int; Y:int; Val:'a}
+
+
 //%s for strings
 //%b for bools
 //%i for ints

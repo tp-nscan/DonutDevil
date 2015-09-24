@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Media;
+using LibNode;
 using WpfUtils.Views.Graphics;
 
 namespace WpfUtils.ViewModels.Graphics
@@ -15,8 +17,8 @@ namespace WpfUtils.ViewModels.Graphics
 
         public int ImageHeight { get; }
 
-        protected List<PlotPoint> PlotPointList = new List<PlotPoint>();
-        public IReadOnlyList<PlotPoint> PlotPoints => PlotPointList;
+        protected List<D2Val<Color>> PlotPointList = new List<D2Val<Color>>();
+        public IReadOnlyList<D2Val<Color>> PlotPoints => PlotPointList;
 
         protected List<PlotRectangle> PlotRectangleList = new List<PlotRectangle>();
         public IReadOnlyList<PlotRectangle> PlotRectangles => PlotRectangleList;

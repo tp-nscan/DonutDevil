@@ -1,6 +1,4 @@
-﻿using System.Reflection.Emit;
-
-namespace MathLib.NumericTypes
+﻿namespace MathLib.NumericTypes
 {
     public static class Torus3NbrhdExt
     {
@@ -18,8 +16,6 @@ namespace MathLib.NumericTypes
             var rowL   = offset +  ((R + 1) % height) * width;
             var rowLl  = offset +  ((R + 2) % height) * width;
             var rowLll = offset +  ((R + 3) % height) * width;
-
-
 
             var colFff = (C - 3 + width) % width;
             var colFf  = (C - 2 + width) % width;
