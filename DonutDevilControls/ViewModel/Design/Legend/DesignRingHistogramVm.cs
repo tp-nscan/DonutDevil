@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Media;
 using DonutDevilControls.ViewModel.Legend;
+using LibNode;
 using MathLib;
 using MathLib.NumericTypes;
 using WpfUtils.Utils;

@@ -64,7 +64,6 @@ namespace WpfUtils.Views.Graphics
                 }
 
             } // Invalidates on exit of using block
-
         }
 
 
@@ -121,7 +120,6 @@ namespace WpfUtils.Views.Graphics
                 }
 
             } // Invalidates on exit of using block
-
         }
 
 
@@ -146,8 +144,7 @@ namespace WpfUtils.Views.Graphics
             }
 
             var gridImage = d as WbImage;
-            if ((gridImage == null)) return;
-            gridImage.DoPlotLines();
+            gridImage?.DoPlotLines();
         }
 
         void DoPlotLines()

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows.Media;
 using LibNode;
-using MathLib.NumericTypes;
 using WpfUtils.Views.Graphics;
 
 namespace WpfUtils.ViewModels.Graphics

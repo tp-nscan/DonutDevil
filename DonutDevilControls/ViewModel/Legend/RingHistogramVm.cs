@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
+using LibNode;
 using MathLib;
 using MathLib.Intervals;
 using MathLib.NumericTypes;
@@ -18,10 +19,10 @@ namespace DonutDevilControls.ViewModel.Legend
         public RingHistogramVm(string title, double minValue, double maxValue)
         {
             _title = title;
-            _minValue = minValue;
-            _maxValue = maxValue;
-            _legendVm = new WbRingPlotVm(80);
-            _histogramVm = new WbRingPlotVm(165);
+            MinValue = minValue;
+            MaxValue = maxValue;
+            LegendVm = new WbRingPlotVm(80);
+            HistogramVm = new WbRingPlotVm(165);
 
             _histogramColorSequence = Colors.White.ToUniformColorSequence(Colorsteps);
         }
@@ -43,17 +44,9 @@ namespace DonutDevilControls.ViewModel.Legend
             );
         }
 
-        private readonly WbRingPlotVm _legendVm;
-        public WbRingPlotVm LegendVm
-        {
-            get { return _legendVm; }
-        }
+        public WbRingPlotVm LegendVm { get; }
 
-        private readonly WbRingPlotVm _histogramVm;
-        public WbRingPlotVm HistogramVm
-        {
-            get { return _histogramVm; }
-        }
+        public WbRingPlotVm HistogramVm { get; }
 
         public void MakeHistogram(IEnumerable<float> values)
         {
@@ -70,7 +63,6 @@ namespace DonutDevilControls.ViewModel.Legend
                     => new D1Val<Color>(index, _histogramColorSequence.ToUnitColor(val))
                 )
             );
-
         }
 
         public void MakeHistogram(IEnumerable<float> xVals, IEnumerable<float> yVals)
@@ -79,8 +71,6 @@ namespace DonutDevilControls.ViewModel.Legend
         }
 
         private string _title;
-        private double _minValue;
-        private double _maxValue;
 
         public string Title
         {
@@ -104,17 +94,9 @@ namespace DonutDevilControls.ViewModel.Legend
             set { throw new NotImplementedException(); }
         }
 
-        public double MinValue
-        {
-            get { return _minValue; }
-            set { _minValue = value; }
-        }
+        public double MinValue { get; set; }
 
-        public double MaxValue
-        {
-            get { return _maxValue; }
-            set { _maxValue = value; }
-        }
+        public double MaxValue { get; set; }
 
         public double MinValueX
         {
@@ -140,10 +122,7 @@ namespace DonutDevilControls.ViewModel.Legend
             set { throw new NotImplementedException(); }
         }
 
-        public LegendType DisplaySpaceType
-        {
-            get { return LegendType.Ring; }
-        }
+        public LegendType DisplaySpaceType { get; } = LegendType.Ring;
     }
 
 

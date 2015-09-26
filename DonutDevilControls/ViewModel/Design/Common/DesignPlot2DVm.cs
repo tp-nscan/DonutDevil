@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using System.Windows.Media;
-using DonutDevilControls.ViewModel.Common;
 using DonutDevilControls.ViewModel.Legend;
 using LibNode;
-using MathLib.NumericTypes;
 using WpfUtils.Views.Graphics;
 
 namespace DonutDevilControls.ViewModel.Design.Common
@@ -19,8 +17,8 @@ namespace DonutDevilControls.ViewModel.Design.Common
             MinValueY = -1.0;
             MaxValueY = 1.0;
             WbUniformGridVm.AddValues(
-                D2Val<Color>Ex.TestSequence()
-                    .Select(pp=>new D2Val<Color>(pp.X,pp.Y,pp.Color))
+                PlotPointEx.TestSequence()
+                    .Select(pp=>new D2Val<Color>(pp.X,pp.Y,pp.Val))
                 );
         }
 
