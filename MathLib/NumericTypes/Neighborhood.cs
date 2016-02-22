@@ -81,15 +81,11 @@ namespace MathLib.NumericTypes
     {
         public Neighborhood(int radius)
         {
-            _radius = radius;
+            Radius = radius;
             _values = new T[radius*2+1, radius*2+1];
         }
 
-        private readonly int _radius;
-        public int Radius
-        {
-            get { return _radius; }
-        }
+        public int Radius { get; }
 
         public void SetValue(int xOff, int yOff, T value)
         {
