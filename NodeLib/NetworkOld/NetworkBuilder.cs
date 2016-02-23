@@ -29,7 +29,7 @@ namespace NodeLib.NetworkOld
             Ring,
             Sphere,
             Spots,
-            Twister,
+            Twister
         }
 
         public static class NetworkBuilder
